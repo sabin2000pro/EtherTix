@@ -54,6 +54,11 @@ const UserSchema = new mongoose.Schema<UserDocument>({
     },
 
     accountActive: {
+        type: Boolean,
+        default: false
+    },
+
+    accountVerified: {
         
     }
 
