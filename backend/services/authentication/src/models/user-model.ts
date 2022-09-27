@@ -7,6 +7,8 @@ interface UserDocument {
     email: string;
     password: string;
     role: string;
+    accountActive: boolean;
+    accountVerified: boolean;
 
     comparePasswords: (enteredPassword: string) => boolean;
     getAuthenticationToken: () => void;

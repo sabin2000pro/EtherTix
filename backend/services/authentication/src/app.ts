@@ -4,7 +4,6 @@ import morgan from "morgan"
 import hpp from "hpp"
 import helmet from "helmet"
 import cors from "cors";
-import path from "path";
 
 const app: Application = express();
 
