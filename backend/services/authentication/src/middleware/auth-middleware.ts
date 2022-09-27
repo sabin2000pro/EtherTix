@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextFunction } from "express";
 
 
@@ -8,3 +9,6 @@ export const protectAuth = async (request: Request, response: Response, next: Ne
 export const restrictRolesTo = (...roles) => {
 
 }
+=======
+import {Request, Response} from "express";
+>>>>>>> auth-feature
