@@ -17,6 +17,7 @@ interface UserDocument {
 // Working on the auth feature branch
 const UserSchema = new mongoose.Schema<UserDocument>({
     
+    // username of the user
     username: {
         type: String,
         required: true,
@@ -24,10 +25,22 @@ const UserSchema = new mongoose.Schema<UserDocument>({
         maxlength: [20, "Username must be at least 20 characters long"]
     },
 
+    // User's e-mail address
     email: {
         type: String,
         required: true
+    },
+
+    // The user's password
+    password: {
+        type: String
     }
+
+}, {timestamps: true});
+
+// @description: Before saving a user to the database, hash their password
+UserSchema.pre('save', async function(next) {
+
 })
 
 export default UserSchema;//test

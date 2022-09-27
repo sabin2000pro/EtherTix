@@ -37,10 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = require("./app");
+var port = process.env.PORT || 5300;
 var startAuthServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        return [2 /*return*/, app_1.app.listen(3000, function () {
-                console.log('Authentication Service Live On Port 3000');
+        return [2 /*return*/, app_1.app.listen(port, function () {
+                console.log('Authentication Service Live On Port 5300');
             })];
     });
 }); };
