@@ -14,13 +14,17 @@ interface UserDocument {
 
 // Working on the auth feature branch
 const UserSchema = new mongoose.Schema<UserDocument>({
+    
     username: {
         type: String,
-        required: true
+        required: true,
+        minlength: [5, "Username must be at least 5 characters long"],
+        maxlength: [20, "Username must be at least 20 characters long"]
     },
 
     email: {
-        type: String
+        type: String,
+        required: true
     }
 })
 
