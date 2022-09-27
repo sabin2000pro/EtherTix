@@ -6,6 +6,7 @@ interface UserDocument {
     username: string;
     email: string;
     password: string;
+    passwordConfirm: string;
     role: string;
 
     comparePasswords: (enteredPassword: string) => boolean;
