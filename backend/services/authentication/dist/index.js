@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = require("./app");
 var port = process.env.PORT || 5300;
+// Start of authentication server
 var startAuthServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, app_1.app.listen(port, function () {
