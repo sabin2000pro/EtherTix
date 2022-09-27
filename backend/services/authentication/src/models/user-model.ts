@@ -4,11 +4,13 @@ import bcryptjs from "bcryptjs";
 
 interface UserDocument {
     username: string;
-    email: string;
+    email: string; // The user's e-mail address
     password: string;
+    passwordConfirm: string;
     role: string;
     accountActive: boolean;
     accountVerified: boolean;
+    accountLocked: boolean;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -35,7 +37,20 @@ const UserSchema = new mongoose.Schema<UserDocument>({
 
     // The user's password
     password: {
-        type: String
+        type: String,
+        required: [true, "Please provide a valid password"]
+    },
+
+    passwordConfirm: {
+        type: String,
+        required: [true, "Please confirm your password"]
+    },
+
+    role: {
+        type: String,
+        required: [true, "Please provide a valid role for the user"],
+        enum: ["admin", "moderator", "organiser"],
+        default: "user"
     }
 
 }, {timestamps: true});
