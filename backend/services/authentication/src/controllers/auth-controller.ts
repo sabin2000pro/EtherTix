@@ -1,1 +1,1 @@
-//test
+import User from '../models/user-model';
