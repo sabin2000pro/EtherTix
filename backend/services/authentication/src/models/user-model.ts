@@ -12,6 +12,7 @@ interface UserDocument {
     getAuthenticationToken: () => void;
 }
 
+// Working on the auth feature branch
 const UserSchema = new mongoose.Schema<UserDocument>({
     username: {
         type: String,
