@@ -1,0 +1,22 @@
+version: '3.2'
+
+services:
+  auth-service:
+    image: sabin2000/ethertix-auth-service
+    build:
+      context: ../backend/services/authentication
+      dockerfile: Dockerfile
+    
+    restart: always
+
+    ports:
+      - "5300:5300"
+    volumes:
+       - /app/node_modules
+       - ./backend/services/authentication:/app
+
+  events-service:
+    image: sabin2000/ethertix-events-service
+    
+    build:
+      dockerfile: Dockerfile

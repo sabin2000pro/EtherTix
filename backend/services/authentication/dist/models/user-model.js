@@ -47,17 +47,44 @@ var UserSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
         minlength: [5, "Username must be at least 5 characters long"],
-        maxlength: [20, "Username must be at least 20 characters long"]
+        maxlength: [20, "Username must be at least 20 characters long"],
+        trim: true
     },
     // User's e-mail address
     email: {
         type: String,
+<<<<<<< HEAD
         required: true
     },
     // The user's password
     password: {
         type: String
     }
+=======
+        required: true,
+        unique: true
+    },
+    // The user's password
+    password: {
+        type: String,
+        required: [true, "Please provide a valid password"]
+    },
+    passwordConfirm: {
+        type: String,
+        required: [true, "Please confirm your password"]
+    },
+    role: {
+        type: String,
+        required: [true, "Please provide a valid role for the user"],
+        enum: ["admin", "moderator", "organiser"],
+        default: "user"
+    },
+    accountActive: {
+        type: Boolean,
+        default: false
+    },
+    accountVerified: {}
+>>>>>>> auth-feature
 }, { timestamps: true });
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', function (next) {
@@ -67,4 +94,14 @@ UserSchema.pre('save', function (next) {
         });
     });
 });
+UserSchema.methods.comparePasswords = function (enteredPassword) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, false];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
 exports.default = UserSchema; //test

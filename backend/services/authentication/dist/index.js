@@ -41,7 +41,11 @@ var port = process.env.PORT || 5300;
 // Start of authentication server
 var startAuthServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+<<<<<<< HEAD
         return [2 /*return*/, app_1.app.listen(port, function () {
+=======
+        return [2 /*return*/, app_1.app.listen(5300, function () {
+>>>>>>> auth-feature
                 console.log('Authentication Service Live On Port 5300');
             })];
     });
