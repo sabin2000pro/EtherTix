@@ -1,7 +1,19 @@
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
-export const protectAuth = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
-    let token;
+declare namespace Express {
+    export interface Request {
+
+        user: any;
+        body: any;
+        session: any
+        headers: any
+        authorization: any
+    }
+  }
+  
+
+export const protectAuth = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
 }
 
 export const restrictRolesTo = (...roles) => {
