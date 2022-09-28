@@ -14,6 +14,8 @@ interface UserDocument {
     accountVerified: boolean;
     accountLocked: boolean;
 
+    createdAt: Date;
+
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
 }
@@ -69,7 +71,13 @@ const UserSchema = new mongoose.Schema<UserDocument>({
 
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', async function(next) {
-    // Hash User's Current Password
+   if(!this.isModified("password")) {
+     return next();
+   }
+
+   this.password = await bcrypt.hash(this.password, 10);
+
+   return next();
 })
 
 UserSchema.methods.comparePasswords = async function(enteredPassword: string): Promise<boolean> {
@@ -80,4 +88,4 @@ UserSchema.methods.getAuthenticationToken = function() {
 
 }
 
-export default UserSchema;//test
+export default UserSchema; // Export the user schema
