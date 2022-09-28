@@ -12,7 +12,9 @@ declare namespace Express {
   
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+    return response.status(201).json({success: true, message: "Register User here"});
 }
 
-export const loginUser = async (request)
+export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "Login User here"});
+}
