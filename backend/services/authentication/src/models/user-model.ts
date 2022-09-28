@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
-import jsonwebtoken from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 interface UserDocument {
+    forename: string;
+    surname: string;
     username: string;
     email: string; // The user's e-mail address
     password: string;
@@ -17,6 +20,16 @@ interface UserDocument {
 
 // Working on the auth feature branch
 const UserSchema = new mongoose.Schema<UserDocument>({
+
+    forename: {
+        type: String,
+        required: [true, "Please provide your forename"]
+    },
+
+    surname: {
+        type: String,
+        required: [true, "Please provide your surname"]
+    },
     
     // username of the user
     username: {
@@ -60,7 +73,11 @@ UserSchema.pre('save', async function(next) {
 })
 
 UserSchema.methods.comparePasswords = async function(enteredPassword: string): Promise<boolean> {
-    return await false;
+    return await bcrypt.compare(this.password, enteredPassword);
+}
+
+UserSchema.methods.getAuthenticationToken = function() {
+
 }
 
 export default UserSchema;//test
