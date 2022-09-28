@@ -6,7 +6,7 @@ const ForgotPassword: React.FC = (props) => {
     <>
     
     <div>
-
+       <h1>Forgot Password Page</h1>
     </div>
 
     </>

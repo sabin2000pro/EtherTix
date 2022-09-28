@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import jsonwebtoken from "jsonwebtoken";
-import bcryptjs from "bcryptjs";
 
 interface UserDocument {
     username: string;

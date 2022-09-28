@@ -53,14 +53,6 @@ var UserSchema = new mongoose_1.default.Schema({
     // User's e-mail address
     email: {
         type: String,
-<<<<<<< HEAD
-        required: true
-    },
-    // The user's password
-    password: {
-        type: String
-    }
-=======
         required: true,
         unique: true
     },
@@ -78,13 +70,7 @@ var UserSchema = new mongoose_1.default.Schema({
         required: [true, "Please provide a valid role for the user"],
         enum: ["admin", "moderator", "organiser"],
         default: "user"
-    },
-    accountActive: {
-        type: Boolean,
-        default: false
-    },
-    accountVerified: {}
->>>>>>> auth-feature
+    }
 }, { timestamps: true });
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', function (next) {
