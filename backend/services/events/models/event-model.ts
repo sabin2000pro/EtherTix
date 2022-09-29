@@ -11,6 +11,14 @@ interface EventAttributes {
     changedAt: Date;
     publishedAt: Date;
     event_status: string;
+    currency: string;
+    isOnline: Boolean;
+
+
+    organiser: mongoose.Schema.Types.ObjectId;
+    venue: mongoose.Schema.Types.ObjectId;
+    ticket: mongoose.Schema.Types.ObjectId;
+    issue: mongoose.Schema.Types.ObjectId;
 }
 
 interface EventDocument extends mongoose.Model<EventAttributes> {
@@ -24,6 +32,14 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     publishedAt: Date;
     changedAt: Date;
     event_status: string;
+    currency: string;
+
+    isOnline: Boolean;
+    
+    organiser: mongoose.Schema.Types.ObjectId;
+    venue: mongoose.Schema.Types.ObjectId;
+    ticket: mongoose.Schema.Types.ObjectId;
+    issue: mongoose.Schema.Types.ObjectId;
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -81,6 +97,23 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: String,
         enum: ["draft", "live", "started", "ended", "completed", "canceled"],
         required: [true, "Please specify the status that the event is in"]
+    },
+
+    currency: {
+        type: String,
+        required: [true, "Please specify the currency that this event will take payment in"],
+        default: 'ETH'
+    },
+
+    isOnline: {
+        type: Boolean,
+        required: [true, "Please specify whether or not the event is online"],
+        default: false
+    },
+
+    organiser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     }
 
 }, {

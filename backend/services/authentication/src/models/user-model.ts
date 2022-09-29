@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-interface UserDocument {
+interface IUserAttributes {
     forename: string;
     surname: string;
     username: string;
@@ -16,6 +16,31 @@ interface UserDocument {
 
     photo: string;
     createdAt: Date;
+    address: String;
+    pastEventsHeld: Number;
+    upcomingEvents: Number;
+
+    comparePasswords: (enteredPassword: string) => Promise<boolean>;
+    getAuthenticationToken: () => Promise<void>;
+}
+
+interface UserDocument extends mongoose.Model<IUserAttributes> {
+    forename: string;
+    surname: string;
+    username: string;
+    email: string; // The user's e-mail address
+    password: string;
+    passwordConfirm: string;
+    role: string;
+    accountActive: boolean;
+    accountVerified: boolean;
+    accountLocked: boolean;
+    address: string;
+    photo: string;
+    createdAt: Date;
+
+    pastEventsHeld: Number;
+    upcomingEvents: Number;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -72,13 +97,18 @@ const UserSchema = new mongoose.Schema<UserDocument>({
         required: [true, "Please provide a valid role for the user"],
         enum: ["admin", "moderator", "organiser"],
         default: "user"
+    },
+
+    pastEventsHeld: {
+        type: Number,
+        default: 0,
     }
 
 }, {timestamps: true});
 
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', async function(next) {
-    
+
    if(!this.isModified("password")) {
      return next();
    }
