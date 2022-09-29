@@ -10,5 +10,7 @@ Once a ticket is purchased, the user completely owns this ticket associated to a
 
 # Authentication Use Case Diagram
 
+First and foremost, one important design methodology that is used to design this system are UML Use Case diagrams. Generally, these diagrams show how the users are going to interact with the system. Figure 1.0 below shows the authentication use case diagram for the system. An advantage of use case diagrams is that it captures all the functional requirements that are required to be implemented in the system. Thus, the client has a clear picture of how user interaction is going to happen. Adding continuous value to the project over time since the diagrams do not contain any requirements that are not required in the project. Thereby, preventing waste which does not add any value to the project
+
 ![EtherTixAuthUseCase](https://user-images.githubusercontent.com/29733613/193007485-42a47ce9-6cee-4863-a558-4cc1b6f26e17.png)
 
