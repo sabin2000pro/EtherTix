@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from "express";
 import morgan from "morgan"
 import hpp from "hpp"
 import helmet from "helmet"
+import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import connectAuthDatabase from './database/auth-db';
 
@@ -10,10 +11,16 @@ const app: Application = express();
 
 connectAuthDatabase()
 
-app.use(express.json());
+if(process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
 
+if(process.env.NODE_ENV === 'production') {
+    app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
+}
+ 
+app.use(express.json());
 app.set('trust proxy', true);
-app.use(morgan('dev'));
 app.use(hpp());
 app.use(cors());
 app.use(helmet());

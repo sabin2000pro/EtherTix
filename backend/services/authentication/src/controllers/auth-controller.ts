@@ -21,12 +21,13 @@ export const registerUser = async (request: Request, response: Response, next: N
     return response.status(StatusCodes.CREATED).json({success: true, sentAt: Date.now(), message: "Register User here"});
 }
 
-// @description: Register User API - Registers a new user on the platform
+// @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
 // @route: /api/v1/auth/register
 // @http-method: POST
 // @public: Yes (No Authorization Token Required)
 
 export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const {} = request.body;
     return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
 }
 
@@ -39,8 +40,8 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
     return response.status(200).json({success: true, message: "Login User here"});
 }
 
-// @description: Register User API - Registers a new user on the platform
-// @route: /api/v1/auth/register
+// @description: Forgot Password API - Users can submit a forgot password request to this API if they forget their password.
+// @route: /api/v1/auth/forgot-password
 // @http-method: POST
 // @public: Yes (No Authorization Token Required)
 

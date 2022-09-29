@@ -14,3 +14,18 @@ services:
     volumes:
        - /app/node_modules
        - ../backend/services/authentication:/app
+
+  events-service:
+      image: sabin2000/ethertix-events-service
+      build:
+        context: ../backend/services/events
+        dockerfile: Dockerfile
+
+      restart: always
+
+      ports:
+        - "5301:5301"
+
+      volumes:
+        - /app/node_modules
+        - ../backend/services/events:/app

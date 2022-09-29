@@ -19,6 +19,10 @@ interface EventAttributes {
 
     maxCapacity: Number;
     minCapacity: Number;
+    showRemaining: Boolean;
+    ticketAvailability: Object;
+    isSoldOut: Boolean;
+    searchable: Boolean;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -48,6 +52,10 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
 
     maxCapacity: Number;
     minCapacity: Number;
+    showRemaining: Boolean;
+    ticketAvailability: Object;
+    isSoldOut: Boolean;
+    searchable: Boolean;
     
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -169,6 +177,62 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Number,
         required: [true, "Please specify the minimum number of people that can attend the event"],
         default: 20
+    },
+
+    showRemaining: {
+        type: Boolean,
+        default: false
+    },
+
+    ticketAvailability: {
+
+        hasAvailableTickets: {
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if this event has available tickets"]
+        },
+
+        minimumTicketPrice: {
+
+           currency: {
+                type: String,
+                required: [true, "Please specify the maximum cost of the ticket price in ETH FORMAT"],
+                default: "ETH",
+           },
+
+           price: {
+             type: Number,
+             required: [true, "Please specify the minimum cost of the ticket price in ETH FORMAT"],
+             default: 0.024
+           }
+
+        },
+
+        maximumTicketPrice: {
+
+            currency: {
+                type: String,
+                default: "ETH", // The default currency is ETH as this is what payments will be made in using Web3 and meta mask wallet
+               },
+    
+               price: {
+                 type: Number,
+                 default: 0.0041 // The default price is in ETHER value (0.041 => £50GBP)
+               }
+        }
+
+    },
+
+    isSoldOut: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if the event is sold out or not"]
+    },
+
+    searchable: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if this event is searchable or not"]
     },
 
     organiser: { // Relationship between the event and organiser of the event (user) (Event -> Organiser ID)
