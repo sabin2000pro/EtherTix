@@ -29,6 +29,8 @@ interface EventAttributes {
     isLocked: Boolean;
     isFree: Boolean;
 
+    eventSalesStatus: Object;
+
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
@@ -67,6 +69,8 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     isLocked: Boolean;
     reservedSeating: Boolean;
     isFree: Boolean;
+
+    eventSalesStatus: Object;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -269,12 +273,32 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event is free or not"]
-    }
+    },
 
     reservedSeating: {
         type: Boolean,
         default: false,
         required: [true, "Please specify if this event has reserved seating or not"]
+    },
+
+
+    eventSalesStatus: {
+
+        salesStatus: {
+            type: String,
+            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"]
+        },
+
+        salesStart: {
+            timezone: {
+                type: String
+            },
+
+            utc: {
+                type: String
+            }
+
+        }
     },
 
     organiser: { // Relationship between the event and organiser of the event (user) (Event -> Organiser ID)
