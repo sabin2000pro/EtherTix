@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build / Deploy Available Authentication Service
+      - name: Build / Deploy Available Events Service
         run:
           |

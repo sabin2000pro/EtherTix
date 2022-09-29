@@ -14,6 +14,7 @@ interface UserDocument {
     accountVerified: boolean;
     accountLocked: boolean;
 
+    photo: string;
     createdAt: Date;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
@@ -49,6 +50,12 @@ const UserSchema = new mongoose.Schema<UserDocument>({
         unique: true
     },
 
+    photo: {
+        type: String,
+        required: [true, "Please upload a valid user avatar"],
+        default: 'no-photo.jpg'
+    },
+
     // The user's password
     password: {
         type: String,
@@ -71,6 +78,7 @@ const UserSchema = new mongoose.Schema<UserDocument>({
 
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', async function(next) {
+    
    if(!this.isModified("password")) {
      return next();
    }
@@ -85,7 +93,7 @@ UserSchema.methods.comparePasswords = async function(enteredPassword: string): P
 }
 
 UserSchema.methods.getAuthenticationToken = function() {
-
+    // Sign JWT token
 }
 
 export default UserSchema; // Export the user schema

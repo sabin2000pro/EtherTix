@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../models/user-model';
+import {StatusCodes} from "http-status-codes";
 
 declare namespace Express {
     export interface Request {
@@ -7,6 +8,7 @@ declare namespace Express {
         body: any;
         session: any
     }
+
   }
   
 // @description: Register User API - Registers a new user on the platform
@@ -15,7 +17,8 @@ declare namespace Express {
 // @public: Yes (No Authorization Token Required)
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(201).json({success: true, message: "Register User here"});
+    const {} = request.body as Body;
+    return response.status(StatusCodes.CREATED).json({success: true, sentAt: Date.now(), message: "Register User here"});
 }
 
 // @description: Register User API - Registers a new user on the platform
@@ -24,6 +27,10 @@ export const registerUser = async (request: Request, response: Response, next: N
 // @public: Yes (No Authorization Token Required)
 
 export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
+}
+
+export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(200).json({success: true, message: "Login User here"});
 }
 
@@ -42,10 +49,6 @@ export const resetPassword = async (request: Request, response: Response, next: 
 
 export const getCurrentUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(200).json({success: true, message: "Current User here"});
-}
-
-export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Login User here"});
 }
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
