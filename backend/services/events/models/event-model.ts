@@ -13,12 +13,15 @@ interface EventAttributes {
     event_status: string;
     currency: string;
     isOnline: Boolean;
-
+    event_logo: string;
+    format: Object;
+    category: Object;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
     issue: mongoose.Schema.Types.ObjectId;
+
 }
 
 interface EventDocument extends mongoose.Model<EventAttributes> {
@@ -34,7 +37,10 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     event_status: string;
     currency: string;
 
+    event_logo: string;
     isOnline: Boolean;
+    format: Object;
+    category: Object;
     
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -103,6 +109,39 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: String,
         required: [true, "Please specify the currency that this event will take payment in"],
         default: 'ETH'
+    },
+
+    event_logo: {
+        type: String,
+        required: [true, "Please upload a valid event logo"],
+        default: 'no-photo.jpg'
+    },
+
+    format: { // Event Format
+
+        id: {
+            type: String
+        },
+
+        name: {
+            type: String,
+            required: [true, "Please specify the format name"],
+            enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
+        }
+
+    },
+
+    category: {
+
+        id: {
+            type: String
+        },
+
+        name: {
+            type: String,
+            required: [true, "Please specify the category of the event"],
+            enum: ["Food / Drink", "Sports", "Free", "Charity", ""]
+        }
     },
 
     isOnline: {
