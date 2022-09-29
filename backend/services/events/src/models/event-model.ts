@@ -17,10 +17,14 @@ interface EventAttributes {
     format: Object;
     category: Object;
 
+    maxCapacity: Number;
+    minCapacity: Number;
+
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
     issue: mongoose.Schema.Types.ObjectId;
+    review: mongoose.Schema.Types.ObjectId;
 
 }
 
@@ -41,11 +45,15 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     isOnline: Boolean;
     format: Object;
     category: Object;
+
+    maxCapacity: Number;
+    minCapacity: Number;
     
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
     issue: mongoose.Schema.Types.ObjectId;
+    review: mongoose.Schema.Types.ObjectId;
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -77,13 +85,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: String
     },
 
-    startAt: {
+    startAt: { // Start Date of the event
         type: Date,
         required: [true, "Please include when the event starts"],
         default: Date.now
     },
 
-    endsAt: {
+    endsAt: { // End date of the event
         type: Date,
         required: [true, "Please include when the event finishes"],
         default: Date.now
@@ -142,17 +150,55 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             required: [true, "Please specify the category of the event"],
             enum: ["Food / Drink", "Sports", "Free", "Charity", ""]
         }
+
     },
 
-    isOnline: {
+    isOnline: { // Determines if the event is online or not
         type: Boolean,
         required: [true, "Please specify whether or not the event is online"],
         default: false
     },
 
-    organiser: {
+    maxCapacity: {
+        type: Number,
+        required: [true, "Please specify the maximum number of people that can attend the event"],
+        default: 100
+    },
+
+    minCapacity: {
+        type: Number,
+        required: [true, "Please specify the minimum number of people that can attend the event"],
+        default: 20
+    },
+
+    organiser: { // Relationship between the event and organiser of the event (user) (Event -> Organiser ID)
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        required: true
+    },
+
+    venue: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Venue",
+        required: true
+    },
+
+    ticket: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ticket",
+        required: true
+    },
+
+    issue: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Issue",
+        required: true
+    },
+
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+        required: true
     }
 
 }, {

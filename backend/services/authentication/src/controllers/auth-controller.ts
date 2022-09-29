@@ -30,6 +30,11 @@ export const loginUser = async (request: Request, response: Response, next: Next
     return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
 }
 
+// @description: Logout User API - Logout User by clearing the cookie stored inside the session
+// @route: /api/v1/auth/logout
+// @http-method: GET
+// @public: No (Authorization Token Required To Identify User)
+
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(200).json({success: true, message: "Login User here"});
 }

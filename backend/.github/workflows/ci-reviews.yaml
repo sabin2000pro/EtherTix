@@ -1,0 +1,17 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+
+  build-auth-service:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build / Deploy Available Reviews Service
+        run:
+          |
