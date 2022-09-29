@@ -17,7 +17,7 @@ interface PasswordResetDocument extends mongoose.Model<IPasswordReset> {
 }
 
 // @schema: E-mail Verification Model
-const PasswordResetSchema = new mongoose.Schema<IPasswordReset>({
+const PasswordResetSchema = new mongoose.Schema<PasswordResetDocument>({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -37,6 +37,8 @@ const PasswordResetSchema = new mongoose.Schema<IPasswordReset>({
         type: Date,
         default: Date.now()
     }
+}, {
+    timestamps: true
 })
 
 export default PasswordResetSchema;

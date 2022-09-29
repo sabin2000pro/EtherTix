@@ -27,6 +27,7 @@ interface EventAttributes {
     hideStartDate: Boolean;
     hideEndDate: Boolean;
     isLocked: Boolean;
+    isFree: Boolean;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -64,8 +65,9 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     hideStartDate: Boolean;
     hideEndDate: Boolean;
     isLocked: Boolean;
+    reservedSeating: Boolean;
+    isFree: Boolean;
 
-    
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
@@ -261,6 +263,18 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event should show when it ends or not"]
+    },
+
+    isFree: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if the event is free or not"]
+    }
+
+    reservedSeating: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if this event has reserved seating or not"]
     },
 
     organiser: { // Relationship between the event and organiser of the event (user) (Event -> Organiser ID)
