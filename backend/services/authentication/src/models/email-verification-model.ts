@@ -48,7 +48,15 @@ const EmailVerificationSchema = new mongoose.Schema<EmailVerificationDocument>({
 })
 
 EmailVerificationSchema.pre('save', async function(next) {
+    if(!this.isModified('token')) {
+        return next();
+    }
+
     
 })
+
+EmailVerificationSchema.methods.compareVerificationTokens = async function(enteredToken: string): Promise<boolean> {
+    return await bcrypt.compare(enteredToken, this.token);
+}
 
 export default EmailVerificationSchema;

@@ -81,19 +81,19 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
 
 const EventSchema = new mongoose.Schema<EventDocument>({
 
-    name: {
+    name: { // Event Name
         type: String,
         required: [true, "Please specify the name of the event"]
     },
 
-    summary: {
+    summary: { // Event Summary
         type: String,
         required: [true, "Please provide a summary for the event"],
         minlength: [25, "Minimum summary length of 25 characters"],
         maxlength: [50, "Maximum length for the summary of 50 characters."],
     },
 
-    description: {
+    description: { // Event Description with text object inside
 
         text: {
             type: String,
@@ -121,7 +121,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: Date.now
     },
 
-    createdAt: {
+    createdAt: { // Time at which the event is created at
         type: Date,
         default: Date.now
     },
@@ -131,13 +131,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: Date.now
     },
 
-    event_status: {
+    event_status: { // Status of the event
         type: String,
         enum: ["draft", "live", "started", "ended", "completed", "canceled"],
         required: [true, "Please specify the status that the event is in"]
     },
 
-    currency: {
+    currency: { // The type of currency that the event takes payment in
         type: String,
         required: [true, "Please specify the currency that this event will take payment in"],
         default: 'ETH'
@@ -227,8 +227,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         maximumTicketPrice: {
 
             currency: {
-                type: String,
-                default: "ETH", // The default currency is ETH as this is what payments will be made in using Web3 and meta mask wallet
+                    type: String,
+                    default: "ETH", // The default currency is ETH as this is what payments will be made in using Web3 and meta mask wallet
                },
     
                price: {
@@ -239,7 +239,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     },
 
-    isLocked: {
+    isLocked: { // True or false if the event is locked or not. If the event is locked, then disable the button to view available times
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event is locked or not"]
