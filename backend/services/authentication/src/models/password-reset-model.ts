@@ -41,4 +41,8 @@ const PasswordResetSchema = new mongoose.Schema<PasswordResetDocument>({
     timestamps: true
 })
 
+PasswordResetSchema.pre('save', async function(next) {
+    
+})
+
 export default PasswordResetSchema;

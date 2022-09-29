@@ -21,7 +21,7 @@ interface EmailVerificationDocument extends mongoose.Model<IEmailVerification> {
 }
 
 // @schema: E-mail Verification Model
-const EmailVerificationSchema = new mongoose.Schema<IEmailVerification>({
+const EmailVerificationSchema = new mongoose.Schema<EmailVerificationDocument>({
 
     owner: {
         type: mongoose.Schema.Types.ObjectId,
@@ -43,6 +43,12 @@ const EmailVerificationSchema = new mongoose.Schema<IEmailVerification>({
         default: Date.now()
     }
 
+}, {
+    timestamps: true
+})
+
+EmailVerificationSchema.pre('save', async function(next) {
+    
 })
 
 export default EmailVerificationSchema;
