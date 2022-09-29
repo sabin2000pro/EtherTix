@@ -24,6 +24,10 @@ interface EventAttributes {
     isSoldOut: Boolean;
     searchable: Boolean;
 
+    hideStartDate: Boolean;
+    hideEndDate: Boolean;
+    isLocked: Boolean;
+
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
@@ -57,6 +61,11 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     isSoldOut: Boolean;
     searchable: Boolean;
     
+    hideStartDate: Boolean;
+    hideEndDate: Boolean;
+    isLocked: Boolean;
+
+    
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
@@ -65,6 +74,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
+
     name: {
         type: String,
         required: [true, "Please specify the name of the event"]
@@ -147,7 +157,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     },
 
-    category: {
+    category: { // Category object that stores what kind of category this event belongs to
 
         id: {
             type: String
@@ -223,7 +233,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     },
 
-    isSoldOut: {
+    isLocked: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if the event is locked or not"]
+    },
+
+    isSoldOut: { // Field that determines if the event is sold out or not
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event is sold out or not"]
@@ -233,6 +249,18 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Boolean,
         default: false,
         required: [true, "Please specify if this event is searchable or not"]
+    },
+
+    hideStartDate: { // Field that shows when an event starts or not
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if the event should show when it starts or not"]
+    },
+
+    hideEndDate: { // Field that shows when an event starts or not
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if the event should show when it ends or not"]
     },
 
     organiser: { // Relationship between the event and organiser of the event (user) (Event -> Organiser ID)

@@ -6,6 +6,6 @@ COPY nodemon.json .
 COPY tsconfig.json .
 RUN npm install --silent
 COPY . .
-EXPOSE 5306
+EXPOSE 3000
 RUN npm run build
 CMD [ "npm", "run", "start:server" ]
