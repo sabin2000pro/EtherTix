@@ -1,6 +1,8 @@
 import { ErrorResponse } from './../utils/error-response';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
+import {EmailVerification} from '../models/email-verification-model';
+import {PasswordReset} from '../models/password-reset-model';
 import {StatusCodes} from "http-status-codes";
 
 declare namespace Express {
@@ -11,6 +13,10 @@ declare namespace Express {
     }
 
   }
+
+  const sendTokenResponse = (user, statusCode, response) => {
+     
+  }
   
 // @description: Register User API - Registers a new user on the platform
 // @route: /api/v1/auth/register
@@ -18,19 +24,39 @@ declare namespace Express {
 // @public: Yes (No Authorization Token Required)
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {email} = request.body;
-    
-    const newUser = await User.create(request.body);
+    const {email, password, confirmPassword} = request.body;
+
+    if(password !== confirmPassword) {
+        return next(new ErrorResponse(`Password confirmation error. Please check passwords`, 400));
+    }
+
     const existingUser = await User.findOne({email})
 
     if(existingUser) {
         return next(new ErrorResponse("User already created", 400));
     }
 
-
+    const newUser = await User.create(request.body);
     await newUser.save();
 
+    const currentUser = newUser._id; // Get the current user's ID
+    const userOTP = generateOTPVerificationToken();
+
+    console.log(`Your OTP : `, userOTP);
+
+
     return response.status(StatusCodes.CREATED).json({success: true, sentAt: Date.now().toFixed(), data: newUser});
+}
+
+const generateOTPVerificationToken = (otp_length = 6) => {
+    let OTP = ''
+
+    for(let i = 1; i <= otp_length; i++) {
+       const randomOTP = Math.round(Math.random() * 9)
+       OTP += randomOTP;
+    }
+
+    return OTP;
 }
 
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
@@ -39,7 +65,24 @@ export const registerUser = async (request: Request, response: Response, next: N
 // @public: Yes (No Authorization Token Required)
 
 export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {} = request.body;
+    const {email, password} = request.body;
+
+    if(!email || !password) {
+        return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, 400));
+    }
+
+    const user = await User.findOne({email});
+
+    if(!user) {
+        return next(new ErrorResponse(`Could not find that user`, 404));
+    }
+
+    // Compare user passwords before logging in
+    const matchPasswords = await user.comparePasswords(password);
+
+    if(!matchPasswords) {
+        return next(new ErrorResponse(`Passwords do not match. Please try again`, 400));
+    }
 
     return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
 }
