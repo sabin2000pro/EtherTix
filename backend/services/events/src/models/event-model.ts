@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface EventAttributes {
+interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
     description: string;
@@ -183,13 +183,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    maxCapacity: {
+    maxCapacity: { // Maximum Capacity of people that can attend the event
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
         default: 100
     },
 
-    minCapacity: {
+    minCapacity: { // Minimum Capacity of people that can attend the event
         type: Number,
         required: [true, "Please specify the minimum number of people that can attend the event"],
         default: 20
@@ -202,7 +202,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     ticketAvailability: {
 
-        hasAvailableTickets: {
+        hasAvailableTickets: { // Object that stores data about the availability of tickets. True or false is stored
             type: Boolean,
             default: false,
             required: [true, "Please specify if this event has available tickets"]
