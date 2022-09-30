@@ -47,7 +47,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> {
 }
 
 // Working on the auth feature branch
-const UserSchema = new mongoose.Schema<UserDocument>({
+const UserSchema = new mongoose.Schema({
 
     forename: {
         type: String,
@@ -77,7 +77,6 @@ const UserSchema = new mongoose.Schema<UserDocument>({
 
     photo: {
         type: String,
-        required: [true, "Please upload a valid user avatar"],
         default: 'no-photo.jpg'
     },
 
@@ -95,7 +94,7 @@ const UserSchema = new mongoose.Schema<UserDocument>({
     role: {
         type: String,
         required: [true, "Please provide a valid role for the user"],
-        enum: ["admin", "moderator", "organiser"],
+        enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
     },
 
@@ -126,4 +125,5 @@ UserSchema.methods.getAuthenticationToken = function() {
     // Sign JWT token
 }
 
-export default UserSchema; // Export the user schema
+const User = mongoose.model<IUserAttributes>("User", UserSchema);
+export {User}

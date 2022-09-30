@@ -1,5 +1,6 @@
+import { ErrorResponse } from './../utils/error-response';
 import { NextFunction, Request, Response } from 'express';
-import User from '../models/user-model';
+import {User} from '../models/user-model';
 import {StatusCodes} from "http-status-codes";
 
 declare namespace Express {
@@ -17,8 +18,19 @@ declare namespace Express {
 // @public: Yes (No Authorization Token Required)
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {} = request.body as Body;
-    return response.status(StatusCodes.CREATED).json({success: true, sentAt: Date.now(), message: "Register User here"});
+    const {email} = request.body;
+    
+    const newUser = await User.create(request.body);
+    const existingUser = await User.findOne({email})
+
+    if(existingUser) {
+        return next(new ErrorResponse("User already created", 400));
+    }
+
+
+    await newUser.save();
+
+    return response.status(StatusCodes.CREATED).json({success: true, sentAt: Date.now().toFixed(), data: newUser});
 }
 
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
@@ -28,6 +40,7 @@ export const registerUser = async (request: Request, response: Response, next: N
 
 export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const {} = request.body;
+
     return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
 }
 
