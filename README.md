@@ -24,8 +24,9 @@ Our approach is to build a hybrid centralised and decentralised web application.
 
 First and foremost, one important design methodology that is used to design this system are UML Use Case diagrams. Generally, these diagrams show how the users are going to interact with the system. Figure 1.0 below shows the authentication use case diagram for the system. An advantage of use case diagrams is that it captures all the functional requirements that are required to be implemented in the system. Thus, the client has a clear picture of how user interaction is going to happen. Adding continuous value to the project over time since the diagrams do not contain any requirements that are not required in the project. Thereby, preventing waste which does not add any value to the project
 
-<img width="318" alt="image" src="https://user-images.githubusercontent.com/29733613/193553132-74d912cf-a4a9-45c2-950a-af245df8c61e.png">
+![auth](https://user-images.githubusercontent.com/29733613/193555626-b9e2bb88-b4d2-4916-b355-b0153c3d0c22.png)
+
 
 # Events Service - Use Case Diagram
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/29733613/193553271-85415991-39b2-442a-927a-f537e975ddff.png">
+<img width="520" alt="image" src="https://user-images.githubusercontent.com/29733613/193553271-85415991-39b2-442a-927a-f537e975ddff.png">
