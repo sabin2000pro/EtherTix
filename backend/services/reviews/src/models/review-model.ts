@@ -20,14 +20,15 @@ interface IReviewDocument extends mongoose.Model<IReviewAttributes> {
 
 // @description: Review Schema for an event
 const ReviewSchema = new mongoose.Schema<IReviewDocument>({
-    title: {
+
+    title: { // Title of the Review
         type: String,
         trim: true,
         required: [true, 'Please add a title for the review'],
         maxlength: 100
       },
 
-      text: {
+      text: { // Text Review
         type: String,
         required: [true, 'Please add some text']
       },
@@ -44,7 +45,6 @@ const ReviewSchema = new mongoose.Schema<IReviewDocument>({
         default: Date.now
       },
 
-      
       event: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Bootcamp',
@@ -56,7 +56,6 @@ const ReviewSchema = new mongoose.Schema<IReviewDocument>({
         ref: 'User',
         required: true
       }
-
 
 })
 
