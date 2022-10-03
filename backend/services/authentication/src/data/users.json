@@ -62,6 +62,32 @@
         "passwordConfirm": "123mini123",
         "role": "user",
         "pastEventsHeld": 0
+    },
+
+    {
+        "_id": "5d7a514b5d2c12c7449be045",
+        "forename": "Sabin",
+        "surname": "Lungu",
+        "username": "sabin2000",
+        "email": "sabin2000@gmail.com",
+        "photo": "no-photo.jpg",
+        "password": "123mini123",
+        "passwordConfirm": "123mini123",
+        "role": "user",
+        "pastEventsHeld": 0
+    },
+
+    {
+        "_id": "5d7a514b5d2c12c7449be046",
+        "forename": "John",
+        "surname": "Geremi",
+        "username": "johnny2309",
+        "email": "johnny22@yahoo.com",
+        "photo": "no-photo.jpg",
+        "password": "lol12345",
+        "passwordConfirm": "lol12345",
+        "role": "moderator",
+        "pastEventsHeld": 0
     }
 
 
