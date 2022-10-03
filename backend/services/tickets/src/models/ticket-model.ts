@@ -12,6 +12,7 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
 }
 
 const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
+
     ticket: { // Ticket Object
 
         name: {
@@ -47,6 +48,42 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             type: Boolean,
             required: [true, "Please specify if the ticket is free or not"],
             default: false
+        },
+
+        deliveryMethods: { // Methods of ticket delivery
+            type: String,
+            required: [true, "Please specify the type of delivery method"],
+            default: "SMS",
+            enum: ["Will Call", "SMS", "Electronic", "E-mail"]
+        },
+
+        onSaleStatus: {
+            type: String
+        },
+
+        saleStartsAt: {
+            type: Date,
+            default: Date.now
+        },
+
+        saleEndsAt: {
+
+        },
+
+        confirmationMessage: {
+            type: String,
+            required: [true, "Please specify the confirmation message for the purchased event ticket"]
+        },
+
+        ticketSold: {
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if the ticket has been sold or not"]
+        },
+
+        event: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Event"
         }
 
 
