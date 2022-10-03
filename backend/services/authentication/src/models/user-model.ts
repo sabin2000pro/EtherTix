@@ -24,17 +24,17 @@ interface IUserAttributes {
     getAuthenticationToken: () => Promise<void>;
 }
 
-interface UserDocument extends mongoose.Model<IUserAttributes> {
+interface UserDocument extends mongoose.Model<IUserAttributes> { // User Document holding all of the information regarding a user
     forename: string;
-    surname: string;
-    username: string;
+    surname: string; // Users surname
+    username: string; // Username of the user
     email: string; // The user's e-mail address
     password: string;
-    passwordConfirm: string;
+    passwordConfirm: string; // Password Confirmation
     role: string;
     accountActive: boolean;
     accountVerified: boolean;
-    accountLocked: boolean;
+    accountLocked: boolean; // True or false if the account is locked or not
     address: string;
     photo: string;
     createdAt: Date;

@@ -45,7 +45,7 @@ export const registerUser = async (request: Request, response: Response, next: N
     const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
     await verificationToken.save();
 
-    // Send e-mail verification
+    // Send e-mail verification to user
 
     return response.status(StatusCodes.CREATED).json({success: true,  data: newUser});
 }

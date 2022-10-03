@@ -16,7 +16,7 @@ interface DiscountDocument extends mongoose.Model<IDiscountAttributes> {
 // Create the Data Model Schema using Mongoose
 const DiscountSchema = new mongoose.Schema<DiscountDocument>({
 
-   discount: {
+   discount: { // Discount Object
 
     type: {
         type: String,
@@ -25,12 +25,12 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
 
    },
 
-   code: {
+   code: { // The discount code
      type: String,
      default: "abcd"
    },
 
-   amountOff: {
+   amountOff: { // How much to take off the price in (ETHER)
      type: String,
      default: null
    },

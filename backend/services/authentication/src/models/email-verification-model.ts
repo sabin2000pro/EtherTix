@@ -13,7 +13,8 @@ interface IEmailVerification {
 
 interface EmailVerificationDocument extends mongoose.Model<IEmailVerification> {
     owner: mongoose.Schema.Types.ObjectId,
-    token: string;
+    token: string; // Verification Token
+
     createdAt: Date;
     expiresAt: Date;
 
