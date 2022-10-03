@@ -309,7 +309,12 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         }
     },
 
-    organiser: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+
+    organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
 
     venue: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
@@ -318,7 +323,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     },
 
     ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}],
-    review: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}]
+    review: [{type: mongoose.Schema.Types.ObjectId, ref: "Review"}]
 
 }, {
     timestamps: true,
