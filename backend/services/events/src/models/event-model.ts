@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
-    description: string;
+    description: Object;
     event_url: string;
     startAt: Date;
     endsAt: Date;
@@ -44,7 +44,7 @@ interface EventAttributes { // Interface for the event attributes
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
-    description: string
+    description: Object;
     event_url: string;
     startAt: Date;
     endsAt: Date;
@@ -175,7 +175,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         name: {
             type: String,
             required: [true, "Please specify the category of the event"],
-            enum: ["Food / Drink", "Sports", "Free", "Charity", "Nature"]
+            enum: ["Food/Drink", "Sports", "Free", "Charity", "Nature"]
         }
 
     },
@@ -324,12 +324,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     ticket: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Ticket",
-        required: true
-    },
-
-    issue: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Issue",
         required: true
     },
 

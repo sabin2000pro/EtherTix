@@ -1,6 +1,6 @@
 [
    {
-      "_id": "",
+      "_id": "5d725a4a7b292f5f8ceff787",
       "name": "Edinburgh Highland Tour",
       "summary": "Come with us on our tour where we visit the beautiful highlands of Edinburgh, you will not regret it. A fun experience for all adults and teenagers. A great event that lets you see the beautiful landmarks of Edinburgh",
 
@@ -19,7 +19,7 @@
       },
 
       "category": {
-        "id": 1,
+        "id": "1",
         "name": "Nature"
       },
 
@@ -58,9 +58,74 @@
       },
 
       "organiser": "",
-      "venue": ""
+      "venue": "",
+      "ticket": "",
+      "review": ""
+   },
 
 
-   }
+   {
+    "_id": "5d725a4a7b292f5f8ceff788",
+    "name": "Three Sisters Drink n Socialise",
+    "summary": "Fancy a drink? Come to our Drink n Socialise event where you can meet new people, socialise and watch the football on our big screen. Adults and Teenagers welcome",
+
+    "description": {
+      "text": "Lorem ipsum text..." 
+    },
+
+    "startsAt": "2022-12-01T18:00:00.817Z",
+    "endsAt": "2022-12-01T20:00:00.817Z",
+    "event_status": "pending",
+    "currency": "ETH",
+
+    "format": {
+       "id": "2",
+       "name": "Outdoor"
+    },
+
+    "category": {
+      "id": "2",
+      "name": "Food/Drink"
+    },
+
+    "isOnline": false,
+    "maxCapacity": 100,
+    "minCapacity": 20,
+    "showRemaining": 100,
+    "isPremium": false,
+
+    "ticketAvailability": {
+      "hasAvailableTickets": true
+    },
+
+    "minimumTicketPrice": {
+      "currency": "ETH",
+      "price": 0.010
+    },
+
+    "maximumTicketPrice": {
+      "currency": "ETH",
+      "price": 0.020
+    },
+  
+    "isLocked": true,
+    "isSoldOut": false,
+    "searchable": true,
+    "hideStartDate": false,
+    "hideEndDate": false,
+    "isFree": false,
+    "reservedSeating": false,
+
+    "eventSalesStatus": {
+       "salesStatus": "unavailable",
+       "salesStart": "2023-11-30T15:00:00.817Z",
+       "salesEnd": "2023-11-30T11:22:00.817Z"
+    },
+
+    "organiser": "",
+    "venue": ""
+
+
+ }
 
 ]
