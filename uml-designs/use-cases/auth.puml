@@ -12,6 +12,8 @@ package AuthSystem {
     rectangle "Authentication Service" {
 
         (Register) as (Register)
+        (Google Login) as (Google)
+        (Facebook Login) as (Facebook)
         (Logout) as (Logout)
         (Verify E-mail) as (Verify)
         (Resend MFA) as (ResendMFA)
@@ -31,18 +33,24 @@ rectangle "Profile" {
     (Update Password) as (Update)
     (Update Profile) as (UpdateProfile)
     (View Details) as (View)
+    (Upload Avatar) as (Upload)
 
     (Update) -- User
     (UpdateProfile) -- User
 
     (View) -- User
+    (Upload) -- User
 }
 
         (Register) --  User
         (Login) --  User
         (Logout) -- User
+
         User -- (Forgot)
         User -- (Reset)
+        User -- (Google)
+        User -- (Facebook)
+
         (Resend) -- User
         (ResendMFA) -- User
         (Verify) -- User

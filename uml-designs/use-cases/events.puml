@@ -28,11 +28,12 @@ package EventsService {
     }
 
     package EventsBooking {
+
            left to right direction
            rectangle "Events Booking" << subsystem >> {
 
             (Check Ticket Availability) as (Check)
-            (Select Tickets) as (TicketSelect)
+            (Select Ticket Class) as (TicketSelect)
             (Select Event Category) as (Select)
             (Connect Wallet) as (Connect)
             (Pay Organiser Wallet) as (Pay)
@@ -69,6 +70,9 @@ package EventsService {
         User -- (Search)
 
         (Create) .> (SingleEvent) : includes
+        (Check) <. (TicketSelect) : extends
+
+       
 
 }
 
