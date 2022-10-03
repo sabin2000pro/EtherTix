@@ -12,14 +12,14 @@ interface EventAttributes { // Interface for the event attributes
     publishedAt: Date;
     event_status: string;
     currency: string;
-    isOnline: Boolean;
+    isOnline: Boolean; // True or false if the event is online
     event_logo: string;
     format: Object;
     category: Object;
 
     maxCapacity: Number;
     minCapacity: Number;
-    
+
     showRemaining: boolean;
     ticketAvailability: Object;
     isSoldOut: boolean;
@@ -29,6 +29,7 @@ interface EventAttributes { // Interface for the event attributes
     hideEndDate: boolean;
     isLocked: boolean;
     isFree: boolean;
+    isPremium: boolean;
 
     eventSalesStatus: Object;
 
@@ -72,6 +73,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     isFree: Boolean;
 
     eventSalesStatus: Object;
+    isPremium: boolean;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -198,6 +200,12 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     showRemaining: {
         type: Boolean,
+        default: false
+    },
+
+    isPremium: {
+        type: Boolean,
+        required: [true, "Please specify if the event is premium or not"],
         default: false
     },
 

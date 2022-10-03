@@ -31,13 +31,13 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             default: 0
         },
 
-        address: {
+        address: { // Address of the venue
             type: String,
-            required: [true, 'Please add an address']
+            required: [true, 'Please add a valid address for the venue']
           },
 
-          location: {
-            // GeoJSON Point
+          location: { // GeoJSON Point For the location
+            
             type: {
               type: String,
               enum: ['Point']
@@ -48,13 +48,17 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
               index: '2dsphere'
             },
 
-            
             formattedAddress: String,
             street: String,
             city: String,
             state: String,
             zipcode: String,
             country: String
+          },
+
+          createdAt: {
+            type: Date,
+            default: Date.now
           },
 
         organiser: {
