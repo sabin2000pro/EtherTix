@@ -35,6 +35,11 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
    ticket: { // The ticket to which the discount applies to
     type: mongoose.Schema.Types.ObjectId,
     ref: "Ticket"
+   },
+
+   event: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Event"
    }
 
    }
