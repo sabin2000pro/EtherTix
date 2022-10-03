@@ -16,7 +16,7 @@ interface IUserAttributes {
 
     photo: string;
     createdAt: Date;
-    address: String;
+    address: string;
     pastEventsHeld: Number;
     upcomingEvents: Number;
 
@@ -121,9 +121,10 @@ UserSchema.methods.comparePasswords = async function(enteredPassword: string): P
     return await bcrypt.compare(this.password, enteredPassword);
 }
 
+ // Sign JWT Token and retrieve it
 UserSchema.methods.getAuthenticationToken = function() {
-    // Sign JWT token
+   
 }
 
-const User = mongoose.model<IUserAttributes>("User", UserSchema);
+const User = mongoose.model<UserDocument>("User", UserSchema);
 export {User}

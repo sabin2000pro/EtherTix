@@ -1,0 +1,60 @@
+@startuml
+
+skinparam actorStyle awesome
+
+actor User as "User"
+actor Organiser as "Organiser"
+
+package AuthSystem {
+
+    left to right direction
+
+    rectangle "Authentication Service" {
+
+        (Register) as (Register)
+        (Logout) as (Logout)
+        (Verify E-mail) as (Verify)
+        (Resend MFA) as (ResendMFA)
+        (Login) as (Login)
+        (Lock Account) as (Lock)
+        (Unlock Account) as (Unlock)
+        (Resend Verification) as (Resend)
+        
+        (Forgot Password) as (Forgot)
+        (Reset Password) as (Reset)
+        (Verify MFA) as (MFA)
+}
+
+left to right direction
+rectangle "Profile" {
+    
+    (Update Password) as (Update)
+    (Update Profile) as (UpdateProfile)
+    (View Details) as (View)
+
+    (Update) -- User
+    (UpdateProfile) -- User
+
+    (View) -- User
+}
+
+        (Register) --  User
+        (Login) --  User
+        (Logout) -- User
+        User -- (Forgot)
+        User -- (Reset)
+        (Resend) -- User
+        (ResendMFA) -- User
+        (Verify) -- User
+
+        Organiser -- (Lock)
+        Organiser -- (Unlock)
+
+        (Register) .> (Verify) : includes
+        (Verify) .> (Resend) : extends
+        (Login) .> (MFA) : includes
+        (Logout) .> (Login) : extends
+}
+
+
+@enduml

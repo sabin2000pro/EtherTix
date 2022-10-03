@@ -12,5 +12,8 @@
   "devDependencies": {
     "tsc-node": "^0.0.3",
     "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "mongoose": "^6.6.3"
   }
 }

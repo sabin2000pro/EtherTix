@@ -45,4 +45,9 @@ PasswordResetSchema.pre('save', async function(next) {
     
 })
 
-export default PasswordResetSchema;
+PasswordResetSchema.methods.compareResetToken = function(enteredToken: string) {
+
+}
+
+const PasswordReset = mongoose.model<PasswordResetDocument>("PasswordReset", PasswordResetSchema);
+export {PasswordReset};

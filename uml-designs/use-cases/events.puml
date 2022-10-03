@@ -1,0 +1,76 @@
+@startuml
+
+skinparam actorStyle awesome
+
+actor User as "User"
+actor Organiser as "Organiser"
+
+package EventsService {
+    left to right direction
+
+    rectangle "Events System" << subsystem >> {
+
+        (View All Events) as (ViewEvents)
+        (View Trending Events) as (Trending)
+
+        (View Event) as (SingleEvent)
+        (Create Event) as (Create)
+        (Filter Events) as (Filter)
+        (Sort Events) as (Sort)
+        (Search Event) as (Search)
+
+        (Edit Event) as (Edit)
+        (Delete Single Event) as (Delete)
+        (Delete Events) as (DeleteMultiple)
+
+        (Upload Event Photo) as (Upload)
+        (Book Event) as (Book)
+    }
+
+    package EventsBooking {
+           left to right direction
+           rectangle "Events Booking" << subsystem >> {
+
+            (Check Ticket Availability) as (Check)
+            (Select Tickets) as (TicketSelect)
+            (Select Event Category) as (Select)
+            (Connect Wallet) as (Connect)
+            (Pay Organiser Wallet) as (Pay)
+        }
+
+
+           (Check) -- User
+           (TicketSelect) -- User
+           (Select) -- User
+           (Connect) -- User
+           (Pay) -- User
+    }
+
+        (ViewEvents) -- User
+        (SingleEvent) -- User
+        (Trending) -- User
+        
+        Organiser -- (Create)
+        Organiser -- (Edit)
+        Organiser -- (Delete)
+
+        Organiser -- (DeleteMultiple)
+        Organiser -- (ViewEvents)
+        Organiser -- (Trending)
+        Organiser -- (Upload)
+        Organiser -- (Search)
+
+        Organiser -- (Sort)
+        Organiser -- (Filter)
+
+        User -- (Sort)
+        User -- (Filter)
+        User -- (Book)
+        User -- (Search)
+
+        (Create) .> (SingleEvent) : includes
+
+}
+
+
+@enduml

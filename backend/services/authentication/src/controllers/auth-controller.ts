@@ -24,9 +24,9 @@ declare namespace Express {
 // @public: Yes (No Authorization Token Required)
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {email, password, confirmPassword} = request.body;
+    const {email, password, passwordConfirm} = request.body;
 
-    if(password !== confirmPassword) {
+    if(password !== passwordConfirm ) {
         return next(new ErrorResponse(`Password confirmation error. Please check passwords`, 400));
     }
 
@@ -42,13 +42,15 @@ export const registerUser = async (request: Request, response: Response, next: N
     const currentUser = newUser._id; // Get the current user's ID
     const userOTP = generateOTPVerificationToken();
 
-    console.log(`Your OTP : `, userOTP);
+    const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
+    await verificationToken.save();
 
+    // Send e-mail verification
 
-    return response.status(StatusCodes.CREATED).json({success: true, sentAt: Date.now().toFixed(), data: newUser});
+    return response.status(StatusCodes.CREATED).json({success: true,  data: newUser});
 }
 
-const generateOTPVerificationToken = (otp_length = 6) => {
+const generateOTPVerificationToken = (otp_length = 6): String => {
     let OTP = ''
 
     for(let i = 1; i <= otp_length; i++) {

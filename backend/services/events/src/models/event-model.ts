@@ -19,15 +19,16 @@ interface EventAttributes { // Interface for the event attributes
 
     maxCapacity: Number;
     minCapacity: Number;
-    showRemaining: Boolean;
+    
+    showRemaining: boolean;
     ticketAvailability: Object;
-    isSoldOut: Boolean;
-    searchable: Boolean;
+    isSoldOut: boolean;
+    searchable: boolean;
 
-    hideStartDate: Boolean;
-    hideEndDate: Boolean;
-    isLocked: Boolean;
-    isFree: Boolean;
+    hideStartDate: boolean;
+    hideEndDate: boolean;
+    isLocked: boolean;
+    isFree: boolean;
 
     eventSalesStatus: Object;
 
@@ -281,8 +282,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if this event has reserved seating or not"]
     },
 
-
-    eventSalesStatus: {
+    eventSalesStatus: { // Enumeration object that stores the status of the event sales. Event can be on sale, not on sale, sale ended, event is sold out or unavailable
 
         salesStatus: {
             type: String,
@@ -290,6 +290,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         },
 
         salesStart: {
+
             timezone: {
                 type: String
             },
@@ -335,4 +336,5 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     timestamps: true
 }) 
 
-export default EventSchema;
+const Event = mongoose.model<EventDocument>("Event", EventSchema);
+export {Event}

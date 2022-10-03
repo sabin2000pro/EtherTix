@@ -6,7 +6,6 @@ interface IDiscountAttributes {
     amountOff: string;
     percentOff: string;
 }
-
 interface DiscountDocument extends mongoose.Model<IDiscountAttributes> {
     discount: Object;
     code: string;
@@ -14,6 +13,7 @@ interface DiscountDocument extends mongoose.Model<IDiscountAttributes> {
     percentOff: string;
 }
 
+// Create the Data Model Schema using Mongoose
 const DiscountSchema = new mongoose.Schema<DiscountDocument>({
 
    discount: {
@@ -42,4 +42,5 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
 
 })
 
-export default DiscountSchema;
+const Discount = mongoose.model<DiscountDocument>("Discount", DiscountSchema);
+export {Discount}

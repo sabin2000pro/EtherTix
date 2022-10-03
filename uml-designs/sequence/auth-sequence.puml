@@ -1,0 +1,6 @@
+@startuml
+
+left to right direction
+rectangle "Bank UML"
+
+@enduml

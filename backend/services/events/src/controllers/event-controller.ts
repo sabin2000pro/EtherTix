@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Event from '../models/event-model';
+import {Event} from '../models/event-model';
 import mongoose from "mongoose";
 import {StatusCodes} from "http-status-codes";
 
