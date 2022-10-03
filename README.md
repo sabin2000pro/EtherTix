@@ -30,3 +30,7 @@ First and foremost, one important design methodology that is used to design this
 # Events Service - Use Case Diagram
 
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/29733613/193553271-85415991-39b2-442a-927a-f537e975ddff.png">
+
+# Venues Service - Use Case Diagram
+
+
