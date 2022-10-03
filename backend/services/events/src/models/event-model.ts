@@ -35,7 +35,7 @@ interface EventAttributes { // Interface for the event attributes
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
-    ticket: mongoose.Schema.Types.ObjectId;
+    ticket: mongoose.Schema.Types.ObjectId
     issue: mongoose.Schema.Types.ObjectId;
     review: mongoose.Schema.Types.ObjectId;
 
@@ -175,7 +175,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         name: {
             type: String,
             required: [true, "Please specify the category of the event"],
-            enum: ["Food/Drink", "Sports", "Free", "Charity", "Nature"]
+            enum: ["Food/Drink", "Sports", "Free", "Charity", "Nature", "Talk", "Conference"]
         }
 
     },
@@ -309,11 +309,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         }
     },
 
-    organiser: { // Relationship between the event and organiser of the event (user) (Event -> Organiser ID)
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
+    organiser: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
 
     venue: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
@@ -321,20 +317,12 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: true
     },
 
-    ticket: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Ticket",
-        required: true
-    },
-
-    review: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Review",
-        required: true
-    }
+    ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}],
+    review: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}]
 
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true}
 }) 
 
 const Event = mongoose.model<EventDocument>("Event", EventSchema);

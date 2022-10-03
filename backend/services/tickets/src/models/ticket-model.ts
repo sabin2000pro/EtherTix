@@ -19,6 +19,12 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: null
         },
 
+        ticketClass: {
+            type: String,
+            required: [true, "Please specify the ticket class for this event"],
+            enum: ["premium", "standard", "basic", "vip"]
+        },
+
         capacity: { // Number of tickets for sale (0, 1, 2,3)
             type: String,
             required: [true, "Please specify the number of tickets available for sale"],
@@ -37,7 +43,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: 5
         },
 
-        description: {
+        description: { // Ticket Description for an event
             type: String,
             required: [true, "Provide a valid description for the ticket"]
         },
