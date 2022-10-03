@@ -24,5 +24,5 @@ Our approach is to build a hybrid centralised and decentralised web application.
 
 First and foremost, one important design methodology that is used to design this system are UML Use Case diagrams. Generally, these diagrams show how the users are going to interact with the system. Figure 1.0 below shows the authentication use case diagram for the system. An advantage of use case diagrams is that it captures all the functional requirements that are required to be implemented in the system. Thus, the client has a clear picture of how user interaction is going to happen. Adding continuous value to the project over time since the diagrams do not contain any requirements that are not required in the project. Thereby, preventing waste which does not add any value to the project
 
-![EtherTixAuthUseCase](https://user-images.githubusercontent.com/29733613/193007485-42a47ce9-6cee-4863-a558-4cc1b6f26e17.png)
+<img width="318" alt="image" src="https://user-images.githubusercontent.com/29733613/193553132-74d912cf-a4a9-45c2-950a-af245df8c61e.png">
 
