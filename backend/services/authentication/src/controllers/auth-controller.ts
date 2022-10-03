@@ -95,6 +95,8 @@ export const loginUser = async (request: Request, response: Response, next: Next
 // @public: No (Authorization Token Required To Identify User)
 
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    // Clear the cookie from the session
+    request.session = null;
     return response.status(200).json({success: true, message: "Login User here"});
 }
 

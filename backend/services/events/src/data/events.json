@@ -57,10 +57,10 @@
          "salesEnd": "2023-05-12T11:09:00.817Z"
       },
 
-      "organiser": "",
+      "organiser": "5d7a514b5d2c12c7449be040",
       "venue": "",
-      "ticket": "",
-      "review": ""
+      "ticket": ["", "", "", "", ""],
+      "review": ["", ""]
    },
 
 
