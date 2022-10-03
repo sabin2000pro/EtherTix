@@ -1,8 +1,6 @@
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 
-type TicketTypes = {
-    
-}
+
 interface ITicketAttributes {
     ticket: Object
 }
@@ -16,7 +14,9 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
     ticket: { // Ticket Object
 
         name: {
-            type: String
+            type: String,
+            required: [true, "Please specify the name of the ticket class"],
+            default: null
         },
 
         capacity: { // Number of tickets for sale (0, 1, 2,3)
@@ -26,11 +26,15 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         },
 
         minimumQuantityPurchase: {
-
+            type: Number,
+            required: [true, "Please specify the minimum number of tickets that can be purchased for this event"],
+            default: 1
         },
 
         maximumQuantityPurchase: {
-
+            type: Number,
+            required: [true, "Please specify the maximum number of tickets that can be purchased for this event"],
+            default: 5
         },
 
         description: {
@@ -66,8 +70,9 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: Date.now
         },
 
-        saleEndsAt: {
-
+        saleEndsAt: { // The timestamp at which the ticket sale ends
+            type: Date,
+            default: Date.now
         },
 
         confirmationMessage: {
