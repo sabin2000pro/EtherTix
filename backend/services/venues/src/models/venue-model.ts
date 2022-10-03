@@ -61,7 +61,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             default: Date.now
           },
 
-        organiser: { // Event organiser
+        organiser: { // Event Venue Organiser
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         }

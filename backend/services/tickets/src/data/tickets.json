@@ -1,0 +1,22 @@
+[
+    {
+        "ticket" : {
+            "_id": "5c725a4a7b292f5f8ceff500",
+            "event": "5d725a4a7b292f5f8ceff787",
+            "name": "Highland Event Ticket",
+            "ticketClass": "standard",
+            "capacity": 5,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 5,
+            "description": "Standard Ticket for the highland tour event",
+            "cost": 0.085,
+            "isFree": false,
+            "deliveryMethods": "SMS",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
+            "ticketSold": false
+        }
+
+
+    }
+]

@@ -26,9 +26,9 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         },
 
         capacity: { // Number of tickets for sale (0, 1, 2,3)
-            type: String,
+            type: Number,
             required: [true, "Please specify the number of tickets available for sale"],
-            default: null
+            default: 0
         },
 
         minimumQuantityPurchase: {
@@ -49,9 +49,9 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         },
 
         cost: { // The ticket cost in ETHER
-            type: String,
+            type: Number,
             required: [true, "Please specify how much the ticket costs"],
-            default: "0.013"
+            default: 0.010
         },
 
         isFree: {
@@ -69,7 +69,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         onSaleStatus: {
             type: String,
-            enum: ["AVAILABLE", "SOLD_OUT"],
+            enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
             required: [true, "Please specify the on sale status of the ticket"]
         },
 
