@@ -1,7 +1,14 @@
 [
     {
         "_id": "",
-        "forename": "",
-        "surname": ""
+        "forename": "Jamie",
+        "surname": "Brown",
+        "username": "jamiebrown2000",
+        "email": "jamiebrown2000@yahoo.com",
+        "photo": "no-photo.jpg",
+        "password": "987eventmaster",
+        "passwordConfirm": "987eventmaster",
+        "role": "organiser",
+        "pastEventsHeld": 0
     }
 ]
