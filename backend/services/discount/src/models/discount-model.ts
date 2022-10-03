@@ -28,24 +28,22 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
     },
  
     percentOff: {
-     type: String,
-     default: null
-   },
+      type: String,
+      default: null
+    },
 
    ticket: { // The ticket to which the discount applies to
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Ticket"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Ticket"
    },
 
    event: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Event"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event"
    }
 
    }
-
-
-})
+}, {timestamps: true})
 
 const Discount = mongoose.model<DiscountDocument>("Discount", DiscountSchema);
 export {Discount}

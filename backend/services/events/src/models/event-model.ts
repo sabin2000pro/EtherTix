@@ -136,7 +136,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     event_status: { // Status of the event
         type: String,
-        enum: ["draft", "live", "started", "ended", "completed", "canceled"],
+        default: "pending",
+        enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
 
@@ -148,7 +149,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     event_logo: {
         type: String,
-        required: [true, "Please upload a valid event logo"],
         default: 'no-photo.jpg'
     },
 
@@ -175,7 +175,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         name: {
             type: String,
             required: [true, "Please specify the category of the event"],
-            enum: ["Food / Drink", "Sports", "Free", "Charity", ""]
+            enum: ["Food / Drink", "Sports", "Free", "Charity", "Nature"]
         }
 
     },
@@ -189,18 +189,19 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     maxCapacity: { // Maximum Capacity of people that can attend the event
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
-        default: 100
+        default: 0
     },
 
     minCapacity: { // Minimum Capacity of people that can attend the event
         type: Number,
         required: [true, "Please specify the minimum number of people that can attend the event"],
-        default: 20
+        default: 0
     },
 
     showRemaining: {
         type: Boolean,
-        default: false
+        default: false,
+        required: [true, "Please specify the number of remaining slots"]
     },
 
     isPremium: {
@@ -221,7 +222,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
            currency: {
                 type: String,
-                required: [true, "Please specify the maximum cost of the ticket price in ETH FORMAT"],
+                required: [true, "Please specify the event currency in ether"],
                 default: "ETH",
            },
 
@@ -236,8 +237,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         maximumTicketPrice: {
 
             currency: {
-                    type: String,
-                    default: "ETH", // The default currency is ETH as this is what payments will be made in using Web3 and meta mask wallet
+                type: String,
+                default: "ETH", // The default currency is ETH as this is what payments will be made in using Web3 and meta mask wallet
                },
     
                price: {
@@ -298,15 +299,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         },
 
         salesStart: {
+            type: Date,
+            default: Date.now
+        },
 
-            timezone: {
-                type: String
-            },
-
-            utc: {
-                type: String
-            }
-
+        salesEnd: {
+            type: Date,
+            default: Date.now
         }
     },
 

@@ -24,7 +24,7 @@ app.use(helmet());
 // Include error handling middleware here for the venues
 
 app.get("/", (request: Request, response: Response) => {
-    return response.json({message: "Venues Root Route"})
+    return response.json({message: "Tickets Root Route"})
 })
 
 export {app}

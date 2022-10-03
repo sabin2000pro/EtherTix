@@ -29,3 +29,51 @@ services:
       volumes:
         - /app/node_modules
         - ../backend/services/events:/app
+
+  venues-service:
+    image: sabin2000/ethertix-venues-service
+
+    build:
+      context: ../backend/services/venues
+      dockerfile: Dockerfile
+
+    restart: always
+
+    ports:
+      - "5302:5302"
+
+    volumes:
+        - /app/node_modules
+        - ../backend/services/venues:/app
+  
+  tickets-service:
+    image: sabin2000/ethertix-tickets-service
+
+    build:
+      context: ../backend/services/tickets
+      dockerfile: Dockerfile
+
+    restart: always
+
+    ports:
+      - "5303:5303"
+
+    volumes:
+        - /app/node_modules
+        - ../backend/services/tickets:/app
+
+  discount-service:
+    image: sabin2000/ethertix-discount-service
+
+    build:
+      context: ../backend/services/tickets
+      dockerfile: Dockerfile
+
+    restart: always
+
+    ports:
+      - "5304:5304"
+
+    volumes:
+        - /app/node_modules
+        - ../backend/services/discount:/app
