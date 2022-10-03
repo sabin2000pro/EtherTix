@@ -8,5 +8,16 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/helmet": "^4.0.0",
+    "@types/hpp": "^0.2.2",
+    "@types/morgan": "^1.9.3",
+    "bunyan": "^1.8.15",
+    "cors": "^2.8.5",
+    "helmet": "^6.0.0",
+    "hpp": "^0.2.3",
+    "morgan": "^1.10.0"
+  }
 }
