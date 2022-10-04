@@ -106,7 +106,7 @@ const UserSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 // @description: Before saving a user to the database, hash their password
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function(next: () => void) {
 
    if(!this.isModified("password")) {
      return next();
@@ -117,8 +117,9 @@ UserSchema.pre('save', async function(next) {
    return next();
 })
 
-UserSchema.methods.comparePasswords = async function(enteredPassword: string): Promise<boolean> {
-    return await bcrypt.compare(this.password, enteredPassword);
+UserSchema.methods.comparePasswords = async function(password: string): Promise<boolean> {
+    const hashedPassword: string = (this as unknown as UserDocument).password!;
+    return await bcrypt.compare(password, hashedPassword);
 }
 
  // Sign JWT Token and retrieve it

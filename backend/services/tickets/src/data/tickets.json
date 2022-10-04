@@ -3,20 +3,98 @@
         "ticket" : {
             "_id": "5c725a4a7b292f5f8ceff500",
             "event": "5d725a4a7b292f5f8ceff787",
-            "name": "Highland Event Ticket",
+            "name": "Highland Standard Event Ticket",
             "ticketClass": "standard",
             "capacity": 5,
             "minimumQuantityPurchase": 1,
             "maximumQuantityPurchase": 5,
             "description": "Standard Ticket for the highland tour event",
-            "cost": 0.085,
+            "cost": 0.0150,
             "isFree": false,
-            "deliveryMethods": "SMS",
+            "deliveryMethods": "Will Call",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false
         }
+    },
+
+    {
+        "ticket" : {
+            "_id": "5c725a4a7b292f5f8ceff501",
+            "event": "5d725a4a7b292f5f8ceff787",
+            "name": "Highland Basic Event Ticket",
+            "ticketClass": "basic", 
+            "capacity": 5,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 5,
+            "description": "Basic Entry Ticket for the highland tour event",
+            "cost": 0.0085,
+            "isFree": false,
+            "deliveryMethods": "Will Call",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
+            "ticketSold": false
+        }
+    },
+
+    {
+        "ticket" : {
+            "_id": "5c725a4a7b292f5f8ceff502",
+            "event": "5d725a4a7b292f5f8ceff787",
+            "name": "Highland Premium Event Ticket",
+            "ticketClass": "premium",
+            "capacity": 5,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 5,
+            "description": "Premium Entry Ticket for the highland tour event",
+            "cost": 0.0250,
+            "isFree": false,
+            "deliveryMethods": "Will Call",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
+            "ticketSold": false
+        }
+    },
+
+    {
+        "ticket" : {
+            "_id": "5c725a4a7b292f5f8ceff503",
+            "event": "5d725a4a7b292f5f8ceff787",
+            "name": "Highland VIP Event Ticket",
+            "ticketClass": "vip",
+            "capacity": 3,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 3,
+            "description": "Premium VIP Entry Ticket for the highland tour event",
+            "cost": 0.0450,
+            "isFree": false,
+            "deliveryMethods": "Will Call",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
+            "ticketSold": false
+        }
+    },
+
+    {
+        "ticket" : {
+            "_id": "5c725a4a7b292f5f8ceff600",
+            "event": "5d725a4a7b292f5f8ceff788",
+            "name": "Three Sisters Drink n Socialise Basic Ticket",
+            "ticketClass": "basic",
+            "capacity": 5,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 3,
+            "description": "Basic Entry Ticket for the Three Sisters Drink n Socialise Event",
+            "cost": 0.0085,
+            "isFree": false,
+            "deliveryMethods": "SMS",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon in a couple of minutes",
+            "ticketSold": false
+        }
+    },
+
+    
 
 
-    }
 ]

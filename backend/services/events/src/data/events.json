@@ -3,9 +3,9 @@
       "_id": "5d725a4a7b292f5f8ceff787",
       "organiser": "5d7a514b5d2c12c7449be040",
       "venue": "",
-      "ticket": ["5c725a4a7b292f5f8ceff500", "", "", "", ""],
+      "ticket": ["5c725a4a7b292f5f8ceff500", "5c725a4a7b292f5f8ceff501", "5c725a4a7b292f5f8ceff502", "5c725a4a7b292f5f8ceff503"],
       "review": ["", ""],
-      
+
       "name": "Edinburgh Highland Tour",
       "summary": "Come with us on our tour where we visit the beautiful highlands of Edinburgh, you will not regret it. A fun experience for all adults and teenagers. A great event that lets you see the beautiful landmarks of Edinburgh",
 
@@ -37,16 +37,6 @@
       "ticketAvailability": {
         "hasAvailableTickets": true
       },
-
-      "minimumTicketPrice": {
-        "currency": "ETH",
-        "price": 0.020
-      },
-
-      "maximumTicketPrice": {
-        "currency": "ETH",
-        "price": 0.041
-      },
     
       "isLocked": true,
       "isSoldOut": false,
@@ -66,6 +56,9 @@
 
    {
     "_id": "5d725a4a7b292f5f8ceff788",
+    "organiser": "5d7a514b5d2c12c7449be042",
+    "venue": "",
+    "ticket": ["5c725a4a7b292f5f8ceff600", "", "", "", ""],
     "name": "Three Sisters Drink n Socialise",
     "summary": "Fancy a drink? Come to our Drink n Socialise event where you can meet new people, socialise and watch the football on our big screen. Adults and Teenagers welcome",
 
@@ -120,11 +113,7 @@
        "salesStatus": "unavailable",
        "salesStart": "2023-11-30T15:00:00.817Z",
        "salesEnd": "2023-11-30T11:22:00.817Z"
-    },
-
-    "organiser": "5d7a514b5d2c12c7449be042",
-    "venue": "",
-    "ticket": ["", "", "", "", ""]
+    }
 
  },
 

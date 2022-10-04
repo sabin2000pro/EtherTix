@@ -216,37 +216,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             type: Boolean,
             default: false,
             required: [true, "Please specify if this event has available tickets"]
-        },
-
-        minimumTicketPrice: {
-
-           currency: {
-                type: String,
-                required: [true, "Please specify the event currency in ether"],
-                default: "ETH",
-           },
-
-           price: {
-             type: Number,
-             required: [true, "Please specify the minimum cost of the ticket price in ETH FORMAT"],
-             default: 0.024
-           }
-
-        },
-
-        maximumTicketPrice: {
-
-            currency: {
-                type: String,
-                default: "ETH", // The default currency is ETH as this is what payments will be made in using Web3 and meta mask wallet
-               },
-    
-               price: {
-                 type: Number,
-                 default: 0.0041 // The default price is in ETHER value (0.041 => £50GBP)
-               }
         }
-
+        
     },
 
     isLocked: { // True or false if the event is locked or not. If the event is locked, then disable the button to view available times

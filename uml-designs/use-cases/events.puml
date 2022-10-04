@@ -71,7 +71,6 @@ package EventsService {
 
         (Create) .> (SingleEvent) : includes
         (Check) <. (TicketSelect) : extends
-
        
 
 }
