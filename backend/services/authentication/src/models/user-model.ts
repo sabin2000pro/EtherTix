@@ -124,7 +124,7 @@ UserSchema.methods.comparePasswords = async function(password: string): Promise<
 
  // Sign JWT Token and retrieve it
 UserSchema.methods.getAuthenticationToken = function() {
-   return jwt.sign({id: this._id}, process.env.JWT_TOKEN, {expiresIn: process.env.EXPIRES_IN});
+   return jwt.sign({id: this._id}, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify", {expiresIn: "90d"});
 }
 
 const User = mongoose.model<UserDocument>("User", UserSchema);

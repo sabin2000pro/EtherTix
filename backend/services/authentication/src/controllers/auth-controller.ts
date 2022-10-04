@@ -37,10 +37,10 @@ export const registerUser = async (request: Request, response: Response, next: N
     }
 
     const newUser = await User.create(request.body);
-    await newUser.save();
-
-    const token = await newUser.getAuthenticationToken();
+    const token = newUser.getAuthenticationToken();
+    
     console.log(`Your JWT TOKEN : ${token}`);
+    await newUser.save();
 
     const currentUser = newUser._id; // Get the current user's ID
     const userOTP = generateOTPVerificationToken();
