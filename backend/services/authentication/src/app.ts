@@ -33,8 +33,6 @@ app.use(cookieSession({
 
 app.use('/api/v1/auth', authRouter);
 
-app.use(errorHandler);
-
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Root Route"})
 })
