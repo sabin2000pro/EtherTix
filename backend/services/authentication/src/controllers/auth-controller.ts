@@ -39,6 +39,9 @@ export const registerUser = async (request: Request, response: Response, next: N
     const newUser = await User.create(request.body);
     await newUser.save();
 
+    const token = await newUser.getAuthenticationToken();
+    console.log(`Your JWT TOKEN : ${token}`);
+
     const currentUser = newUser._id; // Get the current user's ID
     const userOTP = generateOTPVerificationToken();
 
@@ -47,7 +50,7 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     // Send e-mail verification to user
 
-    return response.status(StatusCodes.CREATED).json({success: true,  data: newUser});
+    return response.status(StatusCodes.CREATED).json({success: true, data: newUser, token});
 }
 
 const generateOTPVerificationToken = (otp_length = 6): String => {
