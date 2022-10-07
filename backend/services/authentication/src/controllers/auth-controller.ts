@@ -27,18 +27,18 @@ export const registerUser = async (request: Request, response: Response, next: N
     const {email, password, passwordConfirm} = request.body;
 
     if(password !== passwordConfirm ) {
-        return next(new ErrorResponse(`Password confirmation error. Please check passwords`, 400));
+        return next(new ErrorResponse(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
     }
 
     const existingUser = await User.findOne({email})
 
     if(existingUser) {
-        return next(new ErrorResponse("User already created", 400));
+        return next(new ErrorResponse("User already created", StatusCodes.BAD_REQUEST));
     }
 
     const newUser = await User.create(request.body);
     const token = newUser.getAuthenticationToken();
-    
+
     console.log(`Your JWT TOKEN : ${token}`);
     await newUser.save();
 
@@ -54,6 +54,7 @@ export const registerUser = async (request: Request, response: Response, next: N
 }
 
 const generateOTPVerificationToken = (otp_length = 6): String => {
+
     let OTP = ''
 
     for(let i = 1; i <= otp_length; i++) {
@@ -73,23 +74,28 @@ export const loginUser = async (request: Request, response: Response, next: Next
     const {email, password} = request.body;
 
     if(!email || !password) {
-        return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, 400));
+        return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
     }
 
     const user = await User.findOne({email});
 
     if(!user) {
-        return next(new ErrorResponse(`Could not find that user`, 404));
+        return next(new ErrorResponse(`Could not find that user`, StatusCodes.NOT_FOUND));
     }
 
     // Compare user passwords before logging in
     const matchPasswords = await user.comparePasswords(password);
 
     if(!matchPasswords) {
-        return next(new ErrorResponse(`Passwords do not match. Please try again`, 400));
+        return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
-    return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
+    // Generate new JWT and store in in the session
+
+    const token = user.getAuthenticationToken();
+    request.session = {jwt: token};
+
+    return response.status(StatusCodes.OK).json({success: true, token});
 }
 
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
