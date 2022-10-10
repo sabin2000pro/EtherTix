@@ -28,6 +28,7 @@ const connectTicketsSchema = async (...args: unknown[]) => {
     catch(error: any) {
         
         if(error) {
+            
             return console.error(error);
         }
 

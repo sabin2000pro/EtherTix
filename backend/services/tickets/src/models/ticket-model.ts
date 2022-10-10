@@ -51,9 +51,8 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         cost: { // The ticket cost in ETHER
             type: Number,
             required: [true, "Please specify how much the ticket costs"],
-            default: 0.010,
-            max: 0.020
-        },
+            default: 0.010       
+         },
 
         isFree: {
             type: Boolean,
@@ -87,8 +86,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         confirmationMessage: {
             type: String,
             required: [true, "Please specify the confirmation message for the purchased event ticket"],
-            minlength: [10, "Minimum of 10 characters for the confirmation message"],
-            maxlength: [50, "Maximum of 50 characters for the confirmation message"]
+            minlength: [10, "Minimum of 10 characters for the confirmation message"]
         },
 
         ticketSold: {

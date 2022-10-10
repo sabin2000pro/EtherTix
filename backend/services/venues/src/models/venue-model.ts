@@ -64,12 +64,28 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
         organiser: { // Event Venue Organiser
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
-        }
+        },
+
+        event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}]
 
     }
 
 
 }) 
+
+
+// Virtual populate
+VenueSchema.virtual('Organiser', {
+  ref: 'User',
+  foreignField: 'user',
+  localField: '_id'
+});
+
+VenueSchema.virtual('events', {
+  ref: 'Event',
+  foreignField: 'event',
+  localField: '_id'
+});
 
 
 const Venue = mongoose.model<IVenueDocument>("Venue", VenueSchema);
