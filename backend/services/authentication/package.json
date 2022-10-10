@@ -50,6 +50,7 @@
   "devDependencies": {
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.7.23",
+    "@types/nodemailer": "^6.4.6",
     "mongoose": "^6.6.2"
   }
 }

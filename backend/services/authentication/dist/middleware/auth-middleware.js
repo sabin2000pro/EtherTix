@@ -36,18 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.restrictRolesTo = exports.protectAuth = void 0;
+exports.protectAuth = void 0;
 var protectAuth = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
     var token;
     return __generator(this, function (_a) {
+        if (!token) {
+        }
         return [2 /*return*/];
     });
 }); };
 exports.protectAuth = protectAuth;
-var restrictRolesTo = function () {
-    var roles = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        roles[_i] = arguments[_i];
-    }
-};
-exports.restrictRolesTo = restrictRolesTo;

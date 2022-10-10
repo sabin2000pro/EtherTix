@@ -39,9 +39,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var bcryptjs_1 = __importDefault(require("bcryptjs"));
+var dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: '../../config.env' });
 // Working on the auth feature branch
 var UserSchema = new mongoose_1.default.Schema({
+    forename: {
+        type: String,
+        required: [true, "Please provide your forename"]
+    },
+    surname: {
+        type: String,
+        required: [true, "Please provide your surname"]
+    },
     // username of the user
     username: {
         type: String,
@@ -56,6 +69,10 @@ var UserSchema = new mongoose_1.default.Schema({
         required: true,
         unique: true
     },
+    photo: {
+        type: String,
+        default: 'no-photo.jpg'
+    },
     // The user's password
     password: {
         type: String,
@@ -68,26 +85,49 @@ var UserSchema = new mongoose_1.default.Schema({
     role: {
         type: String,
         required: [true, "Please provide a valid role for the user"],
-        enum: ["admin", "moderator", "organiser"],
+        enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
+    },
+    pastEventsHeld: {
+        type: Number,
+        default: 0,
     }
 }, { timestamps: true });
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/];
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (!this.isModified("password")) {
+                        return [2 /*return*/, next()];
+                    }
+                    _a = this;
+                    return [4 /*yield*/, bcryptjs_1.default.hash(this.password, 10)];
+                case 1:
+                    _a.password = _b.sent();
+                    return [2 /*return*/, next()];
+            }
         });
     });
 });
-UserSchema.methods.comparePasswords = function (enteredPassword) {
+UserSchema.methods.comparePasswords = function (password) {
     return __awaiter(this, void 0, void 0, function () {
+        var hashedPassword;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, false];
+                case 0:
+                    hashedPassword = this.password;
+                    return [4 /*yield*/, bcryptjs_1.default.compare(password, hashedPassword)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
     });
 };
-exports.default = UserSchema; //test
+// Sign JWT Token and retrieve it
+UserSchema.methods.getAuthenticationToken = function () {
+    return jsonwebtoken_1.default.sign({ id: this._id }, process.env.JWT_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN });
+};
+var User = mongoose_1.default.model("User", UserSchema);
+exports.User = User;
