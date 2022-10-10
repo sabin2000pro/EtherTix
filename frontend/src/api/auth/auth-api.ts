@@ -1,16 +1,40 @@
 import axios from 'axios';
 
-export const register = async (registerPayload: Object): Promise<any> => {
+// Default config options
+const defaultOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+  };
+
+  let axiosInstance = axios.create(defaultOptions)
+
+axiosInstance.interceptors.request.use((configData: any | undefined) => {
+    const authToken = localStorage.getItem("token");
+    configData.headers.Authorization = authToken ? `Bearer ${authToken}` : "" // Store the token in the header
+
+    console.log(`Headers : ${configData.headers}`)
+    console.log(`Auth token : ${authToken}`);
+
+    return configData;
+})
+
+export const register = async (registerPayload: any): Promise<any> => {
     try {
 
     } 
     
     catch(err: any) {
-
+        if(err) {
+            return console.error(err);
+        }
     }
+
 }
 
-export const verifyEmailAddress = async (registerPayload: Object): Promise<any> => {
+export const verifyEmailAddress = async (registerPayload: any): Promise<any> => {
+
     try {
 
     } 
