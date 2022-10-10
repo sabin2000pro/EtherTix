@@ -2,6 +2,7 @@
    {
       "_id": "5d725a4a7b292f5f8ceff787",
       "organiser": "5d7a514b5d2c12c7449be040",
+      
       "name": "Edinburgh Highland Tour",
       "summary": "Come with us on our tour where we visit the beautiful highlands of Edinburgh, you will not regret it. A fun experience for all adults and teenagers. A great event that lets you see the beautiful landmarks of Edinburgh",
 
@@ -51,6 +52,7 @@
 
 
    {
+
     "_id": "5d725a4a7b292f5f8ceff788",
     "organiser": "5d7a514b5d2c12c7449be042",
     "name": "Three Sisters Drink n Socialise",
@@ -112,7 +114,9 @@
  },
 
  {
+
     "_id": "5d725a4a7b292f5f8ceff791",
+    "organiser": "5d7a514b5d2c12c7449be040",
     "name": "Agile Project Management",
     "summary": "Want to learn more about how to manage your software projects? Come to our event with your friends and family, or yourself if you are interested in building software projects using agile project management. We are waiting for you.",
 
@@ -167,9 +171,9 @@
        "salesStatus": "unavailable",
        "salesStart": "2023-11-30T15:00:00.817Z",
        "salesEnd": "2023-11-30T11:22:00.817Z"
-    },
+    }
 
-    "organiser": "5d7a514b5d2c12c7449be040"
+    
  }
 
 ]
