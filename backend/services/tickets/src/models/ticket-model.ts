@@ -13,7 +13,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
     ticket: { // Ticket Object
 
-        name: {
+        name: { // Name of the ticket
             type: String,
             required: [true, "Please specify the name of the ticket class"],
             default: null

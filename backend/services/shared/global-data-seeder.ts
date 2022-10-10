@@ -13,6 +13,7 @@ const tickets = JSON.parse(fs.readFileSync(path.join(__dirname, '../tickets/src/
 connectAuthDatabase();
 connectEventsDatabase();
 
+
 export const loadAllData = async (): Promise<any> => {
 
     try {
