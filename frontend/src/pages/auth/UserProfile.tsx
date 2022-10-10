@@ -9,7 +9,6 @@ const UserProfile: React.FC = (props: any) => {
 
      }
 
-
      getAuthToken();
 
   }, [])

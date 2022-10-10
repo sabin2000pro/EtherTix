@@ -24,6 +24,7 @@ export abstract class CustomError extends Error {
     public processErrors(): IError {
         return {message: this.message, statusCode: this.statusCode, status: this.status}
     }
+
 }
 
 export class BadRequestError extends Error {
@@ -41,6 +42,12 @@ export class BadRequestError extends Error {
 export class NotFoundError extends Error {
     statusCode = StatusCodes.BAD_REQUEST;
     status = "Resource not found on the server"
+
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+  }
+
 }
 
 export class JwtMalformedError extends Error {
@@ -79,6 +86,13 @@ export class ImproperHTTPMethod extends Error {
 
 export class UnauthenticatedError extends Error {
 
+    statusCode = StatusCodes.UNAUTHORIZED;
+    status = "You are unauthorized to perform this action."
+
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 }
 
 export class DuplicateFieldError extends Error {

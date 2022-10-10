@@ -1,6 +1,6 @@
-import cookieSession from 'cookie-session';
 import dotenv from "dotenv";
-dotenv.config({path: '../config.env'});
+dotenv.config();
+import cookieSession from 'cookie-session';
 import express, { Application, Request, Response } from "express";
 import morgan from "morgan"
 import hpp from "hpp"
@@ -31,6 +31,7 @@ app.use(cookieSession({
     keys: ['session']
 }));
 
+// Error Handler middleware
 app.use('/api/v1/auth', authRouter);
 
 app.get("/", (request: Request, response: Response) => {

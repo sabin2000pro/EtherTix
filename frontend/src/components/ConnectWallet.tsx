@@ -1,7 +1,7 @@
 import React from 'react'
 
 // @description: Connet Metamask Wallet
-const ConnectWallet = () => {
+const ConnectWallet: React.FC = () => {
   return (
     <div>
 

@@ -4,6 +4,7 @@ import {User} from '../models/user-model';
 import {EmailVerification} from '../models/email-verification-model';
 import {PasswordReset} from '../models/password-reset-model';
 import {StatusCodes} from "http-status-codes";
+import { generateOTPVerificationToken } from '../utils/generate-otp';
 
 declare namespace Express {
     export interface Request {
@@ -51,19 +52,6 @@ export const registerUser = async (request: Request, response: Response, next: N
     return response.status(StatusCodes.CREATED).json({success: true, data: newUser, token});
 }
 
-const generateOTPVerificationToken = (otp_length = 6): String => {
-
-    let OTP = ''
-    let RANDOM_LENGTH = 9;
-
-    for(let i = 1; i <= otp_length; i++) {
-
-       const randomOTP = Math.round(Math.random() * RANDOM_LENGTH)
-       OTP += randomOTP;
-    }
-
-    return OTP;
-}
 
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
 // @route: /api/v1/auth/register
@@ -104,8 +92,10 @@ export const loginUser = async (request: Request, response: Response, next: Next
 // @public: No (Authorization Token Required To Identify User)
 
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    // Clear the cookie from the session
-    request.session = null;
+    if(request.session !== undefined) {
+        request.session = null;
+    }
+    
     return response.status(200).json({success: true, message: "Login User here"});
 }
 

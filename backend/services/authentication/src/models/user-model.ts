@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+dotenv.config({path: '../../config.env'});
 
 interface IUserAttributes {
     forename: string;
@@ -125,7 +126,7 @@ UserSchema.methods.comparePasswords = async function(password: string): Promise<
 
  // Sign JWT Token and retrieve it
 UserSchema.methods.getAuthenticationToken = function() {
-   return jwt.sign({id: this._id}, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify", {expiresIn: "90d"});
+   return jwt.sign({id: this._id}, process.env.JWT_TOKEN!, {expiresIn: process.env.JWT_EXPIRES_IN!});
 }
 
 const User = mongoose.model<UserDocument>("User", UserSchema);
