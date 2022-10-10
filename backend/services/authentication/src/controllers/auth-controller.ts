@@ -1,11 +1,10 @@
-import { JwtTokenError } from './../../../shared/error-handler';
 import { NextFunction, Request, Response } from 'express';
-import { BadRequestError } from './../../../shared/error-handler';
 import {User} from '../models/user-model';
 import {EmailVerification} from '../models/email-verification-model';
 import {PasswordReset} from '../models/password-reset-model';
 import {StatusCodes} from "http-status-codes";
 import { generateOTPVerificationToken } from '../utils/generate-otp';
+import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 
 declare namespace Express {
     export interface Request {
@@ -38,7 +37,7 @@ export const registerUser = async (request: Request, response: Response, next: N
     const token = newUser.getAuthenticationToken();
 
     if(!token) {
-        return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", ))
+        return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", 400))
     }
 
     await newUser.save();

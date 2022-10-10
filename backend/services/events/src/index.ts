@@ -6,7 +6,7 @@ const port = process.env.PORT || 5301;
 const startAuthServer = async () => {
 
       return app.listen(port, () => {
-        console.log('Events Service Live On Port 5301');
+        console.log(`Event service live on port ${port}`);
       });
 
 }

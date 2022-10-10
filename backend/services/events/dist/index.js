@@ -42,7 +42,7 @@ var port = process.env.PORT || 5301;
 var startAuthServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, app_1.app.listen(port, function () {
-                console.log('Events Service Live On Port 5301');
+                console.log("Event service live on port ".concat(port));
             })];
     });
 }); };

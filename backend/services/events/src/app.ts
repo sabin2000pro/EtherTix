@@ -1,4 +1,4 @@
-import { CustomError } from '../../shared/error-handler';
+import { CustomError } from './middlewares/error-handler';
 import connectEventDatabase from './database/event-db';
 import express, { Application, Request, Response, NextFunction } from "express";
 import morgan from "morgan"
@@ -7,6 +7,7 @@ import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { StatusCodes } from 'http-status-codes';
+import eventRouter from './routes/event-routes';
 
 const app: Application = express();
 
@@ -22,15 +23,14 @@ if(process.env.NODE_ENV === 'production') {
  
 app.use(express.json());
 app.set('trust proxy', true);
-
 app.use(hpp());
-
 app.use(cors({
     origin: "*",
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
-
 app.use(helmet());
+
+app.use('/api/v1', eventRouter);
 
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Root Route"})

@@ -4,18 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
-var dotenv_1 = __importDefault(require("dotenv"));
+const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-var cookie_session_1 = __importDefault(require("cookie-session"));
-var express_1 = __importDefault(require("express"));
-var morgan_1 = __importDefault(require("morgan"));
-var hpp_1 = __importDefault(require("hpp"));
-var helmet_1 = __importDefault(require("helmet"));
-var express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
-var cors_1 = __importDefault(require("cors"));
-var auth_db_1 = __importDefault(require("./database/auth-db"));
-var auth_routes_1 = __importDefault(require("./routes/auth-routes"));
-var app = (0, express_1.default)();
+const cookie_session_1 = __importDefault(require("cookie-session"));
+const express_1 = __importDefault(require("express"));
+const morgan_1 = __importDefault(require("morgan"));
+const hpp_1 = __importDefault(require("hpp"));
+const helmet_1 = __importDefault(require("helmet"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
+const cors_1 = __importDefault(require("cors"));
+const auth_db_1 = __importDefault(require("./database/auth-db"));
+const auth_routes_1 = __importDefault(require("./routes/auth-routes"));
+const app = (0, express_1.default)();
 exports.app = app;
 (0, auth_db_1.default)();
 if (process.env.NODE_ENV === 'development') {
@@ -34,6 +34,7 @@ app.use((0, cookie_session_1.default)({
 }));
 // Error Handler middleware
 app.use('/api/v1/auth', auth_routes_1.default);
-app.get("/", function (request, response) {
+app.get("/", (request, response) => {
     return response.json({ message: "Root Route" });
 });
+//# sourceMappingURL=app.js.map

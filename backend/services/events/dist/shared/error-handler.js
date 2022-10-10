@@ -54,8 +54,12 @@ var NotFoundError = /** @class */ (function (_super) {
 exports.NotFoundError = NotFoundError;
 var JwtTokenError = /** @class */ (function (_super) {
     __extends(JwtTokenError, _super);
-    function JwtTokenError() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function JwtTokenError(message, statusCode) {
+        var _this = _super.call(this, message) || this;
+        _this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
+        _this.status = "JWT Token Invalid. Please check the token again.";
+        _this.statusCode = statusCode;
+        return _this;
     }
     return JwtTokenError;
 }(Error));

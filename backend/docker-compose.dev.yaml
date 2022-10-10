@@ -77,3 +77,33 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/discount:/app
+
+  database-service:
+    image: mongo
+
+    ports:
+      - "27017:27017"
+
+    restart: always
+
+    volumes:
+      - type: volume
+        source: mongodb_data_volume
+        target: /data/db
+
+  frontend-service:
+    image: sabin2000/ethertix-frontend-service
+    restart: always
+
+    ports:
+      - "3000:3000"
+
+    build:
+      context: './frontend'
+      dockerfile: Dockerfile
+    
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+volumes:
+  mongodb_data_volume:

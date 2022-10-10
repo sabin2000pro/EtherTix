@@ -37,8 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lockUserAccount = exports.deactivateUserAccount = exports.resendTwoFactorLoginCode = exports.resendEmailVerificationCode = exports.updateUserProfile = exports.updateUserPassword = exports.verifyLoginToken = exports.verifyEmailAddress = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
-var error_handler_1 = require("./../../../shared/error-handler");
-var error_handler_2 = require("../../../shared/error-handler");
 var user_model_1 = require("../models/user-model");
 var email_verification_model_1 = require("../models/email-verification-model");
 var http_status_codes_1 = require("http-status-codes");
@@ -54,21 +52,21 @@ var registerUser = function (request, response, next) { return __awaiter(void 0,
             case 0:
                 _a = request.body, email = _a.email, password = _a.password, passwordConfirm = _a.passwordConfirm;
                 if (password !== passwordConfirm) {
-                    return [2 /*return*/, next(new error_handler_2.BadRequestError("Password confirmation error. Please check passwords", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    // return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
                 }
                 return [4 /*yield*/, user_model_1.User.findOne({ email: email })]; // Find an existing user
             case 1:
                 existingUser = _b.sent() // Find an existing user
                 ;
                 if (existingUser) {
-                    return [2 /*return*/, next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    //    return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
                 }
                 return [4 /*yield*/, user_model_1.User.create(request.body)];
             case 2:
                 newUser = _b.sent();
                 token = newUser.getAuthenticationToken();
                 if (!token) {
-                    return [2 /*return*/, next(new error_handler_1.JwtTokenError("JWT Token invalid. Please ensure it is valid"))];
+                    // return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", 400))
                 }
                 return [4 /*yield*/, newUser.save()];
             case 3:
@@ -96,19 +94,19 @@ var loginUser = function (request, response, next) { return __awaiter(void 0, vo
             case 0:
                 _a = request.body, email = _a.email, password = _a.password;
                 if (!email || !password) {
-                    return [2 /*return*/, next(new error_handler_2.BadRequestError("Missing e-mail address or password. Check entries", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    // return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
                 }
                 return [4 /*yield*/, user_model_1.User.findOne({ email: email })];
             case 1:
                 user = _b.sent();
                 if (!user) {
-                    return [2 /*return*/, next(new error_handler_2.BadRequestError("Could not find that user", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    // return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
                 }
                 return [4 /*yield*/, user.comparePasswords(password)];
             case 2:
                 matchPasswords = _b.sent();
                 if (!matchPasswords) {
-                    return [2 /*return*/, next(new error_handler_2.BadRequestError("Passwords do not match. Please try again", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    // return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
                 }
                 token = user.getAuthenticationToken();
                 request.session = { jwt: token }; // Store the token in the session as a cookie

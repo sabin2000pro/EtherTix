@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
-var error_handler_1 = require("../../shared/error-handler");
+var error_handler_1 = require("../../shared/src/error-handler");
 var event_db_1 = __importDefault(require("./database/event-db"));
 var express_1 = __importDefault(require("express"));
 var morgan_1 = __importDefault(require("morgan"));
