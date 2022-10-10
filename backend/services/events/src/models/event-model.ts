@@ -91,9 +91,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     summary: { // Event Summary
         type: String,
-        required: [true, "Please provide a summary for the event"],
-        minlength: [25, "Minimum summary length of 25 characters"],
-        maxlength: [50, "Maximum length for the summary of 50 characters."],
+        required: [true, "Please provide a summary for the event"]
     },
 
     description: { // Event Description with text object inside
@@ -101,8 +99,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         text: {
             type: String,
             required: [true, "Please include a description for the event"],
-            minlength: [20, "Minimum length for the event text description is 20 characters"],
-            maxlength: [100, "Max length for the event description is 100 characters"],
             trim: true
         }
 
@@ -283,18 +279,17 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: "User"
     },
 
     venue: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Venue",
-        required: true
+        ref: "Venue"
     },
 
     ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}],
     review: [{type: mongoose.Schema.Types.ObjectId, ref: "Review"}]
+
 
 }, {
     timestamps: true,

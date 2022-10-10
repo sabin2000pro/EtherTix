@@ -42,7 +42,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '../../config.env' });
-var MONGO_URI = process.env.MONGO_URI;
 var connectAuthDatabase = function () {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {

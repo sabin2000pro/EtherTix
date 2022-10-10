@@ -14,7 +14,9 @@ declare namespace Express {
   }
 
 export const fetchAllEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "All Events Here"});
+    const events = await Event.find();
+
+    return response.status(200).json({success: true, data: events});
 }
 
 export const fetchSingleEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {

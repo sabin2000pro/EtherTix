@@ -37,13 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lockUserAccount = exports.deactivateUserAccount = exports.resendTwoFactorLoginCode = exports.resendEmailVerificationCode = exports.updateUserProfile = exports.updateUserPassword = exports.verifyLoginToken = exports.verifyEmailAddress = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
-var error_response_1 = require("./../utils/error-response");
+var bad_request_error_1 = require("./../errors/bad-request-error");
 var user_model_1 = require("../models/user-model");
 var email_verification_model_1 = require("../models/email-verification-model");
 var http_status_codes_1 = require("http-status-codes");
 var generate_otp_1 = require("../utils/generate-otp");
-var sendTokenResponse = function (user, statusCode, response) {
-};
 // @description: Register User API - Registers a new user on the platform
 // @route: /api/v1/auth/register
 // @http-method: POST
@@ -55,14 +53,14 @@ var registerUser = function (request, response, next) { return __awaiter(void 0,
             case 0:
                 _a = request.body, email = _a.email, password = _a.password, passwordConfirm = _a.passwordConfirm;
                 if (password !== passwordConfirm) {
-                    return [2 /*return*/, next(new error_response_1.ErrorResponse("Password confirmation error. Please check passwords", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError("Password confirmation error. Please check passwords"))];
                 }
                 return [4 /*yield*/, user_model_1.User.findOne({ email: email })]; // Find an existing user
             case 1:
                 existingUser = _b.sent() // Find an existing user
                 ;
                 if (existingUser) {
-                    return [2 /*return*/, next(new error_response_1.ErrorResponse("User already created", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError("User already exists"))];
                 }
                 return [4 /*yield*/, user_model_1.User.create(request.body)];
             case 2:
@@ -94,19 +92,19 @@ var loginUser = function (request, response, next) { return __awaiter(void 0, vo
             case 0:
                 _a = request.body, email = _a.email, password = _a.password;
                 if (!email || !password) {
-                    return [2 /*return*/, next(new error_response_1.ErrorResponse("Missing e-mail address or password. Check entries", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError("Missing e-mail address or password. Check entries"))];
                 }
                 return [4 /*yield*/, user_model_1.User.findOne({ email: email })];
             case 1:
                 user = _b.sent();
                 if (!user) {
-                    return [2 /*return*/, next(new error_response_1.ErrorResponse("Could not find that user", http_status_codes_1.StatusCodes.NOT_FOUND))];
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError("Could not find that user"))];
                 }
                 return [4 /*yield*/, user.comparePasswords(password)];
             case 2:
                 matchPasswords = _b.sent();
                 if (!matchPasswords) {
-                    return [2 /*return*/, next(new error_response_1.ErrorResponse("Passwords do not match. Please try again", http_status_codes_1.StatusCodes.BAD_REQUEST))];
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError("Passwords do not match. Please try again"))];
                 }
                 token = user.getAuthenticationToken();
                 request.session = { jwt: token };

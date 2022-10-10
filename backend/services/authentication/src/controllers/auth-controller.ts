@@ -1,5 +1,5 @@
-import { ErrorResponse } from './../utils/error-response';
 import { NextFunction, Request, Response } from 'express';
+import { BadRequestError } from '../../../shared/error-handler';
 import {User} from '../models/user-model';
 import {EmailVerification} from '../models/email-verification-model';
 import {PasswordReset} from '../models/password-reset-model';
@@ -14,10 +14,6 @@ declare namespace Express {
     }
 
   }
-
-  const sendTokenResponse = (user, statusCode, response) => {
-      
-  }
   
 // @description: Register User API - Registers a new user on the platform
 // @route: /api/v1/auth/register
@@ -28,13 +24,13 @@ export const registerUser = async (request: Request, response: Response, next: N
     const {email, password, passwordConfirm} = request.body;
 
     if(password !== passwordConfirm ) {
-        return next(new ErrorResponse(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
+        return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
     }
 
     const existingUser = await User.findOne({email}) // Find an existing user
 
     if(existingUser) {
-        return next(new ErrorResponse("User already created", StatusCodes.BAD_REQUEST));
+       return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
     }
 
     const newUser = await User.create(request.body);
@@ -62,20 +58,20 @@ export const loginUser = async (request: Request, response: Response, next: Next
     const {email, password} = request.body;
 
     if(!email || !password) {
-        return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
+        return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
     }
 
     const user = await User.findOne({email});
 
     if(!user) {
-        return next(new ErrorResponse(`Could not find that user`, StatusCodes.NOT_FOUND));
+        return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
     }
 
     // Compare user passwords before logging in
     const matchPasswords = await user.comparePasswords(password);
 
     if(!matchPasswords) {
-        return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
+        return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
     // Generate new JWT and store in in the session
@@ -95,7 +91,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
     if(request.session !== undefined) {
         request.session = null;
     }
-    
+
     return response.status(200).json({success: true, message: "Login User here"});
 }
 

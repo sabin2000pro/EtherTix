@@ -21,14 +21,17 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
 })
 
 export const register = async (registerPayload: any): Promise<any> => {
+
     try {
 
     } 
     
     catch(err: any) {
+
         if(err) {
             return console.error(err);
         }
+        
     }
 
 }
