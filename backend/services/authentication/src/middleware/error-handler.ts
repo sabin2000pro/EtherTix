@@ -69,7 +69,8 @@ export class ServerError extends Error {
 }
 
 export class UnauthorizedError extends Error {
-
+    statusCode = StatusCodes.UNAUTHORIZED;
+    status = "You are unauthorized to perform this action."
 }
 
 export class ImproperHTTPMethod extends Error {
