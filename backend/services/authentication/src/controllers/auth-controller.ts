@@ -1,3 +1,4 @@
+import { JwtTokenError } from './../../../shared/error-handler';
 import { NextFunction, Request, Response } from 'express';
 import { BadRequestError } from '../../../shared/error-handler';
 import {User} from '../models/user-model';
@@ -35,6 +36,12 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     const newUser = await User.create(request.body);
     const token = newUser.getAuthenticationToken();
+
+    if(!token) {
+        return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", ))
+    }
+
+
     await newUser.save();
 
     const currentUser = newUser._id; // Get the current user's ID
@@ -77,7 +84,7 @@ export const loginUser = async (request: Request, response: Response, next: Next
     // Generate new JWT and store in in the session
 
     const token = user.getAuthenticationToken();
-    request.session = {jwt: token};
+    request.session = {jwt: token}; // Store the token in the session as a cookie
 
     return response.status(StatusCodes.OK).json({success: true, token});
 }

@@ -50,7 +50,7 @@ export class NotFoundError extends Error {
 
 }
 
-export class JwtMalformedError extends Error {
+export class JwtTokenError extends Error {
 
 }
 
