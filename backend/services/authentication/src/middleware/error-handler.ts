@@ -40,7 +40,7 @@ export class BadRequestError extends Error {
 
 export class NotFoundError extends Error {
     statusCode = StatusCodes.BAD_REQUEST;
-    status = "Bad Request Error."
+    status = "Resource not found on the server"
 }
 
 export class JwtMalformedError extends Error {
@@ -48,6 +48,42 @@ export class JwtMalformedError extends Error {
 }
 
 export class FileTooLargeError extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
+    status = "The file size of the file you uploaded is too large. Check again."
+
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+  }
+}
+
+export class ServerError extends Error {
+    statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+    status = "Unexpected Server Error Occurred"
+
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 
 }
 
+export class UnauthorizedError extends Error {
+
+}
+
+export class ImproperHTTPMethod extends Error {
+
+}
+
+export class UnauthenticatedError extends Error {
+
+}
+
+export class DuplicateFieldError extends Error {
+
+}
+
+export class JwtTokenNotFoundError extends Error {
+
+}
