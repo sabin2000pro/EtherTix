@@ -99,11 +99,11 @@ services:
       - "3000:3000"
 
     build:
-      context: './frontend'
+      context: ../frontend
       dockerfile: Dockerfile
     
     volumes:
       - /app/node_modules
-      - ./frontend:/app
+      - ../frontend:/app
 volumes:
   mongodb_data_volume:

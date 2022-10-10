@@ -89,12 +89,10 @@
             "isFree": false,
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
-            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon in a couple of minutes",
+            "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
             "ticketSold": false
         }
-    },
-
-    
+    }
 
 
 ]

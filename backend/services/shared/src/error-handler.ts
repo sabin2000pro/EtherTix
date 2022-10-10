@@ -99,10 +99,18 @@ export class UnauthenticatedError extends Error {
         super(message);
         this.statusCode = statusCode;
   }
+
+
 }
 
 export class DuplicateFieldError extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
+    status = "Duplicate field created. Please check entry again"
 
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 }
 
 export class JwtTokenNotFoundError extends Error {

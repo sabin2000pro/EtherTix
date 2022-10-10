@@ -21,6 +21,13 @@ export const fetchAllEvents = async (request: Request, response: Response, next:
 
 export const fetchSingleEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const id = request.params.id;
+    const event = await Event.findById(id);
+
+    if(!event) {
+
+    }
+
+    
     return response.status(200).json({success: true, message: "All Events Here"});
 }
 

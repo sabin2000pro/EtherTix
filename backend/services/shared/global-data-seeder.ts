@@ -1,5 +1,6 @@
 import { User } from '../authentication/src/models/user-model';
 import {Event} from '../events/src/models/event-model';
+import {Ticket} from '../tickets/src/models/ticket-model';
 import connectAuthDatabase from '../authentication/src/database/auth-db';
 import connectEventsDatabase from '../events/src/database/event-db';
 import fs from "fs";
@@ -7,6 +8,7 @@ import path from 'path';
 
 const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../authentication/src/data/users.json')).toString()) as unknown as string;
 const events = JSON.parse(fs.readFileSync(path.join(__dirname, '../events/src/data/events.json')).toString()) as unknown as string;
+const tickets = JSON.parse(fs.readFileSync(path.join(__dirname, '../tickets/src/data/tickets.json')).toString()) as unknown as string;
 
 connectAuthDatabase();
 connectEventsDatabase();
@@ -16,8 +18,10 @@ export const loadAllData = async (): Promise<any> => {
     try {
 
         if(users !== null && events !== null) {
+
             await User.create(users);
             await Event.create(events);
+            await Ticket.create(tickets);
         
             console.log(`User data imported to DB`);
     

@@ -52,10 +52,18 @@ var fetchAllEvents = function (request, response, next) { return __awaiter(void 
 }); };
 exports.fetchAllEvents = fetchAllEvents;
 var fetchSingleEvent = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var id;
+    var id, event;
     return __generator(this, function (_a) {
-        id = request.params.id;
-        return [2 /*return*/, response.status(200).json({ success: true, message: "All Events Here" })];
+        switch (_a.label) {
+            case 0:
+                id = request.params.id;
+                return [4 /*yield*/, event_model_1.Event.findById(id)];
+            case 1:
+                event = _a.sent();
+                if (!event) {
+                }
+                return [2 /*return*/, response.status(200).json({ success: true, message: "All Events Here" })];
+        }
     });
 }); };
 exports.fetchSingleEvent = fetchSingleEvent;
