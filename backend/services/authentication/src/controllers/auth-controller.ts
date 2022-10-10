@@ -1,6 +1,6 @@
 import { JwtTokenError } from './../../../shared/error-handler';
 import { NextFunction, Request, Response } from 'express';
-import { BadRequestError } from '../../../shared/error-handler';
+import { BadRequestError } from './../../../shared/error-handler';
 import {User} from '../models/user-model';
 import {EmailVerification} from '../models/email-verification-model';
 import {PasswordReset} from '../models/password-reset-model';
@@ -40,7 +40,6 @@ export const registerUser = async (request: Request, response: Response, next: N
     if(!token) {
         return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", ))
     }
-
 
     await newUser.save();
 

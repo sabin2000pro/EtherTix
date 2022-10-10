@@ -51,7 +51,6 @@ PasswordResetSchema.pre('save', async function(next) {
     }
 
     this.token = await bcrypt.hash(this.token, ROUNDS) as any;
-
     return next();
 })
 
