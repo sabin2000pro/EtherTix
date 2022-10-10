@@ -45,16 +45,16 @@ const ReviewSchema = new mongoose.Schema<IReviewDocument>({
         default: Date.now
       },
 
-      event: {
+      event: { //  Rev -> Event // ID Of the event for which the review was left on
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bootcamp',
+        ref: 'Event',
         required: true
       },
 
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      user: { // Rev -> User. Which user left this specific review
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true
       }
 
 })
