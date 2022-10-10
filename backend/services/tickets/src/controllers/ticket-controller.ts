@@ -1,5 +1,15 @@
-import { NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
+
+
+declare namespace Express {
+    export interface Request {
+        user: any;
+        body: any;
+        session: any
+    }
+
+  }
 
 // @desc      Get courses
 // @route     GET /api/v1/tickets
@@ -7,7 +17,7 @@ import { Ticket } from '../models/ticket-model';
 // @access    Public
 
 export const getAllEventTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+    
 }
 
 // @desc      Get courses

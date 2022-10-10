@@ -21,3 +21,10 @@ export const protectAuth = async (request: Request, response: Response, next: Ne
 
     
 }
+
+export const restrictRoleTo = (...roles: any) => {
+    
+    return (request: Request, response: Response, next: NextFunction) => {
+        
+    }
+}

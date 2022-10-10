@@ -3,6 +3,7 @@ import {Event} from '../events/src/models/event-model';
 import {Ticket} from '../tickets/src/models/ticket-model';
 import connectAuthDatabase from '../authentication/src/database/auth-db';
 import connectEventsDatabase from '../events/src/database/event-db';
+import connectTicketsDatabase from '../tickets/src/database/tickets-db';
 import fs from "fs";
 import path from 'path';
 
@@ -10,8 +11,14 @@ const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../authentication
 const events = JSON.parse(fs.readFileSync(path.join(__dirname, '../events/src/data/events.json')).toString()) as unknown as string;
 const tickets = JSON.parse(fs.readFileSync(path.join(__dirname, '../tickets/src/data/tickets.json')).toString()) as unknown as string;
 
-connectAuthDatabase();
-connectEventsDatabase();
+const connectServicesToDb = () => {
+    connectAuthDatabase();
+    connectEventsDatabase();
+    connectTicketsDatabase();
+}
+
+connectServicesToDb();
+
 
 
 export const loadAllData = async (): Promise<any> => {
@@ -24,7 +31,7 @@ export const loadAllData = async (): Promise<any> => {
             await Event.create(events);
             await Ticket.create(tickets);
         
-            console.log(`User data imported to DB`);
+            console.log(`Data imported to the database.`);
     
             return process.exit(1);
         }
@@ -48,7 +55,8 @@ export const removeAllData = async (): Promise<any> => {
         await User.remove();
         await Event.remove();
 
-        console.log(`All data removed from database...`);
+        await Ticket.remove();
+        console.log(`Data removed from the database.`);
 
         return process.exit(1);
     } 

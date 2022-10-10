@@ -296,5 +296,18 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     toJSON: {virtuals: true}
 }) 
 
+// Virtual populate
+EventSchema.virtual('tickets', {
+    ref: 'Ticket',
+    foreignField: 'ticket',
+    localField: '_id'
+});
+
+EventSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'review',
+    localField: '_id'
+});
+
 const Event = mongoose.model<EventDocument>("Event", EventSchema);
 export {Event}
