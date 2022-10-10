@@ -1,3 +1,5 @@
+import { StatusCodes } from "http-status-codes";
+
 export interface IErrorResponse { // Error Response interface
     message: string;
     statusCode: number | undefined;
@@ -25,9 +27,27 @@ export abstract class CustomError extends Error {
 }
 
 export class BadRequestError extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
+    status = "Bad Request Error."
+
+  constructor(message, statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 
 }
+
 
 export class NotFoundError extends Error {
-    
+    statusCode = StatusCodes.BAD_REQUEST;
+    status = "Bad Request Error."
 }
+
+export class JwtMalformedError extends Error {
+
+}
+
+export class FileTooLargeError extends Error {
+
+}
+

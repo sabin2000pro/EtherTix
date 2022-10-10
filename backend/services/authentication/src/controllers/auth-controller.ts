@@ -38,8 +38,6 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     const newUser = await User.create(request.body);
     const token = newUser.getAuthenticationToken();
-
-    console.log(`Your JWT TOKEN : ${token}`);
     await newUser.save();
 
     const currentUser = newUser._id; // Get the current user's ID
