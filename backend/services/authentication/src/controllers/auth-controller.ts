@@ -15,7 +15,7 @@ declare namespace Express {
   }
 
   const sendTokenResponse = (user, statusCode, response) => {
-     
+      
   }
   
 // @description: Register User API - Registers a new user on the platform
@@ -30,7 +30,7 @@ export const registerUser = async (request: Request, response: Response, next: N
         return next(new ErrorResponse(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
     }
 
-    const existingUser = await User.findOne({email})
+    const existingUser = await User.findOne({email}) // Find an existing user
 
     if(existingUser) {
         return next(new ErrorResponse("User already created", StatusCodes.BAD_REQUEST));
@@ -56,9 +56,11 @@ export const registerUser = async (request: Request, response: Response, next: N
 const generateOTPVerificationToken = (otp_length = 6): String => {
 
     let OTP = ''
+    let RANDOM_LENGTH = 9;
 
     for(let i = 1; i <= otp_length; i++) {
-       const randomOTP = Math.round(Math.random() * 9)
+
+       const randomOTP = Math.round(Math.random() * RANDOM_LENGTH)
        OTP += randomOTP;
     }
 
@@ -115,6 +117,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 // @public: Yes (No Authorization Token Required)
 
 export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const {email} = request.body;
     return response.status(200).json({success: true, message: "Forgot Password"});
 }
 

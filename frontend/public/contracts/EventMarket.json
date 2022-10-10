@@ -1,0 +1,382 @@
+{
+  "contractName": "EventMarket",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "EventNftCreated",
+      "type": "event"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"EventNftCreated\",\"type\":\"event\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/EventMarket.sol\":\"EventMarket\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/EventMarket.sol\":{\"keccak256\":\"0x288ef4a1d2dcfaf8450026f0ce7c30636d9238f79f69a403aae0e1f0909a4fd9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://05f475207343727f13f5c6af9ac7e941505b736bea10673f90930049e82128c2\",\"dweb:/ipfs/QmVr2truQ9GFKfSZuTvJHsvQbRpmAMPhWVEQh221yUxQ5h\"]}},\"version\":1}",
+  "bytecode": "0x6080604052600080546001600160a01b0319163317905534600181905566470de4df8200006002558015603157600080fd5b50603f80603f6000396000f3fe6080604052600080fdfea2646970667358221220d17615731a0941b2ee2d525c9372977a1d0f7fb965b7d80af338e074878ba97664736f6c63430008110033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220d17615731a0941b2ee2d525c9372977a1d0f7fb965b7d80af338e074878ba97664736f6c63430008110033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "57:325:1:-:0;;;84:34;;;-1:-1:-1;;;;;;84:34:1;108:10;84:34;;;143:9;84:34;124:28;;;188:11;159:40;;357:22;;;;;;;;;57:325;;;;;;",
+  "deployedSourceMap": "57:325:1:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.7;\n\ncontract EventMarket {\n    address contractOwner = msg.sender;\n    uint256 msgValue = msg.value;\n\n    uint256 eventStartingPrice = 0.020 ether;\n    \n    struct EventNft {\n        uint256 tokenId;\n        address tokenName;\n        bool listedForSale;\n    }\n\n    event EventNftCreated (\n\n    );\n\n\n    constructor() {\n\n    }\n\n}",
+  "sourcePath": "/Users/sabin2000/Documents/ethertix/frontend/contracts/EventMarket.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/EventMarket.sol",
+    "exportedSymbols": {
+      "EventMarket": [
+        33
+      ]
+    },
+    "id": 34,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 8,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "EventMarket",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 33,
+        "linearizedBaseContracts": [
+          33
+        ],
+        "name": "EventMarket",
+        "nameLocation": "66:11:1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 12,
+            "mutability": "mutable",
+            "name": "contractOwner",
+            "nameLocation": "92:13:1",
+            "nodeType": "VariableDeclaration",
+            "scope": 33,
+            "src": "84:34:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address",
+              "typeString": "address"
+            },
+            "typeName": {
+              "id": 9,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "84:7:1",
+              "stateMutability": "nonpayable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "value": {
+              "expression": {
+                "id": 10,
+                "name": "msg",
+                "nodeType": "Identifier",
+                "overloadedDeclarations": [],
+                "referencedDeclaration": 4294967281,
+                "src": "108:3:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_magic_message",
+                  "typeString": "msg"
+                }
+              },
+              "id": 11,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": false,
+              "lValueRequested": false,
+              "memberLocation": "112:6:1",
+              "memberName": "sender",
+              "nodeType": "MemberAccess",
+              "src": "108:10:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address",
+                "typeString": "address"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 16,
+            "mutability": "mutable",
+            "name": "msgValue",
+            "nameLocation": "132:8:1",
+            "nodeType": "VariableDeclaration",
+            "scope": 33,
+            "src": "124:28:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 13,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "124:7:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "expression": {
+                "id": 14,
+                "name": "msg",
+                "nodeType": "Identifier",
+                "overloadedDeclarations": [],
+                "referencedDeclaration": 4294967281,
+                "src": "143:3:1",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_magic_message",
+                  "typeString": "msg"
+                }
+              },
+              "id": 15,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": false,
+              "lValueRequested": false,
+              "memberLocation": "147:5:1",
+              "memberName": "value",
+              "nodeType": "MemberAccess",
+              "src": "143:9:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 19,
+            "mutability": "mutable",
+            "name": "eventStartingPrice",
+            "nameLocation": "167:18:1",
+            "nodeType": "VariableDeclaration",
+            "scope": 33,
+            "src": "159:40:1",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 17,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "159:7:1",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "hexValue": "302e303230",
+              "id": 18,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "188:11:1",
+              "subdenomination": "ether",
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_20000000000000000_by_1",
+                "typeString": "int_const 20000000000000000"
+              },
+              "value": "0.020"
+            },
+            "visibility": "internal"
+          },
+          {
+            "canonicalName": "EventMarket.EventNft",
+            "id": 26,
+            "members": [
+              {
+                "constant": false,
+                "id": 21,
+                "mutability": "mutable",
+                "name": "tokenId",
+                "nameLocation": "244:7:1",
+                "nodeType": "VariableDeclaration",
+                "scope": 26,
+                "src": "236:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 20,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "236:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 23,
+                "mutability": "mutable",
+                "name": "tokenName",
+                "nameLocation": "269:9:1",
+                "nodeType": "VariableDeclaration",
+                "scope": 26,
+                "src": "261:17:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 22,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "261:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 25,
+                "mutability": "mutable",
+                "name": "listedForSale",
+                "nameLocation": "293:13:1",
+                "nodeType": "VariableDeclaration",
+                "scope": 26,
+                "src": "288:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 24,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "288:4:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "EventNft",
+            "nameLocation": "217:8:1",
+            "nodeType": "StructDefinition",
+            "scope": 33,
+            "src": "210:103:1",
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "e8723c214ed47858b337d3ab9bab060499ed3b05e55d471beb9f0b82f6bd878d",
+            "id": 28,
+            "name": "EventNftCreated",
+            "nameLocation": "325:15:1",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 27,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "341:8:1"
+            },
+            "src": "319:31:1"
+          },
+          {
+            "body": {
+              "id": 31,
+              "nodeType": "Block",
+              "src": "371:8:1",
+              "statements": []
+            },
+            "id": 32,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 29,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "368:2:1"
+            },
+            "returnParameters": {
+              "id": 30,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "371:0:1"
+            },
+            "scope": 33,
+            "src": "357:22:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 34,
+        "src": "57:325:1",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:350:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.17+commit.8df45f5f.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.9",
+  "updatedAt": "2022-10-10T09:30:27.090Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

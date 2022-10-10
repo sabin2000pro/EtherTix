@@ -13,9 +13,5 @@ declare namespace Express {
   
 
 export const protectAuth = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
-}
-
-export const restrictRolesTo = (...roles) => {
-
+    let token;
 }
