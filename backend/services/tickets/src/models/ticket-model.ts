@@ -112,6 +112,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         }
 
     }
+    
 }, {
     timestamps: true,
     toJSON: {virtuals: true}

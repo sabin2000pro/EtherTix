@@ -17,19 +17,20 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
         enum: ["access", "coded", "hold", "public"]
     },
 
-    code: { // The discount code
+    discountCode: { // The discount code
       type: String,
-      default: "abcd"
+      default: "abcd",
+      required: [true, "Please specify the discount code."]
     },
  
     amountOff: { // How much to take off the price in (ETHER)
-      type: String,
-      default: null
+        type: String,
+        default: null
     },
  
     percentOff: {
-      type: String,
-      default: null
+        type: String,
+        default: null
     },
 
    ticket: { // The ticket to which the discount applies to
