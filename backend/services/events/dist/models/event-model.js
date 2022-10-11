@@ -172,5 +172,16 @@ var EventSchema = new mongoose_1.default.Schema({
     timestamps: true,
     toJSON: { virtuals: true }
 });
+// Virtual populate
+EventSchema.virtual('tickets', {
+    ref: 'Ticket',
+    foreignField: 'ticket',
+    localField: '_id'
+});
+EventSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'review',
+    localField: '_id'
+});
 var Event = mongoose_1.default.model("Event", EventSchema);
 exports.Event = Event;

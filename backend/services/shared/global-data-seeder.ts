@@ -25,7 +25,7 @@ export const loadAllData = async (): Promise<any> => {
 
     try {
 
-        if(users !== null && events !== null) {
+        if(users !== null && events !== null && tickets != null && venues != null) {
 
             await User.create(users);
             await Event.create(events);
