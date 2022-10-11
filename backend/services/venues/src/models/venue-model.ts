@@ -158,6 +158,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
   toJSON: {virtuals: true}
 }) 
 
+//TODO
 // // Geocode & create location field
 // VenueSchema.pre('save', async function(next) {
 
