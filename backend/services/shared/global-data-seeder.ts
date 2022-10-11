@@ -1,9 +1,11 @@
 import { User } from '../authentication/src/models/user-model';
 import {Event} from '../events/src/models/event-model';
 import {Ticket} from '../tickets/src/models/ticket-model';
+import {Venue} from '../venues/src/models/venue-model';
 import connectAuthDatabase from '../authentication/src/database/auth-db';
 import connectEventsDatabase from '../events/src/database/event-db';
 import connectTicketsDatabase from '../tickets/src/database/tickets-db';
+import connectVenuesDatabase from '../venues/src/database/venues-db';
 import fs from "fs";
 import path from 'path';
 
@@ -16,6 +18,7 @@ const connectServicesToDb = () => {
     connectAuthDatabase();
     connectEventsDatabase();
     connectTicketsDatabase();
+    connectVenuesDatabase();
 }
 
 connectServicesToDb();
@@ -30,6 +33,7 @@ export const loadAllData = async (): Promise<any> => {
             await User.create(users);
             await Event.create(events);
             await Ticket.create(tickets);
+            await Venue.create(venues);
         
             console.log(`Data imported to the database.`);
     
