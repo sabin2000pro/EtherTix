@@ -19,8 +19,8 @@ interface IUserAttributes {
     photo: string;
     createdAt: Date;
     address: string;
-    pastEventsHeld: Number;
-    upcomingEvents: Number;
+    pastEventsHeld: number;
+    upcomingEvents: number;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
