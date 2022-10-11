@@ -113,7 +113,8 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true}
 });
 
 const Ticket = mongoose.model<ITicketDocument>("Ticket", TicketSchema);

@@ -246,7 +246,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if the event should show when it ends or not"]
     },
 
-    isFree: {
+    isFree: { // If the event is free or not
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event is free or not"]
@@ -262,10 +262,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
         salesStatus: {
             type: String,
-            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"]
+            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
+            required: [true, "Please specify the sales status of the event."]
         },
 
-        salesStart: {
+        salesStart: { // Start date of the ticket sales
             type: Date,
             default: Date.now
         },
@@ -275,7 +276,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             default: Date.now
         }
     },
-
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
