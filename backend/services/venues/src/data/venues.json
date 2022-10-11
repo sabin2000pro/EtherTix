@@ -15,6 +15,15 @@
         "ageRestrictions": "AGE_RESTRICTION_MIN_EIGHTEEN",
         "venueCapacity": 150,
         "address": "139 Cowgate, Edinburgh EH1 1JS"
+    },
+
+    {
+        "_id": "5d725a4a7b292f5f8cefg602",
+        "event": "5d725a4a7b292f5f8ceff791",
+        "name": "Usher Hall Venue",
+        "ageRestrictions": "AGE_RESTRICTION_ALL_AGES",
+        "venueCapacity": 2200,
+        "address": "Lothian Rd, Edinburgh EH1 2EA"
     }
 
 

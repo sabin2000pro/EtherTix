@@ -11,7 +11,7 @@
             "description": "Standard Ticket for the highland tour event",
             "cost": 0.0150,
             "isFree": false,
-            "deliveryMethods": "Will Call",
+            "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false
@@ -30,7 +30,7 @@
             "description": "Basic Entry Ticket for the highland tour event",
             "cost": 0.0085,
             "isFree": false,
-            "deliveryMethods": "Will Call",
+            "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false
@@ -49,7 +49,7 @@
             "description": "Premium Entry Ticket for the highland tour event",
             "cost": 0.0250,
             "isFree": false,
-            "deliveryMethods": "Will Call",
+            "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false
@@ -68,7 +68,7 @@
             "description": "Premium VIP Entry Ticket for the highland tour event",
             "cost": 0.0450,
             "isFree": false,
-            "deliveryMethods": "Will Call",
+            "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false
