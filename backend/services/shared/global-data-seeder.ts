@@ -10,6 +10,7 @@ import path from 'path';
 const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../authentication/src/data/users.json')).toString()) as unknown as string;
 const events = JSON.parse(fs.readFileSync(path.join(__dirname, '../events/src/data/events.json')).toString()) as unknown as string;
 const tickets = JSON.parse(fs.readFileSync(path.join(__dirname, '../tickets/src/data/tickets.json')).toString()) as unknown as string;
+const venues = JSON.parse(fs.readFileSync(path.join(__dirname, '../venues/src/data/venues.json')).toString()) as unknown as string;
 
 const connectServicesToDb = () => {
     connectAuthDatabase();
@@ -18,7 +19,6 @@ const connectServicesToDb = () => {
 }
 
 connectServicesToDb();
-
 
 
 export const loadAllData = async (): Promise<any> => {
