@@ -4,8 +4,11 @@ import hpp from "hpp"
 import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
+import connectVenueSchema from './database/venues-db';
 
 const app: Application = express();
+
+connectVenueSchema();
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
