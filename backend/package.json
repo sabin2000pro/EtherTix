@@ -11,7 +11,9 @@
     "express-rate-limit": "^6.6.0",
     "helmet": "^6.0.0",
     "hpp": "^0.2.3",
+    "mailgun-js": "^0.22.0",
     "mongoose": "^6.6.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "twilio": "^3.82.2"
   }
 }
