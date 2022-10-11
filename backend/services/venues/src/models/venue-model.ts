@@ -72,6 +72,16 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           default: false
         },
 
+        smokingAllowed: {
+          type: Boolean,
+          default: false
+        },
+
+        photo: {
+          type: String,
+          default: 'no-photo.jpg'
+        },
+
         address: { // Address of the venue
             type: String,
             required: [true, 'Please add a valid address for the venue']

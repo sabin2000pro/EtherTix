@@ -19,10 +19,16 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: null
         },
 
-        ticketClass: {
+        ticketClass: { // The ticket class. VIP ones are the most expensive and basic are the cheapest.
             type: String,
             required: [true, "Please specify the ticket class for this event"],
             enum: ["premium", "standard", "basic", "vip"]
+        },
+
+        ticketToken: { // The format of the ticket that will be sent to the buyer
+            type: String,
+            required: [true, "Please specify the format of the ticket"],
+            enum: ["Barcode", "QR Code", "Image", "PDF"]
         },
 
         capacity: { // Number of tickets for sale (0, 1, 2,3)
@@ -98,8 +104,12 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         event: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Event"
-        }
+        },
 
+        issuer: { // The issuer of the ticket
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
 
     }
 }, {
