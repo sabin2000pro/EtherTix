@@ -303,13 +303,6 @@ EventSchema.virtual('tickets', {
     localField: '_id'
 });
 
-// Virtual populate
-EventSchema.virtual('venue', {
-    ref: 'Venue',
-    foreignField: 'venue',
-    localField: '_id'
-});
-
 EventSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'review',

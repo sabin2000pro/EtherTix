@@ -6,6 +6,7 @@ import {PasswordReset} from '../models/password-reset-model';
 import {StatusCodes} from "http-status-codes";
 import { generateOTPVerificationToken } from '../utils/generate-otp';
 import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
+import { generateMfaToken } from '../utils/generate-mfa';
 
 declare namespace Express {
     export interface Request {
@@ -96,8 +97,30 @@ export const loginUser = async (request: Request, response: Response, next: Next
     }
 
     // Generate new JWT and store in in the session
-
     const token = user.getAuthenticationToken();
+    const userMfa = generateMfaToken();
+
+    // Check for a valid MFA
+    if(!userMfa) {
+        // return error
+    }
+
+    console.log(`Your MFA : ${userMfa}`);
+
+        // Send MFA e-mail to user
+        const transporter = emailTransporter();
+
+        transporter.sendMail({
+            from: 'mfa@ethertix.com',
+            to: user.email,
+            subject: 'Login MFA Verification',
+            html: `
+            
+            <p>Your MFA code</p>
+            <h1> ${userMfa}</h1>
+            `
+        })
+
     request.session = {jwt: token}; // Store the token in the session as a cookie
 
     return response.status(StatusCodes.OK).json({success: true, token});

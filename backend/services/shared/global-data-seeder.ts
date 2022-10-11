@@ -65,6 +65,7 @@ export const removeAllData = async (): Promise<any> => {
         await User.remove();
         await Event.remove();
         await Ticket.remove();
+        await Venue.remove();
 
         dataRemoved = (!dataRemoved) as boolean;
 

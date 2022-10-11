@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lockUserAccount = exports.deactivateUserAccount = exports.resendTwoFactorLoginCode = exports.resendEmailVerificationCode = exports.updateUserProfile = exports.updateUserPassword = exports.verifyLoginToken = exports.verifyEmailAddress = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
+const send_email_1 = require("./../utils/send-email");
 const user_model_1 = require("../models/user-model");
 const email_verification_model_1 = require("../models/email-verification-model");
 const http_status_codes_1 = require("http-status-codes");
@@ -39,6 +40,19 @@ const registerUser = (request, response, next) => __awaiter(void 0, void 0, void
     const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
     yield verificationToken.save();
     // Send e-mail verification to user
+    const transporter = (0, send_email_1.emailTransporter)();
+    transporter.sendMail({
+        from: 'verification@ethertix.com',
+        to: newUser.email,
+        subject: 'E-mail Verification',
+        html: `
+        
+        <p>Your verification OTP</p>
+        <h1> ${userOTP}</h1>
+        `
+    });
+    const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
+    yield userOTPVerification.save();
     return response.status(http_status_codes_1.StatusCodes.CREATED).json({ success: true, data: newUser, token });
 });
 exports.registerUser = registerUser;

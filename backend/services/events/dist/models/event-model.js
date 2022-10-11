@@ -147,7 +147,8 @@ var EventSchema = new mongoose_1.default.Schema({
     eventSalesStatus: {
         salesStatus: {
             type: String,
-            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"]
+            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
+            required: [true, "Please specify the sales status of the event."]
         },
         salesStart: {
             type: Date,

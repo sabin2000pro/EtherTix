@@ -182,14 +182,6 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 // });
 
 
-
-// Virtual populate
-VenueSchema.virtual('Organiser', {
-  ref: 'User',
-  foreignField: 'user',
-  localField: '_id'
-});
-
 VenueSchema.virtual('events', {
   ref: 'Event',
   foreignField: 'event',
