@@ -23,8 +23,8 @@ const connectServicesToDb = () => {
 
 connectServicesToDb();
 
-
 export const loadAllData = async (): Promise<any> => {
+    let dataImported = false;
 
     try {
 
@@ -34,10 +34,15 @@ export const loadAllData = async (): Promise<any> => {
             await Event.create(events);
             await Ticket.create(tickets);
             await Venue.create(venues);
+
+            dataImported = (!dataImported) as boolean;
+
+            if(dataImported) {
+                console.log(`Data imported to the database.`);
+
+                return process.exit(1);
+            }
         
-            console.log(`Data imported to the database.`);
-    
-            return process.exit(1);
         }
 
     } 
@@ -53,13 +58,16 @@ export const loadAllData = async (): Promise<any> => {
 }
 
 export const removeAllData = async (): Promise<any> => {
+    let dataRemoved = false;
 
     try {
 
         await User.remove();
         await Event.remove();
-
         await Ticket.remove();
+
+        dataRemoved = (!dataRemoved) as boolean;
+
         console.log(`Data removed from the database.`);
 
         return process.exit(1);
@@ -70,6 +78,7 @@ export const removeAllData = async (): Promise<any> => {
         if(err) {
             return console.log(err);
         }
+
     }
 
 
