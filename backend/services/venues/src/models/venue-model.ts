@@ -21,6 +21,8 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             type: String,
             required: [true, "Please include a valid name for the name"]
         },
+        
+        slug: String,
   
         website: {
           type: String,
@@ -43,8 +45,6 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           ]
         },
 
-        slug: String,
-
         ageRestrictions: { // Venue entry age restriction
             type: String,
             required: [true, "Please include a valid age restriction for the venue"],
@@ -65,6 +65,11 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
         closeTime: {  
           type: Date,
           default: Date.now
+        },
+
+        hasPublicAccess: {
+          type: Boolean,
+          default: false
         },
 
         address: { // Address of the venue
