@@ -1,3 +1,4 @@
+import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
 import {EmailVerification} from '../models/email-verification-model';
@@ -49,6 +50,21 @@ export const registerUser = async (request: Request, response: Response, next: N
     await verificationToken.save();
 
     // Send e-mail verification to user
+    const transporter = emailTransporter();
+
+    transporter.sendMail({
+        from: 'verification@ethertix.com',
+        to: newUser.email,
+        subject: 'E-mail Verification',
+        html: `
+        
+        <p>Your verification OTP</p>
+        <h1> ${userOTP}</h1>
+        `
+    })
+
+    const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
+    await userOTPVerification.save();
 
     return response.status(StatusCodes.CREATED).json({success: true, data: newUser, token});
 }
@@ -93,6 +109,7 @@ export const loginUser = async (request: Request, response: Response, next: Next
 // @public: No (Authorization Token Required To Identify User)
 
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     if(request.session !== undefined) {
         request.session = null;
     }
