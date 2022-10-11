@@ -3,19 +3,51 @@ import geocoder from "node-geocoder";
 
 interface IVenueAttributes {
     venue: Object;
+    name: string;
+    slug: string;
+    email: string;
+    venueCapacity: number;
+    phone: string;
+    ageRestrictions: string;
+
+    openTime: Date,
+    closeTime: Date,
+    hasPublicAccess: boolean;
+    smokingAllowed: boolean;
+    photo: string;
+    createdAt: Date;
+
+    website: string;
     location: Object;
     address: string
+
+    organiser: mongoose.Schema.Types.ObjectId
+    event: mongoose.Schema.Types.ObjectId
 }
 
 interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
+    name: string;
+    slug: string;
     venue: Object;
+    phone: string;
+    email: string;
+    website: string;
+    openTime: Date;
+    closeTime: Date;
+    hasPublicAccess: boolean;
+    smokingAllowed: boolean;
+    photo: string;
+    createdAt: Date;
+
+    venueCapacity: number;
+    ageRestrictions: string;
     address: string;
     location: Object;
+    organiser: mongoose.Schema.Types.ObjectId
+    event: mongoose.Schema.Types.ObjectId
 }
 
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
-
-    venue: { // Venue Object
 
         name: {
             type: String,
@@ -26,7 +58,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
   
         website: {
           type: String,
-          
+
           match: [
             /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
             'Please use a valid URL with HTTP or HTTPS'
@@ -120,9 +152,10 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
         event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}]
 
-    }
+}, {
 
-
+  timestamps: true,
+  toJSON: {virtuals: true}
 }) 
 
 // Geocode & create location field
