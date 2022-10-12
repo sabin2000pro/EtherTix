@@ -110,7 +110,9 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
     return response.status(201).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
 }
 
-
+export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
+}
 
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
 // @route: /api/v1/auth/register
@@ -207,6 +209,10 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
 }
 
+export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "Resend Two Factor Code Here"});
+}
+
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
 // @route: /api/v1/auth/logout
 // @http-method: GET
@@ -254,14 +260,6 @@ export const updateUserProfile = async (request: Request, response: Response, ne
     await updatedUserProfile.save();
 
     return response.status(200).json({success: true, message: "Update User Password Here"});
-}
-
-export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
-}
-
-export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Resend Two Factor Code Here"});
 }
 
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
