@@ -7,6 +7,8 @@ import {StatusCodes} from "http-status-codes";
 import { generateOTPVerificationToken } from '../utils/generate-otp';
 import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
+import { isValidObjectId } from 'mongoose';
+import { TwoFactorVerification } from 'models/two-factor-model';
 
 declare namespace Express {
     export interface Request {
@@ -168,8 +170,41 @@ export const loginUser = async (request: Request, response: Response, next: Next
 }
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const {userId, multiFactorToken} = request.body;
+    const user = await User.findById(userId);
 
-    return response.status(200).json({success: true, message: "Verify Login User here"});
+    if(!isValidObjectId(userId)) {
+        return next(new BadRequestError(`This user ID is not valid. Please try again`, 401));
+    }
+
+    if(!multiFactorToken) {
+        user.isActive = !user.isActive;
+        return next(new BadRequestError("Please provide your MFA token", 400));
+    }
+
+    const factorToken = await TwoFactorVerification.findOne({owner: userId});
+
+    if(!factorToken) {
+        return next(new BadRequestError(`The 2FA token associated to the user is invalid `, 401));
+    }
+
+    // Check to see if the tokens match
+    const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
+
+    if(!mfaTokensMatch) {
+        user.isActive = false;
+        user.isVerified = false;
+        return next(new BadRequestError("The MFA token you entered is invalid. Try again", 400));
+    }
+
+    user.isVerified = true; // User account is now verified
+    user.isActive = true; // And user account is active
+    factorToken.mfaToken = undefined;
+
+    const jwtToken = user.getAuthenticationToken();
+    (request.session) = {jwtToken} as any || undefined;
+    return response.status(200).json({userData: {id: user._id,  username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "Your Account Is Active"})
+
 }
 
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
@@ -195,10 +230,6 @@ export const forgotPassword = async (request: Request, response: Response, next:
     const {email} = request.body;
     const user = await User.findOne({email});
 
-    if(!user) {
-
-    }
-
     return response.status(200).json({success: true, message: "Forgot Password"});
 }
 
@@ -217,10 +248,6 @@ export const updateUserPassword = async (request: Request, response: Response, n
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const fieldsToUpdate = {email: request.body.email, username: request.body.username};
     const user = await User.find(fieldsToUpdate.email);
-
-    if(!user) {
-
-    }
 
     // Update the user
     const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
