@@ -21,6 +21,9 @@ interface IUserAttributes {
     address: string;
     pastEventsHeld: number;
     upcomingEvents: number;
+    isActive: boolean;
+    isLocked: boolean;
+    isVerified: boolean;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -41,8 +44,12 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     photo: string;
     createdAt: Date;
 
-    pastEventsHeld: Number;
-    upcomingEvents: Number;
+    pastEventsHeld: number;
+    upcomingEvents: number;
+
+    isActive: boolean;
+    isLocked: boolean;
+    isVerified: boolean;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -103,6 +110,21 @@ const UserSchema = new mongoose.Schema({
     pastEventsHeld: {
         type: Number,
         default: 0,
+    },
+
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    isLocked: { 
+        type: Boolean,
+        default: false
+    },
+
+    isActive: {
+        type: Boolean,
+        default: false
     }
 
 }, {timestamps: true});

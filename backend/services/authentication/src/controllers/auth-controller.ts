@@ -71,7 +71,24 @@ export const registerUser = async (request: Request, response: Response, next: N
 }
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {ownerId, token} = request.body;
+    const {userId, token} = request.body;
+    const user = await User.findById(userId);
+
+    if(!user) {
+        return next(new BadRequestError(`No user found with that ID`, 400));
+    }
+
+    if(user.isVerified) {
+        return next(new BadRequestError(`User account is already verified`, 400));
+    }
+
+    if(user.isActive) {
+        return next(new BadRequestError(`User account is already active`, 400));
+    }
+
+
+
+
     return response.status(200).json({success: true, message: "Login User here"});
 }
 
