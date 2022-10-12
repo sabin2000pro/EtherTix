@@ -86,13 +86,13 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         return next(new BadRequestError(`User account is already active`, 400));
     }
 
-    const token = await EmailVerification.findOne({owner: userId});
+    const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
 
     if(!token) {
         return next(new BadRequestError(`OTP Verification token is not found. Please try again`, 400));
     }
 
-    const otpTokensMatch = await token.compareEmailTokens(OTP);
+    const otpTokensMatch = await token.compareEmailTokens(OTP); // Check if they match
 
     if(!otpTokensMatch) {
         return next(new BadRequestError(`The token you entered does not match the one in the database.`, 400));
@@ -141,13 +141,11 @@ export const loginUser = async (request: Request, response: Response, next: Next
 
     // Check for a valid MFA
     if(!userMfa) {
-       
+       return next(new BadRequestError("User MFA not valid. Try again", 400))
     }
 
-    console.log(`Your MFA : ${userMfa}`);
-
-        // Send MFA e-mail to user
-        const transporter = emailTransporter();
+     // Send MFA e-mail to user
+     const transporter = emailTransporter();
 
         transporter.sendMail({
             from: 'mfa@ethertix.com',
@@ -162,10 +160,14 @@ export const loginUser = async (request: Request, response: Response, next: Next
 
     request.session = {jwt: token}; // Store the token in the session as a cookie
 
+    // const newTwoFactor = new TwoFactor({owner: user._id, twoFactorToken: userTwoFactorCode});
+    // await newTwoFactor.save();
+
     return response.status(StatusCodes.OK).json({success: true, token});
 }
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     return response.status(200).json({success: true, message: "Verify Login User here"});
 }
 
