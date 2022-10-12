@@ -128,6 +128,10 @@ export const loginUser = async (request: Request, response: Response, next: Next
         return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
     }
 
+    if(user.isLocked) {
+        return next(new BadRequestError("Cannot login. Your account is locked", 400));
+    }
+
     // Compare user passwords before logging in
     const matchPasswords = await user.comparePasswords(password);
 
@@ -159,9 +163,6 @@ export const loginUser = async (request: Request, response: Response, next: Next
         })
 
     request.session = {jwt: token}; // Store the token in the session as a cookie
-
-    // const newTwoFactor = new TwoFactor({owner: user._id, twoFactorToken: userTwoFactorCode});
-    // await newTwoFactor.save();
 
     return response.status(StatusCodes.OK).json({success: true, token});
 }
