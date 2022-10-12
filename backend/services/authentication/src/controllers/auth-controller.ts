@@ -1,3 +1,4 @@
+import { NotFoundError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -236,6 +237,10 @@ export const forgotPassword = async (request: Request, response: Response, next:
     const {email} = request.body;
     const user = await User.findOne({email});
 
+    if(!user) {
+        return next(new NotFoundError("No user found with that e-mail address", 404));
+    }
+
     return response.status(200).json({success: true, message: "Forgot Password"});
 }
 
@@ -268,4 +273,8 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 export const lockUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(200).json({success: true, message: "Lock User Account"});
+}
+
+export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "Upload User Profile Picture Here..."});
 }
