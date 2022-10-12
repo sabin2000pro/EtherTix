@@ -71,7 +71,7 @@ export const registerUser = async (request: Request, response: Response, next: N
 }
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {userId, token} = request.body;
+    const {userId, OTP} = request.body;
     const user = await User.findById(userId);
 
     if(!user) {
@@ -86,10 +86,26 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         return next(new BadRequestError(`User account is already active`, 400));
     }
 
+    const token = await EmailVerification.findOne({owner: userId});
 
+    if(!token) {
+        return next(new BadRequestError(`OTP Verification token is not found. Please try again`, 400));
+    }
 
+    const otpTokensMatch = await token.compareEmailTokens(OTP);
 
-    return response.status(200).json({success: true, message: "Login User here"});
+    if(!otpTokensMatch) {
+        return next(new BadRequestError(`The token you entered does not match the one in the database.`, 400));
+    }
+
+    user.isVerified = true;
+    user.accountActive = false;
+
+    const jwtToken = user.getAuthenticationToken();
+
+    request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
+    return response.status(201).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
 }
 
 
