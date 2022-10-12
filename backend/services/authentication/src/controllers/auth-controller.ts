@@ -70,6 +70,12 @@ export const registerUser = async (request: Request, response: Response, next: N
     return response.status(StatusCodes.CREATED).json({success: true, data: newUser, token});
 }
 
+export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const {ownerId, token} = request.body;
+    return response.status(200).json({success: true, message: "Login User here"});
+}
+
+
 
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
 // @route: /api/v1/auth/register
@@ -102,7 +108,7 @@ export const loginUser = async (request: Request, response: Response, next: Next
 
     // Check for a valid MFA
     if(!userMfa) {
-        // return error
+       
     }
 
     console.log(`Your MFA : ${userMfa}`);
@@ -126,6 +132,10 @@ export const loginUser = async (request: Request, response: Response, next: Next
     return response.status(StatusCodes.OK).json({success: true, token});
 }
 
+export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "Verify Login User here"});
+}
+
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
 // @route: /api/v1/auth/logout
 // @http-method: GET
@@ -147,6 +157,12 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 
 export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const {email} = request.body;
+    const user = await User.findOne({email});
+
+    if(!user) {
+
+    }
+
     return response.status(200).json({success: true, message: "Forgot Password"});
 }
 
@@ -158,19 +174,22 @@ export const getCurrentUser = async (request: Request, response: Response, next:
     return response.status(200).json({success: true, message: "Current User here"});
 }
 
-export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Login User here"});
-}
-
-export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Verify Login User here"});
-}
-
 export const updateUserPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(200).json({success: true, message: "Update User Password Here"});
 }
 
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const fieldsToUpdate = {email: request.body.email, username: request.body.username};
+    const user = await User.find(fieldsToUpdate.email);
+
+    if(!user) {
+
+    }
+
+    // Update the user
+    const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
+    await updatedUserProfile.save();
+
     return response.status(200).json({success: true, message: "Update User Password Here"});
 }
 

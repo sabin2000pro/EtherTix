@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
 
-
 declare namespace Express {
     export interface Request {
         user: any;
