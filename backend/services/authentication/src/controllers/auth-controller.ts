@@ -74,41 +74,55 @@ export const registerUser = async (request: Request, response: Response, next: N
 }
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {userId, OTP} = request.body;
-    const user = await User.findById(userId);
 
-    if(!user) {
-        return next(new BadRequestError(`No user found with that ID`, 400));
+    try {
+        const {userId, OTP} = request.body;
+        const user = await User.findById(userId);
+
+        if(!user) {
+            return next(new BadRequestError(`No user found with that ID`, 400));
+        }
+
+        if(user.isVerified) {
+            return next(new BadRequestError(`User account is already verified`, 400));
+        }
+
+        if(user.isActive) {
+            return next(new BadRequestError(`User account is already active`, 400));
+        }
+
+        const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
+
+        if(!token) {
+            return next(new BadRequestError(`OTP Verification token is not found. Please try again`, 400));
+        }
+
+        const otpTokensMatch = await token.compareEmailTokens(OTP); // Check if they match
+
+        if(!otpTokensMatch) {
+            return next(new BadRequestError(`The token you entered does not match the one in the database.`, 400));
+        }
+
+        user.isVerified = true;
+        user.accountActive = false;
+
+        const jwtToken = user.getAuthenticationToken();
+
+        request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
+        return response.status(201).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
+    } 
+    
+    catch(error: any) {
+
+        if(error) {
+            return next(new BadRequestError(error, 400));
+        }
+
+        
     }
 
-    if(user.isVerified) {
-        return next(new BadRequestError(`User account is already verified`, 400));
-    }
 
-    if(user.isActive) {
-        return next(new BadRequestError(`User account is already active`, 400));
-    }
-
-    const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
-
-    if(!token) {
-        return next(new BadRequestError(`OTP Verification token is not found. Please try again`, 400));
-    }
-
-    const otpTokensMatch = await token.compareEmailTokens(OTP); // Check if they match
-
-    if(!otpTokensMatch) {
-        return next(new BadRequestError(`The token you entered does not match the one in the database.`, 400));
-    }
-
-    user.isVerified = true;
-    user.accountActive = false;
-
-    const jwtToken = user.getAuthenticationToken();
-
-    request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
-
-    return response.status(201).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
 }
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
