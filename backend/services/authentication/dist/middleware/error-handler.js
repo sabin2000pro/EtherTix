@@ -11,7 +11,7 @@ class CustomError extends Error {
     }
 }
 exports.CustomError = CustomError;
-class BadRequestError extends Error {
+class BadRequestError extends CustomError {
     constructor(message, statusCode) {
         super(message);
         this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
@@ -20,7 +20,7 @@ class BadRequestError extends Error {
     }
 }
 exports.BadRequestError = BadRequestError;
-class NotFoundError extends Error {
+class NotFoundError extends CustomError {
     constructor(message, statusCode) {
         super(message);
         this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;

@@ -12,13 +12,13 @@ interface EventAttributes { // Interface for the event attributes
     publishedAt: Date;
     event_status: string;
     currency: string;
-    isOnline: Boolean; // True or false if the event is online
+    isOnline: boolean; // True or false if the event is online
     event_logo: string;
     format: Object;
     category: Object;
 
-    maxCapacity: Number;
-    minCapacity: Number;
+    maxCapacity: number;
+    minCapacity: number;
 
     showRemaining: boolean;
     ticketAvailability: Object;
@@ -55,22 +55,22 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     currency: string;
 
     event_logo: string;
-    isOnline: Boolean;
+    isOnline: boolean;
     format: Object;
     category: Object;
 
-    maxCapacity: Number;
-    minCapacity: Number;
-    showRemaining: Boolean;
+    maxCapacity: number;
+    minCapacity: number;
+    showRemaining: boolean;
     ticketAvailability: Object;
-    isSoldOut: Boolean;
-    searchable: Boolean;
+    isSoldOut: boolean;
+    searchable: boolean;
     
-    hideStartDate: Boolean;
-    hideEndDate: Boolean;
-    isLocked: Boolean;
-    reservedSeating: Boolean;
-    isFree: Boolean;
+    hideStartDate: boolean;
+    hideEndDate: boolean;
+    isLocked: boolean;
+    reservedSeating: boolean;
+    isFree: boolean;
 
     eventSalesStatus: Object;
     isPremium: boolean;
@@ -78,8 +78,8 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
-    issue: mongoose.Schema.Types.ObjectId;
-    review: mongoose.Schema.Types.ObjectId;
+    issue: mongoose.Schema.Types.ObjectId; // MAPPING: ONE EVENT -> MANY ISSUE SUPPORT TICKETS
+    review: mongoose.Schema.Types.ObjectId; // MAPPING: ONE EVENT -> MANY REVIEWS
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -306,6 +306,12 @@ EventSchema.virtual('tickets', {
 EventSchema.virtual('reviews', {
     ref: 'Review',
     foreignField: 'review',
+    localField: '_id'
+});
+
+EventSchema.virtual('venues', {
+    ref: 'Venue',
+    foreignField: 'venue',
     localField: '_id'
 });
 

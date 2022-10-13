@@ -25,37 +25,30 @@ const two_factor_model_1 = require("../models/two-factor-model");
 // @http-method: POST
 // @public: Yes (No Authorization Token Required)
 const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email, password, passwordConfirm } = request.body;
-        if (password !== passwordConfirm) {
-            return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
-        }
-        const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
-        if (existingUser) {
-            return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
-        }
-        const newUser = yield user_model_1.User.create(request.body);
-        const token = newUser.getAuthenticationToken();
-        if (!token) {
-            return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
-        }
-        yield newUser.save();
-        const currentUser = newUser._id; // Get the current user's ID
-        const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
-        const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
-        yield verificationToken.save();
-        // Send e-mail verification to user
-        const transporter = (0, send_email_1.emailTransporter)();
-        sendConfirmationEmail(transporter, newUser, userOTP);
-        const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
-        yield userOTPVerification.save();
-        return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
+    const { email, password, passwordConfirm } = request.body;
+    if (password !== passwordConfirm) {
+        return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
-    catch (error) {
-        if (error) {
-            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
-        }
+    const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
+    if (existingUser) {
+        return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
+    const newUser = yield user_model_1.User.create(request.body);
+    const token = newUser.getAuthenticationToken();
+    if (!token) {
+        return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
+    }
+    yield newUser.save();
+    const currentUser = newUser._id; // Get the current user's ID
+    const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
+    const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
+    yield verificationToken.save();
+    // Send e-mail verification to user
+    const transporter = (0, send_email_1.emailTransporter)();
+    sendConfirmationEmail(transporter, newUser, userOTP);
+    const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
+    yield userOTPVerification.save();
+    return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
 });
 exports.registerUser = registerUser;
 const sendConfirmationEmail = (transporter, newUser, userOTP) => {

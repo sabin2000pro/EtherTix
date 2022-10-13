@@ -15,7 +15,8 @@ declare namespace Express {
     export interface Request {
         user: any;
         body: any;
-        session: any
+        session: any;
+        file: any;
     }
 
   }
@@ -27,7 +28,7 @@ declare namespace Express {
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
-    try {
+    
         const {email, password, passwordConfirm} = request.body;
 
     if(password !== passwordConfirm ) {
@@ -67,16 +68,7 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     } 
     
-    catch(error: any) {
 
-        if(error) {
-            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-        }
-
-
-    }
-    
-}
 
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
     return transporter.sendMail({
@@ -159,7 +151,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 }
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+
     try {
         return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
     } 

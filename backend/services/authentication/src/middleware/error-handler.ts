@@ -27,7 +27,7 @@ export abstract class CustomError extends Error {
 
 }
 
-export class BadRequestError extends Error {
+export class BadRequestError extends CustomError {
     statusCode = StatusCodes.BAD_REQUEST;
     status = "Bad Request Error."
 
@@ -39,7 +39,7 @@ export class BadRequestError extends Error {
 }
 
 
-export class NotFoundError extends Error {
+export class NotFoundError extends CustomError {
     statusCode = StatusCodes.BAD_REQUEST;
     status = "Resource not found on the server"
 

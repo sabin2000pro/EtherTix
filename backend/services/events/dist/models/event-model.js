@@ -184,5 +184,10 @@ EventSchema.virtual('reviews', {
     foreignField: 'review',
     localField: '_id'
 });
+EventSchema.virtual('venues', {
+    ref: 'Venue',
+    foreignField: 'venue',
+    localField: '_id'
+});
 var Event = mongoose_1.default.model("Event", EventSchema);
 exports.Event = Event;

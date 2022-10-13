@@ -5,7 +5,7 @@ interface IVenueAttributes {
     venue: Object;
     name: string;
     slug: string;
-    email: string;
+    email: string; // E-mail Address of the venue
     venueCapacity: number;
     phone: string;
     ageRestrictions: string;
