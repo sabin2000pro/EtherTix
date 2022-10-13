@@ -58,6 +58,7 @@ export class JwtTokenError extends Error {
         super(message);
         this.statusCode = statusCode;
   }
+  
 }
 
 export class FileTooLargeError extends Error {

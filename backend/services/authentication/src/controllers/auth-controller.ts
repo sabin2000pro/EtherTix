@@ -259,12 +259,22 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 // @public: No (Authorization Token Required To Identify User)
 
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    try {
 
-    if(request.session !== undefined) {
-        request.session = null;
+        if(request.session !== undefined) {
+            request.session = null;
+        }
+    
+        return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
+    } 
+    
+    catch(error: any) {
+        if(error) {
+            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+        }
     }
 
-    return response.status(200).json({success: true, message: "Login User here"});
+
 }
 
 // @description: Forgot Password API - Users can submit a forgot password request to this API if they forget their password.
