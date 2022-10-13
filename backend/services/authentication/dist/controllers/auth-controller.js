@@ -19,33 +19,47 @@ const generate_otp_1 = require("../utils/generate-otp");
 const error_handler_2 = require("../middleware/error-handler");
 const generate_mfa_1 = require("../utils/generate-mfa");
 const mongoose_1 = require("mongoose");
-const two_factor_model_1 = require("models/two-factor-model");
+const two_factor_model_1 = require("../models/two-factor-model");
 // @description: Register User API - Registers a new user on the platform
 // @route: /api/v1/auth/register
 // @http-method: POST
 // @public: Yes (No Authorization Token Required)
 const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, passwordConfirm } = request.body;
-    if (password !== passwordConfirm) {
-        return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+    try {
+        const { email, password, passwordConfirm } = request.body;
+        if (password !== passwordConfirm) {
+            return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
+        if (existingUser) {
+            return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const newUser = yield user_model_1.User.create(request.body);
+        const token = newUser.getAuthenticationToken();
+        if (!token) {
+            return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
+        }
+        yield newUser.save();
+        const currentUser = newUser._id; // Get the current user's ID
+        const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
+        const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
+        yield verificationToken.save();
+        // Send e-mail verification to user
+        const transporter = (0, send_email_1.emailTransporter)();
+        sendConfirmationEmail(transporter, newUser, userOTP);
+        const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
+        yield userOTPVerification.save();
+        return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
     }
-    const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
-    if (existingUser) {
-        return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
-    const newUser = yield user_model_1.User.create(request.body);
-    const token = newUser.getAuthenticationToken();
-    if (!token) {
-        return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
-    }
-    yield newUser.save();
-    const currentUser = newUser._id; // Get the current user's ID
-    const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
-    const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
-    yield verificationToken.save();
-    // Send e-mail verification to user
-    const transporter = (0, send_email_1.emailTransporter)();
-    transporter.sendMail({
+});
+exports.registerUser = registerUser;
+const sendConfirmationEmail = (transporter, newUser, userOTP) => {
+    return transporter.sendMail({
         from: 'verification@ethertix.com',
         to: newUser.email,
         subject: 'E-mail Verification',
@@ -55,34 +69,44 @@ const registerUser = (request, response, next) => __awaiter(void 0, void 0, void
         <h1> ${userOTP}</h1>
         `
     });
-    const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
-    yield userOTPVerification.save();
-    return sendTokenResponse(request, newUser, 201, response);
-});
-exports.registerUser = registerUser;
+};
 const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
         const user = yield user_model_1.User.findById(userId);
         if (!user) {
-            return next(new error_handler_2.BadRequestError(`No user found with that ID`, 400));
+            return next(new error_handler_2.BadRequestError(`No user found with that ID`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (user.isVerified) {
-            return next(new error_handler_2.BadRequestError(`User account is already verified`, 400));
+            return next(new error_handler_2.BadRequestError(`User account is already verified`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (user.isActive) {
-            return next(new error_handler_2.BadRequestError(`User account is already active`, 400));
+            return next(new error_handler_1.AccountVerifiedError(`User account is already active`, 400));
         }
         const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId }); // Find a verification token
         if (!token) {
             return next(new error_handler_2.BadRequestError(`OTP Verification token is not found. Please try again`, 400));
         }
-        const otpTokensMatch = yield token.compareEmailTokens(OTP); // Check if they match
+        const otpTokensMatch = yield token.compareVerificationTokens(OTP); // Check if they match
         if (!otpTokensMatch) {
             return next(new error_handler_2.BadRequestError(`The token you entered does not match the one in the database.`, 400));
         }
         user.isVerified = true;
         user.accountActive = false;
+        if (user.isVerified) {
+            return next(new error_handler_2.BadRequestError("Your e-mail address is already confirmed.", 400));
+        }
+        const transporter = (0, send_email_1.emailTransporter)();
+        // Send welcome e-mail
+        transporter.sendMail({
+            from: 'welcome@ethertix.com',
+            to: user.email,
+            subject: 'E-mail Confirmation Success',
+            html: `
+                
+                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                `
+        });
         const jwtToken = user.getAuthenticationToken();
         request.session = { token: jwtToken } || undefined; // Get the authentication JWT token
         return response.status(201).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "E-mail Address verified" });
@@ -95,7 +119,14 @@ const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0
 });
 exports.verifyEmailAddress = verifyEmailAddress;
 const resendEmailVerificationCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Resend E-mail Verification Code Here" });
+    try {
+        return response.status(200).json({ success: true, message: "Resend E-mail Verification Code Here" });
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error, 400));
+        }
+    }
 });
 exports.resendEmailVerificationCode = resendEmailVerificationCode;
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
@@ -180,10 +211,17 @@ exports.resendTwoFactorLoginCode = resendTwoFactorLoginCode;
 // @http-method: GET
 // @public: No (Authorization Token Required To Identify User)
 const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (request.session !== undefined) {
-        request.session = null;
+    try {
+        if (request.session !== undefined) {
+            request.session = null;
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: {} });
     }
-    return response.status(200).json({ success: true, message: "Login User here" });
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
 });
 exports.logoutUser = logoutUser;
 // @description: Forgot Password API - Users can submit a forgot password request to this API if they forget their password.
@@ -200,11 +238,14 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
 });
 exports.forgotPassword = forgotPassword;
 const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const resetToken = request.params.resetToken; // The reset token in the request parameters
     return response.status(200).json({ success: true, message: "Rest Password Here" });
 });
 exports.resetPassword = resetPassword;
 const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Current User here" });
+    const user = request.user._id;
+    console.log(`User data : ${user}`);
+    return response.status(200).json({ success: true, data: user });
 });
 exports.getCurrentUser = getCurrentUser;
 const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -233,8 +274,8 @@ const uploadUserProfilePicture = (request, response, next) => __awaiter(void 0, 
 });
 exports.uploadUserProfilePicture = uploadUserProfilePicture;
 const sendTokenResponse = (request, user, statusCode, response) => {
-    const token = user.getSignedToken();
-    request.session = { token }; // Store the token in the session
-    return response.status(statusCode).json({ userData: { id: user._id, username: user.username, role: user.role, email: user.email, token } });
+    const jwtToken = user.getAuthenticationToken();
+    request.session = { token: jwtToken }; // Store the token in the session
+    return response.status(statusCode).json({ userData: { id: user._id, username: user.username, email: user.email, jwtToken } });
 };
 //# sourceMappingURL=auth-controller.js.map

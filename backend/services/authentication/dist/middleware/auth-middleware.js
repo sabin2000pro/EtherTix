@@ -22,7 +22,7 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
         token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
     if (!token) {
-        return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action"));
+        return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action", 400));
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
@@ -31,13 +31,14 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
     }
     catch (error) {
         if (error) {
-            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action"));
+            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action", 400));
         }
     }
 });
 exports.protectAuth = protectAuth;
 const restrictRoleTo = (...roles) => {
     return (request, response, next) => {
+        // @TODO
         if (!roles.includes(request.user.role)) {
         }
     };

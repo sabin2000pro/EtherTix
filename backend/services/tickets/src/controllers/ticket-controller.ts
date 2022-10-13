@@ -10,7 +10,7 @@ declare namespace Express {
 
   }
 
-// @desc      Get courses
+// @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Public
@@ -19,31 +19,44 @@ export const getAllEventTickets = async (request: Request, response: Response, n
     
 }
 
-// @desc      Get courses
+// @desc      Get Event Ticket By ID
 // @route     GET /api/v1/courses
 // @route     GET /api/v1/tickets/:ticketId
 // @access    Public
 
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+    const ticketId = request.params.ticketId;
 }
 
-// @desc      Add course
+// @desc      Create New Event Ticket
 // @route     POST /api/v1/events/:eventId/tickets
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewEventTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+    const eventId = request.params.eventId;
+    const body = request.body;
 }
+
+// @desc      Edit Ticket By ID
+// @route     POST /api/v1/tickets/:ticketId
+// @access    Private (JWT Authorization Token Required)
 
 export const editTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+    const id = request.params.id;
 }
+
+// @desc      Delete All Tickets For A specific event
+// @route     POST /api/v1/events/:eventId/tickets
+// @access    Private (JWT Authorization Token Required)
 
 export const deleteAllTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+    const eventId = request.params.ticketId;
 }
 
+// @desc      Remove An Event Ticket By ID
+// @route     POST /api/v1/events/:eventId/tickets
+// @access    Private (JWT Authorization Token Required)
+
 export const deleteTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+    const ticketId = request.params.id;
 }

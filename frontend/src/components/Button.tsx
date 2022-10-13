@@ -4,9 +4,14 @@ type ButtonProps = {
     props: any
 }
 
-const Button: React.FC<ButtonProps> = ({}) => {
+const Button: React.FC<ButtonProps> = (props) => {
   return (
     <>
+
+
+     <div className= "btn-container">
+       
+     </div>
 
     </>
   )

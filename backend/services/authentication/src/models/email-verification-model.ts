@@ -8,7 +8,7 @@ interface IEmailVerification {
     createdAt: Date;
     expiresAt: Date;
 
-    compareEmailTokens: (enteredToken: string) => Promise<boolean>
+    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
 }
 
 interface EmailVerificationDocument extends mongoose.Model<IEmailVerification> {
@@ -18,7 +18,7 @@ interface EmailVerificationDocument extends mongoose.Model<IEmailVerification> {
     createdAt: Date;
     expiresAt: Date;
 
-    compareEmailTokens: (enteredToken: string) => Promise<boolean>
+    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
 }
 
 // @schema: E-mail Verification Model

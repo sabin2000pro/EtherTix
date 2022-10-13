@@ -23,10 +23,11 @@ export const protectAuth = async (request: Express.Request, response: Response, 
     }
 
     if(!token) {
-        return next(new UnauthorizedError("You are not authorized to perform this action"));
+        return next(new UnauthorizedError("You are not authorized to perform this action", 400));
     }
 
     try {
+        
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
         request.user = await User.findById(decoded.id);
 
@@ -34,8 +35,9 @@ export const protectAuth = async (request: Express.Request, response: Response, 
     } 
     
     catch(error: any) {
+
         if(error) {
-            return next(new UnauthorizedError("You are unauthorized to perform this action"));
+            return next(new UnauthorizedError("You are unauthorized to perform this action", 400));
         }
     }
 
@@ -46,6 +48,8 @@ export const restrictRoleTo = (...roles: any) => {
 
     return (request: Express.Request, response: Response, next: NextFunction) => {
 
+
+        // @TODO
         if(!roles.includes(request.user.role)) {
 
         }

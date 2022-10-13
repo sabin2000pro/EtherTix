@@ -115,7 +115,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
             return next(new BadRequestError(`OTP Verification token is not found. Please try again`, 400));
         }
 
-        const otpTokensMatch = await token.compareEmailTokens(OTP); // Check if they match
+        const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
 
         if(!otpTokensMatch) {
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, 400));
@@ -124,10 +124,26 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         user.isVerified = true;
         user.accountActive = false;
 
+        if(user.isVerified) {
+            return next(new BadRequestError("Your e-mail address is already confirmed.", 400));
+        }
+
+        const transporter = emailTransporter();
+
+        // Send welcome e-mail
+            transporter.sendMail({
+                from: 'welcome@ethertix.com',
+                to: user.email,
+                subject: 'E-mail Confirmation Success',
+                html: `
+                
+                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                `
+            })
+        
+
         const jwtToken = user.getAuthenticationToken();
-
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
-
         return response.status(201).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
     
@@ -143,12 +159,17 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 }
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
     try {
         return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
     } 
     
     catch(error: any) {
 
+
+        if(error) {
+            return next(new BadRequestError(error, 400));
+        }
     }
 
 

@@ -2,6 +2,7 @@ import { User } from '../authentication/src/models/user-model';
 import {Event} from '../events/src/models/event-model';
 import {Ticket} from '../tickets/src/models/ticket-model';
 import {Venue} from '../venues/src/models/venue-model';
+import {EmailVerification} from '../authentication/src/models/email-verification-model';
 import connectAuthDatabase from '../authentication/src/database/auth-db';
 import connectEventsDatabase from '../events/src/database/event-db';
 import connectTicketsDatabase from '../tickets/src/database/tickets-db';
@@ -65,7 +66,9 @@ export const removeAllData = async (): Promise<any> => {
         await User.remove();
         await Event.remove();
         await Ticket.remove();
+       
         await Venue.remove();
+        await EmailVerification.remove();
 
         dataRemoved = (!dataRemoved) as boolean;
 

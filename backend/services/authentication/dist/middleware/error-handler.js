@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.CustomError = void 0;
+exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.CustomError = void 0;
 const http_status_codes_1 = require("http-status-codes");
 class CustomError extends Error {
     constructor(message) {
@@ -57,10 +57,10 @@ class ServerError extends Error {
 }
 exports.ServerError = ServerError;
 class UnauthorizedError extends Error {
-    constructor() {
-        super(...arguments);
+    constructor(message, statusCode) {
+        super(message);
         this.statusCode = http_status_codes_1.StatusCodes.UNAUTHORIZED;
-        this.status = "You are unauthorized to perform this action.";
+        this.statusCode = statusCode;
     }
 }
 exports.UnauthorizedError = UnauthorizedError;
@@ -71,11 +71,26 @@ class UnauthenticatedError extends Error {
     constructor(message, statusCode) {
         super(message);
         this.statusCode = http_status_codes_1.StatusCodes.UNAUTHORIZED;
-        this.status = "You are unauthorized to perform this action.";
         this.statusCode = statusCode;
     }
 }
 exports.UnauthenticatedError = UnauthenticatedError;
+class AccountNotActiveError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
+        this.statusCode = statusCode;
+    }
+}
+exports.AccountNotActiveError = AccountNotActiveError;
+class AccountVerifiedError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
+        this.statusCode = statusCode;
+    }
+}
+exports.AccountVerifiedError = AccountVerifiedError;
 class DuplicateFieldError extends Error {
 }
 exports.DuplicateFieldError = DuplicateFieldError;
