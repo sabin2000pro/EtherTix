@@ -1,4 +1,4 @@
-import { NotFoundError } from './../middleware/error-handler';
+import { NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -106,7 +106,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         }
 
         if(user.isActive) {
-            return next(new BadRequestError(`User account is already active`, 400));
+            return next(new AccountVerifiedError(`User account is already active`, 400));
         }
 
         const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
@@ -265,10 +265,11 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
             request.session = null;
         }
     
-        return response.status(StatusCodes.OK).json({success: true, message: "Login User here"});
+        return response.status(StatusCodes.OK).json({success: true, data: {}});
     } 
     
     catch(error: any) {
+
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }

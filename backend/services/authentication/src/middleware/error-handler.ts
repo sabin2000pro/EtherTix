@@ -58,7 +58,7 @@ export class JwtTokenError extends Error {
         super(message);
         this.statusCode = statusCode;
   }
-  
+
 }
 
 export class FileTooLargeError extends Error {
@@ -84,7 +84,12 @@ export class ServerError extends Error {
 
 export class UnauthorizedError extends Error {
     statusCode = StatusCodes.UNAUTHORIZED;
-    status = "You are unauthorized to perform this action."
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
+
 }
 
 export class ImproperHTTPMethod extends Error {
@@ -94,7 +99,6 @@ export class ImproperHTTPMethod extends Error {
 export class UnauthenticatedError extends Error {
 
     statusCode = StatusCodes.UNAUTHORIZED;
-    status = "You are unauthorized to perform this action."
 
     constructor(message: string, statusCode: number) {
         super(message);
@@ -105,7 +109,15 @@ export class UnauthenticatedError extends Error {
 
 export class AccountNotActiveError extends Error {
     statusCode = StatusCodes.BAD_REQUEST;
-    status = "Your account is not active. Please contact an administrator for support."
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
+}
+
+export class AccountVerifiedError extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
 
     constructor(message: string, statusCode: number) {
         super(message);
@@ -114,7 +126,7 @@ export class AccountNotActiveError extends Error {
 }
 
 export class DuplicateFieldError extends Error {
-
+    
 }
 
 export class JwtTokenNotFoundError extends Error {
