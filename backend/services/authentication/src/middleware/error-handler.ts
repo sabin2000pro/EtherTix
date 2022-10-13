@@ -99,6 +99,17 @@ export class UnauthenticatedError extends Error {
         super(message);
         this.statusCode = statusCode;
   }
+
+}
+
+export class AccountNotActiveError extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
+    status = "Your account is not active. Please contact an administrator for support."
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 }
 
 export class DuplicateFieldError extends Error {

@@ -9,7 +9,7 @@ import { generateOTPVerificationToken } from '../utils/generate-otp';
 import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
-import { TwoFactorVerification } from 'models/two-factor-model';
+import { TwoFactorVerification } from '../models/two-factor-model';
 
 declare namespace Express {
     export interface Request {
@@ -26,7 +26,9 @@ declare namespace Express {
 // @public: Yes (No Authorization Token Required)
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {email, password, passwordConfirm} = request.body;
+
+    try {
+        const {email, password, passwordConfirm} = request.body;
 
     if(password !== passwordConfirm ) {
         return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
@@ -54,9 +56,30 @@ export const registerUser = async (request: Request, response: Response, next: N
     await verificationToken.save();
 
     // Send e-mail verification to user
-    const transporter = emailTransporter();
 
-    transporter.sendMail({
+    const transporter = emailTransporter();
+    sendConfirmationEmail(transporter, newUser, userOTP as unknown as any);
+
+    const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
+    await userOTPVerification.save();
+
+    return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
+
+    } 
+    
+    catch(error: any) {
+
+        if(error) {
+            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+        }
+
+
+    }
+    
+}
+
+const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+    return transporter.sendMail({
         from: 'verification@ethertix.com',
         to: newUser.email,
         subject: 'E-mail Verification',
@@ -66,11 +89,6 @@ export const registerUser = async (request: Request, response: Response, next: N
         <h1> ${userOTP}</h1>
         `
     })
-
-    const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
-    await userOTPVerification.save();
-
-    return response.status(StatusCodes.CREATED).json({success: true, data: newUser, token});
 }
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -80,11 +98,11 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         const user = await User.findById(userId);
 
         if(!user) {
-            return next(new BadRequestError(`No user found with that ID`, 400));
+            return next(new BadRequestError(`No user found with that ID`, StatusCodes.BAD_REQUEST));
         }
 
         if(user.isVerified) {
-            return next(new BadRequestError(`User account is already verified`, 400));
+            return next(new BadRequestError(`User account is already verified`, StatusCodes.BAD_REQUEST));
         }
 
         if(user.isActive) {
@@ -119,14 +137,21 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
             return next(new BadRequestError(error, 400));
         }
 
-        
     }
 
 
 }
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
+    try {
+        return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
+    } 
+    
+    catch(error: any) {
+
+    }
+
+
 }
 
 // @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
@@ -259,11 +284,14 @@ export const forgotPassword = async (request: Request, response: Response, next:
 }
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const resetToken = request.params.resetToken; // The reset token in the request parameters
     return response.status(200).json({success: true, message: "Rest Password Here"});
 }
 
-export const getCurrentUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Current User here"});
+export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+    const user = request.user._id;
+    console.log(`User data : ${user}`);
+    return response.status(200).json({success: true, data: user});
 }
 
 export const updateUserPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -292,3 +320,10 @@ export const lockUserAccount = async (request: Request, response: Response, next
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(200).json({success: true, message: "Upload User Profile Picture Here..."});
 }
+
+const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
+    const jwtToken = user.getAuthenticationToken();
+    request.session = {token: jwtToken}; // Store the token in the session
+ 
+    return response.status(statusCode).json({userData: {id: user._id, username: user.username, email: user.email, jwtToken}});
+ }

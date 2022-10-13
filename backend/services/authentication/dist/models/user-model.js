@@ -64,6 +64,18 @@ const UserSchema = new mongoose_1.default.Schema({
     pastEventsHeld: {
         type: Number,
         default: 0,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    isLocked: {
+        type: Boolean,
+        default: false
+    },
+    isActive: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 // @description: Before saving a user to the database, hash their password
