@@ -105,5 +105,6 @@ services:
     volumes:
       - /app/node_modules
       - ../frontend:/app
+
 volumes:
   mongodb_data_volume:

@@ -77,6 +77,10 @@ const UserSchema = new mongoose.Schema({
         trim: true
     },
 
+    address: { // IMPORTANT FIELD. THIS STORES THE METAMASK WALLET ACCOUNT ADDRESS FOR A SPECIFIC USER. NOT REQUIRED UPON REGISTRATION
+        type: String
+    },
+
     // User's e-mail address
     email: {
         type: String,

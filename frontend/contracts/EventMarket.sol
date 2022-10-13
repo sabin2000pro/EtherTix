@@ -14,7 +14,7 @@ contract EventMarket {
     }
 
     event EventNftCreated (
-
+        uint256 tokenId
     );
 
 

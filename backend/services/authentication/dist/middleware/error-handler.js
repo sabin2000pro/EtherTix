@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.CustomError = void 0;
+exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.errorHandler = exports.CustomError = void 0;
 const http_status_codes_1 = require("http-status-codes");
 class CustomError extends Error {
     constructor(message) {
@@ -11,6 +11,13 @@ class CustomError extends Error {
     }
 }
 exports.CustomError = CustomError;
+const errorHandler = (err, request, response, next) => {
+    if (err instanceof CustomError) {
+        return response.status(404).json({ message: err.message, errors: err.processErrors() });
+    }
+    return next();
+};
+exports.errorHandler = errorHandler;
 class BadRequestError extends CustomError {
     constructor(message, statusCode) {
         super(message);

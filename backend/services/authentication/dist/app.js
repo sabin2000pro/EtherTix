@@ -35,11 +35,7 @@ app.use((0, cookie_session_1.default)({
 }));
 // Error Handler middleware
 app.use('/api/v1/auth', auth_routes_1.default);
-app.all("*", (error, request, response, next) => {
-    if (error instanceof error_handler_1.CustomError) {
-        return response.status(404).json({ message: error.message, errors: error.processErrors() });
-    }
-});
+app.use(error_handler_1.errorHandler);
 app.get("/", (request, response) => {
     return response.json({ message: "Root Route" });
 });

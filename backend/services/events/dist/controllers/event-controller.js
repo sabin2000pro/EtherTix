@@ -37,40 +37,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadEventPhoto = exports.deleteAllEvents = exports.deleteEventByID = exports.updateEventByID = exports.createNewEvent = exports.fetchSingleEvent = exports.fetchAllEvents = void 0;
-var event_model_1 = require("../models/event-model");
 var fetchAllEvents = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var events, currentPage;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, event_model_1.Event.find()];
-            case 1:
-                events = _a.sent();
-                currentPage = parseInt(request.query.page);
-                return [2 /*return*/, response.status(200).json({ success: true, data: events })];
-        }
+        return [2 /*return*/];
     });
 }); };
 exports.fetchAllEvents = fetchAllEvents;
 var fetchSingleEvent = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, event;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                id = request.params.id;
-                return [4 /*yield*/, event_model_1.Event.findById(id)];
-            case 1:
-                event = _a.sent();
-                if (!event) {
-                }
-                return [2 /*return*/, response.status(200).json({ success: true, message: "All Events Here" })];
-        }
+        return [2 /*return*/, response.status(200).json({ success: true, message: "Single Event Here" })];
     });
 }); };
 exports.fetchSingleEvent = fetchSingleEvent;
 var createNewEvent = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a;
-    return __generator(this, function (_b) {
-        _a = request.body;
+    return __generator(this, function (_a) {
         return [2 /*return*/, response.status(200).json({ success: true, message: "All Events Here" })];
     });
 }); };

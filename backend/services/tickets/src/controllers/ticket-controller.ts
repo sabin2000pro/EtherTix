@@ -43,6 +43,13 @@ export const createNewEventTicket = async (request: Request, response: Response,
 
 export const editTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const id = request.params.id;
+    let ticket = await Ticket.findById(id);
+
+    if(!ticket) {
+
+    }
+
+
 }
 
 // @desc      Delete All Tickets For A specific event
@@ -59,4 +66,8 @@ export const deleteAllTickets = async (request: Request, response: Response, nex
 
 export const deleteTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const ticketId = request.params.id;
+}
+
+export const uploadEventTicketPhoto = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+  
 }
