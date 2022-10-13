@@ -9,7 +9,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import connectAuthDatabase from './database/auth-db';
 import authRouter from './routes/auth-routes';
-import { CustomError } from './middleware/error-handler';
+import { errorHandler } from './middleware/error-handler';
 
 const app: Application = express();
 
@@ -34,16 +34,7 @@ app.use(cookieSession({
 
 // Error Handler middleware
 app.use('/api/v1/auth', authRouter);
-
-app.all("*", (error: Error, request: Request, response: Response, next: NextFunction) => {
-
-    if(error instanceof CustomError) {
-        return response.status(404).json({message: error.message, errors: error.processErrors() })
-    }
-
-
-})
-
+app.use(errorHandler);
 
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Root Route"})

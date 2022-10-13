@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from "http-status-codes";
 
 export interface IErrorResponse { // Error Response interface
@@ -25,6 +26,15 @@ export abstract class CustomError extends Error {
         return {message: this.message, statusCode: this.statusCode, status: this.status}
     }
 
+}
+
+export const errorHandler = (err: Error, request: Request, response: Response, next: NextFunction) => {
+
+    if(err instanceof CustomError) {
+        return response.status(404).json({message: err.message, errors: err.processErrors() })
+    }
+
+    return next();
 }
 
 export class BadRequestError extends CustomError {
