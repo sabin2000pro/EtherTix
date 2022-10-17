@@ -13,7 +13,7 @@ declare namespace Express {
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
-// @access    Public
+// @access    Private (Authorization Token Required)
 
 export const getAllEventTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     

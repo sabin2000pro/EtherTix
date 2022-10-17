@@ -25,6 +25,7 @@ interface IUserAttributes {
     isLocked: boolean;
     isVerified: boolean;
 
+
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
 }
@@ -109,6 +110,10 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Please provide a valid role for the user"],
         enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
+    },
+
+    ticketsOwned: {
+
     },
 
     pastEventsHeld: {
