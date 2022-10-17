@@ -26,10 +26,27 @@ declare namespace Express {
 // @http-method: POST
 // @public: Yes (No Authorization Token Required)
 
+const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+    return transporter.sendMail({
+        from: 'verification@ethertix.com',
+        to: newUser.email,
+        subject: 'E-mail Verification',
+        html: `
+        
+        <p>Your verification OTP</p>
+        <h1> ${userOTP}</h1>
+        `
+    })
+}
+
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
-    
+    try {
         const {email, password, passwordConfirm} = request.body;
+
+     if(!email) {
+        return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
+     }
 
     if(password !== passwordConfirm ) {
         return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
@@ -68,24 +85,22 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     } 
     
-
-
-const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
-    return transporter.sendMail({
-        from: 'verification@ethertix.com',
-        to: newUser.email,
-        subject: 'E-mail Verification',
-        html: `
+    catch(error: any) {
         
-        <p>Your verification OTP</p>
-        <h1> ${userOTP}</h1>
-        `
-    })
-}
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message, success: false})
+        }
+    }
+
+     
+
+} 
+
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
+
         const {userId, OTP} = request.body;
         const user = await User.findById(userId);
 
@@ -272,10 +287,11 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 // @public: No (Authorization Token Required To Identify User)
 
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     try {
 
         if(request.session !== undefined) {
-            request.session = null;
+            request.session = null; // Clear the session object
         }
     
         return response.status(StatusCodes.OK).json({success: true, data: {}});
