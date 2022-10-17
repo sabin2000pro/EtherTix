@@ -21,7 +21,6 @@ export const deleteVenueByID = async (request: Request, response: Response, next
 
 }
 
-
 export const deleteAllVenues = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
 }
