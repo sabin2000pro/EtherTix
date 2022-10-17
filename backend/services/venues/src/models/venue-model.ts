@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import geocoder from "node-geocoder";
-
 interface IVenueAttributes {
     venue: Object;
     name: string;

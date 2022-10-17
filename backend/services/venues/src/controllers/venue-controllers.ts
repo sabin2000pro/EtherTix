@@ -1,6 +1,17 @@
 import { Venue } from '../models/venue-model';
 import {Request, Response, NextFunction} from 'express';
 
+declare namespace Express {
+    export interface Request {
+        user: any;
+        body: any;
+        session: any
+    }
+
+  }
+
+  
+
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
