@@ -36,6 +36,9 @@ const UserSchema = new mongoose_1.default.Schema({
         maxlength: [20, "Username must be at least 20 characters long"],
         trim: true
     },
+    address: {
+        type: String
+    },
     // User's e-mail address
     email: {
         type: String,
@@ -61,6 +64,7 @@ const UserSchema = new mongoose_1.default.Schema({
         enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
     },
+    ticketsOwned: {},
     pastEventsHeld: {
         type: Number,
         default: 0,

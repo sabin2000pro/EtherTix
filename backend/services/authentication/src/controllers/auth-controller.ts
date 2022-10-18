@@ -20,11 +20,7 @@ declare namespace Express {
     }
 
   }
-  
-// @description: Register User API - Registers a new user on the platform
-// @route: /api/v1/auth/register
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
+
 
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
     return transporter.sendMail({
@@ -38,6 +34,10 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
         `
     })
 }
+
+// @desc      Register New User
+// @route     POST /api/v1/auth/register
+// @access    Public (No Authorization Token Required)
 
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -86,16 +86,18 @@ export const registerUser = async (request: Request, response: Response, next: N
     } 
     
     catch(error: any) {
-        
+
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message, success: false})
         }
     }
 
-     
 
 } 
 
+// @desc      Verify User E-mail Address After Registration
+// @route     POST /api/v1/auth/verify-email
+// @access    Public (No Authorization Token Required)
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -103,6 +105,16 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 
         const {userId, OTP} = request.body;
         const user = await User.findById(userId);
+
+        // Check for invalid User ID
+        if(!isValidObjectId(userId)) {
+
+        }
+
+        // Check for missing OTP
+        if(!OTP) {
+
+        }
 
         if(!user) {
             return next(new BadRequestError(`No user found with that ID`, StatusCodes.BAD_REQUEST));
@@ -157,18 +169,25 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
     catch(error: any) {
 
         if(error) {
-            return next(new BadRequestError(error, 400));
+            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
 
     }
-
 
 }
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
-        return response.status(200).json({success: true, message: "Resend E-mail Verification Code Here"});
+        const {ownerId, OTP} = request.body;
+
+        if(!isValidObjectId(ownerId)) {
+            return next(new BadRequestError("Owner ID invalid. Check again", 400));
+        }
+
+
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Resend E-mail Verification Code Here"});
     } 
     
     catch(error: any) {

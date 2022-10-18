@@ -20,37 +20,6 @@ const error_handler_2 = require("../middleware/error-handler");
 const generate_mfa_1 = require("../utils/generate-mfa");
 const mongoose_1 = require("mongoose");
 const two_factor_model_1 = require("../models/two-factor-model");
-// @description: Register User API - Registers a new user on the platform
-// @route: /api/v1/auth/register
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
-const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, passwordConfirm } = request.body;
-    if (password !== passwordConfirm) {
-        return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
-    }
-    const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
-    if (existingUser) {
-        return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
-    }
-    const newUser = yield user_model_1.User.create(request.body);
-    const token = newUser.getAuthenticationToken();
-    if (!token) {
-        return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
-    }
-    yield newUser.save();
-    const currentUser = newUser._id; // Get the current user's ID
-    const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
-    const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
-    yield verificationToken.save();
-    // Send e-mail verification to user
-    const transporter = (0, send_email_1.emailTransporter)();
-    sendConfirmationEmail(transporter, newUser, userOTP);
-    const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
-    yield userOTPVerification.save();
-    return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
-});
-exports.registerUser = registerUser;
 const sendConfirmationEmail = (transporter, newUser, userOTP) => {
     return transporter.sendMail({
         from: 'verification@ethertix.com',
@@ -63,10 +32,59 @@ const sendConfirmationEmail = (transporter, newUser, userOTP) => {
         `
     });
 };
+// @desc      Register New User
+// @route     POST /api/v1/auth/register
+// @access    Public (No Authorization Token Required)
+const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password, passwordConfirm } = request.body;
+        if (!email) {
+            return next(new error_handler_2.BadRequestError("No E-mail provided. Please check your entries", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        if (password !== passwordConfirm) {
+            return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
+        if (existingUser) {
+            return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const newUser = yield user_model_1.User.create(request.body);
+        const token = newUser.getAuthenticationToken();
+        if (!token) {
+            return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
+        }
+        yield newUser.save();
+        const currentUser = newUser._id; // Get the current user's ID
+        const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
+        const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
+        yield verificationToken.save();
+        // Send e-mail verification to user
+        const transporter = (0, send_email_1.emailTransporter)();
+        sendConfirmationEmail(transporter, newUser, userOTP);
+        const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
+        yield userOTPVerification.save();
+        return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message, success: false });
+        }
+    }
+});
+exports.registerUser = registerUser;
+// @desc      Verify User E-mail Address After Registration
+// @route     POST /api/v1/auth/verify-email
+// @access    Public (No Authorization Token Required)
 const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
         const user = yield user_model_1.User.findById(userId);
+        // Check for invalid User ID
+        if (!(0, mongoose_1.isValidObjectId)(userId)) {
+        }
+        // Check for missing OTP
+        if (!OTP) {
+        }
         if (!user) {
             return next(new error_handler_2.BadRequestError(`No user found with that ID`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -106,14 +124,18 @@ const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0
     }
     catch (error) {
         if (error) {
-            return next(new error_handler_2.BadRequestError(error, 400));
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
 });
 exports.verifyEmailAddress = verifyEmailAddress;
 const resendEmailVerificationCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        return response.status(200).json({ success: true, message: "Resend E-mail Verification Code Here" });
+        const { ownerId, OTP } = request.body;
+        if (!(0, mongoose_1.isValidObjectId)(ownerId)) {
+            return next(new error_handler_2.BadRequestError("Owner ID invalid. Check again", 400));
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend E-mail Verification Code Here" });
     }
     catch (error) {
         if (error) {
@@ -206,7 +228,7 @@ exports.resendTwoFactorLoginCode = resendTwoFactorLoginCode;
 const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (request.session !== undefined) {
-            request.session = null;
+            request.session = null; // Clear the session object
         }
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: {} });
     }

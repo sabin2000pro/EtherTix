@@ -33,8 +33,7 @@ export const getEventTicketById = async (request: Request, response: Response, n
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewEventTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const eventId = request.params.eventId;
-    const body = request.body;
+
 }
 
 // @desc      Edit Ticket By ID
@@ -42,13 +41,6 @@ export const createNewEventTicket = async (request: Request, response: Response,
 // @access    Private (JWT Authorization Token Required)
 
 export const editTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const id = request.params.id;
-    let ticket = await Ticket.findById(id);
-
-    if(!ticket) {
-
-    }
-
 
 }
 
@@ -57,7 +49,7 @@ export const editTicketByID = async (request: Request, response: Response, next:
 // @access    Private (JWT Authorization Token Required)
 
 export const deleteAllTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const eventId = request.params.ticketId;
+
 }
 
 // @desc      Remove An Event Ticket By ID
@@ -65,7 +57,7 @@ export const deleteAllTickets = async (request: Request, response: Response, nex
 // @access    Private (JWT Authorization Token Required)
 
 export const deleteTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const ticketId = request.params.id;
+    
 }
 
 export const uploadEventTicketPhoto = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
