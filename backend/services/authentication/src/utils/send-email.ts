@@ -9,8 +9,8 @@ return nodemailer.createTransport({
     port: 2525,
 
     auth: {
-      user: "97f91e0d2279c6",
-      pass: "44445d576ce426"
+      user: "ef8f21393bb3ed",
+      pass: "bb1318de95aa3f"
     }
 
     

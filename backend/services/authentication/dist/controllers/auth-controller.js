@@ -120,7 +120,7 @@ const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0
         });
         const jwtToken = user.getAuthenticationToken();
         request.session = { token: jwtToken } || undefined; // Get the authentication JWT token
-        return response.status(201).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "E-mail Address verified" });
+        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "E-mail Address verified" });
     }
     catch (error) {
         if (error) {

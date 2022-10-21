@@ -163,7 +163,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
-        return response.status(201).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
+        return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
     
     catch(error: any) {
