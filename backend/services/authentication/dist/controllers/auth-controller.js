@@ -92,20 +92,20 @@ const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0
             return next(new error_handler_2.BadRequestError(`User account is already verified`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (user.isActive) {
-            return next(new error_handler_1.AccountVerifiedError(`User account is already active`, 400));
+            return next(new error_handler_1.AccountVerifiedError(`User account is already active`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId }); // Find a verification token
         if (!token) {
-            return next(new error_handler_2.BadRequestError(`OTP Verification token is not found. Please try again`, 400));
+            return next(new error_handler_2.BadRequestError(`OTP Verification token is not found. Please try again`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const otpTokensMatch = yield token.compareVerificationTokens(OTP); // Check if they match
         if (!otpTokensMatch) {
-            return next(new error_handler_2.BadRequestError(`The token you entered does not match the one in the database.`, 400));
+            return next(new error_handler_2.BadRequestError(`The token you entered does not match the one in the database.`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         user.isVerified = true;
         user.accountActive = false;
         if (user.isVerified) {
-            return next(new error_handler_2.BadRequestError("Your e-mail address is already confirmed.", 400));
+            return next(new error_handler_2.BadRequestError("Your e-mail address is already confirmed.", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const transporter = (0, send_email_1.emailTransporter)();
         // Send welcome e-mail
@@ -196,18 +196,18 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
     }
     if (!multiFactorToken) {
         user.isActive = !user.isActive;
-        return next(new error_handler_2.BadRequestError("Please provide your MFA token", 400));
+        return next(new error_handler_2.BadRequestError("Please provide your MFA token", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     const factorToken = yield two_factor_model_1.TwoFactorVerification.findOne({ owner: userId });
     if (!factorToken) {
-        return next(new error_handler_2.BadRequestError(`The 2FA token associated to the user is invalid `, 401));
+        return next(new error_handler_2.BadRequestError(`The 2FA token associated to the user is invalid `, http_status_codes_1.StatusCodes.UNAUTHORIZED));
     }
     // Check to see if the tokens match
     const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
     if (!mfaTokensMatch) {
         user.isActive = false;
         user.isVerified = false;
-        return next(new error_handler_2.BadRequestError("The MFA token you entered is invalid. Try again", 400));
+        return next(new error_handler_2.BadRequestError("The MFA token you entered is invalid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     user.isVerified = true; // User account is now verified
     user.isActive = true; // And user account is active
