@@ -77,8 +77,7 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/discount:/app
-
-   posts-service:
+  posts-service:
     image: sabin2000/ethertix-posts-service
 
     build:
@@ -93,6 +92,13 @@ services:
     volumes:
       - /app/node_modules
       - ../backend/services/posts:/app
+
+  comments-service:
+   image: sabin2000/ethertix-comments-service
+
+   build:
+    context: ../backend/services/comments
+    dockerfile: Dockerfile
 
   database-service:
     image: mongo
