@@ -125,26 +125,26 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         }
 
         if(user.isActive) {
-            return next(new AccountVerifiedError(`User account is already active`, 400));
+            return next(new AccountVerifiedError(`User account is already active`, StatusCodes.BAD_REQUEST));
         }
 
         const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
 
         if(!token) {
-            return next(new BadRequestError(`OTP Verification token is not found. Please try again`, 400));
+            return next(new BadRequestError(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
         }
 
         const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
 
         if(!otpTokensMatch) {
-            return next(new BadRequestError(`The token you entered does not match the one in the database.`, 400));
+            return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
 
         user.isVerified = true;
         user.accountActive = false;
 
         if(user.isVerified) {
-            return next(new BadRequestError("Your e-mail address is already confirmed.", 400));
+            return next(new BadRequestError("Your e-mail address is already confirmed.", StatusCodes.BAD_REQUEST));
         }
 
         const transporter = emailTransporter();
@@ -268,13 +268,13 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
     if(!multiFactorToken) {
         user.isActive = !user.isActive;
-        return next(new BadRequestError("Please provide your MFA token", 400));
+        return next(new BadRequestError("Please provide your MFA token", StatusCodes.BAD_REQUEST));
     }
 
     const factorToken = await TwoFactorVerification.findOne({owner: userId});
 
     if(!factorToken) {
-        return next(new BadRequestError(`The 2FA token associated to the user is invalid `, 401));
+        return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
     }
 
     // Check to see if the tokens match
@@ -283,7 +283,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     if(!mfaTokensMatch) {
         user.isActive = false;
         user.isVerified = false;
-        return next(new BadRequestError("The MFA token you entered is invalid. Try again", 400));
+        return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
     }
 
     user.isVerified = true; // User account is now verified

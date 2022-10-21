@@ -14,6 +14,15 @@ export const defaultAuthState = {
 const AuthProvider = createContext(defaultAuthState);
 const AuthDispatchContext = React.createContext(null);
 
+export const AuthReducer = (type: any, action: any) => {
+    switch(action.type) {
+
+
+        default:
+            return defaultAuthState
+    }
+}
+
 
 export const AuthContext: React.FC<ChildrenProps> = ({children}) => {
 
