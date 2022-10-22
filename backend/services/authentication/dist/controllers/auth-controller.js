@@ -32,9 +32,16 @@ const sendConfirmationEmail = (transporter, newUser, userOTP) => {
         `
     });
 };
-// @desc      Register New User
-// @route     POST /api/v1/auth/register
-// @access    Public (No Authorization Token Required)
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @AccessLevel - Public
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, passwordConfirm } = request.body;
@@ -72,18 +79,27 @@ const registerUser = (request, response, next) => __awaiter(void 0, void 0, void
     }
 });
 exports.registerUser = registerUser;
-// @desc      Verify User E-mail Address After Registration
-// @route     POST /api/v1/auth/verify-email
-// @access    Public (No Authorization Token Required)
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @description - Verifies the User's E-mail Address after registering an account
+ * @Returns - 200 OK Status Server Response
+ * @PreCondition - The User Provides their OTP in the input field (frontend)
+ * @PostCondition - Server responds with a 200 OK status code and sets the is verified variable to true
+ */
 const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
         const user = yield user_model_1.User.findById(userId);
         // Check for invalid User ID
         if (!(0, mongoose_1.isValidObjectId)(userId)) {
+            return next(new error_handler_1.NotFoundError("User ID not found. Please check your entry again.", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         // Check for missing OTP
         if (!OTP) {
+            return next(new error_handler_1.NotFoundError("OTP Entered not found. Please check your entry", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         if (!user) {
             return next(new error_handler_2.BadRequestError(`No user found with that ID`, http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -158,7 +174,7 @@ const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0,
         return next(new error_handler_2.BadRequestError(`Could not find that user`, http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     if (user.isLocked) {
-        return next(new error_handler_2.BadRequestError("Cannot login. Your account is locked", 400));
+        return next(new error_handler_2.BadRequestError("Cannot login. Your account is locked", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     // Compare user passwords before logging in
     const matchPasswords = yield user.comparePasswords(password);
@@ -170,7 +186,7 @@ const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0,
     const userMfa = (0, generate_mfa_1.generateMfaToken)();
     // Check for a valid MFA
     if (!userMfa) {
-        return next(new error_handler_2.BadRequestError("User MFA not valid. Try again", 400));
+        return next(new error_handler_2.BadRequestError("User MFA not valid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     // Send MFA e-mail to user
     const transporter = (0, send_email_1.emailTransporter)();
@@ -218,7 +234,15 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
 });
 exports.verifyLoginToken = verifyLoginToken;
 const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
+    try {
+        const { userId, mfaCode } = request.body;
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message });
+        }
+    }
 });
 exports.resendTwoFactorLoginCode = resendTwoFactorLoginCode;
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
@@ -239,32 +263,74 @@ const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.logoutUser = logoutUser;
-// @description: Forgot Password API - Users can submit a forgot password request to this API if they forget their password.
-// @route: /api/v1/auth/forgot-password
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email } = request.body;
     const user = yield user_model_1.User.findOne({ email });
     if (!user) {
-        return next(new error_handler_1.NotFoundError("No user found with that e-mail address", 404));
+        return next(new error_handler_1.NotFoundError("No user found with that e-mail address", http_status_codes_1.StatusCodes.NOT_FOUND));
     }
-    return response.status(200).json({ success: true, message: "Forgot Password" });
+    const resetPasswordLink = ``;
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Forgot Password" });
 });
 exports.forgotPassword = forgotPassword;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Rest Password Here" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Rest Password Here" });
 });
 exports.resetPassword = resetPassword;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = request.user._id;
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
 });
 exports.getCurrentUser = getCurrentUser;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
 });
 exports.updateUserPassword = updateUserPassword;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const fieldsToUpdate = { email: request.body.email, username: request.body.username };
     const user = yield user_model_1.User.find(fieldsToUpdate.email);
@@ -274,18 +340,54 @@ const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0,
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
 });
 exports.updateUserProfile = updateUserProfile;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const deactivateUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
 });
 exports.deactivateUserAccount = deactivateUserAccount;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Lock User Account" });
 });
 exports.lockUserAccount = lockUserAccount;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const uploadUserProfilePicture = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Upload User Profile Picture Here..." });
 });
 exports.uploadUserProfilePicture = uploadUserProfilePicture;
+/**
+ *
+ * @param Request: Request Object stores the request information
+ * @param Response: Server Responds with a status code
+ * @param Next: Calls the next function in the middleware chain
+ * @Returns - 200 Server Response
+ * @PreCondition - User provides e-mail address to send a request to reset password
+ * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
+ */
 const sendTokenResponse = (request, user, statusCode, response) => {
     const jwtToken = user.getAuthenticationToken();
     request.session = { token: jwtToken }; // Store the token in the session

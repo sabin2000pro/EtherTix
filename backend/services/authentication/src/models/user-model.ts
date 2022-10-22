@@ -15,6 +15,7 @@ interface IUserAttributes {
     accountActive: boolean;
     accountVerified: boolean;
     accountLocked: boolean;
+    isNewUser: boolean;
 
     photo: string;
     createdAt: Date;
@@ -43,6 +44,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     accountLocked: boolean; // True or false if the account is locked or not
     address: string;
     photo: string;
+    isNewUser: boolean;
     createdAt: Date;
 
     pastEventsHeld: number;
@@ -128,6 +130,11 @@ const UserSchema = new mongoose.Schema({
     },
 
     isLocked: { 
+        type: Boolean,
+        default: false
+    },
+
+    isNewUser: {
         type: Boolean,
         default: false
     },
