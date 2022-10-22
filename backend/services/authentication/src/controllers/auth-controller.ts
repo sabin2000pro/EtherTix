@@ -279,7 +279,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     const user = await User.findById(userId);
 
     if(!isValidObjectId(userId)) {
-        return next(new BadRequestError(`This user ID is not valid. Please try again`, 401));
+        return next(new BadRequestError(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
     }
 
     if(!multiFactorToken) {
@@ -316,7 +316,7 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
     try {
         const {userId, mfaCode} = request.body;
-        
+
         return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
     }
     

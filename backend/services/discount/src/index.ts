@@ -1,14 +1,14 @@
 import { app } from "./app"
 
-const port = process.env.PORT || 5305;
+const port = process.env.PORT || 5307;
 
 // Start of authentication server
-const startTicketsServer = async () => {
+const startDiscountServer = async () => {
 
       return app.listen(port, () => {
-        console.log('Discount Service Live On Port 5305');
+        console.log('Discount Service Live On Port 5307');
       });
 
 }
 
-startTicketsServer()
+startDiscountServer()

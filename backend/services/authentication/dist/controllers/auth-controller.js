@@ -208,7 +208,7 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
     const { userId, multiFactorToken } = request.body;
     const user = yield user_model_1.User.findById(userId);
     if (!(0, mongoose_1.isValidObjectId)(userId)) {
-        return next(new error_handler_2.BadRequestError(`This user ID is not valid. Please try again`, 401));
+        return next(new error_handler_2.BadRequestError(`This user ID is not valid. Please try again`, http_status_codes_1.StatusCodes.UNAUTHORIZED));
     }
     if (!multiFactorToken) {
         user.isActive = !user.isActive;

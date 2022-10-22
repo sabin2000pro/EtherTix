@@ -80,6 +80,10 @@ const UserSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false
     },
+    isNewUser: {
+        type: Boolean,
+        default: false
+    },
     isActive: {
         type: Boolean,
         default: false
