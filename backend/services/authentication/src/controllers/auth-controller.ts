@@ -313,7 +313,20 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 }
 
 export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
+
+    try {
+        const {userId, mfaCode} = request.body;
+        
+        return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
+    }
+    
+    catch(error: any) {
+
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
+        }
+
+    }
 }
 
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
@@ -339,9 +352,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
         }
     }
 
-
 }
-
 
 
 /**
@@ -359,8 +370,10 @@ export const forgotPassword = async (request: Request, response: Response, next:
     const user = await User.findOne({email});
 
     if(!user) {
-        return next(new NotFoundError("No user found with that e-mail address", 404));
+        return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
     }
+
+    const resetPasswordLink = ``
 
     return response.status(StatusCodes.OK).json({success: true, message: "Forgot Password"});
 }
