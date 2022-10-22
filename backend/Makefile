@@ -1,6 +1,3 @@
-compose-services:
-	- cd backend
-
 make-production:
 	- docker-compose -f docker-compose.prod.yaml -f docker-compose.prod.yaml up --build
 
