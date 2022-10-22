@@ -17,9 +17,16 @@ declare namespace Express {
         user: any;
         body: any;
         session: any;
-        file: any;
     }
 
+  }
+
+  export interface IGetUserAuthInfoRequest extends Request {
+    user: any // or any other type
+  }
+
+interface IUserFileUpload extends Request {
+     files: any
   }
 
 
@@ -100,6 +107,7 @@ export const registerUser = async (request: Request, response: Response, next: N
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message, success: false})
         }
+
     }
 
 
@@ -356,6 +364,8 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
+
+
     }
 
 }
@@ -460,8 +470,27 @@ export const getCurrentUser = async (request: Express.Request, response: Respons
  * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
  */
 
-export const updateUserPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
+export const updateUserPassword = async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+    const currentPassword = request.body.currentPassword;
+    const newPassword = request.body.newPassword;
+
+    if(!newPassword) {
+        return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
+    }
+
+    const user = await User.findById(<any>request.user._id);
+
+    if(!user) {
+        return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+    }
+
+    const currentPasswordMatch = user.comparePasswords(currentPassword);
+
+    if(!currentPasswordMatch) { // If passwords do not match
+        return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
+    }
+
+    return response.status(StatusCodes.OK).json({success: true, message: ""});
 }
 
 /**
@@ -476,7 +505,6 @@ export const updateUserPassword = async (request: Request, response: Response, n
 
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const fieldsToUpdate = {email: request.body.email, username: request.body.username};
-    const user = await User.find(fieldsToUpdate.email);
 
     // Update the user
     const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
@@ -524,7 +552,6 @@ export const lockUserAccount = async (request: Request, response: Response, next
  */
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
     return response.status(StatusCodes.OK).json({success: true, message: "Upload User Profile Picture Here..."});
 }
 
