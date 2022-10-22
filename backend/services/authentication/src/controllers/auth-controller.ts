@@ -25,10 +25,6 @@ declare namespace Express {
     user: any // or any other type
   }
 
-interface IUserFileUpload extends Request {
-     files: any
-  }
-
 
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 

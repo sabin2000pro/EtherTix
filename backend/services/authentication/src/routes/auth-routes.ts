@@ -1,3 +1,4 @@
+import { updateUserPassword } from './../controllers/auth-controller';
 import express, { Router } from "express";
 import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser} from "../controllers/auth-controller";
 import { protectAuth } from '../middleware/auth-middleware';
@@ -19,5 +20,7 @@ authRouter.route('/verify-login-mfa').post(rateLimiter, verifyLoginToken)
 authRouter.route('/logout').get(rateLimiter, protectAuth as any, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter, forgotPassword as any);
 authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
+
+authRouter.route('/update-password').post(rateLimiter, updateUserPassword as any)
 
 export default authRouter;
