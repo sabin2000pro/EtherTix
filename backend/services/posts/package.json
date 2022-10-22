@@ -10,8 +10,16 @@
     "dev": "nodemon dist/index.js",
     "start:server": "npm run dev"
   },
-  
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/morgan": "^1.9.3",
+    "cors": "^2.8.5",
+    "morgan": "^1.10.0"
+  }
 }
