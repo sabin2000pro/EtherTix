@@ -100,15 +100,15 @@ services:
     context: ../backend/services/comments
     dockerfile: Dockerfile
 
-    
    restart: always
 
    ports:
      - "5306:5306"
 
    volumes:
-      - /app/node_modules
-      - ../backend/services/comments:/app
+      - type: volume
+        source: /app/node_modules
+        target: ../backend/services/comments:/app
 
    depends_on:
     - posts-service
