@@ -490,6 +490,9 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
         return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
     }
 
+    user.password = request.body.newPassword
+    await user.save(); // Save new user
+
     return response.status(StatusCodes.OK).json({success: true, message: ""});
 }
 
