@@ -160,6 +160,13 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         if(!otpTokensMatch) {
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
+
+        user.isVerified = true
+
+        if(user.isVerified) {
+            return next(new BadRequestError("User is already verified. Please login now", 400));
+        }
+
         const transporter = emailTransporter();
 
         // Send welcome e-mail
@@ -177,7 +184,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
 
-        return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
+        return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: true}, message: "E-mail Address verified"})
     } 
     
     catch(error: any) {
@@ -244,10 +251,6 @@ export const loginUser = async (request: Request, response: Response, next: Next
         return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
-    if(!user.isVerified) {
-        return next(new BadRequestError(`Cannot login. Verify your e-mail address first`, StatusCodes.BAD_REQUEST));
-    }
-
     // Generate new JWT and store in in the session
     const token = user.getAuthenticationToken();
     const userMfa = generateMfaToken();
@@ -255,6 +258,10 @@ export const loginUser = async (request: Request, response: Response, next: Next
     // Check for a valid MFA
     if(!userMfa) {
        return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
+    }
+
+    if(!user.isVerified) {
+        return next(new BadRequestError(`Cannot login. Verify your e-mail address first`, StatusCodes.BAD_REQUEST));
     }
 
      // Send MFA e-mail to user
