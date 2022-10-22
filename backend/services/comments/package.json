@@ -2,9 +2,13 @@
   "name": "comments",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build ",
+    "dev": "nodemon dist/index.js",
+    "start:server": "npm run dev"
   },
   "keywords": [],
   "author": "",

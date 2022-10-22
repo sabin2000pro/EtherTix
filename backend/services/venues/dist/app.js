@@ -10,8 +10,10 @@ var hpp_1 = __importDefault(require("hpp"));
 var helmet_1 = __importDefault(require("helmet"));
 var express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 var cors_1 = __importDefault(require("cors"));
+var venues_db_1 = __importDefault(require("./database/venues-db"));
 var app = (0, express_1.default)();
 exports.app = app;
+(0, venues_db_1.default)();
 if (process.env.NODE_ENV === 'development') {
     app.use((0, morgan_1.default)('dev'));
 }

@@ -12,9 +12,10 @@ var DiscountSchema = new mongoose_1.default.Schema({
             type: String,
             enum: ["access", "coded", "hold", "public"]
         },
-        code: {
+        discountCode: {
             type: String,
-            default: "abcd"
+            default: "abcd",
+            required: [true, "Please specify the discount code."]
         },
         amountOff: {
             type: String,
