@@ -10,7 +10,7 @@ import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
-import { generateRandomResetPasswordToken } from 'utils/generateResetPasswordToken';
+import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 
 declare namespace Express {
     export interface Request {
@@ -247,6 +247,10 @@ export const loginUser = async (request: Request, response: Response, next: Next
         return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
+    if(!user.isVerified) {
+        return next(new BadRequestError(`Cannot login. Verify your e-mail address first`, StatusCodes.BAD_REQUEST));
+    }
+
     // Generate new JWT and store in in the session
     const token = user.getAuthenticationToken();
     const userMfa = generateMfaToken();
@@ -272,7 +276,7 @@ export const loginUser = async (request: Request, response: Response, next: Next
 
     request.session = {jwt: token}; // Store the token in the session as a cookie
 
-    return response.status(StatusCodes.OK).json({success: true, token});
+    return response.status(StatusCodes.OK).json({success: true, token, userData: user});
 }
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -298,6 +302,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
 
     if(!mfaTokensMatch) {
+
         user.isActive = false;
         user.isVerified = false;
         return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
@@ -378,7 +383,7 @@ export const forgotPassword = async (request: Request, response: Response, next:
 
     // If the user already has the reset token
     if(userHasResetToken) {
-
+        return next(new BadRequestError("You already have the reset password token. Try again later.", StatusCodes.BAD_REQUEST));
     }
 
     const token = generateRandomResetPasswordToken();
@@ -409,8 +414,6 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
             subject: 'Reset Password',
             html: `
             
-            <p>Reset Password Link</p>
-
             <h1> ${resetPasswordURL}</h1>
             `
 

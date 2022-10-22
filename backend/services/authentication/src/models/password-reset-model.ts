@@ -24,8 +24,7 @@ const PasswordResetSchema = new mongoose.Schema<PasswordResetDocument>({
     },
 
     token: {
-        type: String,
-        required: [true, "Please provide a valid token"]
+        type: String
     },
 
     createdAt: {
