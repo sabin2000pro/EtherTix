@@ -164,22 +164,23 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         user.isVerified = true
 
         if(user.isVerified) {
+            
+            const transporter = emailTransporter();
+
+            // Send welcome e-mail
+                transporter.sendMail({
+                    from: 'welcome@ethertix.com',
+                    to: user.email,
+                    subject: 'E-mail Confirmation Success',
+                    html: `
+                    
+                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                    `
+                })
+    
+    
             return next(new BadRequestError("User is already verified. Please login now", 400));
         }
-
-        const transporter = emailTransporter();
-
-        // Send welcome e-mail
-            transporter.sendMail({
-                from: 'welcome@ethertix.com',
-                to: user.email,
-                subject: 'E-mail Confirmation Success',
-                html: `
-                
-                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                `
-            })
-
 
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token

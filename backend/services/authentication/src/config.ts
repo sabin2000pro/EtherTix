@@ -7,6 +7,7 @@ class Config {
     public JWT_TOKEN_EXPIRES: string | undefined;
 
     constructor() {
+        
         this.DATABASE_URL = process.env.DATABASE_URL || ""
         this.JWT_TOKEN = process.env.JWT_TOKEN || ""
         this.JWT_TOKEN_EXPIRES = process.env.JWT_TOKEN_EXPIRES || ""
