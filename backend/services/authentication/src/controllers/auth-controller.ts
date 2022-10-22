@@ -94,6 +94,8 @@ export const registerUser = async (request: Request, response: Response, next: N
     const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
     await userOTPVerification.save();
 
+    existingUser.isVerified = false
+
     return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
 
     } 
@@ -161,31 +163,26 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
 
+        const transporter = emailTransporter();
+
+        // Send welcome e-mail
+            transporter.sendMail({
+                from: 'welcome@ethertix.com',
+                to: user.email,
+                subject: 'E-mail Confirmation Success',
+                html: `
+                
+                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                `
+            })
+
         user.isVerified = true
-
-        if(user.isVerified) {
-            
-            const transporter = emailTransporter();
-
-            // Send welcome e-mail
-                transporter.sendMail({
-                    from: 'welcome@ethertix.com',
-                    to: user.email,
-                    subject: 'E-mail Confirmation Success',
-                    html: `
-                    
-                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                    `
-                })
-    
-    
-            return next(new BadRequestError("User is already verified. Please login now", 400));
-        }
+        console.log("User now verified ? ", user.isVerified);
 
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
 
-        return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: true}, message: "E-mail Address verified"})
+        return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
     
     catch(error: any) {
