@@ -177,13 +177,6 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
 
-        user.isVerified = true;
-
-        if(user.isVerified) {
-            return next(new BadRequestError(`User account already verified`, StatusCodes.BAD_REQUEST));
-
-        }
-
         return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
     
@@ -439,6 +432,7 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const resetToken = request.params.resetToken;
+
     return response.status(StatusCodes.OK).json({success: true, message: "Rest Password Here"});
 }
 
@@ -492,7 +486,7 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
     user.password = request.body.newPassword
     await user.save(); // Save new user
 
-    return response.status(StatusCodes.OK).json({success: true, message: ""});
+    return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
 }
 
 /**
