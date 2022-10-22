@@ -10,6 +10,7 @@ import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
+import { generateRandomResetPasswordToken } from 'utils/generateResetPasswordToken';
 
 declare namespace Express {
     export interface Request {
@@ -155,14 +156,6 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         if(!otpTokensMatch) {
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
-
-        user.isVerified = true;
-        user.accountActive = false;
-
-        if(user.isVerified) {
-            return next(new BadRequestError("Your e-mail address is already confirmed.", StatusCodes.BAD_REQUEST));
-        }
-
         const transporter = emailTransporter();
 
         // Send welcome e-mail
@@ -175,10 +168,18 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
                 <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
                 `
             })
-        
+
 
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
+        user.isVerified = true;
+
+        if(user.isVerified) {
+            return next(new BadRequestError(`User account already verified`, StatusCodes.BAD_REQUEST));
+
+        }
+
         return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
     
@@ -373,9 +374,32 @@ export const forgotPassword = async (request: Request, response: Response, next:
         return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
     }
 
-    const resetPasswordLink = ``
+    const userHasResetToken = await PasswordReset.findOne({owner: user._id});
+
+    // If the user already has the reset token
+    if(userHasResetToken) {
+
+    }
+
+    const token = generateRandomResetPasswordToken();
+
+    if(token === undefined) {
+        return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
+    }
+
+    console.log(`Your reset password token`, token);
+
+    const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token});
+    await resetPasswordToken.save();
+
+    const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
+    sendPasswordResetEmail(user, resetPasswordURL);
 
     return response.status(StatusCodes.OK).json({success: true, message: "Forgot Password"});
+}
+
+const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+
 }
 
 /**
