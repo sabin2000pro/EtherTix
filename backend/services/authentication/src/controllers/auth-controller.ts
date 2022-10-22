@@ -395,10 +395,26 @@ export const forgotPassword = async (request: Request, response: Response, next:
     const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
     sendPasswordResetEmail(user, resetPasswordURL);
 
-    return response.status(StatusCodes.OK).json({success: true, message: "Forgot Password"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent"});
 }
 
 const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+     
+     const transporter = emailTransporter();
+
+        transporter.sendMail({
+
+            from: 'resetpassword@ethertix.com',
+            to: user.email,
+            subject: 'Reset Password',
+            html: `
+            
+            <p>Reset Password Link</p>
+
+            <h1> ${resetPasswordURL}</h1>
+            `
+
+        })
 
 }
 
