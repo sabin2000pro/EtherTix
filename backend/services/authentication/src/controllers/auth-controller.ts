@@ -23,6 +23,7 @@ declare namespace Express {
 
 
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+
     return transporter.sendMail({
         from: 'verification@ethertix.com',
         to: newUser.email,
@@ -95,9 +96,13 @@ export const registerUser = async (request: Request, response: Response, next: N
 
 } 
 
-// @desc      Verify User E-mail Address After Registration
-// @route     POST /api/v1/auth/verify-email
-// @access    Public (No Authorization Token Required)
+// @ Description: Verify User E-mail Address After Registration
+// @ Request Method: POST
+// @ Route:  POST /api/v1/auth/verify-email
+// @ Access: Public (No Authorization Token Required)
+// @ Returns: Server Response (200 Status Code)
+// @ Pre Condition(s): User ID and OTP is present in the body of request 
+// @ Post Condition(s): Server responds back to the client with message saying that the e-mail is verified. Sends the verification OTP to the e-mail address of the registered user
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -108,12 +113,12 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 
         // Check for invalid User ID
         if(!isValidObjectId(userId)) {
-
+            return next(new NotFoundError("User ID not found. Please check your entry again.", StatusCodes.NOT_FOUND))
         }
 
         // Check for missing OTP
         if(!OTP) {
-
+            return next(new NotFoundError("OTP Entered not found. Please check your entry", StatusCodes.NOT_FOUND))
         }
 
         if(!user) {
@@ -339,11 +344,11 @@ export const forgotPassword = async (request: Request, response: Response, next:
         return next(new NotFoundError("No user found with that e-mail address", 404));
     }
 
-    return response.status(200).json({success: true, message: "Forgot Password"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Forgot Password"});
 }
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Rest Password Here"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Rest Password Here"});
 }
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
