@@ -62,7 +62,7 @@ export const registerUser = async (request: Request, response: Response, next: N
     const token = newUser.getAuthenticationToken();
 
     if(!token) {
-        return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", 400))
+        return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
     }
 
     await newUser.save();
@@ -292,12 +292,12 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
     const jwtToken = user.getAuthenticationToken();
     (request.session) = {jwtToken} as any || undefined;
-    return response.status(200).json({userData: {id: user._id,  username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "Your Account Is Active"})
+    return response.status(StatusCodes.OK).json({userData: {id: user._id,  username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "Your Account Is Active"})
 
 }
 
 export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Resend Two Factor Code Here"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
 }
 
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
@@ -375,8 +375,8 @@ export const lockUserAccount = async (request: Request, response: Response, next
 }
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
-    return response.status(200).json({success: true, message: "Upload User Profile Picture Here..."});
+
+    return response.status(StatusCodes.OK).json({success: true, message: "Upload User Profile Picture Here..."});
 }
 
 const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {

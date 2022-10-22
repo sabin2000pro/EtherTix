@@ -51,7 +51,7 @@ const registerUser = (request, response, next) => __awaiter(void 0, void 0, void
         const newUser = yield user_model_1.User.create(request.body);
         const token = newUser.getAuthenticationToken();
         if (!token) {
-            return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", 400));
+            return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         yield newUser.save();
         const currentUser = newUser._id; // Get the current user's ID
@@ -214,11 +214,11 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
     factorToken.mfaToken = undefined;
     const jwtToken = user.getAuthenticationToken();
     (request.session) = { jwtToken } || undefined;
-    return response.status(200).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "Your Account Is Active" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "Your Account Is Active" });
 });
 exports.verifyLoginToken = verifyLoginToken;
 const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Resend Two Factor Code Here" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
 });
 exports.resendTwoFactorLoginCode = resendTwoFactorLoginCode;
 // @description: Logout User API - Logout User by clearing the cookie stored inside the session
@@ -283,7 +283,7 @@ const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, v
 });
 exports.lockUserAccount = lockUserAccount;
 const uploadUserProfilePicture = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Upload User Profile Picture Here..." });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Upload User Profile Picture Here..." });
 });
 exports.uploadUserProfilePicture = uploadUserProfilePicture;
 const sendTokenResponse = (request, user, statusCode, response) => {
