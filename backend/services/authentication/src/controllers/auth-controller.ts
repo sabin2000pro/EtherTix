@@ -94,7 +94,7 @@ export const registerUser = async (request: Request, response: Response, next: N
     const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
     await userOTPVerification.save();
 
-    existingUser.isVerified = false
+    newUser.isVerified = false
 
     return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
 
