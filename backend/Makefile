@@ -33,11 +33,10 @@ build-services:
 	- cd services/venues* && docker build -t sabin2000/ethertix-venues-service . && docker push sabin2000/ethertix-venues-service
 	- cd services/posts* && docker build -t sabin2000/ethertix-posts-service . && docker push sabin2000/ethertix-posts-service
 	- cd services/comments* && docker build -t sabin2000/ethertix-comments-service . && docker push sabin2000/ethertix-comments-service
-
-
 	- docker volume prune && docker system prune
 
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
+	
 	- kubectl get pods
 	- kubectl get deployments
 

@@ -113,8 +113,9 @@ const UserSchema = new mongoose.Schema({
     },
 
     ticketsOwned: {
-
-    },
+        type: Number,
+        default: 0
+    },  
 
     pastEventsHeld: {
         type: Number,
