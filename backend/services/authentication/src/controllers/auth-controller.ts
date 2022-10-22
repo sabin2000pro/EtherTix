@@ -182,7 +182,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         const {ownerId, OTP} = request.body;
 
         if(!isValidObjectId(ownerId)) {
-            return next(new BadRequestError("Owner ID invalid. Check again", 400));
+            return next(new BadRequestError("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
         }
 
 
@@ -194,7 +194,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
 
 
         if(error) {
-            return next(new BadRequestError(error, 400));
+            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
     }
 
@@ -343,18 +343,16 @@ export const forgotPassword = async (request: Request, response: Response, next:
 }
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const resetToken = request.params.resetToken; // The reset token in the request parameters
     return response.status(200).json({success: true, message: "Rest Password Here"});
 }
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const user = request.user._id;
-    console.log(`User data : ${user}`);
-    return response.status(200).json({success: true, data: user});
+    return response.status(StatusCodes.OK).json({success: true, data: user});
 }
 
 export const updateUserPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Update User Password Here"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
 }
 
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -365,18 +363,19 @@ export const updateUserProfile = async (request: Request, response: Response, ne
     const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
     await updatedUserProfile.save();
 
-    return response.status(200).json({success: true, message: "Update User Password Here"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
 }
 
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Resend Two Factor Code Here"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
 }
 
 export const lockUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Lock User Account"});
+    return response.status(StatusCodes.OK).json({success: true, message: "Lock User Account"});
 }
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
     return response.status(200).json({success: true, message: "Upload User Profile Picture Here..."});
 }
 

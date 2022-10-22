@@ -133,13 +133,13 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
     try {
         const { ownerId, OTP } = request.body;
         if (!(0, mongoose_1.isValidObjectId)(ownerId)) {
-            return next(new error_handler_2.BadRequestError("Owner ID invalid. Check again", 400));
+            return next(new error_handler_2.BadRequestError("Owner ID invalid. Check again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend E-mail Verification Code Here" });
     }
     catch (error) {
         if (error) {
-            return next(new error_handler_2.BadRequestError(error, 400));
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
 });
@@ -253,18 +253,16 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
 });
 exports.forgotPassword = forgotPassword;
 const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const resetToken = request.params.resetToken; // The reset token in the request parameters
     return response.status(200).json({ success: true, message: "Rest Password Here" });
 });
 exports.resetPassword = resetPassword;
 const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = request.user._id;
-    console.log(`User data : ${user}`);
-    return response.status(200).json({ success: true, data: user });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
 });
 exports.getCurrentUser = getCurrentUser;
 const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Update User Password Here" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
 });
 exports.updateUserPassword = updateUserPassword;
 const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -273,15 +271,15 @@ const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0,
     // Update the user
     const updatedUserProfile = yield user_model_1.User.findByIdAndUpdate(request.params.id, fieldsToUpdate, { new: true, runValidators: true });
     yield updatedUserProfile.save();
-    return response.status(200).json({ success: true, message: "Update User Password Here" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
 });
 exports.updateUserProfile = updateUserProfile;
 const deactivateUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Resend Two Factor Code Here" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
 });
 exports.deactivateUserAccount = deactivateUserAccount;
 const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Lock User Account" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Lock User Account" });
 });
 exports.lockUserAccount = lockUserAccount;
 const uploadUserProfilePicture = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
