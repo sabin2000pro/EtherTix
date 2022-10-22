@@ -18,7 +18,6 @@ app.use(hpp());
 app.use(cors());
 app.use(helmet());
 
-
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Posts Root Route"})
 })

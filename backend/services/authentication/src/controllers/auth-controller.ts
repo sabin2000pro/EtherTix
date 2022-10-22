@@ -438,6 +438,7 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
  */
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    const resetToken = request.params.resetToken;
     return response.status(StatusCodes.OK).json({success: true, message: "Rest Password Here"});
 }
 
@@ -475,6 +476,8 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
     }
 
     const user = await User.findById(<any>request.user._id);
+
+    console.log(`User : ${user}`);
 
     if(!user) {
         return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
