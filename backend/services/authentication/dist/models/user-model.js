@@ -64,7 +64,10 @@ const UserSchema = new mongoose_1.default.Schema({
         enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
     },
-    ticketsOwned: {},
+    ticketsOwned: {
+        type: Number,
+        default: 0
+    },
     pastEventsHeld: {
         type: Number,
         default: 0,

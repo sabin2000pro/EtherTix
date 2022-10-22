@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.7.23",
+    "@types/node-geocoder": "^3.24.5",
     "mongoose": "^6.6.2"
   }
 }

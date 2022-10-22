@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Venue = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var VenueSchema = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const VenueSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         required: [true, "Please include a valid name for the name"]
@@ -115,5 +115,6 @@ VenueSchema.virtual('events', {
     foreignField: 'event',
     localField: '_id'
 });
-var Venue = mongoose_1.default.model("Venue", VenueSchema);
+const Venue = mongoose_1.default.model("Venue", VenueSchema);
 exports.Venue = Venue;
+//# sourceMappingURL=venue-model.js.map

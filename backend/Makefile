@@ -20,6 +20,7 @@ build-services:
 	- cd services/discount* && npm run build
 	- cd services/posts* && npm run build
 	- cd services/comments* && npm run build
+	- cd services/chat* && npm run build
 
 	- cd services/shared && ts-node global-data-seeder.ts --delete
 	- cd services/shared && ts-node global-data-seeder.ts --import
@@ -33,6 +34,7 @@ build-services:
 	- cd services/venues* && docker build -t sabin2000/ethertix-venues-service . && docker push sabin2000/ethertix-venues-service
 	- cd services/posts* && docker build -t sabin2000/ethertix-posts-service . && docker push sabin2000/ethertix-posts-service
 	- cd services/comments* && docker build -t sabin2000/ethertix-comments-service . && docker push sabin2000/ethertix-comments-service
+
 	- docker volume prune && docker system prune
 
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
