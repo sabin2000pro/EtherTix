@@ -1,4 +1,4 @@
-import { updateUserPassword } from './../controllers/auth-controller';
+import { updateUserPassword, updateUserProfile } from './../controllers/auth-controller';
 import express, { Router } from "express";
 import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser} from "../controllers/auth-controller";
 import { protectAuth } from '../middleware/auth-middleware';
@@ -22,5 +22,6 @@ authRouter.route('/forgot-password').post(rateLimiter, forgotPassword as any);
 authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
 
 authRouter.route('/update-password').post(rateLimiter, updateUserPassword as any)
+authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
 
 export default authRouter;
