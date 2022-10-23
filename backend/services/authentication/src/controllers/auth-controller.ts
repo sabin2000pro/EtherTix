@@ -548,16 +548,18 @@ export const deactivateUserAccount = async (request: Request, response: Response
         return next(new NotFoundError("No user found with that ID", 404));
     }
 
-    if(!user.isActive) {
-
+    if(!user.isValid || !isActive) {
+        return next(new BadRequestError("User account is already inactive", 400));
     }
 
     if(user.isActive && user.isValid) {
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
+
         await user.save();
     }
 
+    
 
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
 }
