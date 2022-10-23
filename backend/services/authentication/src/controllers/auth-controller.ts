@@ -78,6 +78,7 @@ export const registerUser = async (request: Request, response: Response, next: N
         return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
     }
 
+    newUser.passwordConfirm = undefined;
     await newUser.save();
 
     const currentUser = newUser._id; // Get the current user's ID
@@ -92,7 +93,6 @@ export const registerUser = async (request: Request, response: Response, next: N
     sendConfirmationEmail(transporter, newUser, userOTP as unknown as any);
 
     const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
-    newUser.passwordConfirm = undefined;
     await userOTPVerification.save();
 
     newUser.isVerified = false
