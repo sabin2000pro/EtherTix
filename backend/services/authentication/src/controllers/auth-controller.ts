@@ -161,7 +161,6 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         }
 
         user.isVerified = true
-        console.log("User now verified ? ", user.isVerified);
 
         await user.save();
         await EmailVerification.findByIdAndDelete(token._id);
@@ -326,11 +325,11 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
         const {userId, mfaCode} = request.body;
 
         if(!isValidObjectId(userId)) {
-            return next(new NotFoundError("User ID is invalid. Please check again", 404));
+            return next(new NotFoundError("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
 
         if(!mfaCode) {
-            return next(new NotFoundError("No MFA found. Please try again.", 404));
+            return next(new NotFoundError("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
         }
 
         return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
@@ -443,8 +442,6 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
  */
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const resetToken = request.params.resetToken;
-
     return response.status(StatusCodes.OK).json({success: true, message: "Rest Password Here"});
 }
 
@@ -460,11 +457,17 @@ export const resetPassword = async (request: Request, response: Response, next: 
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const user = request.user._id;
+
+    if(!user) {
+
+    }
+
+
     return response.status(StatusCodes.OK).json({success: true, data: user});
 }
 
 export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({valid: true})
+    return response.status(StatusCodes.OK).json({isValid: true})
 }
 
 
@@ -537,7 +540,26 @@ export const updateUserProfile = async (request: Request, response: Response, ne
  */
 
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
+    const {userId} = request.body;
+    const user = await User.findById(userId);
+
+    // If no user exists
+    if(!user) {
+        return next(new NotFoundError("No user found with that ID", 404));
+    }
+
+    if(!user.isActive) {
+
+    }
+
+    if(user.isActive && user.isValid) {
+        user.isActive = (!user.isActive);
+        user.isValid = (!user.isValid);
+        await user.save();
+    }
+
+
+    return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
 }
 
 /**
@@ -565,6 +587,7 @@ export const lockUserAccount = async (request: Request, response: Response, next
  */
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     return response.status(StatusCodes.OK).json({success: true, message: "Upload User Profile Picture Here..."});
 }
 
