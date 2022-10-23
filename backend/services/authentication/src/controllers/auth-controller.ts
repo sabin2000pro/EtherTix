@@ -92,10 +92,10 @@ export const registerUser = async (request: Request, response: Response, next: N
     sendConfirmationEmail(transporter, newUser, userOTP as unknown as any);
 
     const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
+    newUser.passwordConfirm = undefined;
     await userOTPVerification.save();
 
     newUser.isVerified = false
-    newUser.passwordConfirm = undefined;
 
     return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
 
