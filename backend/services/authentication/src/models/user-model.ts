@@ -25,6 +25,7 @@ interface IUserAttributes {
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
+    isValid: boolean;
 
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
@@ -53,6 +54,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
+    isValid: true
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -148,12 +150,14 @@ const UserSchema = new mongoose.Schema({
 
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', async function(next: () => void) {
+    let ROUNDS = 10;
 
    if(!this.isModified("password")) {
      return next();
    }
 
-   this.password = await bcrypt.hash(this.password, 10);
+   this.password = await bcrypt.hash(this.password, ROUNDS);
+   this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, ROUNDS);
 
    return next();
 })

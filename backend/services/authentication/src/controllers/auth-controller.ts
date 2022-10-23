@@ -304,7 +304,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     if(!mfaTokensMatch) {
         user.isActive = (!user.isActive) as boolean;
         user.isVerified = (!user.isVerified) as boolean;
-        
+
         return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
     }
 
@@ -324,6 +324,14 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
     try {
         const {userId, mfaCode} = request.body;
+
+        if(!isValidObjectId(userId)) {
+            return next(new NotFoundError("User ID is invalid. Please check again", 404));
+        }
+
+        if(!mfaCode) {
+            return next(new NotFoundError("No MFA found. Please try again.", 404));
+        }
 
         return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
     }
@@ -454,6 +462,11 @@ export const getCurrentUser = async (request: Express.Request, response: Respons
     const user = request.user._id;
     return response.status(StatusCodes.OK).json({success: true, data: user});
 }
+
+export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(StatusCodes.OK).json({valid: true})
+}
+
 
 /**
  * 
