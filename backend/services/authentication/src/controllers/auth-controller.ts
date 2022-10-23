@@ -78,9 +78,7 @@ export const registerUser = async (request: Request, response: Response, next: N
         return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
     }
 
-    newUser.passwordConfirm = undefined;
     await newUser.save();
-
     const currentUser = newUser._id; // Get the current user's ID
     const userOTP = generateOTPVerificationToken();
 
@@ -94,8 +92,6 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
     await userOTPVerification.save();
-
-    newUser.isVerified = false
 
     return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
 
@@ -164,6 +160,12 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
 
+        user.isVerified = true
+        console.log("User now verified ? ", user.isVerified);
+
+        await user.save();
+        await EmailVerification.findByIdAndDelete(token._id);
+
         const transporter = emailTransporter();
 
         // Send welcome e-mail
@@ -177,12 +179,8 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
                 `
             })
 
-        user.isVerified = true
-        console.log("User now verified ? ", user.isVerified);
-
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
-
 
         return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
@@ -205,8 +203,6 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         if(!isValidObjectId(ownerId)) {
             return next(new BadRequestError("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
         }
-
-
 
         return response.status(StatusCodes.OK).json({success: true, message: "Resend E-mail Verification Code Here"});
     } 
@@ -240,6 +236,10 @@ export const loginUser = async (request: Request, response: Response, next: Next
         return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
     }
 
+    if(!user.isVerified) {
+        return next(new BadRequestError(`Cannot login. Verify your e-mail address first`, StatusCodes.BAD_REQUEST));
+    }
+
     if(user.isLocked) {
         return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
     }
@@ -258,10 +258,6 @@ export const loginUser = async (request: Request, response: Response, next: Next
     // Check for a valid MFA
     if(!userMfa) {
        return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
-    }
-
-    if(!user.isVerified) {
-        return next(new BadRequestError(`Cannot login. Verify your e-mail address first`, StatusCodes.BAD_REQUEST));
     }
 
      // Send MFA e-mail to user
