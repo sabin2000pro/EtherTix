@@ -95,6 +95,7 @@ export const registerUser = async (request: Request, response: Response, next: N
     await userOTPVerification.save();
 
     newUser.isVerified = false
+    newUser.passwordConfirm = undefined;
 
     return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
 
@@ -181,6 +182,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 
         const jwtToken = user.getAuthenticationToken();
         request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
 
         return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
@@ -396,7 +398,6 @@ export const forgotPassword = async (request: Request, response: Response, next:
         return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
     }
 
-    console.log(`Your reset password token`, token);
 
     const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token});
     await resetPasswordToken.save();
