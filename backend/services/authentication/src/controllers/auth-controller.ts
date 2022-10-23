@@ -302,15 +302,17 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
 
     if(!mfaTokensMatch) {
-
-        user.isActive = false;
-        user.isVerified = false;
+        user.isActive = (!user.isActive) as boolean;
+        user.isVerified = (!user.isVerified) as boolean;
+        
         return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
     }
 
     user.isVerified = true; // User account is now verified
     user.isActive = true; // And user account is active
     factorToken.mfaToken = undefined;
+
+    await user.save();
 
     const jwtToken = user.getAuthenticationToken();
     (request.session) = {jwtToken} as any || undefined;
