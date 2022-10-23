@@ -144,9 +144,14 @@ const UserSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: false
+    },
+
+    isValid: {
+        type: Boolean,
+        default: false
     }
 
-}, {timestamps: true});
+}, {timestamps: true, toJSON: {virtuals: true}});
 
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', async function(next: () => void) {
