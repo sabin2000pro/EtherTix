@@ -543,7 +543,11 @@ export const deactivateUserAccount = async (request: Request, response: Response
         return next(new NotFoundError("No user found with that ID", 404));
     }
 
+<<<<<<< HEAD
     if(!user.isValid || !user.isActive) {
+=======
+    if(!user.isValid || !isActive) {
+>>>>>>> 6194a9a2bc72c9b83a96ea304cc2109838f0f99c
         return next(new BadRequestError("User account is already inactive", 400));
     }
 
@@ -555,6 +559,11 @@ export const deactivateUserAccount = async (request: Request, response: Response
         await user.save();
     }
 
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 6194a9a2bc72c9b83a96ea304cc2109838f0f99c
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
 }
 
