@@ -11,6 +11,7 @@ import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
+import {Event} from '../../../events/src/models/event-model';
 
 declare namespace Express {
     export interface Request {
@@ -403,7 +404,6 @@ export const forgotPassword = async (request: Request, response: Response, next:
         return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
     }
 
-
     const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token});
     await resetPasswordToken.save();
 
@@ -456,12 +456,7 @@ export const resetPassword = async (request: Request, response: Response, next: 
  */
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
-    const user = request.user._id;
-
-    if(!user) {
-
-    }
-
+    const user = request.user;
 
     return response.status(StatusCodes.OK).json({success: true, data: user});
 }
@@ -548,16 +543,17 @@ export const deactivateUserAccount = async (request: Request, response: Response
         return next(new NotFoundError("No user found with that ID", 404));
     }
 
-    if(!user.isActive) {
-
+    if(!user.isValid || !user.isActive) {
+        return next(new BadRequestError("User account is already inactive", 400));
     }
 
     if(user.isActive && user.isValid) {
+
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
+
         await user.save();
     }
-
 
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
 }

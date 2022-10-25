@@ -54,7 +54,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
-    isValid: true
+    isValid: boolean;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
