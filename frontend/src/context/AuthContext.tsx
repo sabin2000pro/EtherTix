@@ -12,7 +12,6 @@ export const defaultAuthState = {
 }
  // Create the auth provider
 const AuthProvider = createContext(defaultAuthState);
-const AuthDispatchContext = React.createContext(null);
 
 export const AuthReducer = (type: any, action: any) => {
     switch(action.type) {

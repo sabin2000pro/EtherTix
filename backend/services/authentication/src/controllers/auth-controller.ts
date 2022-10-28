@@ -41,18 +41,6 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @AccessLevel - Public
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
-
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
@@ -109,16 +97,13 @@ export const registerUser = async (request: Request, response: Response, next: N
 
 } 
 
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @description - Verifies the User's E-mail Address after registering an account
- * @Returns - 200 OK Status Server Response 
- * @PreCondition - The User Provides their OTP in the input field (frontend)
- * @PostCondition - Server responds with a 200 OK status code and sets the is verified variable to true
- */
+const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
+    const jwtToken = user.getAuthenticationToken();
+    request.session = {token: jwtToken}; // Store the token in the session
+ 
+    return response.status(statusCode).json({userData: {id: user._id, username: user.username, email: user.email, jwtToken}});
+}
+
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -217,11 +202,6 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
 
 
 }
-
-// @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
-// @route: /api/v1/auth/register
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
 
 export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const {email, password} = request.body;
@@ -345,11 +325,6 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
     }
 }
 
-// @description: Logout User API - Logout User by clearing the cookie stored inside the session
-// @route: /api/v1/auth/logout
-// @http-method: GET
-// @public: No (Authorization Token Required To Identify User)
-
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
@@ -371,17 +346,6 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
     }
 
 }
-
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
 
 export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const {email} = request.body;
@@ -431,29 +395,9 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 }
 
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
-
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(StatusCodes.OK).json({success: true, message: "Rest Password Here"});
 }
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const user = request.user;
@@ -464,17 +408,6 @@ export const getCurrentUser = async (request: Express.Request, response: Respons
 export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(StatusCodes.OK).json({isValid: true})
 }
-
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
 
 export const updateUserPassword = async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
     const currentPassword = request.body.currentPassword;
@@ -504,16 +437,6 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
     return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
 }
 
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
-
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const fieldsToUpdate = {email: request.body.email, username: request.body.username};
 
@@ -524,15 +447,6 @@ export const updateUserProfile = async (request: Request, response: Response, ne
     return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
 }
 
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
 
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const {userId} = request.body;
@@ -543,11 +457,9 @@ export const deactivateUserAccount = async (request: Request, response: Response
         return next(new NotFoundError("No user found with that ID", 404));
     }
 
-<<<<<<< HEAD
     if(!user.isValid || !user.isActive) {
-=======
-    if(!user.isValid || !isActive) {
->>>>>>> 6194a9a2bc72c9b83a96ea304cc2109838f0f99c
+
+    if(!user.isValid || !user.isActive) {
         return next(new BadRequestError("User account is already inactive", 400));
     }
 
@@ -559,56 +471,11 @@ export const deactivateUserAccount = async (request: Request, response: Response
         await user.save();
     }
 
-<<<<<<< HEAD
-=======
-    
 
->>>>>>> 6194a9a2bc72c9b83a96ea304cc2109838f0f99c
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
-}
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
-
-export const lockUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Lock User Account"});
-}
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
+}}
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     return response.status(StatusCodes.OK).json({success: true, message: "Upload User Profile Picture Here..."});
 }
-
-/**
- * 
- * @param Request: Request Object stores the request information 
- * @param Response: Server Responds with a status code 
- * @param Next: Calls the next function in the middleware chain 
- * @Returns - 200 Server Response 
- * @PreCondition - User provides e-mail address to send a request to reset password
- * @PostCondition - The server responds back to the client with the reset password link to the e-mail address of the registered user
- */
-
-const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
-    const jwtToken = user.getAuthenticationToken();
-    request.session = {token: jwtToken}; // Store the token in the session
- 
-    return response.status(statusCode).json({userData: {id: user._id, username: user.username, email: user.email, jwtToken}});
- }

@@ -8,195 +8,344 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lockUserAccount = exports.deactivateUserAccount = exports.resendTwoFactorLoginCode = exports.resendEmailVerificationCode = exports.updateUserProfile = exports.updateUserPassword = exports.verifyLoginToken = exports.verifyEmailAddress = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
-var user_model_1 = require("../models/user-model");
-var email_verification_model_1 = require("../models/email-verification-model");
-var http_status_codes_1 = require("http-status-codes");
-var generate_otp_1 = require("../utils/generate-otp");
-// @description: Register User API - Registers a new user on the platform
-// @route: /api/v1/auth/register
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
-var registerUser = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, passwordConfirm, existingUser, newUser, token, currentUser, userOTP, verificationToken;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _a = request.body, email = _a.email, password = _a.password, passwordConfirm = _a.passwordConfirm;
-                if (password !== passwordConfirm) {
-                    // return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
-                }
-                return [4 /*yield*/, user_model_1.User.findOne({ email: email })]; // Find an existing user
-            case 1:
-                existingUser = _b.sent() // Find an existing user
-                ;
-                if (existingUser) {
-                    //    return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
-                }
-                return [4 /*yield*/, user_model_1.User.create(request.body)];
-            case 2:
-                newUser = _b.sent();
-                token = newUser.getAuthenticationToken();
-                if (!token) {
-                    // return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", 400))
-                }
-                return [4 /*yield*/, newUser.save()];
-            case 3:
-                _b.sent();
-                currentUser = newUser._id;
-                userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
-                verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
-                return [4 /*yield*/, verificationToken.save()];
-            case 4:
-                _b.sent();
-                // Send e-mail verification to user
-                return [2 /*return*/, response.status(http_status_codes_1.StatusCodes.CREATED).json({ success: true, data: newUser, token: token })];
-        }
+exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
+const error_handler_1 = require("./../middleware/error-handler");
+const send_email_1 = require("./../utils/send-email");
+const user_model_1 = require("../models/user-model");
+const email_verification_model_1 = require("../models/email-verification-model");
+const password_reset_model_1 = require("../models/password-reset-model");
+const http_status_codes_1 = require("http-status-codes");
+const generate_otp_1 = require("../utils/generate-otp");
+const error_handler_2 = require("../middleware/error-handler");
+const generate_mfa_1 = require("../utils/generate-mfa");
+const mongoose_1 = require("mongoose");
+const two_factor_model_1 = require("../models/two-factor-model");
+const generateResetPasswordToken_1 = require("../utils/generateResetPasswordToken");
+const sendConfirmationEmail = (transporter, newUser, userOTP) => {
+    return transporter.sendMail({
+        from: 'verification@ethertix.com',
+        to: newUser.email,
+        subject: 'E-mail Verification',
+        html: `
+        
+        <p>Your verification OTP</p>
+        <h1> ${userOTP}</h1>
+        `
     });
-}); };
+};
+const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password, passwordConfirm } = request.body;
+        if (!email) {
+            return next(new error_handler_2.BadRequestError("No E-mail provided. Please check your entries", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        if (password !== passwordConfirm) {
+            return next(new error_handler_2.BadRequestError(`Password confirmation error. Please check passwords`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const existingUser = yield user_model_1.User.findOne({ email }); // Find an existing user
+        if (existingUser) {
+            return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const newUser = yield user_model_1.User.create(request.body);
+        const token = newUser.getAuthenticationToken();
+        if (!token) {
+            return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        yield newUser.save();
+        const currentUser = newUser._id; // Get the current user's ID
+        const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
+        const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
+        yield verificationToken.save();
+        // Send e-mail verification to user
+        const transporter = (0, send_email_1.emailTransporter)();
+        sendConfirmationEmail(transporter, newUser, userOTP);
+        const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
+        yield userOTPVerification.save();
+        return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message, success: false });
+        }
+    }
+});
 exports.registerUser = registerUser;
-// @description: Login User API - Login User On Platform by storing the JWT cookie inside the current session
-// @route: /api/v1/auth/register
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
-var loginUser = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, user, matchPasswords, token;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _a = request.body, email = _a.email, password = _a.password;
-                if (!email || !password) {
-                    // return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
-                }
-                return [4 /*yield*/, user_model_1.User.findOne({ email: email })];
-            case 1:
-                user = _b.sent();
-                if (!user) {
-                    // return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
-                }
-                return [4 /*yield*/, user.comparePasswords(password)];
-            case 2:
-                matchPasswords = _b.sent();
-                if (!matchPasswords) {
-                    // return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
-                }
-                token = user.getAuthenticationToken();
-                request.session = { jwt: token }; // Store the token in the session as a cookie
-                return [2 /*return*/, response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, token: token })];
+const sendTokenResponse = (request, user, statusCode, response) => {
+    const jwtToken = user.getAuthenticationToken();
+    request.session = { token: jwtToken }; // Store the token in the session
+    return response.status(statusCode).json({ userData: { id: user._id, username: user.username, email: user.email, jwtToken } });
+};
+const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId, OTP } = request.body;
+        const user = yield user_model_1.User.findById(userId);
+        // Check for invalid User ID
+        if (!(0, mongoose_1.isValidObjectId)(userId)) {
+            return next(new error_handler_1.NotFoundError("User ID not found. Please check your entry again.", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
-    });
-}); };
-exports.loginUser = loginUser;
-// @description: Logout User API - Logout User by clearing the cookie stored inside the session
-// @route: /api/v1/auth/logout
-// @http-method: GET
-// @public: No (Authorization Token Required To Identify User)
-var logoutUser = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        if (request.session !== undefined) {
-            request.session = null;
+        // Check for missing OTP
+        if (!OTP) {
+            return next(new error_handler_1.NotFoundError("OTP Entered not found. Please check your entry", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Login User here" })];
-    });
-}); };
-exports.logoutUser = logoutUser;
-// @description: Forgot Password API - Users can submit a forgot password request to this API if they forget their password.
-// @route: /api/v1/auth/forgot-password
-// @http-method: POST
-// @public: Yes (No Authorization Token Required)
-var forgotPassword = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var email;
-    return __generator(this, function (_a) {
-        email = request.body.email;
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Forgot Password" })];
-    });
-}); };
-exports.forgotPassword = forgotPassword;
-var resetPassword = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Rest Password Here" })];
-    });
-}); };
-exports.resetPassword = resetPassword;
-var getCurrentUser = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Current User here" })];
-    });
-}); };
-exports.getCurrentUser = getCurrentUser;
-var verifyEmailAddress = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Login User here" })];
-    });
-}); };
+        if (!user) {
+            return next(new error_handler_2.BadRequestError(`No user found with that ID`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        if (user.isVerified) {
+            return next(new error_handler_2.BadRequestError(`User account is already verified`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        if (user.isActive) {
+            return next(new error_handler_1.AccountVerifiedError(`User account is already active`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId }); // Find a verification token
+        if (!token) {
+            return next(new error_handler_2.BadRequestError(`OTP Verification token is not found. Please try again`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const otpTokensMatch = yield token.compareVerificationTokens(OTP); // Check if they match
+        if (!otpTokensMatch) {
+            return next(new error_handler_2.BadRequestError(`The token you entered does not match the one in the database.`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        user.isVerified = true;
+        yield user.save();
+        yield email_verification_model_1.EmailVerification.findByIdAndDelete(token._id);
+        const transporter = (0, send_email_1.emailTransporter)();
+        // Send welcome e-mail
+        transporter.sendMail({
+            from: 'welcome@ethertix.com',
+            to: user.email,
+            subject: 'E-mail Confirmation Success',
+            html: `
+                
+                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                `
+        });
+        const jwtToken = user.getAuthenticationToken();
+        request.session = { token: jwtToken } || undefined; // Get the authentication JWT token
+        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "E-mail Address verified" });
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
+});
 exports.verifyEmailAddress = verifyEmailAddress;
-var verifyLoginToken = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Verify Login User here" })];
-    });
-}); };
-exports.verifyLoginToken = verifyLoginToken;
-var updateUserPassword = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Update User Password Here" })];
-    });
-}); };
-exports.updateUserPassword = updateUserPassword;
-var updateUserProfile = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Update User Password Here" })];
-    });
-}); };
-exports.updateUserProfile = updateUserProfile;
-var resendEmailVerificationCode = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Resend E-mail Verification Code Here" })];
-    });
-}); };
+const resendEmailVerificationCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { ownerId, OTP } = request.body;
+        if (!(0, mongoose_1.isValidObjectId)(ownerId)) {
+            return next(new error_handler_2.BadRequestError("Owner ID invalid. Check again", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend E-mail Verification Code Here" });
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
+});
 exports.resendEmailVerificationCode = resendEmailVerificationCode;
-var resendTwoFactorLoginCode = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Resend Two Factor Code Here" })];
+const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = request.body;
+    if (!email || !password) {
+        return next(new error_handler_2.BadRequestError(`Missing e-mail address or password. Check entries`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const user = yield user_model_1.User.findOne({ email });
+    if (!user) {
+        return next(new error_handler_2.BadRequestError(`Could not find that user`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    if (!user.isVerified) {
+        return next(new error_handler_2.BadRequestError(`Cannot login. Verify your e-mail address first`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    if (user.isLocked) {
+        return next(new error_handler_2.BadRequestError("Cannot login. Your account is locked", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    // Compare user passwords before logging in
+    const matchPasswords = yield user.comparePasswords(password);
+    if (!matchPasswords) {
+        return next(new error_handler_2.BadRequestError(`Passwords do not match. Please try again`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    // Generate new JWT and store in in the session
+    const token = user.getAuthenticationToken();
+    const userMfa = (0, generate_mfa_1.generateMfaToken)();
+    // Check for a valid MFA
+    if (!userMfa) {
+        return next(new error_handler_2.BadRequestError("User MFA not valid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    // Send MFA e-mail to user
+    const transporter = (0, send_email_1.emailTransporter)();
+    transporter.sendMail({
+        from: 'mfa@ethertix.com',
+        to: user.email,
+        subject: 'Login MFA Verification',
+        html: `
+            
+            <p>Your MFA code</p>
+            <h1> ${userMfa}</h1>
+            `
     });
-}); };
+    request.session = { jwt: token }; // Store the token in the session as a cookie
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, token, userData: user });
+});
+exports.loginUser = loginUser;
+const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, multiFactorToken } = request.body;
+    const user = yield user_model_1.User.findById(userId);
+    if (!(0, mongoose_1.isValidObjectId)(userId)) {
+        return next(new error_handler_2.BadRequestError(`This user ID is not valid. Please try again`, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+    }
+    if (!multiFactorToken) {
+        user.isActive = !user.isActive;
+        return next(new error_handler_2.BadRequestError("Please provide your MFA token", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const factorToken = yield two_factor_model_1.TwoFactorVerification.findOne({ owner: userId });
+    if (!factorToken) {
+        return next(new error_handler_2.BadRequestError(`The 2FA token associated to the user is invalid `, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+    }
+    // Check to see if the tokens match
+    const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
+    if (!mfaTokensMatch) {
+        user.isActive = (!user.isActive);
+        user.isVerified = (!user.isVerified);
+        return next(new error_handler_2.BadRequestError("The MFA token you entered is invalid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    user.isVerified = true; // User account is now verified
+    user.isActive = true; // And user account is active
+    factorToken.mfaToken = undefined;
+    yield user.save();
+    const jwtToken = user.getAuthenticationToken();
+    (request.session) = { jwtToken } || undefined;
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "Your Account Is Active" });
+});
+exports.verifyLoginToken = verifyLoginToken;
+const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId, mfaCode } = request.body;
+        if (!(0, mongoose_1.isValidObjectId)(userId)) {
+            return next(new error_handler_1.NotFoundError("User ID is invalid. Please check again", http_status_codes_1.StatusCodes.NOT_FOUND));
+        }
+        if (!mfaCode) {
+            return next(new error_handler_1.NotFoundError("No MFA found. Please try again.", http_status_codes_1.StatusCodes.NOT_FOUND));
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message });
+        }
+    }
+});
 exports.resendTwoFactorLoginCode = resendTwoFactorLoginCode;
-var deactivateUserAccount = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Resend Two Factor Code Here" })];
+const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (request.session !== undefined) {
+            request.session = null; // Clear the session object
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: {} });
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
+});
+exports.logoutUser = logoutUser;
+const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = request.body;
+    const user = yield user_model_1.User.findOne({ email });
+    if (!user) {
+        return next(new error_handler_1.NotFoundError("No user found with that e-mail address", http_status_codes_1.StatusCodes.NOT_FOUND));
+    }
+    const userHasResetToken = yield password_reset_model_1.PasswordReset.findOne({ owner: user._id });
+    // If the user already has the reset token
+    if (userHasResetToken) {
+        return next(new error_handler_2.BadRequestError("You already have the reset password token. Try again later.", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const token = (0, generateResetPasswordToken_1.generateRandomResetPasswordToken)();
+    if (token === undefined) {
+        return next(new error_handler_2.BadRequestError("Reset Password Token is invalid", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const resetPasswordToken = yield password_reset_model_1.PasswordReset.create({ owner: user._id, resetToken: token });
+    yield resetPasswordToken.save();
+    const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}`; // Create the reset password URL
+    sendPasswordResetEmail(user, resetPasswordURL);
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent" });
+});
+exports.forgotPassword = forgotPassword;
+const sendPasswordResetEmail = (user, resetPasswordURL) => {
+    const transporter = (0, send_email_1.emailTransporter)();
+    transporter.sendMail({
+        from: 'resetpassword@ethertix.com',
+        to: user.email,
+        subject: 'Reset Password',
+        html: `
+            
+            <h1> ${resetPasswordURL}</h1>
+            `
     });
-}); };
+};
+const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Rest Password Here" });
+});
+exports.resetPassword = resetPassword;
+const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = request.user;
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
+});
+exports.getCurrentUser = getCurrentUser;
+const sendResetPasswordTokenStatus = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ isValid: true });
+});
+exports.sendResetPasswordTokenStatus = sendResetPasswordTokenStatus;
+const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const currentPassword = request.body.currentPassword;
+    const newPassword = request.body.newPassword;
+    if (!newPassword) {
+        return next(new error_handler_2.BadRequestError("Please provide your new password", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const user = yield user_model_1.User.findById(request.user._id);
+    console.log(`User : ${user}`);
+    if (!user) {
+        return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const currentPasswordMatch = user.comparePasswords(currentPassword);
+    if (!currentPasswordMatch) { // If passwords do not match
+        return next(new error_handler_2.BadRequestError("Current password is invalid.", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    user.password = request.body.newPassword;
+    yield user.save(); // Save new user
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Password Updated" });
+});
+exports.updateUserPassword = updateUserPassword;
+const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const fieldsToUpdate = { email: request.body.email, username: request.body.username };
+    // Update the user
+    const updatedUserProfile = yield user_model_1.User.findByIdAndUpdate(request.params.id, fieldsToUpdate, { new: true, runValidators: true });
+    yield updatedUserProfile.save();
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
+});
+exports.updateUserProfile = updateUserProfile;
+const deactivateUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = request.body;
+    const user = yield user_model_1.User.findById(userId);
+    // If no user exists
+    if (!user) {
+        return next(new error_handler_1.NotFoundError("No user found with that ID", 404));
+    }
+    if (!user.isValid || !user.isActive) {
+        if (!user.isValid || !user.isActive) {
+            return next(new error_handler_2.BadRequestError("User account is already inactive", 400));
+        }
+        if (user.isActive && user.isValid) {
+            user.isActive = (!user.isActive);
+            user.isValid = (!user.isValid);
+            yield user.save();
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Account Deactivated" });
+    }
+});
 exports.deactivateUserAccount = deactivateUserAccount;
-var lockUserAccount = function (request, response, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, response.status(200).json({ success: true, message: "Lock User Account" })];
-    });
-}); };
-exports.lockUserAccount = lockUserAccount;
+const uploadUserProfilePicture = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Upload User Profile Picture Here..." });
+});
+exports.uploadUserProfilePicture = uploadUserProfilePicture;

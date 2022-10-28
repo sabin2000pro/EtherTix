@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var EventSchema = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const EventSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         required: [true, "Please specify the name of the event"]
@@ -147,7 +147,8 @@ var EventSchema = new mongoose_1.default.Schema({
     eventSalesStatus: {
         salesStatus: {
             type: String,
-            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"]
+            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
+            required: [true, "Please specify the sales status of the event."]
         },
         salesStart: {
             type: Date,
@@ -172,5 +173,21 @@ var EventSchema = new mongoose_1.default.Schema({
     timestamps: true,
     toJSON: { virtuals: true }
 });
-var Event = mongoose_1.default.model("Event", EventSchema);
+// Virtual populate
+EventSchema.virtual('tickets', {
+    ref: 'Ticket',
+    foreignField: 'ticket',
+    localField: '_id'
+});
+EventSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'review',
+    localField: '_id'
+});
+EventSchema.virtual('venues', {
+    ref: 'Venue',
+    foreignField: 'venue',
+    localField: '_id'
+});
+const Event = mongoose_1.default.model("Event", EventSchema);
 exports.Event = Event;

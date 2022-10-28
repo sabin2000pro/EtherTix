@@ -191,4 +191,3 @@ EventSchema.virtual('venues', {
 });
 const Event = mongoose_1.default.model("Event", EventSchema);
 exports.Event = Event;
-//# sourceMappingURL=event-model.js.map

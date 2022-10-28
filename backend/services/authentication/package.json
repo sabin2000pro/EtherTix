@@ -8,7 +8,8 @@
     "watch": "tsc -w",
     "prestart": "npm run build ",
     "dev": "nodemon dist/index.js",
-    "start:server": "npm run dev"
+    "start:server": "npm run dev",
+    "auth:test": "jest --bail"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "@types/hpp": "^0.2.2",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/morgan": "^1.9.3",
+    "@types/supertest": "^2.0.12",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
@@ -43,6 +45,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
+    "supertest": "^6.3.1",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.3"
   },

@@ -35,4 +35,3 @@ exports.default = () => {
     });
     connectEventsDatabase();
 };
-//# sourceMappingURL=event-db.js.map

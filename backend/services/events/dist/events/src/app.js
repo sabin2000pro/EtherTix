@@ -41,4 +41,3 @@ app.all('*', (err, request, response, next) => {
     }
     return next();
 });
-//# sourceMappingURL=app.js.map
