@@ -216,10 +216,6 @@ export const loginUser = async (request: Request, response: Response, next: Next
         return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
     }
 
-    if(!user.isVerified) {
-        return next(new BadRequestError(`Cannot login. Verify your e-mail address first`, StatusCodes.BAD_REQUEST));
-    }
-
     if(user.isLocked) {
         return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
     }

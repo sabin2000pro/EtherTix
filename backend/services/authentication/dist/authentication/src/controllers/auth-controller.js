@@ -154,9 +154,6 @@ const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0,
     if (!user) {
         return next(new error_handler_2.BadRequestError(`Could not find that user`, http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
-    if (!user.isVerified) {
-        return next(new error_handler_2.BadRequestError(`Cannot login. Verify your e-mail address first`, http_status_codes_1.StatusCodes.BAD_REQUEST));
-    }
     if (user.isLocked) {
         return next(new error_handler_2.BadRequestError("Cannot login. Your account is locked", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
