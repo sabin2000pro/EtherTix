@@ -43,8 +43,7 @@ const UserSchema = new mongoose_1.default.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
-        match: ["/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i", "Please provide valid E-mail Address"]
+        unique: true
     },
     photo: {
         type: String,
