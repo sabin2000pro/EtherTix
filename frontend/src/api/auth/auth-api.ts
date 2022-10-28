@@ -11,6 +11,7 @@ const defaultOptions = {
   let axiosInstance = axios.create(defaultOptions)
 
 axiosInstance.interceptors.request.use((configData: any | undefined) => {
+    
     const authToken = localStorage.getItem("token");
     configData.headers.Authorization = authToken ? `Bearer ${authToken}` : "" // Store the token in the header
 

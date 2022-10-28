@@ -43,7 +43,8 @@ const UserSchema = new mongoose_1.default.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        match: ["/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i", "Please provide valid E-mail Address"]
     },
     photo: {
         type: String,
@@ -60,7 +61,6 @@ const UserSchema = new mongoose_1.default.Schema({
     },
     role: {
         type: String,
-        required: [true, "Please provide a valid role for the user"],
         enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
     },

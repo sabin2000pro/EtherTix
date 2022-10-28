@@ -10,7 +10,7 @@ services:
     restart: always
 
     ports:
-      - "5300:5300"
+      - "5299:5299"
     volumes:
        - /app/node_modules
        - ../backend/services/authentication:/app

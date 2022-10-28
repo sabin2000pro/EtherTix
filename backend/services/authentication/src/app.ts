@@ -26,6 +26,7 @@ if(process.env.NODE_ENV === 'production') {
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
+
 app.use(cors());
 app.use(helmet());
 app.use(cookieSession({
@@ -34,7 +35,7 @@ app.use(cookieSession({
 
 // Error Handler middleware
 app.use('/api/v1/auth', authRouter);
-app.use(errorHandler);
+// app.use(errorHandler);
 
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Root Route"})
