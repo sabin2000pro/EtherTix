@@ -280,7 +280,6 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     if(!mfaTokensMatch) {
         user.isActive = (!user.isActive) as boolean;
         user.isVerified = (!user.isVerified) as boolean;
-
         return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
     }
 
@@ -397,7 +396,6 @@ export const resetPassword = async (request: Request, response: Response, next: 
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const user = request.user;
-
     return response.status(StatusCodes.OK).json({success: true, data: user});
 }
 

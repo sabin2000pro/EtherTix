@@ -44,7 +44,38 @@ describe("Login Account Test Suite", () => {
             return expect(response.statusCode).toBe(200);
         }
     }));
+    it("Login with invalid password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const loginFields = [{ email: "sabinlungu293@gmail.com", password: "invalidpassword" }];
+        for (const loginData of loginFields) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
+            return expect(response.statusCode).toBe(400);
+        }
+    }));
+    it("Login with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
+        const loginFields = [{ email: "invalidemail", password: "invalidpassword" }];
+        for (const loginData of loginFields) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
+            return expect(response.statusCode).toBe(400);
+        }
+    }));
 });
+describe("Verify E-mail Address Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Verify E-mail Address With Invalid OTP", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidOtpFields = [{ userId: "", OTP: "0" }];
+    }));
+}));
+describe("Forgot Password Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Send Forgot Password with valid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Send Forgot Password with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Send Forgot Password with empty e-mail field", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+}));
+describe("Verify Login MFA Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
+}));
+describe("Resend Login MFA Code - Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
+}));
 afterAll(done => {
     mongoose_1.default.connection.close();
     done();

@@ -44,7 +44,110 @@ describe("Login Account Test Suite", () => {
 
 
     })
+
+    it("Login with invalid password", async () => {
+        const loginFields = [{email: "sabinlungu293@gmail.com", password: "invalidpassword"}]
+
+        for(const loginData of loginFields) {
+            const response = await request(app).post('/api/v1/auth/login').send(loginData)
+            return expect(response.statusCode).toBe(400)
+        }
+
+    })
+
+    it("Login with invalid e-mail address", async () => {
+        const loginFields = [{email: "invalidemail", password: "invalidpassword"}]
+
+        for(const loginData of loginFields) {
+            const response = await request(app).post('/api/v1/auth/login').send(loginData)
+            return expect(response.statusCode).toBe(400)
+        }
+    })
+
+
 })
+
+describe("Verify E-mail Address Test Suite", () => {
+
+    it("Verify E-mail Address With Invalid Entries", async () => {
+        const invalidOtpFields = [{userId: "", OTP: "09"}]
+
+        for(const data of invalidOtpFields) {
+            const response = await request(app).post("/api/v1/auth/verify-email").send(data);
+
+            return expect(response.statusCode).toBe(400)
+        }
+
+    })
+
+    it("Verify E-mail Address With Malformed User ID", async () => {
+        const malformedInputs = [{userId: "5dfa", OTP: "909890"}]
+
+        for(const data of malformedInputs) {
+            const response = await request(app).post("/api/v1/auth/verify-email").send(data);
+
+            return expect(response.statusCode).toBe(400)
+        }
+
+    })
+
+    it("Verify E-mail Address With Missing User ID", async () => {
+        const malformedInputs = [{OTP: "909890"}]
+
+        for(const data of malformedInputs) {
+            const response = await request(app).post("/api/v1/auth/verify-email").send(data);
+
+            return expect(response.statusCode).toBe(404)
+        }
+    })
+
+
+})
+
+describe("Forgot Password Test Suite", () => {
+
+
+    it("Send Forgot Password with valid e-mail address", async () => {
+
+    })
+
+    it("Send Forgot Password with invalid e-mail address", async () => {
+
+    })
+
+    it("Send Forgot Password with empty e-mail field", async () => {
+
+    })
+
+
+
+})
+
+describe("Verify Login MFA Test Suite", () => {
+
+})
+
+describe("Resend Login MFA Code - Test Suite", () => {
+
+})
+
+describe("Reset Password - Test Suite", () => {
+
+})
+
+describe("Logout Test Suite", () => {
+
+
+    it("Logout User Test", async () => {
+
+    })
+
+})
+
+describe("Update User Password Test Suite", () => {
+    
+})
+
 
 afterAll(done => {
     mongoose.connection.close();
