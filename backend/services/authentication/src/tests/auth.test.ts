@@ -108,14 +108,36 @@ describe("Forgot Password Test Suite", () => {
 
 
     it("Send Forgot Password with valid e-mail address", async () => {
+        const validForgotPasswordEntries = [{email: "sabinlungu293@gmail.com"}]
+
+        for(const data of validForgotPasswordEntries) {
+            const response = await request(app).post("/api/v1/auth/forgot-password").send(data);
+
+            return expect(response.statusCode).toBe(200)
+        }
 
     })
 
     it("Send Forgot Password with invalid e-mail address", async () => {
+        const validForgotPasswordEntries = [{email: "tottenham2@gmail.com"}]
 
-    })
+        for(const data of validForgotPasswordEntries) {
+            const response = await request(app).post("/api/v1/auth/forgot-password").send(data);
+
+            return expect(response.statusCode).toBe(404)
+        }
+
+    })  
+
 
     it("Send Forgot Password with empty e-mail field", async () => {
+        const validForgotPasswordEntries = [{email: ""}]
+
+        for(const data of validForgotPasswordEntries) {
+            const response = await request(app).post("/api/v1/auth/forgot-password").send(data);
+
+            return expect(response.statusCode).toBe(404)
+        }
 
     })
 

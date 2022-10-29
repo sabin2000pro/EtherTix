@@ -352,11 +352,6 @@ export const forgotPassword = async (request: Request, response: Response, next:
 
     const userHasResetToken = await PasswordReset.findOne({owner: user._id});
 
-    // If the user already has the reset token
-    if(userHasResetToken) {
-        return next(new BadRequestError("You already have the reset password token. Try again later.", StatusCodes.BAD_REQUEST));
-    }
-
     const token = generateRandomResetPasswordToken();
 
     if(token === undefined) {
@@ -465,8 +460,8 @@ export const deactivateUserAccount = async (request: Request, response: Response
         await user.save();
     }
 
-
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
+
 }}
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {

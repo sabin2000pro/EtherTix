@@ -59,23 +59,54 @@ describe("Login Account Test Suite", () => {
         }
     }));
 });
-describe("Verify E-mail Address Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
-    it("Verify E-mail Address With Invalid OTP", () => __awaiter(void 0, void 0, void 0, function* () {
-        const invalidOtpFields = [{ userId: "", OTP: "0" }];
+describe("Verify E-mail Address Test Suite", () => {
+    it("Verify E-mail Address With Invalid Entries", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidOtpFields = [{ userId: "", OTP: "09" }];
+        for (const data of invalidOtpFields) {
+            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
+            return expect(response.statusCode).toBe(400);
+        }
     }));
-}));
-describe("Forgot Password Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Verify E-mail Address With Malformed User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const malformedInputs = [{ userId: "5dfa", OTP: "909890" }];
+        for (const data of malformedInputs) {
+            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
+            return expect(response.statusCode).toBe(400);
+        }
+    }));
+    it("Verify E-mail Address With Missing User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        const malformedInputs = [{ OTP: "909890" }];
+        for (const data of malformedInputs) {
+            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
+            return expect(response.statusCode).toBe(404);
+        }
+    }));
+});
+describe("Forgot Password Test Suite", () => {
     it("Send Forgot Password with valid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
+        const validForgotPasswordEntries = [{ email: "sabinlungu293@gmail.com" }];
+        for (const data of validForgotPasswordEntries) {
+            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/forgot-password").send(data);
+            return expect(response.statusCode).toBe(200);
+        }
     }));
     it("Send Forgot Password with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     it("Send Forgot Password with empty e-mail field", () => __awaiter(void 0, void 0, void 0, function* () {
     }));
-}));
-describe("Verify Login MFA Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
-}));
-describe("Resend Login MFA Code - Test Suite", () => __awaiter(void 0, void 0, void 0, function* () {
-}));
+});
+describe("Verify Login MFA Test Suite", () => {
+});
+describe("Resend Login MFA Code - Test Suite", () => {
+});
+describe("Reset Password - Test Suite", () => {
+});
+describe("Logout Test Suite", () => {
+    it("Logout User Test", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+});
+describe("Update User Password Test Suite", () => {
+});
 afterAll(done => {
     mongoose_1.default.connection.close();
     done();
