@@ -31,7 +31,7 @@ declare namespace Express {
   // @returns: void
   // @public: True (No Authorization Required)
 
-  
+
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 
     return transporter.sendMail({
@@ -48,48 +48,52 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
+  // @description: Register User Account
+  // @parameters: request: Request Object, response: Response Object, next: Next Function
+  // @returns: Server Response Promise
+  // @public: True (No Authorization Token Required)
+  
 export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
+
         const {email, password, passwordConfirm} = request.body;
 
-     if(!email) {
-        return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
-     }
+        if(!email) {
+          return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
+        }
 
-    if(password !== passwordConfirm ) {
-        return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
-    }
+        if(password !== passwordConfirm ) {
+            return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
+        }
 
-    const existingUser = await User.findOne({email}) // Find an existing user
+        const existingUser = await User.findOne({email}) // Find an existing user
 
-    if(existingUser) {
-       return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
-    }
+        if(existingUser) {
+            return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
+        }
 
-    const newUser = await User.create(request.body);
-    const token = newUser.getAuthenticationToken();
+        const newUser = await User.create(request.body);
+        const token = newUser.getAuthenticationToken();
 
-    if(!token) {
-        return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
-    }
+        if(!token) {
+            return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
+        }
 
-    await newUser.save();
-    const currentUser = newUser._id; // Get the current user's ID
-    const userOTP = generateOTPVerificationToken();
+        await newUser.save();
+        const currentUser = newUser._id; // Get the current user's ID
+        const userOTP = generateOTPVerificationToken();
 
-    const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
-    await verificationToken.save();
+        const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
+        await verificationToken.save();
 
-    // Send e-mail verification to user
+        const transporter = emailTransporter();
+        sendConfirmationEmail(transporter, newUser, userOTP as unknown as any);
 
-    const transporter = emailTransporter();
-    sendConfirmationEmail(transporter, newUser, userOTP as unknown as any);
+        const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
+        await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
-    const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
-    await userOTPVerification.save();
-
-    return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
+        return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
 
     } 
     
