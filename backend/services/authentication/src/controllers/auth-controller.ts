@@ -82,9 +82,12 @@ export const registerUser = async (request: Request, response: Response, next: N
 
         await newUser.save();
         const currentUser = newUser._id; // Get the current user's ID
-        const userOTP = generateOTPVerificationToken();
 
+
+        const userOTP = generateOTPVerificationToken();
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
+
+
         await verificationToken.save();
 
         const transporter = emailTransporter();
@@ -164,7 +167,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         user.isVerified = true
 
         await user.save();
-        await EmailVerification.findByIdAndDelete(token._id);
+        await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
 
         const transporter = emailTransporter();
 
@@ -179,10 +182,10 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
                 `
             })
 
-        const jwtToken = user.getAuthenticationToken();
-        request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+            const jwtToken = user.getAuthenticationToken();
+            request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
 
-        return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
+            return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
     } 
     
     catch(error: any) {
@@ -190,21 +193,49 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
-
     }
-
 }
+
+
+   // @description: Resend the E-mail Verification code to the user if not received
+  // @parameters: request: Request Object, response: Response Object, next: Next Function
+  // @returns: Server Response Promise
+  // @public: True (No Authorization Token Required)
+
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
-        const {ownerId, OTP} = request.body;
 
-        if(!isValidObjectId(ownerId)) {
+        const {userId, OTP} = request.body;
+        const currentUser = await User.findById(userId);
+
+        if(!currentUser) {
+            return next(new BadRequestError("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
+        }
+
+        if(!isValidObjectId(userId)) {
             return next(new BadRequestError("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
         }
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Resend E-mail Verification Code Here"});
+        if(!OTP) {
+            return next(new NotFoundError("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
+        }
+
+        // Find associating user token
+        const token = await EmailVerification.findOne({owner: userId});
+
+        if(!token) {
+            return next(new BadRequestError("User verification token not found", StatusCodes.BAD_REQUEST));
+        }
+
+        // Fetch the generated token
+        const otpToken = generateOTPVerificationToken(); 
+
+        const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
+        await newToken.save(); // Save the new token
+    
+        return response.status(StatusCodes.OK).json({success: true, message: "E-mail Verification Re-sent"});
     } 
     
     catch(error: any) {
