@@ -300,43 +300,59 @@ export const loginUser = async (request: Request, response: Response, next: Next
 }
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {userId, multiFactorToken} = request.body;
-    const user = await User.findById(userId);
 
-    if(!isValidObjectId(userId)) {
-        return next(new BadRequestError(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
-    }
+    try {
 
-    if(!multiFactorToken) {
-        user.isActive = !user.isActive;
-        return next(new BadRequestError("Please provide your MFA token", StatusCodes.BAD_REQUEST));
-    }
-
-    const factorToken = await TwoFactorVerification.findOne({owner: userId});
-
-    if(!factorToken) {
-        return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
-    }
-
-    // Check to see if the tokens match
-    const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
-
-    if(!mfaTokensMatch) {
-        user.isActive = (!user.isActive) as boolean;
-        user.isVerified = (!user.isVerified) as boolean;
-        return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
-    }
-
-    user.isVerified = true; // User account is now verified
-    user.isActive = true; // And user account is active
+        const {userId, multiFactorToken} = request.body;
+        const user = await User.findById(userId);
     
-    factorToken.mfaToken = undefined;
+        if(!isValidObjectId(userId)) {
+            return next(new BadRequestError(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
+        }
+    
+        if(!multiFactorToken) {
+            user.isActive = !user.isActive;
+            return next(new BadRequestError("Please provide your MFA token", StatusCodes.BAD_REQUEST));
+        }
+    
+        const factorToken = await TwoFactorVerification.findOne({owner: userId});
+    
+        if(!factorToken) {
+            return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
+        }
+    
+        // Check to see if the tokens match
+        const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
+    
+        if(!mfaTokensMatch) {
+            user.isActive = (!user.isActive) as boolean;
+            user.isVerified = (!user.isVerified) as boolean;
+            return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
+        }
+    
+        user.isVerified = true; // User account is now verified
+        user.isActive = true; // And user account is active
+        
+        factorToken.mfaToken = undefined;
+    
+        await user.save();
+    
+        const jwtToken = user.getAuthenticationToken();
+        (request.session) = {jwtToken} as any || undefined;
+        return response.status(StatusCodes.OK).json({userData: {id: user._id,  username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "Your Account Is Active"})
+    } 
+    
+    catch(error) {
 
-    await user.save();
+        
+        if(error) {
+            console.error(error);
 
-    const jwtToken = user.getAuthenticationToken();
-    (request.session) = {jwtToken} as any || undefined;
-    return response.status(StatusCodes.OK).json({userData: {id: user._id,  username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "Your Account Is Active"})
+            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message});
+        }
+    }
+
+
 
 }
 
@@ -344,6 +360,9 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
     try {
         const {userId, mfaCode} = request.body;
+        const currentUser = await User.findById(userId);
+
+        console.log(`Current user found : ${currentUser}`);
 
         if(!isValidObjectId(userId)) {
             return next(new NotFoundError("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
@@ -425,7 +444,7 @@ export const forgotPassword = async (request: Request, response: Response, next:
             return response.status(400).json({success: false, message: error.message});
         }
 
-        
+
     }
 
 
