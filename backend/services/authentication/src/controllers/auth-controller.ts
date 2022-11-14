@@ -48,7 +48,7 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
-  // @description: Register User Account
+  // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
@@ -57,7 +57,7 @@ export const registerUser = async (request: Request, response: Response, next: N
 
     try {
 
-        const {email, password, passwordConfirm} = request.body;
+        const {email, password, passwordConfirm} = request.body; // Extract relevant data from the body of the request
 
         if(!email) {
           return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
@@ -115,6 +115,10 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
     return response.status(statusCode).json({userData: {id: user._id, username: user.username, email: user.email, jwtToken}});
 }
 
+  // @description: Verify User E-mail Address
+  // @parameters: request: Request Object, response: Response Object, next: Next Function
+  // @returns: Server Response Promise w/ Status Code 200
+  // @public: True (No Authorization Token Required)
 
 export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -164,7 +168,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 
         const transporter = emailTransporter();
 
-        // Send welcome e-mail
+            // Send welcome e-mail
             transporter.sendMail({
                 from: 'welcome@ethertix.com',
                 to: user.email,
