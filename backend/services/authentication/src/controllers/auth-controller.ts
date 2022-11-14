@@ -26,10 +26,16 @@ declare namespace Express {
     user: any // or any other type
   }
 
+  // @description: Sends the verify confirmation e-mail to the user after registering an account
+  // @parameters: Transporter Object, User Object, Randomly Generated User OTP
+  // @returns: void
+  // @public: True (No Authorization Required)
 
+  
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 
     return transporter.sendMail({
+
         from: 'verification@ethertix.com',
         to: newUser.email,
         subject: 'E-mail Verification',
@@ -37,6 +43,7 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
         
         <p>Your verification OTP</p>
         <h1> ${userOTP}</h1>
+
         `
     })
 }
@@ -285,6 +292,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
     user.isVerified = true; // User account is now verified
     user.isActive = true; // And user account is active
+    
     factorToken.mfaToken = undefined;
 
     await user.save();
@@ -351,6 +359,10 @@ export const forgotPassword = async (request: Request, response: Response, next:
     }
 
     const userHasResetToken = await PasswordReset.findOne({owner: user._id});
+
+    if(!userHasResetToken) {
+        
+    }
 
     const token = generateRandomResetPasswordToken();
 
@@ -447,22 +459,18 @@ export const deactivateUserAccount = async (request: Request, response: Response
     }
 
     if(!user.isValid || !user.isActive) {
-
-    if(!user.isValid || !user.isActive) {
         return next(new BadRequestError("User account is already inactive", 400));
     }
 
     if(user.isActive && user.isValid) {
-
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
-
         await user.save();
     }
 
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
 
-}}
+}
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 

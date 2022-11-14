@@ -35,6 +35,7 @@ describe("Register Account Test Suite", () => {
 describe("Login Account Test Suite", () => {
     
     it("Login With Valid Credentials Test", async () => {
+
         const loginFields = [{email: "sabinlungu293@gmail.com", password: "123mini123"}]
 
         for(const loginData of loginFields) {
@@ -140,7 +141,6 @@ describe("Forgot Password Test Suite", () => {
         }
 
     })
-
 
 
 })

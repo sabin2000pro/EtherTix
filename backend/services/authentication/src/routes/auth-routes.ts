@@ -17,6 +17,7 @@ authRouter.route('/register').post(registerUser);
 authRouter.route('/verify-email').post(rateLimiter, verifyEmailAddress);
 authRouter.route('/login').post(rateLimiter, loginUser);
 authRouter.route('/verify-login-mfa').post(rateLimiter, verifyLoginToken)
+
 authRouter.route('/logout').get(rateLimiter, protectAuth as any, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter, forgotPassword as any);
 authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);

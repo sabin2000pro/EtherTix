@@ -13,6 +13,7 @@ deploy-containers:
 build-services:
 	- cd services/auth*&& npm run build
 	- cd services/events* && npm run build
+	
 	- cd services/venues* && npm run build
 	- cd services/discount* && npm run build
 	- cd services/posts* && npm run build
