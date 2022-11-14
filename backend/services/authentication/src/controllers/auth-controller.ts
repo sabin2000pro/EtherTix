@@ -247,41 +247,49 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
 
 }
 
+  // @description: Login User
+  // @parameters: request: Request Object, response: Response Object, next: Next Function
+  // @returns: Server Response Promise w/ Status Code 200
+  // @public: True (No Authorization Token Required)
+  // @ Pre Condition: E-mail and Password required
+  // @ Post Condition: Logged In User with associated authentication token (JWT)
+
 export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {email, password} = request.body;
 
-    if(!email || !password) {
-        return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
-    }
+    try {
+        const {email, password} = request.body;
 
-    const user = await User.findOne({email});
+        if(!email || !password) {
+            return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
+        }
+    
+        const user = await User.findOne({email});
+    
+        if(!user) {
+            return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
+        }
+    
+        if(user.isLocked) {
+            return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
+        }
+    
+        // Compare user passwords before logging in
+        const matchPasswords = await user.comparePasswords(password);
+    
+        if(!matchPasswords) {
+            return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
+        }
+    
+        // Generate new JWT and store in in the session
+        const token = user.getAuthenticationToken();
+        const userMfa = generateMfaToken();
+    
+        // Check for a valid MFA
+        if(!userMfa) {
+           return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
+        }
 
-    if(!user) {
-        return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
-    }
-
-    if(user.isLocked) {
-        return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
-    }
-
-    // Compare user passwords before logging in
-    const matchPasswords = await user.comparePasswords(password);
-
-    if(!matchPasswords) {
-        return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
-    }
-
-    // Generate new JWT and store in in the session
-    const token = user.getAuthenticationToken();
-    const userMfa = generateMfaToken();
-
-    // Check for a valid MFA
-    if(!userMfa) {
-       return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
-    }
-
-     // Send MFA e-mail to user
-     const transporter = emailTransporter();
+        const transporter = emailTransporter();
 
         transporter.sendMail({
             from: 'mfa@ethertix.com',
@@ -294,9 +302,19 @@ export const loginUser = async (request: Request, response: Response, next: Next
             `
         })
 
-    request.session = {jwt: token}; // Store the token in the session as a cookie
+         request.session = {jwt: token}; // Store the token in the session as a cookie
+         return response.status(StatusCodes.OK).json({success: true, token, userData: user});
+    
+    } 
+    
+    catch(error) {
 
-    return response.status(StatusCodes.OK).json({success: true, token, userData: user});
+        if(error) {
+            return console.error(error.message);
+        }
+
+    }
+       
 }
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -344,7 +362,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     
     catch(error) {
 
-        
+
         if(error) {
             console.error(error);
 
