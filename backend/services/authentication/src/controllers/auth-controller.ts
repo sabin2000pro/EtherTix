@@ -11,7 +11,6 @@ import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
-import {Event} from '../../../events/src/models/event-model';
 
 declare namespace Express {
     export interface Request {
@@ -438,7 +437,7 @@ export const forgotPassword = async (request: Request, response: Response, next:
         const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
         if(!userHasResetToken) {
-            
+            return next(new BadRequestError("User already has the password reset token", StatusCodes.BAD_REQUEST));
         }
     
         const token = generateRandomResetPasswordToken();
@@ -462,11 +461,8 @@ export const forgotPassword = async (request: Request, response: Response, next:
             return response.status(400).json({success: false, message: error.message});
         }
 
-
     }
 
-
-   
 }
 
 const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
@@ -488,7 +484,12 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 }
 
 export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Rest Password Here"});
+    const {currentPassword, newPassword} = request.body; // Pull out the current user password and the new user password
+
+    // Validate Fields
+
+
+    return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Success"});
 }
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
@@ -510,7 +511,6 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
 
     const user = await User.findById(<any>request.user._id);
 
-    console.log(`User : ${user}`);
 
     if(!user) {
         return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
