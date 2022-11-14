@@ -83,10 +83,8 @@ export const registerUser = async (request: Request, response: Response, next: N
         await newUser.save();
         const currentUser = newUser._id; // Get the current user's ID
 
-
         const userOTP = generateOTPVerificationToken();
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
-
 
         await verificationToken.save();
 
@@ -390,32 +388,48 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 }
 
 export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const {email} = request.body;
-    const user = await User.findOne({email});
 
-    if(!user) {
-        return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
-    }
+    try {
 
-    const userHasResetToken = await PasswordReset.findOne({owner: user._id});
+        const {email} = request.body;
+        const user = await User.findOne({email});
+    
+        if(!user) {
+            return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
+        }
+    
+        const userHasResetToken = await PasswordReset.findOne({owner: user._id});
+    
+        if(!userHasResetToken) {
+            
+        }
+    
+        const token = generateRandomResetPasswordToken();
+    
+        if(token === undefined) {
+            return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
+        }
+    
+        const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token});
+        await resetPasswordToken.save();
+    
+        const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
+        sendPasswordResetEmail(user, resetPasswordURL);
+    
+        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent"});
+    } 
+    
+    catch(error: any) {
 
-    if(!userHasResetToken) {
+        if(error) {
+            return response.status(400).json({success: false, message: error.message});
+        }
+
         
     }
 
-    const token = generateRandomResetPasswordToken();
 
-    if(token === undefined) {
-        return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
-    }
-
-    const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token});
-    await resetPasswordToken.save();
-
-    const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
-    sendPasswordResetEmail(user, resetPasswordURL);
-
-    return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent"});
+   
 }
 
 const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
@@ -513,5 +527,5 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
-    return response.status(StatusCodes.OK).json({success: true, message: "Upload User Profile Picture Here..."});
+    return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
 }
