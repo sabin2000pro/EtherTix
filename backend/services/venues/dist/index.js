@@ -18,4 +18,3 @@ const startVenueServer = () => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 startVenueServer();
-//# sourceMappingURL=index.js.map

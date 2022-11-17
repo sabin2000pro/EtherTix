@@ -18,4 +18,3 @@ const startAuthServer = () => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 startAuthServer();
-//# sourceMappingURL=index.js.map

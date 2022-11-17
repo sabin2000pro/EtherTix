@@ -11,6 +11,7 @@ deploy-containers:
 	- cat ingress-service.yaml
 
 build-services:
+
 	- cd services/auth*&& npm run build
 	- cd services/events* && npm run build
 	

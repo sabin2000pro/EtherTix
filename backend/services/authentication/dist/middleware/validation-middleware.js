@@ -24,4 +24,3 @@ exports.loginMfaSchema = joi_1.default.object({});
 exports.resetPasswordSchema = joi_1.default.object({});
 exports.updateUserPasswordSchema = joi_1.default.object({});
 exports.updateUserProfileSchema = joi_1.default.object({});
-//# sourceMappingURL=validation-middleware.js.map

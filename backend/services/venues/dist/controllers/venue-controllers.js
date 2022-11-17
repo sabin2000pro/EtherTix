@@ -72,4 +72,3 @@ exports.uploadVenuePhoto = uploadVenuePhoto;
 const fetchTrendingVenues = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.fetchTrendingVenues = fetchTrendingVenues;
-//# sourceMappingURL=venue-controllers.js.map

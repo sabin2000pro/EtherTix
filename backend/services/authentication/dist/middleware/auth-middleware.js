@@ -44,4 +44,3 @@ const restrictRoleTo = (...roles) => {
     };
 };
 exports.restrictRoleTo = restrictRoleTo;
-//# sourceMappingURL=auth-middleware.js.map

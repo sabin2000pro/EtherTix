@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Discount = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
+const mongoose_1 = __importDefault(require("mongoose"));
 // Create the Data Model Schema using Mongoose
-var DiscountSchema = new mongoose_1.default.Schema({
+const DiscountSchema = new mongoose_1.default.Schema({
     discount: {
         type: {
             type: String,
@@ -35,5 +35,5 @@ var DiscountSchema = new mongoose_1.default.Schema({
         }
     }
 }, { timestamps: true });
-var Discount = mongoose_1.default.model("Discount", DiscountSchema);
+const Discount = mongoose_1.default.model("Discount", DiscountSchema);
 exports.Discount = Discount;

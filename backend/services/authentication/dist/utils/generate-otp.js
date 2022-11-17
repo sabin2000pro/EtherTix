@@ -11,4 +11,3 @@ const generateOTPVerificationToken = (otp_length = 6) => {
     return OTP;
 };
 exports.generateOTPVerificationToken = generateOTPVerificationToken;
-//# sourceMappingURL=generate-otp.js.map

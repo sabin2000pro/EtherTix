@@ -60,7 +60,6 @@ const UserSchema = new mongoose_1.default.Schema({
     },
     role: {
         type: String,
-        required: [true, "Please provide a valid role for the user"],
         enum: ["admin", "moderator", "organiser", "user"],
         default: "user"
     },
@@ -117,4 +116,3 @@ UserSchema.methods.getAuthenticationToken = function () {
 };
 const User = mongoose_1.default.model("User", UserSchema);
 exports.User = User;
-//# sourceMappingURL=user-model.js.map

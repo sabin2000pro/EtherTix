@@ -16,4 +16,3 @@ const emailTransporter = () => {
     });
 };
 exports.emailTransporter = emailTransporter;
-//# sourceMappingURL=send-email.js.map

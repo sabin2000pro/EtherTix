@@ -7,7 +7,7 @@ interface IVenueAttributes {
     email: string; // E-mail Address of the venue
     venueCapacity: number;
     phone: string;
-    ageRestrictions: string;
+    ageRestriction: string;
 
     openTime: Date,
     closeTime: Date,
@@ -39,7 +39,7 @@ interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
     createdAt: Date;
 
     venueCapacity: number;
-    ageRestrictions: string;
+    ageRestriction: string;
     address: string;
     location: Object;
     organiser: mongoose.Schema.Types.ObjectId
@@ -70,6 +70,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
         },
 
         email: {
+
           type: String,
           match: [
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -77,7 +78,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           ]
         },
 
-        ageRestrictions: { // Venue entry age restriction
+        ageRestriction: { // Venue entry age restriction
             type: String,
             required: [true, "Please include a valid age restriction for the venue"],
             enum: ["AGE_RESTRICTION_ALL_AGES", "AGE_RESTRICTION_MIN_SIXTEEN", "AGE_RESTRICTION_MIN_SEVENTEEN", "AGE_RESTRICTION_MIN_EIGHTEEN", "AGE_RESTRICTION_MIN_TWENTY_ONE"]
@@ -94,7 +95,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           default: Date.now
         },
 
-        closeTime: {  
+        closeTime: {  // Closing time of the venue
           type: Date,
           default: Date.now
         },
@@ -155,9 +156,10 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
   timestamps: true,
   toJSON: {virtuals: true}
+
+
 }) 
 
-//TODO
 // // Geocode & create location field
 // VenueSchema.pre('save', async function(next) {
 
@@ -177,6 +179,8 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
 //   // Do not save address in DB
 //   this.address = undefined;
+
+
 //   return next();
 // });
 
@@ -186,7 +190,6 @@ VenueSchema.virtual('events', {
   foreignField: 'event',
   localField: '_id'
 });
-
 
 const Venue = mongoose.model<IVenueDocument>("Venue", VenueSchema);
 export {Venue}

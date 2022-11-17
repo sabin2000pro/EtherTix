@@ -13,7 +13,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const cors_1 = __importDefault(require("cors"));
 const http_status_codes_1 = require("http-status-codes");
-const event_routes_1 = __importDefault(require("./routes/event-routes"));
+const event_routes_1 = require("./routes/event-routes");
 const app = (0, express_1.default)();
 exports.app = app;
 (0, event_db_1.default)();
@@ -31,7 +31,7 @@ app.use((0, cors_1.default)({
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
 app.use((0, helmet_1.default)());
-app.use('/api/v1', event_routes_1.default);
+app.use('/api/v1', event_routes_1.eventRouter);
 app.get("/", (request, response) => {
     return response.json({ message: "Root Route" });
 });
@@ -41,4 +41,3 @@ app.all('*', (err, request, response, next) => {
     }
     return next();
 });
-//# sourceMappingURL=app.js.map

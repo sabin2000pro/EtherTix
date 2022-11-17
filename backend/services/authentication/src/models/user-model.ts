@@ -93,7 +93,7 @@ const UserSchema = new mongoose.Schema({
         unique: true
     },
 
-    photo: {
+    photo: { // Photo for the user
         type: String,
         default: 'no-photo.jpg'
     },

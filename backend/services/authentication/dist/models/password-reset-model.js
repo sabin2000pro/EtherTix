@@ -52,4 +52,3 @@ PasswordResetSchema.methods.compareResetToken = function (enteredToken) {
 };
 const PasswordReset = mongoose_1.default.model("PasswordReset", PasswordResetSchema);
 exports.PasswordReset = PasswordReset;
-//# sourceMappingURL=password-reset-model.js.map

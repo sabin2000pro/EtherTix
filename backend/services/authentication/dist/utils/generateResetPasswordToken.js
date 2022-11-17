@@ -11,4 +11,3 @@ const generateRandomResetPasswordToken = (token_length = 6) => {
     return resetToken;
 };
 exports.generateRandomResetPasswordToken = generateRandomResetPasswordToken;
-//# sourceMappingURL=generateResetPasswordToken.js.map

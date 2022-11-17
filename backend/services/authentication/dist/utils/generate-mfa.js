@@ -11,4 +11,3 @@ const generateMfaToken = (otp_length = 6) => {
     return OTP;
 };
 exports.generateMfaToken = generateMfaToken;
-//# sourceMappingURL=generate-mfa.js.map

@@ -16,7 +16,8 @@ declare namespace Express {
 // @access    Private (Authorization Token Required)
 
 export const getAllEventTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+    const tickets = await Ticket.find();
+    return response.status(200).json({success: true, data: tickets, count: tickets.length});
 }
 
 // @desc      Get Event Ticket By ID
@@ -26,6 +27,12 @@ export const getAllEventTickets = async (request: Request, response: Response, n
 
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const ticketId = request.params.ticketId;
+
+    if(!ticketId) {
+
+    }
+
+
 }
 
 // @desc      Create New Event Ticket
@@ -41,7 +48,7 @@ export const createNewEventTicket = async (request: Request, response: Response,
 // @access    Private (JWT Authorization Token Required)
 
 export const editTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+    const ticketId = request.params.ticketId;
 }
 
 // @desc      Delete All Tickets For A specific event
@@ -58,8 +65,4 @@ export const deleteAllTickets = async (request: Request, response: Response, nex
 
 export const deleteTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     
-}
-
-export const uploadEventTicketPhoto = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-  
 }

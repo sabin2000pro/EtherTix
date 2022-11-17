@@ -14,10 +14,6 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
     
     const authToken = localStorage.getItem("token");
     configData.headers.Authorization = authToken ? `Bearer ${authToken}` : "" // Store the token in the header
-
-    console.log(`Headers : ${configData.headers}`)
-    console.log(`Auth token : ${authToken}`);
-
     return configData;
 })
 

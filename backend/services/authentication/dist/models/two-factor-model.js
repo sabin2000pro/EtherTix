@@ -53,4 +53,3 @@ TwoFactorVerificationSchema.methods.compareVerificationTokens = function (entere
 };
 const TwoFactorVerification = mongoose_1.default.model("TwoFactorVerification", TwoFactorVerificationSchema);
 exports.TwoFactorVerification = TwoFactorVerification;
-//# sourceMappingURL=two-factor-model.js.map

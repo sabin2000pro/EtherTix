@@ -53,4 +53,3 @@ EmailVerificationSchema.methods.compareVerificationTokens = function (enteredTok
 };
 const EmailVerification = mongoose_1.default.model("EmailVerification", EmailVerificationSchema);
 exports.EmailVerification = EmailVerification;
-//# sourceMappingURL=email-verification-model.js.map

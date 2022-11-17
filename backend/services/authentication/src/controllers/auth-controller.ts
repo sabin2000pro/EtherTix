@@ -141,6 +141,7 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
             return next(new BadRequestError(`No user found with that ID`, StatusCodes.BAD_REQUEST));
         }
 
+        // If the user is already verified
         if(user.isVerified) {
             return next(new BadRequestError(`User account is already verified`, StatusCodes.BAD_REQUEST));
         }
@@ -361,15 +362,11 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     
     catch(error) {
 
-
         if(error) {
-            console.error(error);
-
             return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message});
         }
+
     }
-
-
 
 }
 
@@ -563,6 +560,5 @@ export const deactivateUserAccount = async (request: Request, response: Response
 }
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
     return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
 }

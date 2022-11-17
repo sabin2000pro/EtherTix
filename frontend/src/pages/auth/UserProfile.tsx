@@ -1,8 +1,10 @@
 import React, {useEffect} from 'react'
 
 const UserProfile: React.FC = (props: any) => {
+  
 
   useEffect(() => {
+
      // Process the JWT from local storage
 
      const getAuthToken = () => {
@@ -12,6 +14,7 @@ const UserProfile: React.FC = (props: any) => {
      getAuthToken();
 
   }, [])
+
 
   return (
     <>

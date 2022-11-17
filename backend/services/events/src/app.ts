@@ -7,7 +7,7 @@ import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { StatusCodes } from 'http-status-codes';
-import eventRouter from './routes/event-routes';
+import {eventRouter} from './routes/event-routes';
 
 const app: Application = express();
 

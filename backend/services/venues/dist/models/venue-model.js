@@ -29,7 +29,7 @@ const VenueSchema = new mongoose_1.default.Schema({
             'Please add a valid email'
         ]
     },
-    ageRestrictions: {
+    ageRestriction: {
         type: String,
         required: [true, "Please include a valid age restriction for the venue"],
         enum: ["AGE_RESTRICTION_ALL_AGES", "AGE_RESTRICTION_MIN_SIXTEEN", "AGE_RESTRICTION_MIN_SEVENTEEN", "AGE_RESTRICTION_MIN_EIGHTEEN", "AGE_RESTRICTION_MIN_TWENTY_ONE"]
@@ -92,7 +92,6 @@ const VenueSchema = new mongoose_1.default.Schema({
     timestamps: true,
     toJSON: { virtuals: true }
 });
-//TODO
 // // Geocode & create location field
 // VenueSchema.pre('save', async function(next) {
 //   const loc = await geocoder(this.address);
@@ -117,4 +116,3 @@ VenueSchema.virtual('events', {
 });
 const Venue = mongoose_1.default.model("Venue", VenueSchema);
 exports.Venue = Venue;
-//# sourceMappingURL=venue-model.js.map

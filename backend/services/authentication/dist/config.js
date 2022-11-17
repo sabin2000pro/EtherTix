@@ -14,4 +14,3 @@ class Config {
     }
 }
 exports.config = new Config();
-//# sourceMappingURL=config.js.map

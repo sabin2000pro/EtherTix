@@ -39,6 +39,8 @@ export const protectAuth = async (request: Express.Request, response: Response, 
         if(error) {
             return next(new UnauthorizedError("You are unauthorized to perform this action", 400));
         }
+
+        
     }
 
     

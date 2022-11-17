@@ -17,7 +17,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '../../config.env' });
 const connectAuthDatabase = (...args) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+        return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/?retryWrites=true&w=majority").then(conn => {
             if (conn.connection) {
                 return console.log(`Connected to auth database...`);
             }
@@ -33,4 +33,3 @@ const connectAuthDatabase = (...args) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.default = connectAuthDatabase;
-//# sourceMappingURL=auth-db.js.map

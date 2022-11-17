@@ -8,4 +8,3 @@ class ErrorResponse extends Error {
     }
 }
 exports.ErrorResponse = ErrorResponse;
-//# sourceMappingURL=error-response.js.map

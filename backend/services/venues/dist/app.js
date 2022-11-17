@@ -29,4 +29,3 @@ app.use((0, helmet_1.default)());
 app.get("/", (request, response) => {
     return response.json({ message: "Venues Root Route" });
 });
-//# sourceMappingURL=app.js.map

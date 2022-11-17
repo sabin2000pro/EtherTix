@@ -35,4 +35,3 @@ exports.default = () => {
     });
     connectVenuesDatabase();
 };
-//# sourceMappingURL=venues-db.js.map
