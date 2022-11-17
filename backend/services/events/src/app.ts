@@ -33,7 +33,7 @@ app.use(helmet());
 app.use('/api/v1', eventRouter);
 
 app.get("/", (request: Request, response: Response) => {
-    return response.json({message: "Root Route"})
+    return response.json({message: "Event - Root Route"})
 });
 
 app.all('*', (err: Error, request: Request, response: Response, next: NextFunction) => {
