@@ -26,6 +26,8 @@ interface IUserAttributes {
     isVerified: boolean;
     isValid: boolean;
 
+    virtualCredits: number;
+    reputationPoints: number;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -49,6 +51,9 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
 
     pastEventsHeld: number;
     upcomingEvents: number;
+
+    virtualCredits: number;
+    reputationPoints: number;
 
     isActive: boolean;
     isLocked: boolean;
@@ -93,7 +98,7 @@ const UserSchema = new mongoose.Schema({
     // User's e-mail address
     email: {
         type: String,
-        required: true,
+        required: [true, "Please specify a valid e-mail address for the user"],
         unique: true
     },
 

@@ -34,6 +34,8 @@ declare namespace Express {
     _id: string;
     email: string;
     username: string
+    password: string;
+    virtualCredits: number;
 }
 
 export interface IRequestUser extends Request {
@@ -75,7 +77,7 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
   
-export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
+export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, role: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
