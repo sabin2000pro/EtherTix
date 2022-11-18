@@ -170,7 +170,7 @@ const UserSchema = new mongoose.Schema({
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 // @description: Before saving a user to the database, hash their password
-UserSchema.pre('save', async function(next: () => void): NextFunction {
+UserSchema.pre('save', async function(next: () => void) {
 
     let ROUNDS = 10;
 
