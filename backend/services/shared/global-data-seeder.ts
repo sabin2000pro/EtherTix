@@ -25,6 +25,7 @@ const connectServicesToDb = () => {
 connectServicesToDb();
 
 export const loadAllData = async (): Promise<any> => {
+    
     let dataImported = false;
 
     try {
@@ -33,6 +34,7 @@ export const loadAllData = async (): Promise<any> => {
 
             await User.create(users);
             await Event.create(events);
+
             await Ticket.create(tickets);
             await Venue.create(venues);
 

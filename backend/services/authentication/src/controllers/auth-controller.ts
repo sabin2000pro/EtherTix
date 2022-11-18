@@ -10,6 +10,7 @@ import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
+import asyncHandler from 'express-async-handler';
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 
 declare namespace Express {
@@ -17,12 +18,15 @@ declare namespace Express {
         user: any;
         body: any;
         session: any;
+        params: any;
+        method: any;
+        query: any;
     }
 
   }
 
   export interface IGetUserAuthInfoRequest extends Request {
-    user: any // or any other type
+      user: any // or any other type
   }
 
   // @description: Sends the verify confirmation e-mail to the user after registering an account
@@ -52,7 +56,7 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
   
-export const registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const registerUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -83,8 +87,8 @@ export const registerUser = async (request: Request, response: Response, next: N
         const currentUser = newUser._id; // Get the current user's ID
 
         const userOTP = generateOTPVerificationToken();
-        const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
 
+        const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
         const transporter = emailTransporter();
@@ -106,7 +110,7 @@ export const registerUser = async (request: Request, response: Response, next: N
     }
 
 
-} 
+} )
 
 const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
     const jwtToken = user.getAuthenticationToken();
@@ -120,7 +124,7 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-export const verifyEmailAddress = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const verifyEmailAddress = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -194,14 +198,13 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
 
 
     }
-}
+})
 
 
    // @description: Resend the E-mail Verification code to the user if not received
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
-
 
 export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -210,7 +213,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         const {userId, OTP} = request.body;
         const currentUser = await User.findById(userId);
 
-        if(!currentUser) {
+        if(!currentUser) { // If we have no current user
             return next(new BadRequestError("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
         }
 
@@ -244,6 +247,8 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
+
+
     }
 
 
@@ -253,10 +258,8 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
-  // @ Pre Condition: E-mail and Password required
-  // @ Post Condition: Logged In User with associated authentication token (JWT)
 
-export const loginUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const loginUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
         const {email, password} = request.body;
@@ -317,7 +320,7 @@ export const loginUser = async (request: Request, response: Response, next: Next
 
     }
        
-}
+})
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -589,6 +592,13 @@ export const uploadUserProfilePicture = async (request: Request, response: Respo
 export const fetchAllUsers = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     try {
 
+        if(request.method === 'GET') {
+            let query;
+
+            const reqQuery = request.query;
+            const users = await User.find();
+        }
+
     }
     
     catch(error: any) {
@@ -599,21 +609,79 @@ export const fetchAllUsers = async (request: Express.Request, response: Response
 
 export const fetchUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
 
+    try {
+
+        if(request.method === 'GET') {
+
+            const userId = request.params.userId;
+
+            if(!userId) {
+    
+            }
+    
+        }
+
+
+    } 
+    
+    catch(error: any) {
+
+    }
+
+
 }
 
 export const createNewUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+    try {
+        const {} = request.body;
+    } 
+    
+    catch(error: any) {
+
+    }
+
 
 }
 
-
 export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+
+   try {
+      const userId = request.params.userId;
+
+      if(!userId) {
+
+      }
+
+
+   } 
+   
+   catch(error: any) {
+
+   }
+
 
 }
 
 export const deleteUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
 
+    try {
+        const userId = request.params.userId;
+    } 
+    
+    catch(error: any) {
+ 
+    }
+ 
 }
 
 export const deleteAllUsers = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
 
+    try {
+
+    } 
+    
+    catch(error: any) {
+ 
+    }
+ 
 }

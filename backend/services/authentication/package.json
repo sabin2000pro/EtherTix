@@ -47,7 +47,6 @@
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.3"
   },
-
   "devDependencies": {
     "@types/jest": "^29.1.2",
     "@types/mongoose": "^5.11.97",
@@ -59,6 +58,4 @@
     "supertest": "^6.3.1",
     "ts-jest": "^29.0.3"
   }
-
-  
 }
