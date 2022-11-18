@@ -75,13 +75,24 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
   
-export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, password: string, passwordConfirm: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
+export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
+        const forename = request.body.forename;
+        const surname = request.body.surname;
         const email = request.body.email;
         const password = request.body.password;
         const passwordConfirm = request.body.passwordConfirm
+
+        if(!forename) {
+            return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.NOT_FOUND));
+        }
+
+        if(!surname) {
+            return next(new NotFoundError("Surname is missing. Please try enter again", StatusCodes.NOT_FOUND));
+
+        }
 
         if(!email) {
           return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
@@ -97,7 +108,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
             return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
         }
 
-        const user = await User.create(request.body);
+        const user = await User.create({forename, surname, email, password, passwordConfirm});
         const token = user.getAuthenticationToken();
 
         if(!token) {
@@ -119,7 +130,6 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
         return sendTokenResponse(request as any, user, StatusCodes.CREATED, response);
-
     } 
     
     catch(error: any) {
