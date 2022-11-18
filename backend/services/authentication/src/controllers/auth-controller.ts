@@ -199,7 +199,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
         if(!otpTokensMatch) {
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
-        
+
         if(otpTokensMatch) {
             user.isVerified = true
             user.accountActive = true;
@@ -359,7 +359,9 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
     catch(error) {
 
         if(error) {
-            return console.error(error.message);
+            console.error(error.message);
+
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
 
     }
@@ -412,7 +414,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     catch(error) {
 
         if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message});
+            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
         }
 
     }
@@ -466,7 +468,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
     catch(error: any) {
 
         if(error) {
-            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
 
 
@@ -480,6 +482,11 @@ export const forgotPassword = async (request: TypedRequestBody<{email: string}>,
 
         const email = request.body;
         const user = await User.findOne({email});
+
+        // Check if we have an e-mail in the body of the request
+        if(!email) {
+            
+        }
     
         if(!user) {
             return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
@@ -503,13 +510,13 @@ export const forgotPassword = async (request: TypedRequestBody<{email: string}>,
         const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
         sendPasswordResetEmail(user, resetPasswordURL);
     
-        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent"});
+        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", sentAt: new Date(Date.now().toFixed())});
     } 
     
     catch(error: any) {
 
         if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message});
+            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
         }
 
     }
@@ -618,7 +625,7 @@ export const updateUserProfile = async (request: Request, response: Response, ne
     catch(error) {
 
        if(error) {
-
+          return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
        }
 
 
@@ -642,12 +649,13 @@ export const deactivateUserAccount = async (request: Request, response: Response
     }
 
     if(user.isActive && user.isValid) {
+
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
         await user.save();
     }
 
-    return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated"});
+    return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated", status: user.isValid, sentAt: new Date(Date.now().toFixed())});
 
 }
 
