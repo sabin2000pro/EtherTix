@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.fetchPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
+exports.unlockUserAccount = exports.lockUserAccount = exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.fetchPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
 const error_handler_1 = require("./../middleware/error-handler");
 const send_email_1 = require("./../utils/send-email");
 const user_model_1 = require("../models/user-model");
@@ -133,23 +133,26 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
         if (!otpTokensMatch) {
             return next(new error_handler_2.BadRequestError(`The token you entered does not match the one in the database.`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        user.isVerified = true;
-        yield user.save();
-        yield email_verification_model_1.EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
-        const transporter = (0, send_email_1.emailTransporter)();
-        // Send welcome e-mail
-        transporter.sendMail({
-            from: 'welcome@ethertix.com',
-            to: user.email,
-            subject: 'E-mail Confirmation Success',
-            html: `
-                
-                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                `
-        });
-        const jwtToken = user.getAuthenticationToken();
-        request.session = { token: jwtToken } || undefined; // Get the authentication JWT token
-        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ user, message: "E-mail Address verified" });
+        if (otpTokensMatch) {
+            user.isVerified = true;
+            user.accountActive = true;
+            yield user.save();
+            yield email_verification_model_1.EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
+            const transporter = (0, send_email_1.emailTransporter)();
+            // Send welcome e-mail
+            transporter.sendMail({
+                from: 'welcome@ethertix.com',
+                to: user.email,
+                subject: 'E-mail Confirmation Success',
+                html: `
+                    
+                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                    `
+            });
+            const jwtToken = user.getAuthenticationToken();
+            request.session = { token: jwtToken } || undefined; // Get the authentication JWT token
+            return response.status(http_status_codes_1.StatusCodes.CREATED).json({ user, message: "E-mail Address verified" });
+        }
     }
     catch (error) {
         if (error) {
@@ -218,9 +221,6 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
         if (!user) {
             return next(new error_handler_2.BadRequestError(`Could not find that user`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        if (!user.isActive) {
-            return next(new error_handler_2.BadRequestError(`Please activate your account before logging in`, http_status_codes_1.StatusCodes.BAD_REQUEST));
-        }
         if (user.isLocked) {
             return next(new error_handler_2.BadRequestError("Cannot login. Your account is locked", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -243,7 +243,8 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
     }
     catch (error) {
         if (error) {
-            return console.error(error.message);
+            console.error(error.message);
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
 }));
@@ -279,7 +280,7 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
     }
     catch (error) {
         if (error) {
-            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message });
+            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message, stack: error.stack });
         }
     }
 });
@@ -316,7 +317,7 @@ const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0
     }
     catch (error) {
         if (error) {
-            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
 });
@@ -325,6 +326,9 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
     try {
         const email = request.body;
         const user = yield user_model_1.User.findOne({ email });
+        // Check if we have an e-mail in the body of the request
+        if (!email) {
+        }
         if (!user) {
             return next(new error_handler_1.NotFoundError("No user found with that e-mail address", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
@@ -340,11 +344,11 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
         yield resetPasswordToken.save();
         const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}`; // Create the reset password URL
         sendPasswordResetEmail(user, resetPasswordURL);
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent" });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent", sentAt: new Date(Date.now().toFixed()) });
     }
     catch (error) {
         if (error) {
-            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message });
+            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message, stack: error.stack });
         }
     }
 });
@@ -414,11 +418,17 @@ const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0
 });
 exports.updateUserPassword = updateUserPassword;
 const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const fieldsToUpdate = { email: request.body.email, username: request.body.username, role: request.body.role };
-    // Validate fields
-    const updatedUserProfile = yield user_model_1.User.findByIdAndUpdate(request.params.id, fieldsToUpdate, { new: true, runValidators: true });
-    yield updatedUserProfile.save();
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
+    try {
+        const fieldsToUpdate = { email: request.body.email, username: request.body.username, role: request.body.role };
+        const updatedUserProfile = yield user_model_1.User.findByIdAndUpdate(request.params.id, fieldsToUpdate, { new: true, runValidators: true });
+        yield updatedUserProfile.save();
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
+    }
 });
 exports.updateUserProfile = updateUserProfile;
 const deactivateUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -436,28 +446,39 @@ const deactivateUserAccount = (request, response, next) => __awaiter(void 0, voi
         user.isValid = (!user.isValid);
         yield user.save();
     }
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Account Deactivated" });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Account Deactivated", status: user.isValid, sentAt: new Date(Date.now().toFixed()) });
 });
 exports.deactivateUserAccount = deactivateUserAccount;
 exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Avatar Uploaded" });
 }));
 exports.fetchPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Aggregation pipeline to fetch the total number of premium accounts
+    }
+    catch (error) {
+        if (error) {
+            console.error(error);
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
+    }
 }));
 // ADMIN CONTROLLERS
 const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (request.method === 'GET') {
-            let query;
-            const reqQuery = request.query.sort;
             const users = yield user_model_1.User.find();
+            return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, users });
         }
     }
     catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
     }
 });
 exports.fetchAllUsers = fetchAllUsers;
-const fetchUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.fetchUserByID = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (request.method === 'GET') {
             const userId = request.params.userId;
@@ -466,37 +487,54 @@ const fetchUserByID = (request, response, next) => __awaiter(void 0, void 0, voi
         }
     }
     catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
     }
-});
-exports.fetchUserByID = fetchUserByID;
-const createNewUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+}));
+exports.createNewUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const {} = request.body;
+        const body = request.body;
+        const user = yield user_model_1.User.create(body);
+        return response.status(201).json({ success: true, data: user });
     }
     catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
     }
-});
-exports.createNewUser = createNewUser;
+}));
 const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = request.params.userId;
         if (!userId) {
+            return next(new error_handler_1.NotFoundError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         let user = yield user_model_1.User.findById(userId);
         if (!user) {
+            return next(new error_handler_1.NotFoundError("User not found", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         user = yield user_model_1.User.findByIdAndUpdate(userId, request.body, { new: true, runValidators: true });
         yield user.save();
+        return response.status(200).json({ success: true, data: user });
     }
     catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
     }
 });
 exports.editUserByID = editUserByID;
 const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = request.params.userId;
+        if (!userId) {
+        }
     }
     catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
     }
 });
 exports.deleteUserByID = deleteUserByID;
@@ -504,6 +542,26 @@ const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, vo
     try {
     }
     catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
     }
 });
 exports.deleteAllUsers = deleteAllUsers;
+const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = request.user._id;
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+    }
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Account Locked" });
+});
+exports.lockUserAccount = lockUserAccount;
+exports.unlockUserAccount = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
+    }
+}));

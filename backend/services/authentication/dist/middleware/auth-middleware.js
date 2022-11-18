@@ -18,10 +18,11 @@ const error_handler_1 = require("./error-handler");
 const user_model_1 = require("../models/user-model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const error_handler_2 = require("./error-handler");
+require('dotenv').config();
 const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
     // Check to see if the authorization header starts with Bearer
-    if (request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
+    if (request.headers.authorization && request.headers.authorization.includes("Bearer")) {
         token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
     if (!token) {
@@ -29,7 +30,9 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN);
+        console.log(`Decoded : ${decoded}`);
         request.user = yield user_model_1.User.findById(decoded._id);
+        console.log(`User middleware data : `, request.user);
         return next();
     }
     catch (error) {

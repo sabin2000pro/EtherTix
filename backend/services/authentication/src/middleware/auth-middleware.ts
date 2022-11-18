@@ -25,7 +25,7 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
     let token;
     
     // Check to see if the authorization header starts with Bearer
-    if(request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
+    if(request.headers.authorization && request.headers.authorization.includes("Bearer")) {
          token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
 
