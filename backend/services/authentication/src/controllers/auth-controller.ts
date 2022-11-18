@@ -1,3 +1,4 @@
+import { Query } from 'express-serve-static-core';
 import { NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
@@ -37,6 +38,10 @@ declare namespace Express {
 
 export interface IRequestUser extends Request {
     user: IUserData
+}
+
+export interface TypedRequestQuery<T extends Query> extends Express.Request {
+    query: T
 }
 
   // @description: Sends the verify confirmation e-mail to the user after registering an account
@@ -604,20 +609,21 @@ export const uploadUserProfilePicture = async (request: Request, response: Respo
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, response: Response, next: NextFunction): Promise<any> => {
+
     try {
 
         if(request.method === 'GET') {
-            let query;
 
-            const reqQuery = request.query;
+            let query;
+            const reqQuery = request.query.sort;
             const users = await User.find();
         }
 
     }
     
     catch(error: any) {
-
+         
     }
 
 }
