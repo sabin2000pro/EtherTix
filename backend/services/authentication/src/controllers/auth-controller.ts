@@ -423,9 +423,10 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
     try {
 
-        const {userId, mfaCode} = request.body;
-        const currentUser = await User.findById(userId);
+        const {userId, mfaCode} = request.body; // 1. Extract user id and the MFA code from the request body
+        const currentUser = await User.findById(userId); // 2. Find the current user
 
+        // 3. Check if the User ID is valid
         if(!isValidObjectId(userId)) {
             return next(new NotFoundError("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
@@ -433,6 +434,11 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
         if(!mfaCode) {
             return next(new NotFoundError("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
         }
+
+        // 5. Fetch Generated Two Factor code
+        const mfaToken = generateMfaToken();
+        console.log(`Your MFA token : ${mfaToken}`);
+
 
         return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
     }
@@ -629,9 +635,13 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 }
 
-export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const uploadUserProfilePicture = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
     return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
-}
+})
+
+export const fetchPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+    
+})
 
 // ADMIN CONTROLLERS
 

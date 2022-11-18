@@ -17,6 +17,13 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 require('dotenv').config();
+var UserRoles;
+(function (UserRoles) {
+    UserRoles[UserRoles["Admin"] = 0] = "Admin";
+    UserRoles[UserRoles["User"] = 1] = "User";
+    UserRoles[UserRoles["Moderator"] = 2] = "Moderator";
+    UserRoles[UserRoles["Organiser"] = 3] = "Organiser";
+})(UserRoles || (UserRoles = {}));
 // Working on the auth feature branch
 const UserSchema = new mongoose_1.default.Schema({
     forename: {
@@ -41,7 +48,7 @@ const UserSchema = new mongoose_1.default.Schema({
     // User's e-mail address
     email: {
         type: String,
-        required: true,
+        required: [true, "Please specify a valid e-mail address for the user"],
         unique: true
     },
     photo: {
@@ -59,8 +66,9 @@ const UserSchema = new mongoose_1.default.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "moderator", "organiser", "user"],
-        default: "user"
+        enum: [UserRoles.Admin, UserRoles.Moderator, UserRoles.Organiser, UserRoles.User],
+        required: [true, "Please specify the role of the user"],
+        default: UserRoles.User
     },
     ticketsOwned: {
         type: Number,
@@ -89,6 +97,15 @@ const UserSchema = new mongoose_1.default.Schema({
     isValid: {
         type: Boolean,
         default: false
+    },
+    premiumAccount: {
+        type: Boolean,
+        default: false
+    },
+    virtualCredits: {
+        type: Number,
+        default: 0,
+        required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
     }
 }, { timestamps: true, toJSON: { virtuals: true } });
 // @description: Before saving a user to the database, hash their password

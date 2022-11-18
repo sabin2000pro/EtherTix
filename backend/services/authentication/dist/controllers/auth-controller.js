@@ -75,8 +75,8 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
         if (!token) {
             return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        yield user.save();
         const currentUser = user._id; // Get the current user's ID
+        yield user.save();
         const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
         const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
         yield verificationToken.save();
@@ -284,14 +284,18 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
 exports.verifyLoginToken = verifyLoginToken;
 const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId, mfaCode } = request.body;
-        const currentUser = yield user_model_1.User.findById(userId);
+        const { userId, mfaCode } = request.body; // 1. Extract user id and the MFA code from the request body
+        const currentUser = yield user_model_1.User.findById(userId); // 2. Find the current user
+        // 3. Check if the User ID is valid
         if (!(0, mongoose_1.isValidObjectId)(userId)) {
             return next(new error_handler_1.NotFoundError("User ID is invalid. Please check again", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         if (!mfaCode) {
             return next(new error_handler_1.NotFoundError("No MFA found. Please try again.", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
+        // 5. Fetch Generated Two Factor code
+        const mfaToken = (0, generate_mfa_1.generateMfaToken)();
+        console.log(`Your MFA token : ${mfaToken}`);
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
     }
     catch (error) {
@@ -330,7 +334,7 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
         if (token === undefined) {
             return next(new error_handler_2.BadRequestError("Reset Password Token is invalid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        const resetPasswordToken = yield password_reset_model_1.PasswordReset.create({ owner: user._id, resetToken: token });
+        const resetPasswordToken = yield password_reset_model_1.PasswordReset.create({ owner: user._id, resetToken: token }); // Create an instance of the Password Reset model
         yield resetPasswordToken.save();
         const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}`; // Create the reset password URL
         sendPasswordResetEmail(user, resetPasswordURL);
@@ -475,6 +479,11 @@ const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void
         const userId = request.params.userId;
         if (!userId) {
         }
+        let user = yield user_model_1.User.findById(userId);
+        if (!user) {
+        }
+        user = yield user_model_1.User.findByIdAndUpdate(userId, request.body, { new: true, runValidators: true });
+        yield user.save();
     }
     catch (error) {
     }

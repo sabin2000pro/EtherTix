@@ -8,7 +8,7 @@
         "photo": "no-photo.jpg",
         "password": "987eventmaster",
         "passwordConfirm": "987eventmaster",
-        "role": "organiser",
+        "role": "Organiser",
         "pastEventsHeld": 0
     },
 
@@ -21,7 +21,7 @@
         "photo": "no-photo.jpg",
         "password": "andyandy123",
         "passwordConfirm": "andyandy123",
-        "role": "organiser",
+        "role": "Organiser",
         "pastEventsHeld": 3
     },
 
@@ -34,7 +34,7 @@
         "photo": "no-photo.jpg",
         "password": "amyorganiser123",
         "passwordConfirm": "amyorganiser123",
-        "role": "organiser",
+        "role": "Organiser",
         "pastEventsHeld": 5
     },
 
@@ -47,7 +47,7 @@
         "photo": "no-photo.jpg",
         "password": "jake123456789",
         "passwordConfirm": "jake123456789",
-        "role": "user",
+        "role": "User",
         "pastEventsHeld": 0
     },
 
@@ -60,7 +60,7 @@
         "photo": "no-photo.jpg",
         "password": "123mini123",
         "passwordConfirm": "123mini123",
-        "role": "user",
+        "role": "User",
         "pastEventsHeld": 0
     },
 
@@ -73,7 +73,7 @@
         "photo": "no-photo.jpg",
         "password": "123mini123",
         "passwordConfirm": "123mini123",
-        "role": "user",
+        "role": "User",
         "pastEventsHeld": 0
     },
 
@@ -86,7 +86,7 @@
         "photo": "no-photo.jpg",
         "password": "lol12345",
         "passwordConfirm": "lol12345",
-        "role": "moderator",
+        "role": "Moderator",
         "pastEventsHeld": 0
     }
 
