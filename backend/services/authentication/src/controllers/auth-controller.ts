@@ -491,7 +491,7 @@ export const forgotPassword = async (request: Request, response: Response, next:
             return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
         }
     
-        const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token});
+        const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
         await resetPasswordToken.save();
     
         const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
@@ -522,7 +522,6 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
             
             <h1> ${resetPasswordURL}</h1>
             `
-
         })
 
 }

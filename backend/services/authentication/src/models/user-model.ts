@@ -30,6 +30,8 @@ interface IUserAttributes {
     virtualCredits: number;
     reputationPoints: number;
 
+    premiumAccount: boolean;
+
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
 }
@@ -60,6 +62,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     isLocked: boolean;
     isVerified: boolean;
     isValid: boolean;
+    premiumAccount: boolean;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
@@ -157,6 +160,11 @@ const UserSchema = new mongoose.Schema({
     },
 
     isValid: {
+        type: Boolean,
+        default: false
+    },
+
+    premiumAccount: {
         type: Boolean,
         default: false
     },
