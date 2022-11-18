@@ -27,5 +27,4 @@ authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
 authRouter.route('/me').get(getCurrentUser as any);
 
 
-
 export default authRouter;

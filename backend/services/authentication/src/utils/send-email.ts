@@ -1,5 +1,6 @@
 
 import nodemailer from "nodemailer"
+require('dotenv').config();
 
 export const emailTransporter = (): any => {
 

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import {UnauthorizedError } from './error-handler';
 import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
@@ -26,7 +27,7 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
     }
 
     if(!token) {
-        return next(new UnauthorizedError("You are not authorized to perform this action", 400));
+        return next(new UnauthorizedError("You are not authorized to perform this action", StatusCodes.BAD_REQUEST));
     }
 
     try {
@@ -40,7 +41,7 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
     catch(error: any) {
 
         if(error) {
-            return next(new UnauthorizedError("You are unauthorized to perform this action", 400));
+            return next(new UnauthorizedError("You are unauthorized to perform this action", StatusCodes.BAD_REQUEST));
         }
 
         

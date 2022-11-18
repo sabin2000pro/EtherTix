@@ -288,7 +288,7 @@ const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
         `
     })
 
-    
+
 }
 
   // @description: Login User
@@ -327,8 +327,7 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         const token = user.getAuthenticationToken();
         const userMfa = generateMfaToken();
         const transporter = emailTransporter();
-
-
+        
         sendLoginMfa(transporter as any, user as any, userMfa as any);
     
         // Check for a valid MFA
