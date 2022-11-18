@@ -153,6 +153,12 @@ const UserSchema = new mongoose.Schema({
     isValid: {
         type: Boolean,
         default: false
+    },
+
+    virtualCredits: {
+        type: Number,
+        default: 0,
+        required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
     }
 
 }, {timestamps: true, toJSON: {virtuals: true}});
