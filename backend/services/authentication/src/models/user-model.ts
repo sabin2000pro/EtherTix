@@ -1,3 +1,4 @@
+import { NextFunction } from 'express';
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -160,7 +161,7 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
 
-    virtualCredits: {
+    virtualCredits: { // Number of virtual credits the user has when entering the live auction against other individuals
         type: Number,
         default: 0,
         required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
@@ -169,7 +170,8 @@ const UserSchema = new mongoose.Schema({
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 // @description: Before saving a user to the database, hash their password
-UserSchema.pre('save', async function(next: () => void) {
+UserSchema.pre('save', async function(next: () => void): NextFunction {
+
     let ROUNDS = 10;
 
    if(!this.isModified("password")) {
