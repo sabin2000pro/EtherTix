@@ -60,6 +60,10 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
 
 }
 
+enum UserRoles {
+    Admin, User, Moderator, Organiser
+}
+
 // Working on the auth feature branch
 const UserSchema = new mongoose.Schema({
 
@@ -111,9 +115,9 @@ const UserSchema = new mongoose.Schema({
 
     role: {
         type: String,
-        enum: ["admin", "moderator", "organiser", "user"],
+        enum: [UserRoles.Admin, UserRoles.Moderator, UserRoles.Organiser, UserRoles.User],
         required: [true, "Please specify the role of the user"],
-        default: "user"
+        default: UserRoles.User
     },
 
     ticketsOwned: {
