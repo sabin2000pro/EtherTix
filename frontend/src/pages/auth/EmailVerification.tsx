@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const EmailVerification: React.FC = (props: any) => {
+const EmailVerification: React.FC = () => {
 
   return (
     <>

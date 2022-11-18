@@ -1,15 +1,9 @@
-import { useAuth } from 'context/AuthContext'
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 
-type RegisterProps = {
-  
-}
-
-// @description: Login Component
-const Register: React.FC = (props) => {
-  const {authContext} = useAuth()
+const Register: React.FC = () => {
 
   return (
+
     <>
    
     <div>
@@ -17,6 +11,8 @@ const Register: React.FC = (props) => {
     </div>
 
     </>
+
+
   )
 }
 

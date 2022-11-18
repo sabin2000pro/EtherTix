@@ -200,28 +200,33 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
 
-        user.isVerified = true
 
-        await user.save();
-        await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
-
-        const transporter = emailTransporter();
-
-            // Send welcome e-mail
-            transporter.sendMail({
-                from: 'welcome@ethertix.com',
-                to: user.email,
-                subject: 'E-mail Confirmation Success',
-                html: `
-                
-                <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                `
-            })
-
-            const jwtToken = user.getAuthenticationToken();
-            request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
-
-            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+        if(otpTokensMatch) {
+            user.isVerified = true
+            user.accountActive = true;
+    
+            await user.save();
+            await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
+    
+            const transporter = emailTransporter();
+    
+                // Send welcome e-mail
+                transporter.sendMail({
+                    from: 'welcome@ethertix.com',
+                    to: user.email,
+                    subject: 'E-mail Confirmation Success',
+                    html: `
+                    
+                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                    `
+                })
+    
+                const jwtToken = user.getAuthenticationToken();
+                request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+    
+                return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+        }
+       
     } 
     
     catch(error: any) {
@@ -642,7 +647,20 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
 })
 
 export const fetchPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+    try {
     // Aggregation pipeline to fetch the total number of premium accounts
+
+   
+    } 
+    
+    catch(error: any) {
+        if(error) {
+            console.error(error);
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
+        }
+    }
+
+
 })
 
 // ADMIN CONTROLLERS
@@ -665,7 +683,7 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
 }
 
-export const fetchUserByID = asyncHandler(async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchUserByID = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
