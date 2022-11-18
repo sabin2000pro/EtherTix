@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.errorHandler = exports.CustomError = void 0;
+exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.ForbiddenError = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.errorHandler = exports.CustomError = void 0;
 const http_status_codes_1 = require("http-status-codes");
 class CustomError extends Error {
     constructor(message) {
@@ -71,6 +71,14 @@ class UnauthorizedError extends Error {
     }
 }
 exports.UnauthorizedError = UnauthorizedError;
+class ForbiddenError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.FORBIDDEN;
+        this.statusCode = statusCode;
+    }
+}
+exports.ForbiddenError = ForbiddenError;
 class ImproperHTTPMethod extends Error {
 }
 exports.ImproperHTTPMethod = ImproperHTTPMethod;

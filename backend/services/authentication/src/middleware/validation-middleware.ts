@@ -28,6 +28,7 @@ export const resetPasswordValidationAgent = Joi.object({
 })
 
 export const updateUserPasswordValidationAgent = Joi.object({
+    
 })
 
 export const updateUserProfileValidationAgent = Joi.object({

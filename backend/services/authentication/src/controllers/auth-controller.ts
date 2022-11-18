@@ -77,16 +77,18 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
   
-export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, role: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
+export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, role: string, username: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
         const forename = request.body.forename;
         const surname = request.body.surname;
-
+        const username = request.body.username;
         const email = request.body.email;
         const password = request.body.password;
+
         const passwordConfirm = request.body.passwordConfirm
+        const role = request.body.role;
 
         if(!forename) {
             return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.NOT_FOUND));
@@ -110,15 +112,14 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
             return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
         }
 
-        const user = await User.create({forename, surname, email, password, passwordConfirm});
+        const user = await User.create({forename, surname, username, email, role, password, passwordConfirm});
         const token = user.getAuthenticationToken();
 
         if(!token) {
             return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
         }
+
         const currentUser = user._id; // Get the current user's ID
-
-
         await user.save();
 
         const userOTP = generateOTPVerificationToken();
@@ -142,7 +143,6 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         }
 
     }
-
 
 } )
 
@@ -230,8 +230,8 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
 
-
     }
+
 })
 
 
@@ -566,11 +566,11 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
     return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
 })
 
-export const getCurrentUser = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+export const getCurrentUser = asyncHandler(async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
     const user = request.user;
     console.log(user);
     return response.status(StatusCodes.OK).json({success: true, data: user});
-}
+});
 
 export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(StatusCodes.OK).json({isValid: true})
@@ -642,7 +642,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
 })
 
 export const fetchPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
-    
+    // Aggregation pipeline to fetch the total number of premium accounts
 })
 
 // ADMIN CONTROLLERS
@@ -653,8 +653,7 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
         if(request.method === 'GET') {
             let query;
-            const reqQuery = request.query.sort;
-
+            const reqQuery = request.query;
             const users = await User.find();
         }
 
@@ -666,7 +665,7 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
 }
 
-export const fetchUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchUserByID = asyncHandler(async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -688,19 +687,28 @@ export const fetchUserByID = async (request: Express.Request, response: Response
     }
 
 
-}
+})
 
-export const createNewUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const createNewUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any| Response> => {
+
     try {
-        const {} = request.body;
+
+        const body = request.body;
+        const user = await User.create(body);
+
+        return response.status(201).json({success: true, data: user});
     } 
     
     catch(error: any) {
 
+        if(error) {
+
+        }
+
     }
 
 
-}
+})
 
 export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any| Response> => {
 
@@ -709,7 +717,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
       const userId = request.params.userId;
 
       if(!userId) {
-
+        return next(new NotFoundError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
       }
 
       let user = await User.findById(userId);
@@ -721,11 +729,14 @@ export const editUserByID = async (request: Express.Request, response: Response,
       user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
       await user.save();
 
+      return response.status(200).json({success: true, data: user});
 
    } 
    
    catch(error: any) {
+      if(error) {
 
+      }
    }
 
 
@@ -753,4 +764,12 @@ export const deleteAllUsers = async (request: Express.Request, response: Respons
  
     }
  
+}
+
+export const lockUserAccount = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "User Account Locked"})
+}
+
+export const unlockUserAccount = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+    
 }

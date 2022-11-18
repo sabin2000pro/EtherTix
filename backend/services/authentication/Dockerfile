@@ -4,7 +4,7 @@ WORKDIR '/app'
 COPY package.json .
 COPY nodemon.json .
 COPY tsconfig.json .
-RUN npm install --silent
+RUN npm install
 COPY . .
 EXPOSE 5299
 RUN npm run build

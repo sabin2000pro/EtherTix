@@ -51,9 +51,11 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
     try {
         const forename = request.body.forename;
         const surname = request.body.surname;
+        const username = request.body.username;
         const email = request.body.email;
         const password = request.body.password;
         const passwordConfirm = request.body.passwordConfirm;
+        const role = request.body.role;
         if (!forename) {
             return next(new error_handler_1.NotFoundError("Forename is missing. Please try enter again", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
@@ -70,7 +72,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
         if (existingUser) {
             return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        const user = yield user_model_1.User.create({ forename, surname, email, password, passwordConfirm });
+        const user = yield user_model_1.User.create({ forename, surname, username, email, role, password, passwordConfirm });
         const token = user.getAuthenticationToken();
         if (!token) {
             return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -383,12 +385,11 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
     yield user.save(); // Save new user after reset the password
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Password Reset Successfully" });
 }));
-const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getCurrentUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = request.user;
     console.log(user);
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
-});
-exports.getCurrentUser = getCurrentUser;
+}));
 const sendResetPasswordTokenStatus = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ isValid: true });
 });

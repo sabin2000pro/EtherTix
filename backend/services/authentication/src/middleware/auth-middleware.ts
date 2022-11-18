@@ -56,8 +56,8 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
 export const restrictRolesTo = (...roles) => {
 
     return (request: Request & IRequestUser, response: Response, next: NextFunction) => {
-        if(!request.user.role.includes(roles as any)) {  // Check to see if the specified user object role in the body of the request matches
 
+        if(!request.user.role.includes(roles as any)) {  // Check to see if the specified user object role in the body of the request matches
             return next(new ForbiddenError("Your role is unauthorized to perform this action", StatusCodes.FORBIDDEN));
         }
 

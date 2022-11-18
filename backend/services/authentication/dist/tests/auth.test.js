@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const http_status_codes_1 = require("http-status-codes");
 const supertest_1 = __importDefault(require("supertest"));
 const mongoose_1 = __importDefault(require("mongoose"));
 require('dotenv').config("../.env");
@@ -55,7 +56,7 @@ describe("Login Account Test Suite", () => {
         const loginFields = [{ email: "invalidemail", password: "invalidpassword" }];
         for (const loginData of loginFields) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
-            return expect(response.statusCode).toBe(400);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
 });
@@ -117,6 +118,7 @@ describe("Logout Test Suite", () => {
 });
 describe("Update User Password Test Suite", () => {
 });
+// Close the connection to the server after all tests are ran
 afterAll(done => {
     mongoose_1.default.connection.close();
     done();

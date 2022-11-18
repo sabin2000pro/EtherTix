@@ -14,15 +14,15 @@ const rateLimiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
-authRouter.route('/register').post(rateLimiter, registerUserValidationAgent as any, registerUser as any);
+authRouter.route('/register').post(rateLimiter, registerUser as any);
 authRouter.route('/verify-email').post(rateLimiter, verifyEmailAddress as any);
 authRouter.route('/login').post(rateLimiter, loginUser as any);
 authRouter.route('/verify-login-mfa').post(rateLimiter, verifyLoginToken as any)
 
-authRouter.route('/logout').get(rateLimiter, protectAuth as any, logoutUser as any);
+authRouter.route('/logout').get(rateLimiter, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter, forgotPassword as any);
 authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
 
 authRouter.route('/update-password').post(rateLimiter, updateUserPassword as any)
 authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
-authRouter.route('/me').get(getCurrentUser as any);
+authRouter.route('/me').get(rateLimiter, protectAuth as any, getCurrentUser as any);
