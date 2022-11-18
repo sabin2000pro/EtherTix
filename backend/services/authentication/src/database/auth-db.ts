@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({path: '../../config.env'});
 
-const connectAuthDatabase = async (...args: unknown[]) => {
+export const connectAuthDatabase = async (...args: unknown[]) => {
 
     try {
 
@@ -29,4 +29,3 @@ const connectAuthDatabase = async (...args: unknown[]) => {
     }
 }
 
-export default connectAuthDatabase;

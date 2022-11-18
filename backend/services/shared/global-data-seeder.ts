@@ -3,7 +3,7 @@ import {Event} from '../events/src/models/event-model';
 import {Ticket} from '../tickets/src/models/ticket-model';
 import {Venue} from '../venues/src/models/venue-model';
 import {EmailVerification} from '../authentication/src/models/email-verification-model';
-import connectAuthDatabase from '../authentication/src/database/auth-db';
+import {connectAuthDatabase} from '../authentication/src/database/auth-db';
 import connectEventsDatabase from '../events/src/database/event-db';
 import connectTicketsDatabase from '../tickets/src/database/tickets-db';
 import connectVenuesDatabase from '../venues/src/database/venues-db';

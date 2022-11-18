@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+require('dotenv').config();
 import cookieSession from 'cookie-session';
 import express, { Application, NextFunction, Request, Response } from "express";
 import morgan from "morgan"
@@ -7,7 +6,7 @@ import hpp from "hpp"
 import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
-import connectAuthDatabase from './database/auth-db';
+import {connectAuthDatabase} from './database/auth-db';
 import authRouter from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 

@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
-dotenv.config({path: '../../config.env'});
+require('dotenv').config();
 
 interface IUserAttributes {
     forename: string;
@@ -58,6 +57,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
+
 }
 
 // Working on the auth feature branch
