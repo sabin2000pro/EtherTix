@@ -19,11 +19,18 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 require('dotenv').config();
 var UserRoles;
 (function (UserRoles) {
-    UserRoles[UserRoles["Admin"] = 0] = "Admin";
-    UserRoles[UserRoles["User"] = 1] = "User";
-    UserRoles[UserRoles["Moderator"] = 2] = "Moderator";
-    UserRoles[UserRoles["Organiser"] = 3] = "Organiser";
+    UserRoles["Admin"] = "Admin";
+    UserRoles["User"] = "User";
+    UserRoles["Moderator"] = "Moderator";
+    UserRoles["Organiser"] = "Organiser";
 })(UserRoles || (UserRoles = {}));
+var AccountType;
+(function (AccountType) {
+    AccountType[AccountType["Basic"] = 0] = "Basic";
+    AccountType[AccountType["Standard"] = 1] = "Standard";
+    AccountType[AccountType["Premium"] = 2] = "Premium";
+    AccountType[AccountType["Platinum"] = 3] = "Platinum";
+})(AccountType || (AccountType = {}));
 // Working on the auth feature branch
 const UserSchema = new mongoose_1.default.Schema({
     forename: {

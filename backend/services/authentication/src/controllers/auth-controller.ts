@@ -566,7 +566,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
     return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
 })
 
-export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const getCurrentUser = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
     const user = request.user;
     console.log(user);
     return response.status(StatusCodes.OK).json({success: true, data: user});
@@ -603,7 +603,9 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
 }
 
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const fieldsToUpdate = {email: request.body.email, username: request.body.username};
+    const fieldsToUpdate = {email: request.body.email, username: request.body.username, role: request.body.role};
+
+    // Validate fields
 
     const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
     await updatedUserProfile.save();
