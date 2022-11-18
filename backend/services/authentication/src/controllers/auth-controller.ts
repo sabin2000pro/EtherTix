@@ -199,8 +199,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
         if(!otpTokensMatch) {
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
-
-
+        
         if(otpTokensMatch) {
             user.isVerified = true
             user.accountActive = true;
@@ -364,7 +363,7 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         }
 
     }
-    
+
        
 })
 
@@ -730,7 +729,7 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
     catch(error: any) {
 
         if(error) {
-
+            console.error(error);
         }
 
     }
@@ -745,13 +744,13 @@ export const editUserByID = async (request: Express.Request, response: Response,
       const userId = request.params.userId;
 
       if(!userId) {
-        return next(new NotFoundError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+         return next(new NotFoundError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
       }
 
       let user = await User.findById(userId);
 
       if(!user) {
-        
+         return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
       }
 
       user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
@@ -762,18 +761,28 @@ export const editUserByID = async (request: Express.Request, response: Response,
    } 
    
    catch(error: any) {
-      if(error) {
 
-      }
+      if(error) {
+          console.error(error);
+      }    
+
+
    }
 
 
 }
 
-export const deleteUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const deleteUserByID = async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
+
         const userId = request.params.userId;
+
+        if(!userId) {
+
+        }
+
+
     } 
     
     catch(error: any) {
@@ -782,7 +791,7 @@ export const deleteUserByID = async (request: Express.Request, response: Respons
  
 }
 
-export const deleteAllUsers = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const deleteAllUsers = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -794,10 +803,20 @@ export const deleteAllUsers = async (request: Express.Request, response: Respons
  
 }
 
-export const lockUserAccount = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+    const user = await User.findById(request.user._id);
     return response.status(200).json({success: true, message: "User Account Locked"})
 }
 
-export const unlockUserAccount = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const unlockUserAccount = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+
+    try {
+
+    } 
     
-}
+    catch(error: any) {
+
+    }
+
+
+})
