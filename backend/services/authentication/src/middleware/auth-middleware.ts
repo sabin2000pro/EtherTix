@@ -3,11 +3,13 @@ import {UnauthorizedError } from './error-handler';
 import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
 import jwt from "jsonwebtoken";
+import { ForbiddenError } from './error-handler';
 
   export interface IUserData {
     _id: string;
     email: string;
-    username: string
+    username: string;
+    role: string;
 }
 
 export interface IRequestUser extends Request {
@@ -48,4 +50,18 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
     }
 
     
+}
+
+// Middleware Function to restrict certain actions to specific user roles
+export const restrictRolesTo = (...roles) => {
+
+    return (request: Request & IRequestUser, response: Response, next: NextFunction) => {
+        if(!request.user.role.includes(roles as any)) {  // Check to see if the specified user object role in the body of the request matches
+
+            return next(new ForbiddenError("Your role is unauthorized to perform this action", StatusCodes.FORBIDDEN));
+        }
+
+        return next();
+
+    }
 }

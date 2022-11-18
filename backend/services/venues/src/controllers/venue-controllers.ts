@@ -10,7 +10,7 @@ declare namespace Express {
 
   }
 
-  
+
 
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets

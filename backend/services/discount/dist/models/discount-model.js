@@ -18,7 +18,7 @@ const DiscountSchema = new mongoose_1.default.Schema({
             required: [true, "Please specify the discount code."]
         },
         amountOff: {
-            type: String,
+            type: Number,
             default: null
         },
         percentOff: {
@@ -34,6 +34,6 @@ const DiscountSchema = new mongoose_1.default.Schema({
             ref: "Event"
         }
     }
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true } });
 const Discount = mongoose_1.default.model("Discount", DiscountSchema);
 exports.Discount = Discount;

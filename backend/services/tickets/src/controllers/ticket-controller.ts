@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
+import asyncHandler from 'express-async-handler'
 
 declare namespace Express {
     export interface Request {
@@ -15,10 +16,14 @@ declare namespace Express {
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 
-export const getAllEventTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const getAllEventTickets = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any| Response> => {
+    let query;
+    const reqQuery = request.query;
+    const totalTickets = await Ticket.countDocuments({});
+    
     const tickets = await Ticket.find();
     return response.status(200).json({success: true, data: tickets, count: tickets.length});
-}
+})
 
 // @desc      Get Event Ticket By ID
 // @route     GET /api/v1/courses

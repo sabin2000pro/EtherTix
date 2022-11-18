@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import request from "supertest"
 import mongoose from "mongoose"
 require('dotenv').config("../.env")
@@ -10,7 +11,6 @@ beforeAll(async() => {
 })
 
 describe("Register Account Test Suite", () => {
-
 
     it("Register Account with invalid e-mail address", async () => {
         const invalidBodyData = [{username: "bob2000", email: "bob0wef.com", password: "123mini12", passwordConfirm: "123mini12", forename: "Sabin", surname: "Lungu"}]
@@ -61,7 +61,7 @@ describe("Login Account Test Suite", () => {
 
         for(const loginData of loginFields) {
             const response = await request(app).post('/api/v1/auth/login').send(loginData)
-            return expect(response.statusCode).toBe(400)
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
         }
     })
 
@@ -171,6 +171,7 @@ describe("Update User Password Test Suite", () => {
 })
 
 
+// Close the connection to the server after all tests are ran
 afterAll(done => {
     mongoose.connection.close();
     done()

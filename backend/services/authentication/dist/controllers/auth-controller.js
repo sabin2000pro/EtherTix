@@ -321,7 +321,7 @@ const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0
 exports.logoutUser = logoutUser;
 const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email } = request.body;
+        const email = request.body;
         const user = yield user_model_1.User.findOne({ email });
         if (!user) {
             return next(new error_handler_1.NotFoundError("No user found with that e-mail address", http_status_codes_1.StatusCodes.NOT_FOUND));
@@ -342,7 +342,7 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
     }
     catch (error) {
         if (error) {
-            return response.status(400).json({ success: false, message: error.message });
+            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 });

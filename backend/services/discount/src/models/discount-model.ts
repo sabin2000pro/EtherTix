@@ -24,7 +24,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
     },
  
     amountOff: { // How much to take off the price in (ETHER)
-        type: String,
+        type: Number,
         default: null
     },
  
@@ -44,7 +44,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
    }
 
    }
-}, {timestamps: true})
+}, {timestamps: true, toJSON: {virtuals: true }})
 
 const Discount = mongoose.model<DiscountDocument>("Discount", DiscountSchema);
 export {Discount}
