@@ -29,7 +29,6 @@ interface IUserAttributes {
 
     virtualCredits: number;
     reputationPoints: number;
-
     premiumAccount: boolean;
 
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
@@ -82,7 +81,10 @@ const UserSchema = new mongoose.Schema({
 
     forename: {
         type: String,
-        required: [true, "Please provide your forename"]
+        trim: true,
+        required: [true, "Please provide your forename"],
+        maxlength: [10, "Forename cannot exceed 10 characters"],
+        minlength: [3, "Forename cannot be less than 3 characters"]
     },
 
     surname: {
