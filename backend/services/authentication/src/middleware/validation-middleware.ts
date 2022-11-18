@@ -23,14 +23,15 @@ export const emailValidationAgent = Joi.object({
 })
 
 
-export const resetPasswordSchema = Joi.object({
+export const resetPasswordValidationAgent = Joi.object({
+    currentPassword: Joi.string().required(),
+    newPassword: Joi.string().required()
+})
+
+export const updateUserPasswordValidationAgent = Joi.object({
 
 })
 
-export const updateUserPasswordSchema = Joi.object({
-
-})
-
-export const updateUserProfileSchema = Joi.object({
+export const updateUserProfileValidationAgent = Joi.object({
 
 })
