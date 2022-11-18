@@ -1,4 +1,4 @@
-import { Query } from 'express-serve-static-core';
+import { Query, ParamsDictionary } from 'express-serve-static-core';
 import { NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
@@ -44,6 +44,10 @@ export interface TypedRequestQuery<T extends Query> extends Express.Request {
     query: T
 }
 
+export interface TypedRequestBody<T extends ParamsDictionary> extends Request {
+    body: T
+}
+
   // @description: Sends the verify confirmation e-mail to the user after registering an account
   // @parameters: Transporter Object, User Object, Randomly Generated User OTP
   // @returns: void
@@ -71,11 +75,13 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
   
-export const registerUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, password: string, passwordConfirm: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
-        const {email, password, passwordConfirm} = request.body; // Extract relevant data from the body of the request
+        const email = request.body.email;
+        const password = request.body.password;
+        const passwordConfirm = request.body.passwordConfirm
 
         if(!email) {
           return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
@@ -609,14 +615,14 @@ export const uploadUserProfilePicture = async (request: Request, response: Respo
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, response: Response, next: NextFunction): Promise<any> => {
+export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
         if(request.method === 'GET') {
-
             let query;
             const reqQuery = request.query.sort;
+
             const users = await User.find();
         }
 
