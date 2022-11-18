@@ -111,7 +111,7 @@ const UserSchema = new mongoose.Schema({
     },
 
     photo: { // Photo for the user
-        type: String,
+        type: String, // Type is string
         default: 'no-photo.jpg'
     },
 
