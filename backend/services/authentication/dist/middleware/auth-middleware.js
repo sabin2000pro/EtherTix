@@ -12,21 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.restrictRoleTo = exports.protectAuth = void 0;
+exports.protectAuth = void 0;
 const error_handler_1 = require("./error-handler");
 const user_model_1 = require("../models/user-model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
-    if (request.headers.authorization && request.headers.authorization.includes("Bearer")) {
+    // Check to see if the authorization header starts with Bearer
+    if (request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
         token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
     if (!token) {
         return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action", 400));
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        request.user = yield user_model_1.User.findById(decoded.id);
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN);
+        request.user = yield user_model_1.User.findById(decoded._id);
         return next();
     }
     catch (error) {
@@ -36,11 +37,3 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
     }
 });
 exports.protectAuth = protectAuth;
-const restrictRoleTo = (...roles) => {
-    return (request, response, next) => {
-        // @TODO
-        if (!roles.includes(request.user.role)) {
-        }
-    };
-};
-exports.restrictRoleTo = restrictRoleTo;

@@ -29,6 +29,16 @@ declare namespace Express {
       user: any // or any other type
   }
 
+  export interface IUserData {
+    _id: string;
+    email: string;
+    username: string
+}
+
+export interface IRequestUser extends Request {
+    user: IUserData
+}
+
   // @description: Sends the verify confirmation e-mail to the user after registering an account
   // @parameters: Transporter Object, User Object, Randomly Generated User OTP
   // @returns: void

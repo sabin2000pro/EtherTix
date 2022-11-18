@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
 const error_handler_1 = require("./../middleware/error-handler");
@@ -21,6 +24,7 @@ const error_handler_2 = require("../middleware/error-handler");
 const generate_mfa_1 = require("../utils/generate-mfa");
 const mongoose_1 = require("mongoose");
 const two_factor_model_1 = require("../models/two-factor-model");
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const generateResetPasswordToken_1 = require("../utils/generateResetPasswordToken");
 // @description: Sends the verify confirmation e-mail to the user after registering an account
 // @parameters: Transporter Object, User Object, Randomly Generated User OTP
@@ -43,7 +47,7 @@ const sendConfirmationEmail = (transporter, newUser, userOTP) => {
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise
 // @public: True (No Authorization Token Required)
-const registerUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registerUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, passwordConfirm } = request.body; // Extract relevant data from the body of the request
         if (!email) {
@@ -56,39 +60,38 @@ const registerUser = (request, response, next) => __awaiter(void 0, void 0, void
         if (existingUser) {
             return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        const newUser = yield user_model_1.User.create(request.body);
-        const token = newUser.getAuthenticationToken();
+        const user = yield user_model_1.User.create(request.body);
+        const token = user.getAuthenticationToken();
         if (!token) {
             return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        yield newUser.save();
-        const currentUser = newUser._id; // Get the current user's ID
+        yield user.save();
+        const currentUser = user._id; // Get the current user's ID
         const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
         const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
         yield verificationToken.save();
         const transporter = (0, send_email_1.emailTransporter)();
-        sendConfirmationEmail(transporter, newUser, userOTP);
-        const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: newUser._id, token: userOTP });
+        sendConfirmationEmail(transporter, user, userOTP);
+        const userOTPVerification = new email_verification_model_1.EmailVerification({ owner: user._id, token: userOTP });
         yield userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
-        return sendTokenResponse(request, newUser, http_status_codes_1.StatusCodes.CREATED, response);
+        return sendTokenResponse(request, user, http_status_codes_1.StatusCodes.CREATED, response);
     }
     catch (error) {
         if (error) {
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message, success: false });
         }
     }
-});
-exports.registerUser = registerUser;
+}));
 const sendTokenResponse = (request, user, statusCode, response) => {
-    const jwtToken = user.getAuthenticationToken();
-    request.session = { token: jwtToken }; // Store the token in the session
-    return response.status(statusCode).json({ userData: { id: user._id, username: user.username, email: user.email, jwtToken } });
+    const token = user.getAuthenticationToken();
+    request.session = { token }; // Store the token in the session
+    return response.status(statusCode).json({ data: user, token });
 };
 // @description: Verify User E-mail Address
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
-const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
         const user = yield user_model_1.User.findById(userId);
@@ -141,8 +144,7 @@ const verifyEmailAddress = (request, response, next) => __awaiter(void 0, void 0
             return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
-});
-exports.verifyEmailAddress = verifyEmailAddress;
+}));
 // @description: Resend the E-mail Verification code to the user if not received
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise
@@ -151,7 +153,7 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
     try {
         const { userId, OTP } = request.body;
         const currentUser = yield user_model_1.User.findById(userId);
-        if (!currentUser) {
+        if (!currentUser) { // If we have no current user
             return next(new error_handler_2.BadRequestError("Current user does not exist. Check user again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (!(0, mongoose_1.isValidObjectId)(userId)) {
@@ -182,9 +184,7 @@ exports.resendEmailVerificationCode = resendEmailVerificationCode;
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
-// @ Pre Condition: E-mail and Password required
-// @ Post Condition: Logged In User with associated authentication token (JWT)
-const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.loginUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = request.body;
         if (!email || !password) {
@@ -209,6 +209,7 @@ const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0,
         if (!userMfa) {
             return next(new error_handler_2.BadRequestError("User MFA not valid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
+        console.log(`User : `, user);
         const transporter = (0, send_email_1.emailTransporter)();
         transporter.sendMail({
             from: 'mfa@ethertix.com',
@@ -221,15 +222,14 @@ const loginUser = (request, response, next) => __awaiter(void 0, void 0, void 0,
             `
         });
         request.session = { jwt: token }; // Store the token in the session as a cookie
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, token, userData: user });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, token, user });
     }
     catch (error) {
         if (error) {
             return console.error(error.message);
         }
     }
-});
-exports.loginUser = loginUser;
+}));
 const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, multiFactorToken } = request.body;
@@ -258,7 +258,7 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
         yield user.save();
         const jwtToken = user.getAuthenticationToken();
         (request.session) = { jwtToken } || undefined;
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "Your Account Is Active" });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ user, message: "Your account is active" });
     }
     catch (error) {
         if (error) {
@@ -340,11 +340,10 @@ const sendPasswordResetEmail = (user, resetPasswordURL) => {
             `
     });
 };
-const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.resetPassword = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const currentPassword = request.body.currentPassword;
     const newPassword = request.body.newPassword;
-    const user = yield user_model_1.User.findById(request.user._id);
-    console.log(user);
+    const resetToken = request.params.resetToken;
     // Validate Fields
     if (!currentPassword) {
         return next(new error_handler_2.BadRequestError("Current password missing. Please try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -352,19 +351,22 @@ const resetPassword = (request, response, next) => __awaiter(void 0, void 0, voi
     if (!newPassword) {
         return next(new error_handler_2.BadRequestError("Please specify the new password", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
-    const resetPasswordToken = (0, generateResetPasswordToken_1.generateRandomResetPasswordToken)();
-    console.log(`Your reset password token : ${resetPasswordToken}`);
+    const user = yield user_model_1.User.findOne({ owner: request.user._id, token: resetToken });
     if (!user) {
         return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const userPasswordsMatch = yield user.comparePasswords(currentPassword);
+    if (!userPasswordsMatch) {
+        return next(new error_handler_2.BadRequestError("Current Password Invalid", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     user.password = newPassword;
     user.passwordConfirm = undefined;
     yield user.save(); // Save new user after reset the password
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Password Reset Successfully" });
-});
-exports.resetPassword = resetPassword;
+}));
 const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = request.user;
+    console.log(user);
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
 });
 exports.getCurrentUser = getCurrentUser;
@@ -423,23 +425,58 @@ exports.uploadUserProfilePicture = uploadUserProfilePicture;
 // ADMIN CONTROLLERS
 const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if (request.method === 'GET') {
+            let query;
+            const reqQuery = request.query;
+            const users = yield user_model_1.User.find();
+        }
     }
     catch (error) {
     }
 });
 exports.fetchAllUsers = fetchAllUsers;
 const fetchUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (request.method === 'GET') {
+            const userId = request.params.userId;
+            if (!userId) {
+            }
+        }
+    }
+    catch (error) {
+    }
 });
 exports.fetchUserByID = fetchUserByID;
 const createNewUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const {} = request.body;
+    }
+    catch (error) {
+    }
 });
 exports.createNewUser = createNewUser;
 const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = request.params.userId;
+        if (!userId) {
+        }
+    }
+    catch (error) {
+    }
 });
 exports.editUserByID = editUserByID;
 const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = request.params.userId;
+    }
+    catch (error) {
+    }
 });
 exports.deleteUserByID = deleteUserByID;
 const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.deleteAllUsers = deleteAllUsers;
