@@ -474,11 +474,11 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 
 }
 
-export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const forgotPassword = async (request: TypedRequestBody<{email: string}>, response: Response, next: NextFunction): Promise<any> => {
 
     try {
 
-        const {email} = request.body;
+        const email = request.body;
         const user = await User.findOne({email});
     
         if(!user) {
@@ -509,7 +509,7 @@ export const forgotPassword = async (request: Request, response: Response, next:
     catch(error: any) {
 
         if(error) {
-            return response.status(400).json({success: false, message: error.message});
+            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message});
         }
 
     }
