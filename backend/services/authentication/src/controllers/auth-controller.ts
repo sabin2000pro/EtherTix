@@ -81,6 +81,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
 
         const forename = request.body.forename;
         const surname = request.body.surname;
+
         const email = request.body.email;
         const password = request.body.password;
         const passwordConfirm = request.body.passwordConfirm
@@ -91,7 +92,6 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
 
         if(!surname) {
             return next(new NotFoundError("Surname is missing. Please try enter again", StatusCodes.NOT_FOUND));
-
         }
 
         if(!email) {
@@ -114,9 +114,10 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         if(!token) {
             return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
         }
+        const currentUser = user._id; // Get the current user's ID
+
 
         await user.save();
-        const currentUser = user._id; // Get the current user's ID
 
         const userOTP = generateOTPVerificationToken();
 
@@ -688,14 +689,24 @@ export const createNewUser = async (request: Express.Request, response: Response
 
 }
 
-export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any| Response> => {
 
    try {
+
       const userId = request.params.userId;
 
       if(!userId) {
 
       }
+
+      let user = await User.findById(userId);
+
+      if(!user) {
+        
+      }
+
+      user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
+      await user.save();
 
 
    } 

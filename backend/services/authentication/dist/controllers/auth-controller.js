@@ -49,7 +49,17 @@ const sendConfirmationEmail = (transporter, newUser, userOTP) => {
 // @public: True (No Authorization Token Required)
 exports.registerUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password, passwordConfirm } = request.body; // Extract relevant data from the body of the request
+        const forename = request.body.forename;
+        const surname = request.body.surname;
+        const email = request.body.email;
+        const password = request.body.password;
+        const passwordConfirm = request.body.passwordConfirm;
+        if (!forename) {
+            return next(new error_handler_1.NotFoundError("Forename is missing. Please try enter again", http_status_codes_1.StatusCodes.NOT_FOUND));
+        }
+        if (!surname) {
+            return next(new error_handler_1.NotFoundError("Surname is missing. Please try enter again", http_status_codes_1.StatusCodes.NOT_FOUND));
+        }
         if (!email) {
             return next(new error_handler_2.BadRequestError("No E-mail provided. Please check your entries", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -60,7 +70,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
         if (existingUser) {
             return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        const user = yield user_model_1.User.create(request.body);
+        const user = yield user_model_1.User.create({ forename, surname, email, password, passwordConfirm });
         const token = user.getAuthenticationToken();
         if (!token) {
             return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -85,7 +95,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
 const sendTokenResponse = (request, user, statusCode, response) => {
     const token = user.getAuthenticationToken();
     request.session = { token }; // Store the token in the session
-    return response.status(statusCode).json({ data: user, token });
+    return response.status(statusCode).json({ user, token });
 };
 // @description: Verify User E-mail Address
 // @parameters: request: Request Object, response: Response Object, next: Next Function
@@ -137,7 +147,7 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
         });
         const jwtToken = user.getAuthenticationToken();
         request.session = { token: jwtToken } || undefined; // Get the authentication JWT token
-        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ userData: { id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified }, message: "E-mail Address verified" });
+        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ user, message: "E-mail Address verified" });
     }
     catch (error) {
         if (error) {
@@ -180,6 +190,18 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
     }
 });
 exports.resendEmailVerificationCode = resendEmailVerificationCode;
+const sendLoginMfa = (transporter, user, userMfa) => {
+    return transporter.sendMail({
+        from: 'mfa@ethertix.com',
+        to: user.email,
+        subject: 'Login MFA Verification',
+        html: `
+        
+        <p>Your MFA code</p>
+        <h1> ${userMfa}</h1>
+        `
+    });
+};
 // @description: Login User
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise w/ Status Code 200
@@ -194,6 +216,9 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
         if (!user) {
             return next(new error_handler_2.BadRequestError(`Could not find that user`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
+        if (!user.isActive) {
+            return next(new error_handler_2.BadRequestError(`Please activate your account before logging in`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
         if (user.isLocked) {
             return next(new error_handler_2.BadRequestError("Cannot login. Your account is locked", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -205,22 +230,12 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
         // Generate new JWT and store in in the session
         const token = user.getAuthenticationToken();
         const userMfa = (0, generate_mfa_1.generateMfaToken)();
+        const transporter = (0, send_email_1.emailTransporter)();
+        sendLoginMfa(transporter, user, userMfa);
         // Check for a valid MFA
         if (!userMfa) {
             return next(new error_handler_2.BadRequestError("User MFA not valid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        console.log(`User : `, user);
-        const transporter = (0, send_email_1.emailTransporter)();
-        transporter.sendMail({
-            from: 'mfa@ethertix.com',
-            to: user.email,
-            subject: 'Login MFA Verification',
-            html: `
-            
-            <p>Your MFA code</p>
-            <h1> ${userMfa}</h1>
-            `
-        });
         request.session = { jwt: token }; // Store the token in the session as a cookie
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, token, user });
     }
@@ -427,7 +442,7 @@ const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, voi
     try {
         if (request.method === 'GET') {
             let query;
-            const reqQuery = request.query;
+            const reqQuery = request.query.sort;
             const users = yield user_model_1.User.find();
         }
     }
