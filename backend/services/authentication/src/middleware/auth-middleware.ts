@@ -61,16 +61,3 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
 
     
 }
-
-export const restrictRoleTo = (...roles: any) => {
-
-    return (request: Express.Request, response: Response, next: NextFunction) => {
-
-
-        // @TODO
-        if(!roles.includes(request.user.role)) {
-
-        }
-
-    }
-}
