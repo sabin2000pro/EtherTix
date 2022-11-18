@@ -664,16 +664,19 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
 })
 
 export const fetchPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+
     try {
+
     // Aggregation pipeline to fetch the total number of premium accounts
 
    
     } 
     
     catch(error: any) {
+
         if(error) {
             console.error(error);
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
     }
 
@@ -687,15 +690,17 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
     try {
 
         if(request.method === 'GET') {
-            let query;
-            const reqQuery = request.query;
             const users = await User.find();
+
+            return response.status(StatusCodes.OK).json({success: true, users});
         }
 
     }
     
     catch(error: any) {
-         
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+        }
     }
 
 }
@@ -718,7 +723,9 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
     } 
     
     catch(error: any) {
-
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+        }
     }
 
 
@@ -737,7 +744,7 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
     catch(error: any) {
 
         if(error) {
-            console.error(error);
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
 
     }
@@ -771,7 +778,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
    catch(error: any) {
 
       if(error) {
-          console.error(error);
+        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
       }    
 
 
@@ -794,7 +801,10 @@ export const deleteUserByID = async (request: Request, response: Response, next:
     } 
     
     catch(error: any) {
- 
+     if(error) {
+        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+
+     }
     }
  
 }
@@ -806,24 +816,38 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
     } 
     
     catch(error: any) {
- 
+
+          if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+          }
+
     }
  
 }
 
 export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
-    const user = await User.findById(request.user._id);
-    return response.status(200).json({success: true, message: "User Account Locked"})
+    const userId = request.user._id;
+    const user = await User.findById(userId);
+
+    if(!user) {
+
+    }
+
+
+    return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
 }
 
 export const unlockUserAccount = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
-
+       
     } 
     
     catch(error: any) {
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
 
+        }
     }
 
 
