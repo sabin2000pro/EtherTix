@@ -295,6 +295,8 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
            return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
         }
 
+        console.log(`User : `, user);
+
         const transporter = emailTransporter();
 
         transporter.sendMail({

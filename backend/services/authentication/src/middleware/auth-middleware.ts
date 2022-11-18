@@ -13,12 +13,28 @@ declare namespace Express {
         authorization: any
     }
   }
+
+
+  export interface IUserData {
+    _id: string;
+    email: string;
+    username: string
+}
+
+export interface IRequestUser extends Request {
+    user: IUserData
+}
+
+export type IAuthRequest = IRequestUser & {
+    headers: {authorization: string}
+}
+
   
 
-export const protectAuth = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+export const protectAuth = async (request: IAuthRequest & IRequestUser, response: Response, next: NextFunction): Promise<any> => {
     let token;
 
-    if(request.headers.authorization && request.headers.authorization.includes("Bearer")) {
+    if(request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
          token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
 
