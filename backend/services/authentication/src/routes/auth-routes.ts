@@ -1,8 +1,8 @@
 import { updateUserPassword, updateUserProfile } from './../controllers/auth-controller';
 import express, { Router } from "express";
 import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser} from "../controllers/auth-controller";
-import { protectAuth } from '../middleware/auth-middleware';
 import rateLimit from 'express-rate-limit';
+import { protectAuth } from '../middleware/auth-middleware';
 
 const authRouter: Router = express.Router();
 

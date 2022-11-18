@@ -33,7 +33,7 @@ app.use((0, cors_1.default)({
 app.use((0, helmet_1.default)());
 app.use('/api/v1', event_routes_1.eventRouter);
 app.get("/", (request, response) => {
-    return response.json({ message: "Root Route" });
+    return response.json({ message: "Event - Root Route" });
 });
 app.all('*', (err, request, response, next) => {
     if (err instanceof error_handler_1.CustomError) {

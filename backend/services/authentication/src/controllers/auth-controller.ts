@@ -375,10 +375,9 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
+
         const {userId, mfaCode} = request.body;
         const currentUser = await User.findById(userId);
-
-        console.log(`Current user found : ${currentUser}`);
 
         if(!isValidObjectId(userId)) {
             return next(new NotFoundError("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
@@ -425,6 +424,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
+
         const {email} = request.body;
         const user = await User.findOne({email});
     
@@ -468,7 +468,6 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
      const transporter = emailTransporter();
 
         transporter.sendMail({
-
             from: 'resetpassword@ethertix.com',
             to: user.email,
             subject: 'Reset Password',
@@ -481,16 +480,11 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 }
 
-export const resetPassword = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
-    const {currentPassword, newPassword} = request.body; // Pull out the current user password and the new user password
-    const user = await User.findById(request.user._id);
+export const resetPassword = async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+    const currentPassword = request.body.currentPassword;
+    const newPassword = request.body.newPassword;
 
-    if(!user) {
-        return next(new NotFoundError("User not found", 404));
-    }
-    
     // Validate Fields
-
     if(!currentPassword) {
         return next(new BadRequestError("Current password missing. Please try again", 400))
     }
@@ -499,9 +493,21 @@ export const resetPassword = async (request: Express.Request, response: Response
         return next(new BadRequestError("Please specify the new password", 400))
     }
 
+    const resetPasswordToken = generateRandomResetPasswordToken();
+    console.log(`Your reset password token : ${resetPasswordToken}`);
 
+    const user = await User.findById(<any>request.user._id);
 
-    return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Success"});
+    if(!user) {
+        return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+    }
+
+    user.password = newPassword;
+    user.passwordConfirm = undefined;
+
+    await user.save(); // Save new user after reset the password
+
+    return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
 }
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
@@ -522,7 +528,6 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
     }
 
     const user = await User.findById(<any>request.user._id);
-
 
     if(!user) {
         return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))

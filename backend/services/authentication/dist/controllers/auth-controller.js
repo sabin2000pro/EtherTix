@@ -309,7 +309,7 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
             return next(new error_handler_1.NotFoundError("No user found with that e-mail address", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         const userHasResetToken = yield password_reset_model_1.PasswordReset.findOne({ owner: user._id });
-        if (!userHasResetToken) {
+        if (userHasResetToken) {
             return next(new error_handler_2.BadRequestError("User already has the password reset token", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const token = (0, generateResetPasswordToken_1.generateRandomResetPasswordToken)();
@@ -343,8 +343,21 @@ const sendPasswordResetEmail = (user, resetPasswordURL) => {
 };
 const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { currentPassword, newPassword } = request.body; // Pull out the current user password and the new user password
+    const user = yield user_model_1.User.findById(request.user.id);
+    if (!user) {
+        return next(new error_handler_1.NotFoundError("User not found", 404));
+    }
     // Validate Fields
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Password Reset Success" });
+    if (!currentPassword) {
+        return next(new error_handler_2.BadRequestError("Current password missing. Please try again", 400));
+    }
+    if (!newPassword) {
+        return next(new error_handler_2.BadRequestError("Please specify the new password", 400));
+    }
+    user.password = newPassword;
+    user.passwordConfirm = undefined;
+    yield user.save();
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Password Reset Successfully" });
 });
 exports.resetPassword = resetPassword;
 const getCurrentUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {

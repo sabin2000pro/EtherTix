@@ -31,6 +31,7 @@ app.use(cors({
     origin: "*",
     methods: ["POST", "PUT", "GET", "DELETE"]
 }));
+
 app.use(helmet());
 app.use(cookieSession({
     keys: ['session']

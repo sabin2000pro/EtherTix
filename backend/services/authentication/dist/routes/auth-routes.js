@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const auth_controller_1 = require("./../controllers/auth-controller");
 const express_1 = __importDefault(require("express"));
 const auth_controller_2 = require("../controllers/auth-controller");
-const auth_middleware_1 = require("../middleware/auth-middleware");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const auth_middleware_1 = require("../middleware/auth-middleware");
 const authRouter = express_1.default.Router();
 const rateLimiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
