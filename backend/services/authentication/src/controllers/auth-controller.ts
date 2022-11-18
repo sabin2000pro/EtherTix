@@ -311,6 +311,10 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         if(!user) {
             return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
         }
+
+        if(!user.isActive) {
+            return next(new BadRequestError(`Please activate your account before logging in`, StatusCodes.BAD_REQUEST));
+        }
     
         if(user.isLocked) {
             return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
