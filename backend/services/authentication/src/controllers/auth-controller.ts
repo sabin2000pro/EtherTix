@@ -330,10 +330,6 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
             return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
         }
 
-        if(!user.isActive) {
-            return next(new BadRequestError(`Please activate your account before logging in`, StatusCodes.BAD_REQUEST));
-        }
-    
         if(user.isLocked) {
             return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
         }
@@ -368,6 +364,7 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         }
 
     }
+    
        
 })
 
@@ -406,7 +403,6 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
         user.isActive = true; // And user account is active
         
         factorToken.mfaToken = undefined;
-    
         await user.save();
     
         const jwtToken = user.getAuthenticationToken();
@@ -608,14 +604,28 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
 }
 
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const fieldsToUpdate = {email: request.body.email, username: request.body.username, role: request.body.role};
 
-    // Validate fields
+    try {
 
-    const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
-    await updatedUserProfile.save();
+        const fieldsToUpdate = {email: request.body.email, username: request.body.username, role: request.body.role};
 
-    return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
+        const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
+        await updatedUserProfile.save();
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
+
+    } 
+    
+    catch(error) {
+
+       if(error) {
+
+       }
+
+
+    }
+
+
 }
 
 
