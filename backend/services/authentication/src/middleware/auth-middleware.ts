@@ -28,8 +28,8 @@ export const protectAuth = async (request: Express.Request, response: Response, 
 
     try {
         
-        const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
-        request.user = await User.findById(decoded.id);
+        const decoded: any = jwt.verify(token, process.env.JWT_TOKEN!);
+        request.user = await User.findById(decoded._id);
 
         return next();
     } 

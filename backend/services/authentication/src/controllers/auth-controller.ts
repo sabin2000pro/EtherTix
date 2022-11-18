@@ -503,7 +503,6 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
         return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
     }
 
-    // Check if passwords match
     const userPasswordsMatch = await user.comparePasswords(currentPassword);
 
     if(!userPasswordsMatch) {
@@ -520,6 +519,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const user = request.user;
+    console.log(user);
     return response.status(StatusCodes.OK).json({success: true, data: user});
 }
 
