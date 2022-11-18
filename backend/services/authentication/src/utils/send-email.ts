@@ -1,14 +1,13 @@
 
-import nodemailer from 'nodemailer';
-require('dotenv').config();
+import nodemailer from "nodemailer"
+require('dotenv').config()
 
-export const emailTransporter = () => {
+export const emailTransporter = (): any => {
 
 return nodemailer.createTransport({
 
-    host: <any>'smtp.mailtrap.io' as any,
-
-    port: process.env.SMTP_PORT,
+    host: "smtp.mailtrap.io",
+    port: 2525,
 
     auth: {
       user: "ef8f21393bb3ed",

@@ -413,7 +413,8 @@ const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0
 });
 exports.updateUserPassword = updateUserPassword;
 const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const fieldsToUpdate = { email: request.body.email, username: request.body.username };
+    const fieldsToUpdate = { email: request.body.email, username: request.body.username, role: request.body.role };
+    // Validate fields
     const updatedUserProfile = yield user_model_1.User.findByIdAndUpdate(request.params.id, fieldsToUpdate, { new: true, runValidators: true });
     yield updatedUserProfile.save();
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });

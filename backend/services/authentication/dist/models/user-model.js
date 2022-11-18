@@ -35,7 +35,10 @@ var AccountType;
 const UserSchema = new mongoose_1.default.Schema({
     forename: {
         type: String,
-        required: [true, "Please provide your forename"]
+        trim: true,
+        required: [true, "Please provide your forename"],
+        maxlength: [10, "Forename cannot exceed 10 characters"],
+        minlength: [3, "Forename cannot be less than 3 characters"]
     },
     surname: {
         type: String,
