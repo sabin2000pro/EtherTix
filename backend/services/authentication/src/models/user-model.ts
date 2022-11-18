@@ -43,12 +43,12 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     email: string; // The user's e-mail address
     password: string;
     passwordConfirm: string; // Password Confirmation
-    role: string;
-    accountActive: boolean;
-    accountVerified: boolean;
+    role: string; // Role of the user
+    accountActive: boolean; // Account active or not
+    accountVerified: boolean; // Accoutn verified or not
     accountLocked: boolean; // True or false if the account is locked or not
     address: string;
-    photo: string;
+    photo: string; // User avatar
     isNewUser: boolean;
     createdAt: Date;
 
