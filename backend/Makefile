@@ -35,11 +35,7 @@ build-services:
 	- cd services/comments* && docker build -t sabin2000/ethertix-comments-service . && docker push sabin2000/ethertix-comments-service
 
 	- docker volume prune && docker system prune
-
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
-	
-	- kubectl get pods
-	- kubectl get deployments
 
 stop-services:
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml down

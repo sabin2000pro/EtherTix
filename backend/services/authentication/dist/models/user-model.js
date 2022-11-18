@@ -16,8 +16,7 @@ exports.User = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: '../../config.env' });
+require('dotenv').config();
 // Working on the auth feature branch
 const UserSchema = new mongoose_1.default.Schema({
     forename: {

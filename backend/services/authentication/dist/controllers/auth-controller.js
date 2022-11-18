@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
+exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
 const error_handler_1 = require("./../middleware/error-handler");
 const send_email_1 = require("./../utils/send-email");
 const user_model_1 = require("../models/user-model");
@@ -271,7 +271,6 @@ const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, 
     try {
         const { userId, mfaCode } = request.body;
         const currentUser = yield user_model_1.User.findById(userId);
-        console.log(`Current user found : ${currentUser}`);
         if (!(0, mongoose_1.isValidObjectId)(userId)) {
             return next(new error_handler_1.NotFoundError("User ID is invalid. Please check again", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
@@ -342,21 +341,25 @@ const sendPasswordResetEmail = (user, resetPasswordURL) => {
     });
 };
 const resetPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { currentPassword, newPassword } = request.body; // Pull out the current user password and the new user password
-    const user = yield user_model_1.User.findById(request.user.id);
-    if (!user) {
-        return next(new error_handler_1.NotFoundError("User not found", 404));
-    }
+    const currentPassword = request.body.currentPassword;
+    const newPassword = request.body.newPassword;
+    const user = yield user_model_1.User.findById(request.user._id);
+    console.log(user);
     // Validate Fields
     if (!currentPassword) {
-        return next(new error_handler_2.BadRequestError("Current password missing. Please try again", 400));
+        return next(new error_handler_2.BadRequestError("Current password missing. Please try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     if (!newPassword) {
-        return next(new error_handler_2.BadRequestError("Please specify the new password", 400));
+        return next(new error_handler_2.BadRequestError("Please specify the new password", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    }
+    const resetPasswordToken = (0, generateResetPasswordToken_1.generateRandomResetPasswordToken)();
+    console.log(`Your reset password token : ${resetPasswordToken}`);
+    if (!user) {
+        return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     user.password = newPassword;
     user.passwordConfirm = undefined;
-    yield user.save();
+    yield user.save(); // Save new user after reset the password
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Password Reset Successfully" });
 });
 exports.resetPassword = resetPassword;
@@ -390,7 +393,6 @@ const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0
 exports.updateUserPassword = updateUserPassword;
 const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const fieldsToUpdate = { email: request.body.email, username: request.body.username };
-    // Update the user
     const updatedUserProfile = yield user_model_1.User.findByIdAndUpdate(request.params.id, fieldsToUpdate, { new: true, runValidators: true });
     yield updatedUserProfile.save();
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Update User Password Here" });
@@ -418,3 +420,26 @@ const uploadUserProfilePicture = (request, response, next) => __awaiter(void 0, 
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Avatar Uploaded" });
 });
 exports.uploadUserProfilePicture = uploadUserProfilePicture;
+// ADMIN CONTROLLERS
+const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
+});
+exports.fetchAllUsers = fetchAllUsers;
+const fetchUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.fetchUserByID = fetchUserByID;
+const createNewUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.createNewUser = createNewUser;
+const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.editUserByID = editUserByID;
+const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.deleteUserByID = deleteUserByID;
+const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.deleteAllUsers = deleteAllUsers;

@@ -24,4 +24,5 @@ authRouter.route('/forgot-password').post(rateLimiter, auth_controller_2.forgotP
 authRouter.route('/reset-password').post(rateLimiter, auth_controller_2.resetPassword);
 authRouter.route('/update-password').post(rateLimiter, auth_controller_1.updateUserPassword);
 authRouter.route('/update-profile').put(rateLimiter, auth_controller_1.updateUserProfile);
+authRouter.route('/me').get(auth_controller_2.getCurrentUser);
 exports.default = authRouter;
