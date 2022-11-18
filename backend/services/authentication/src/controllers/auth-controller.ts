@@ -275,6 +275,22 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
 
 }
 
+const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
+
+    return transporter.sendMail({
+        from: 'mfa@ethertix.com',
+        to: user.email,
+        subject: 'Login MFA Verification',
+        html: `
+        
+        <p>Your MFA code</p>
+        <h1> ${userMfa}</h1>
+        `
+    })
+
+    
+}
+
   // @description: Login User
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise w/ Status Code 200
@@ -310,26 +326,15 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         // Generate new JWT and store in in the session
         const token = user.getAuthenticationToken();
         const userMfa = generateMfaToken();
+        const transporter = emailTransporter();
+
+
+        sendLoginMfa(transporter as any, user as any, userMfa as any);
     
         // Check for a valid MFA
         if(!userMfa) {
            return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
         }
-
-        console.log(`User : `, user);
-
-        const transporter = emailTransporter();
-
-        transporter.sendMail({
-            from: 'mfa@ethertix.com',
-            to: user.email,
-            subject: 'Login MFA Verification',
-            html: `
-            
-            <p>Your MFA code</p>
-            <h1> ${userMfa}</h1>
-            `
-        })
 
          request.session = {jwt: token}; // Store the token in the session as a cookie
          return response.status(StatusCodes.OK).json({success: true, token, user});
