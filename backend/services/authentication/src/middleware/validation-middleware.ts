@@ -15,7 +15,6 @@ export const loginSchema = Joi.object({
 
 export const forgotPasswordSchema = Joi.object({
     email: Joi.string().required()
-
 })
 
 export const verifyEmailAddressSchema = Joi.object({
@@ -23,7 +22,7 @@ export const verifyEmailAddressSchema = Joi.object({
 })
 
 export const loginMfaSchema = Joi.object({
-
+    
 })
 
 export const resetPasswordSchema = Joi.object({
