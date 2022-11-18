@@ -22,7 +22,6 @@ export const emailValidationAgent = Joi.object({
     email: Joi.string().required()
 })
 
-
 export const resetPasswordValidationAgent = Joi.object({
     currentPassword: Joi.string().required(),
     newPassword: Joi.string().required()
