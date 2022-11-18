@@ -137,7 +137,7 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
     const token = user.getAuthenticationToken();
     request.session = {token}; // Store the token in the session
  
-    return response.status(statusCode).json({data: user, token});
+    return response.status(statusCode).json({user, token});
 }
 
   // @description: Verify User E-mail Address
@@ -208,7 +208,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
 
-            return response.status(StatusCodes.CREATED).json({userData: {id: user._id, username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "E-mail Address verified"})
+            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
     } 
     
     catch(error: any) {
@@ -327,7 +327,7 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         const token = user.getAuthenticationToken();
         const userMfa = generateMfaToken();
         const transporter = emailTransporter();
-        
+
         sendLoginMfa(transporter as any, user as any, userMfa as any);
     
         // Check for a valid MFA
