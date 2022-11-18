@@ -191,6 +191,8 @@ export const verifyEmailAddress = async (request: Request, response: Response, n
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
+
+
     }
 }
 
@@ -423,7 +425,6 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
-
         const {email} = request.body;
         const user = await User.findOne({email});
     
@@ -433,7 +434,7 @@ export const forgotPassword = async (request: Request, response: Response, next:
     
         const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
-        if(!userHasResetToken) {
+        if(userHasResetToken) {
             return next(new BadRequestError("User already has the password reset token", StatusCodes.BAD_REQUEST));
         }
     
@@ -480,10 +481,24 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 }
 
-export const resetPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const resetPassword = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const {currentPassword, newPassword} = request.body; // Pull out the current user password and the new user password
+    const user = await User.findById(request.user._id);
 
+    if(!user) {
+        return next(new NotFoundError("User not found", 404));
+    }
+    
     // Validate Fields
+
+    if(!currentPassword) {
+        return next(new BadRequestError("Current password missing. Please try again", 400))
+    }
+
+    if(!newPassword) {
+        return next(new BadRequestError("Please specify the new password", 400))
+    }
+
 
 
     return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Success"});
