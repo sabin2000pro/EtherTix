@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs'
 
 interface ITwoFactorVerification {
@@ -24,12 +23,12 @@ interface TwoFactorVerificationDocument extends mongoose.Model<ITwoFactorVerific
 // @schema: E-mail Verification Model
 const TwoFactorVerificationSchema = new mongoose.Schema<TwoFactorVerificationDocument>({
 
-    owner: {
+    owner: { // Owner of the verification token
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
 
-    mfaToken: {
+    mfaToken: { // the token itself
         type: String,
         required: [true, "Please provide a valid MFA Token"]
     },

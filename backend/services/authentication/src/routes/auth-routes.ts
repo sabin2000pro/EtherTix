@@ -5,7 +5,7 @@ import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddre
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
-const authRouter: Router = express.Router();
+export const authRouter: Router = express.Router();
 
 const rateLimiter = rateLimit({
 	windowMs: 10 * 60 * 1000, // 10 minutes
@@ -26,7 +26,3 @@ authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
 authRouter.route('/update-password').post(rateLimiter, updateUserPassword as any)
 authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
 authRouter.route('/me').get(getCurrentUser as any);
-
-
-
-export default authRouter;
