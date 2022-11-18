@@ -76,15 +76,15 @@ export const registerUser = asyncHandler(async (request: Request, response: Resp
             return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
         }
 
-        const newUser = await User.create(request.body);
-        const token = newUser.getAuthenticationToken();
+        const user = await User.create(request.body);
+        const token = user.getAuthenticationToken();
 
         if(!token) {
             return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
         }
 
-        await newUser.save();
-        const currentUser = newUser._id; // Get the current user's ID
+        await user.save();
+        const currentUser = user._id; // Get the current user's ID
 
         const userOTP = generateOTPVerificationToken();
 
@@ -92,12 +92,12 @@ export const registerUser = asyncHandler(async (request: Request, response: Resp
         await verificationToken.save();
 
         const transporter = emailTransporter();
-        sendConfirmationEmail(transporter, newUser, userOTP as unknown as any);
+        sendConfirmationEmail(transporter, user, userOTP as unknown as any);
 
-        const userOTPVerification = new EmailVerification({owner: newUser._id, token: userOTP});
+        const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
-        return sendTokenResponse(request as any, newUser, StatusCodes.CREATED, response);
+        return sendTokenResponse(request as any, user, StatusCodes.CREATED, response);
 
     } 
     
@@ -113,10 +113,10 @@ export const registerUser = asyncHandler(async (request: Request, response: Resp
 } )
 
 const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
-    const jwtToken = user.getAuthenticationToken();
-    request.session = {token: jwtToken}; // Store the token in the session
+    const token = user.getAuthenticationToken();
+    request.session = {token}; // Store the token in the session
  
-    return response.status(statusCode).json({user, jwtToken});
+    return response.status(statusCode).json({data: user, token});
 }
 
   // @description: Verify User E-mail Address
