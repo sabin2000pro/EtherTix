@@ -486,9 +486,7 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 export const resetPassword = async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
     const currentPassword = request.body.currentPassword;
     const newPassword = request.body.newPassword;
-
-    const user = await User.findById(<any>request.user._id);
-    console.log(user);
+    const resetToken = request.params.resetToken;
 
     // Validate Fields
     if(!currentPassword) {
@@ -499,12 +497,17 @@ export const resetPassword = async (request: IGetUserAuthInfoRequest, response: 
         return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
     }
 
-    const resetPasswordToken = generateRandomResetPasswordToken();
-    console.log(`Your reset password token : ${resetPasswordToken}`);
-
+    const user = await User.findOne({owner: request.user._id, token: resetToken});
 
     if(!user) {
         return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+    }
+
+    // Check if passwords match
+    const userPasswordsMatch = await user.comparePasswords(currentPassword);
+
+    if(!userPasswordsMatch) {
+      return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
     }
 
     user.password = newPassword;
