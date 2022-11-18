@@ -70,7 +70,11 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
 }
 
 enum UserRoles {
-    Admin, User, Moderator, Organiser
+    Admin = "Admin", User = "User", Moderator = "Moderator", Organiser = "Organiser"
+}
+
+enum AccountType {
+    Basic, Standard, Premium, Platinum
 }
 
 // Working on the auth feature branch
