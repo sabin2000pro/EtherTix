@@ -3,18 +3,6 @@ import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
 import jwt from "jsonwebtoken";
 
-declare namespace Express {
-    export interface Request {
-
-        user: any;
-        body: any;
-        session: any
-        headers: any
-        authorization: any
-    }
-  }
-
-
   export interface IUserData {
     _id: string;
     email: string;
@@ -28,8 +16,6 @@ export interface IRequestUser extends Request {
 export type IAuthRequest = IRequestUser & {
     headers: {authorization: string}
 }
-
-  
 
 export const protectAuth = async (request: IAuthRequest & IRequestUser, response: Response, next: NextFunction): Promise<any> => {
     let token;
