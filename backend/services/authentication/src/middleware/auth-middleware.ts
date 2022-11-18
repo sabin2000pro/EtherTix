@@ -18,7 +18,7 @@ declare namespace Express {
 export const protectAuth = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     let token;
 
-    if(request.headers.authorization && request.headers.authorization.includes("Bearer ")) {
+    if(request.headers.authorization && request.headers.authorization.includes("Bearer")) {
          token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
 

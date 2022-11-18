@@ -484,19 +484,21 @@ export const resetPassword = async (request: IGetUserAuthInfoRequest, response: 
     const currentPassword = request.body.currentPassword;
     const newPassword = request.body.newPassword;
 
+    const user = await User.findById(<any>request.user._id);
+    console.log(user);
+
     // Validate Fields
     if(!currentPassword) {
-        return next(new BadRequestError("Current password missing. Please try again", 400))
+        return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
     }
 
     if(!newPassword) {
-        return next(new BadRequestError("Please specify the new password", 400))
+        return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
     }
 
     const resetPasswordToken = generateRandomResetPasswordToken();
     console.log(`Your reset password token : ${resetPasswordToken}`);
 
-    const user = await User.findById(<any>request.user._id);
 
     if(!user) {
         return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
@@ -548,7 +550,6 @@ export const updateUserPassword = async (request: IGetUserAuthInfoRequest, respo
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const fieldsToUpdate = {email: request.body.email, username: request.body.username};
 
-    // Update the user
     const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
     await updatedUserProfile.save();
 
@@ -581,4 +582,38 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 export const uploadUserProfilePicture = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
+}
+
+// ADMIN CONTROLLERS
+
+export const fetchAllUsers = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+    try {
+
+    }
+    
+    catch(error: any) {
+
+    }
+
+}
+
+export const fetchUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+
+}
+
+export const createNewUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+
+}
+
+
+export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+
+}
+
+export const deleteUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+
+}
+
+export const deleteAllUsers = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
+
 }
