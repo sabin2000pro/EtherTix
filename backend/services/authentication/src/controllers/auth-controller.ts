@@ -116,7 +116,7 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
     const jwtToken = user.getAuthenticationToken();
     request.session = {token: jwtToken}; // Store the token in the session
  
-    return response.status(statusCode).json({userData: {id: user._id, username: user.username, email: user.email, jwtToken}});
+    return response.status(statusCode).json({user, jwtToken});
 }
 
   // @description: Verify User E-mail Address
@@ -262,6 +262,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
 export const loginUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
+
         const {email, password} = request.body;
 
         if(!email || !password) {
@@ -308,8 +309,7 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         })
 
          request.session = {jwt: token}; // Store the token in the session as a cookie
-         return response.status(StatusCodes.OK).json({success: true, token, userData: user});
-    
+         return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
     catch(error) {
@@ -362,7 +362,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     
         const jwtToken = user.getAuthenticationToken();
         (request.session) = {jwtToken} as any || undefined;
-        return response.status(StatusCodes.OK).json({userData: {id: user._id,  username: user.username, email: user.email, token: jwtToken, isVerified: user.isVerified}, message: "Your Account Is Active"})
+        return response.status(StatusCodes.OK).json({user, message: "Your account is active"});
     } 
     
     catch(error) {
@@ -483,7 +483,7 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 }
 
-export const resetPassword = async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
     const currentPassword = request.body.currentPassword;
     const newPassword = request.body.newPassword;
     const resetToken = request.params.resetToken;
@@ -507,7 +507,7 @@ export const resetPassword = async (request: IGetUserAuthInfoRequest, response: 
     const userPasswordsMatch = await user.comparePasswords(currentPassword);
 
     if(!userPasswordsMatch) {
-      return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
+       return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
     }
 
     user.password = newPassword;
@@ -516,7 +516,7 @@ export const resetPassword = async (request: IGetUserAuthInfoRequest, response: 
     await user.save(); // Save new user after reset the password
 
     return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
-}
+})
 
 export const getCurrentUser = async (request: Express.Request, response: Response, next: NextFunction): Promise<any> => {
     const user = request.user;
