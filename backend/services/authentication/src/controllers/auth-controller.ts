@@ -11,7 +11,7 @@ import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
-import asyncHandler from 'express-async-handler';
+import asyncHandler from 'express-async-handler';                        
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 
 declare namespace Express {
@@ -202,6 +202,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
         }
 
         if(otpTokensMatch) {
+
             user.isVerified = true
             user.accountActive = true;
     

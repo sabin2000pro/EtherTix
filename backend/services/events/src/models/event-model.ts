@@ -101,7 +101,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             required: [true, "Please include a description for the event"],
             trim: true
         }
-
     },
 
     event_url: {
@@ -289,7 +288,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}],
     review: [{type: mongoose.Schema.Types.ObjectId, ref: "Review"}]
-
 
 }, {
     timestamps: true,
