@@ -11,7 +11,6 @@ declare namespace Express {
   }
 
 
-
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
@@ -45,7 +44,7 @@ export const createVenue = async (request: Request, response: Response, next: Ne
 // @access    Private (Authorization Token Required)
 
 export const editVenueByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+  const venueId = request.params.venueId;
 }
 
 // @desc      Fetch All Event Tickets
@@ -66,28 +65,18 @@ export const deleteAllVenues = async (request: Request, response: Response, next
 
 }
 
-// @desc      Fetch All Event Tickets
-// @route     GET /api/v1/tickets
-// @route     GET /api/v1/events/:eventId/tickets
+// @desc      Fetch All Event Venues Within Radius
+// @route     GET /api/v1/events/:venueId/:postalcode/:radius
 // @access    Private (Authorization Token Required)
 
 export const fetchVenuesWithinRadius = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
 }
 
-// @desc      Fetch All Event Tickets
-// @route     GET /api/v1/tickets
-// @route     GET /api/v1/events/:eventId/tickets
+// @desc      Upload Venue Photo
+// @route     PUT /api/v1/venues/upload
 // @access    Private (Authorization Token Required)
 
 export const uploadVenuePhoto = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
-}
-
-// @desc      Fetch Trending Venues That Are Popular
-// @route     GET /api/v1/venues/trending
-// @access    Public (No Authorization Token Required)
-
-export const fetchTrendingVenues = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
 }

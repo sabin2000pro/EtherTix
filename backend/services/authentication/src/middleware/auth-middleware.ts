@@ -7,9 +7,7 @@ import { ForbiddenError } from './error-handler';
 require('dotenv').config();
 
   export interface IUserData {
-    _id: string;
-    email: string;
-    username: string;
+    user: any
     role: string;
 }
 
@@ -36,10 +34,7 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
     try {
         
         const decoded: any = jwt.verify(token, process.env.JWT_TOKEN!);
-        console.log(`Decoded : ${decoded}`)
-
         request.user = await User.findById(decoded._id);
-        console.log(`User middleware data : `, request.user);
 
         return next();
     } 

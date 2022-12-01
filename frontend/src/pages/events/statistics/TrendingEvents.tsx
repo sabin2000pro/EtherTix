@@ -1,6 +1,10 @@
 import React from 'react'
 
-const TrendingEvents = () => {
+type ITrendingEventProps = {
+   props: any
+}
+
+const TrendingEvents = (props: ITrendingEventProps) => {
 
   return (
 

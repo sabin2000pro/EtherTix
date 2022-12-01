@@ -83,6 +83,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
 
         const forename = request.body.forename;
         const surname = request.body.surname;
+        
         const username = request.body.username;
         const email = request.body.email;
         const password = request.body.password;
@@ -575,7 +576,6 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
 
 export const getCurrentUser = asyncHandler(async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
     const user = request.user;
-    console.log(user);
     return response.status(StatusCodes.OK).json({success: true, data: user});
 });
 
@@ -628,7 +628,6 @@ export const updateUserProfile = async (request: Request, response: Response, ne
           return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
        }
 
-
     }
 
 
@@ -668,7 +667,6 @@ export const fetchPremiumAccounts = asyncHandler(async (request: Request, respon
     try {
 
     // Aggregation pipeline to fetch the total number of premium accounts
-
    
     } 
     
@@ -691,13 +689,13 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
         if(request.method === 'GET') {
             const users = await User.find();
-
             return response.status(StatusCodes.OK).json({success: true, users});
         }
 
     }
     
     catch(error: any) {
+
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
@@ -714,7 +712,7 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
             const userId = request.params.userId;
 
             if(!userId) {
-    
+                return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
             }
     
         }
@@ -738,7 +736,7 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
         const body = request.body;
         const user = await User.create(body);
 
-        return response.status(201).json({success: true, data: user});
+        return response.status(StatusCodes.CREATED).json({success: true, data: user});
     } 
     
     catch(error: any) {
@@ -759,7 +757,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
       const userId = request.params.userId;
 
       if(!userId) {
-         return next(new NotFoundError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+         return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
       }
 
       let user = await User.findById(userId);
@@ -794,17 +792,21 @@ export const deleteUserByID = async (request: Request, response: Response, next:
         const userId = request.params.userId;
 
         if(!userId) {
-
+            return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
         }
 
+        await User.findByIdAndDelete(userId);
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
 
     } 
     
     catch(error: any) {
+
      if(error) {
         return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-
      }
+
+
     }
  
 }
@@ -812,6 +814,13 @@ export const deleteUserByID = async (request: Request, response: Response, next:
 export const deleteAllUsers = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
+
+        if(request.method === 'DELETE') {
+            await User.deleteMany();
+
+            return response.status(StatusCodes.NO_CONTENT).json({success: true, data: {}});
+        }
+
 
     } 
     
@@ -826,27 +835,44 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
 }
 
 export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
-    const userId = request.user._id;
-    const user = await User.findById(userId);
+   try {
+        const userId = request.user._id;
+        const user = await User.findById(userId);
+    
+        if(!user) {
+            return next(new BadRequestError("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
+    
+        return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
+   } 
+   
+   catch(error: any) {
 
-    if(!user) {
+     if(error) {
+        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+     }
 
-    }
+
+   }
 
 
-    return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
 }
 
 export const unlockUserAccount = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
-       
+       // 1. Find the User Account to unlock with the user ID
+       // 2. If user ID does not exist, return error
+       // 3. Update the user account with ID by setting the isLocked flag to true and set is active to false
+       // 4. Return response
+
+
     } 
     
     catch(error: any) {
+
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-
         }
     }
 
