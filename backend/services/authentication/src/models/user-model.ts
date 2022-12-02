@@ -73,7 +73,7 @@ enum UserRoles {
 }
 
 enum AccountType {
-    Basic, Standard, Premium, Platinum
+    Basic = "Basic", Standard = "Standard", Premium = "Premium", Platinum = "Platinum"
 }
 
 // Working on the auth feature branch
@@ -176,7 +176,7 @@ const UserSchema = new mongoose.Schema({
     accountType: {
         type: String,
         default: AccountType.Basic,
-        required: [true, "Please sp"]
+        required: [true, "Please specify type of account"]
     },
 
     virtualCredits: { // Number of virtual credits the user has when entering the live auction against other individuals
