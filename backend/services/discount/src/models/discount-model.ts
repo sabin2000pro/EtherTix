@@ -28,7 +28,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
         default: null
     },
  
-    percentOff: {
+    percentOff: { // Percentage off for the ticket
         type: String,
         default: null
     },

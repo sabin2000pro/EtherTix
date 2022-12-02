@@ -73,7 +73,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             enum: ["Will Call", "SMS", "Electronic", "E-mail"]
         },
 
-        onSaleStatus: {
+        onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
             type: String,
             enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
             required: [true, "Please specify the on sale status of the ticket"]
@@ -92,7 +92,8 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         confirmationMessage: {
             type: String,
             required: [true, "Please specify the confirmation message for the purchased event ticket"],
-            minlength: [10, "Minimum of 10 characters for the confirmation message"]
+            minlength: [10, "Minimum of 10 characters for the confirmation message"],
+            maxlength: [200, "Confirmation message cannot exceed 200 characters"]
         },
 
         ticketSold: {
@@ -108,7 +109,8 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         issuer: { // The issuer of the ticket
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            required: true
         }
 
     }
