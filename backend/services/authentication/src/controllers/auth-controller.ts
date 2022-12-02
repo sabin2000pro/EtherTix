@@ -487,7 +487,7 @@ export const forgotPassword = async (request: TypedRequestBody<{email: string}>,
 
         // Check if we have an e-mail in the body of the request
         if(!email) {
-            
+            return next(new BadRequestError(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
         }
     
         if(!user) {
@@ -634,22 +634,22 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 
 }
 
-
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const {userId} = request.body;
     const user = await User.findById(userId);
 
     // If no user exists
     if(!user) {
-        return next(new NotFoundError("No user found with that ID", 404));
+        return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
     }
 
     if(!user.isValid || !user.isActive) {
-        return next(new BadRequestError("User account is already inactive", 400));
+        return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
     }
 
     if(user.isActive && user.isValid) {
 
+        // Change the is active and is valid fields to false
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
         await user.save();
@@ -663,10 +663,10 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
     return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
 })
 
-export const fetchPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
-
+        
     // Aggregation pipeline to fetch the total number of premium accounts
    
     } 
@@ -674,7 +674,6 @@ export const fetchPremiumAccounts = asyncHandler(async (request: Request, respon
     catch(error: any) {
 
         if(error) {
-            console.error(error);
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
     }

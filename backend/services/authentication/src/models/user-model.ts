@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+require('dotenv').config();
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-require('dotenv').config();
 
 interface IUserAttributes {
     forename: string;
@@ -67,6 +67,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
 
 }
 
+// Roles a user can take
 enum UserRoles {
     Admin = "Admin", User = "User", Moderator = "Moderator", Organiser = "Organiser"
 }
@@ -119,6 +120,9 @@ const UserSchema = new mongoose.Schema({
     // The user's password
     password: {
         type: String,
+        trim: true,
+        maxlength: 20,
+        minlength: 6,
         required: [true, "Please provide a valid password"]
     },
 
@@ -159,7 +163,7 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
 
-    isActive: {
+    isActive: { // User account active
         type: Boolean,
         default: false
     },
@@ -169,9 +173,10 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
 
-    premiumAccount: {
-        type: Boolean,
-        default: false
+    accountType: {
+        type: String,
+        default: AccountType.Basic,
+        required: [true, "Please sp"]
     },
 
     virtualCredits: { // Number of virtual credits the user has when entering the live auction against other individuals
@@ -187,9 +192,9 @@ UserSchema.pre('save', async function(next: () => void) {
 
     let ROUNDS = 10;
 
-   if(!this.isModified("password")) {
-     return next();
-   }
+    if(!this.isModified("password")) {
+      return next();
+    }
 
    this.password = await bcrypt.hash(this.password, ROUNDS);
    this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, ROUNDS);
@@ -208,4 +213,4 @@ UserSchema.methods.getAuthenticationToken = function() {
 }
 
 const User = mongoose.model<UserDocument>("User", UserSchema);
-export {User}
+export {User} // Export user model
