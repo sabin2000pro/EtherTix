@@ -724,16 +724,7 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
 
     try {
         
-    // Aggregation pipeline to fetch the total number of premium accounts
-    const premiumAggregationObj = [
-
-        {
-
-        }
-
-    ]
-
-    } 
+    }
     
     catch(error: any) {
 

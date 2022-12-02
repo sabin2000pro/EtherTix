@@ -5,7 +5,7 @@ import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddre
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
-export const authRouter: Router = express.Router();
+export const authRouter: Router = express.Router({mergeParams: true});
 
 const rateLimiter = rateLimit({
 	windowMs: 10 * 60 * 1000, // 10 minutes

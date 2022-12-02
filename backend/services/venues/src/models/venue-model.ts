@@ -160,17 +160,8 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             required: true
         },
 
-        event: {
-          type: mongoose.Schema.Types.ObjectId, 
-          ref: "Event", 
-          required: true
-        },
-
-        ticket: { // Ticket Corresponding to an event (1 Venue has many tickets) -> 1..* relationship
-           type: mongoose.Schema.Types.ObjectId,
-           ref: "Ticket",
-           required: true
-        }
+        event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true}],
+        ticket: [{type: mongoose.Schema.Types.ObjectId,ref: "Ticket", required: true}]
 
 }, {
 

@@ -20,7 +20,6 @@ build-services:
 	- cd services/posts* && npm run build
 	- cd services/comments* && npm run build
 	- cd services/chat* && npm run build
-
 	- docker login
 
 	- cd services/auth* && docker build -t sabin2000/ethertix-auth-service . && docker push sabin2000/ethertix-auth-service

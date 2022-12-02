@@ -1,11 +1,31 @@
 [
+
     {
         "ticket" : {
-            "_id": "5c725a4a7b292f5f8ceff500",
-            "event": "5d725a4a7b292f5f8ceff787",
+            "name": "Highland Basic Event Ticket",
+            "ticketClass": "basic", 
+            "capacity": 10,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 5,
+            "description": "Basic Entry Ticket for the highland tour event",
+            "cost": 0.0055,
+            "ticketToken": "QR Code",
+            "isFree": false,
+            "deliveryMethods": "SMS",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
+            "ticketSold": false,
+            "issuer": "6389c79878a5641e27a3e0a4",
+            "event": "6389c79b6a298e76b74a8dc5"
+        }
+    },
+
+
+    {
+        "ticket" : {
             "name": "Highland Standard Event Ticket",
             "ticketClass": "standard",
-            "capacity": 5,
+            "capacity": 10,
             "minimumQuantityPurchase": 1,
             "maximumQuantityPurchase": 5,
             "description": "Standard Ticket for the highland tour event",
@@ -16,35 +36,14 @@
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false,
-            "issuer": "6389c3101518d24883215636"
+            "issuer": "6389c79878a5641e27a3e0a4",
+            "event": "6389c79b6a298e76b74a8dc5"
         }
+
     },
 
     {
         "ticket" : {
-            "_id": "5c725a4a7b292f5f8ceff501",
-            "event": "5d725a4a7b292f5f8ceff787",
-            "name": "Highland Basic Event Ticket",
-            "ticketClass": "basic", 
-            "capacity": 5,
-            "minimumQuantityPurchase": 1,
-            "maximumQuantityPurchase": 5,
-            "description": "Basic Entry Ticket for the highland tour event",
-            "cost": 0.0085,
-            "ticketToken": "QR Code",
-            "isFree": false,
-            "deliveryMethods": "SMS",
-            "onSaleStatus": "PENDING",
-            "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false,
-            "issuer": "6389c3101518d24883215636"
-        }
-    },
-
-    {
-        "ticket" : {
-            "_id": "5c725a4a7b292f5f8ceff502",
-            "event": "5d725a4a7b292f5f8ceff787",
             "name": "Highland Premium Event Ticket",
             "ticketClass": "premium",
             "capacity": 5,
@@ -58,14 +57,13 @@
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false,
-            "issuer": "6389c3101518d24883215636"
+            "issuer": "6389c79878a5641e27a3e0a4",
+            "event": "6389c79b6a298e76b74a8dc5"
         }
     },
 
     {
         "ticket" : {
-            "_id": "5c725a4a7b292f5f8ceff503",
-            "event": "5d725a4a7b292f5f8ceff787",
             "name": "Highland VIP Event Ticket",
             "ticketClass": "vip",
             "capacity": 3,
@@ -79,17 +77,36 @@
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false,
-            "issuer": "6389c3101518d24883215636"
+            "issuer": "6389c79878a5641e27a3e0a4",
+            "event": "6389c79b6a298e76b74a8dc5"
         }
     },
 
     {
         "ticket" : {
-            "_id": "5c725a4a7b292f5f8ceff600",
-            "event": "5d725a4a7b292f5f8ceff788",
             "name": "Three Sisters Drink n Socialise Basic Ticket",
             "ticketClass": "basic",
-            "capacity": 5,
+            "capacity": 10,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 3,
+            "description": "Basic Entry Ticket for the Three Sisters Drink n Socialise Event",
+            "cost": 0.0055,
+            "ticketToken": "QR Code",
+            "isFree": false,
+            "deliveryMethods": "SMS",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
+            "ticketSold": false,
+            "issuer": "6389c3101518d24883215636",
+            "event": "5d725a4a7b292f5f8ceff788"
+        }
+    },
+
+    {
+        "ticket" : {
+            "name": "Three Sisters Drink n Socialise Standard Ticket",
+            "ticketClass": "standard",
+            "capacity": 10,
             "minimumQuantityPurchase": 1,
             "maximumQuantityPurchase": 3,
             "description": "Basic Entry Ticket for the Three Sisters Drink n Socialise Event",
@@ -100,7 +117,49 @@
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
             "ticketSold": false,
-            "issuer": "6389c3101518d24883215636"
+            "issuer": "6389c3101518d24883215636",
+            "event": "5d725a4a7b292f5f8ceff788"
+        }
+    },
+
+
+    {
+        "ticket" : {
+            "name": "Three Sisters Drink n Socialise Premium Ticket",
+            "ticketClass": "premium",
+            "capacity": 10,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 3,
+            "description": "Basic Entry Ticket for the Three Sisters Drink n Socialise Event",
+            "cost": 0.0085,
+            "ticketToken": "QR Code",
+            "isFree": false,
+            "deliveryMethods": "SMS",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
+            "ticketSold": false,
+            "issuer": "6389c3101518d24883215636",
+            "event": "5d725a4a7b292f5f8ceff788"
+        }
+    },
+
+    {
+        "ticket" : {
+            "name": "Three Sisters Drink n Socialise VIP Ticket",
+            "ticketClass": "basic",
+            "capacity": 10,
+            "minimumQuantityPurchase": 1,
+            "maximumQuantityPurchase": 3,
+            "description": "Basic Entry Ticket for the Three Sisters Drink n Socialise Event",
+            "cost": 0.0099,
+            "ticketToken": "QR Code",
+            "isFree": false,
+            "deliveryMethods": "SMS",
+            "onSaleStatus": "PENDING",
+            "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
+            "ticketSold": false,
+            "issuer": "6389c3101518d24883215636",
+            "event": "5d725a4a7b292f5f8ceff788"
         }
     }
 

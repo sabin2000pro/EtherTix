@@ -1,9 +1,7 @@
 [
    {
-      "_id": "5d725a4a7b292f5f8ceff787",
       "organiser": "5d7a514b5d2c12c7449be040",
       "venue": "5d725c84c4ded7bcb480eaa0",
-      
       "ticket": ["5c725a4a7b292f5f8ceff500", "5c725a4a7b292f5f8ceff501", "5c725a4a7b292f5f8ceff502", "5c725a4a7b292f5f8ceff503"],
 
       "name": "Edinburgh Highland Tour",
@@ -55,8 +53,6 @@
 
 
    {
-
-    "_id": "5d725a4a7b292f5f8ceff788",
     "organiser": "5d7a514b5d2c12c7449be042",
     "venue": "5d725c84c4ded7bcb480eaa1",
     "name": "Three Sisters Drink n Socialise",
@@ -118,8 +114,6 @@
  },
 
  {
-
-    "_id": "5d725a4a7b292f5f8ceff791",
     "organiser": "5d7a514b5d2c12c7449be040",
     "venue": "5d725c84c4ded7bcb480eaa2",
     "name": "Agile Project Management",

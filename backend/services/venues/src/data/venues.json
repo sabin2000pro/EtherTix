@@ -7,7 +7,9 @@
         "smokingAllowed": false,
         "photo": "no-photo.jpg",
         "address": "Ingliston, Newbridge EH28 8NB",
-        "event": "5d725a4a7b292f5f8ceff787"
+        "event": "5d725a4a7b292f5f8ceff787",
+        "organiser": "6389c3101518d24883215637",
+        "ticket": ["6389c53a1b16e0e7a19808de", "6389c53a1b16e0e7a19808e1", "6389c53a1b16e0e7a19808e0"]
     },
 
     {
@@ -18,7 +20,8 @@
         "smokingAllowed": false,
         "photo": "no-photo.jpg",
         "address": "Lothian Rd, Edinburgh EH1 2EA",
-        "event": "5d725a4a7b292f5f8ceff787"
+        "event": "5d725a4a7b292f5f8ceff787",
+        "organiser": "6389c3101518d24883215637"
     },
 
     {
@@ -29,7 +32,8 @@
         "smokingAllowed": true,
         "photo": "no-photo.jpg",
         "address": "139 Cowgate, Edinburgh EH1 1JS",
-        "event": "5d725a4a7b292f5f8ceff788"
+        "event": "5d725a4a7b292f5f8ceff788",
+        "organiser": "6389c3101518d24883215637"
     }
 
     
