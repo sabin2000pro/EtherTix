@@ -46,7 +46,6 @@ interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
     organiser: mongoose.Schema.Types.ObjectId
     event: mongoose.Schema.Types.ObjectId
     ticket: mongoose.Schema.Types.ObjectId
-
 }
 
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
@@ -105,11 +104,13 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
         hasPublicAccess: {
           type: Boolean,
+          required: [true, "Please specify if the venue has public access or not"],
           default: false
         },
 
         smokingAllowed: {
           type: Boolean,
+          required: [true, "Please specify if smoking is allowed at the venue"],
           default: false
         },
 
