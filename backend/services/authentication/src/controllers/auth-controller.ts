@@ -660,7 +660,59 @@ export const deactivateUserAccount = async (request: Request, response: Response
 }
 
 export const uploadUserProfilePicture = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
+    try {
+
+        if(request.method === 'PUT') {
+
+            const userId = request.params.userId as any;
+            const file = request.files!.file as unknown as any;
+            const currentUser = await User.findById(userId); // Find the current user
+        
+            if(!currentUser) {
+                return next(new NotFoundError("NFT Not found with that ID", StatusCodes.NOT_FOUND));
+            }
+        
+            if(!request.files) {
+                return next(new BadRequestError(`Please upload a file`, StatusCodes.BAD_REQUEST));
+            }
+        
+            // 1. Ensure that the file is an actual image
+        
+            if(!file.mimetype .startsWith("image")) {
+                return next(new BadRequestError("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
+            }
+        
+            // Validate File size. Check if file size exceeds the maximum size
+            if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
+                return next(new BadRequestError("File Size Too Large", StatusCodes.BAD_REQUEST));
+            }
+        
+             // Create custom filename
+          file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
+        
+          file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
+        
+                if(error) {
+                   return next(new BadRequestError("Problem with file upload", 500));
+                }
+        
+                await User.findByIdAndUpdate(request.params.id, { photo: file.name }); // Update the NFT by its ID and add the respective file
+        
+                // Send the file to the upload path
+                return response.status(StatusCodes.OK).json({success: true, message: "File Uploaded"})
+          })
+
+
+            return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
+    
+        }
+    }
+    
+    catch(error: any) {
+
+    }
+
+
 })
 
 export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
@@ -668,7 +720,14 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
     try {
         
     // Aggregation pipeline to fetch the total number of premium accounts
-   
+    const premiumAggregationObj = [
+
+        {
+
+        }
+
+    ]
+
     } 
     
     catch(error: any) {
@@ -769,7 +828,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
       user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
       await user.save();
 
-      return response.status(200).json({success: true, data: user});
+      return response.status(StatusCodes.OK).json({success: true, data: user});
 
    } 
    
