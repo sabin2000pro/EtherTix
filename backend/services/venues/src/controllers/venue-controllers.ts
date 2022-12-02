@@ -17,6 +17,14 @@ declare namespace Express {
 // @access    Private (Authorization Token Required)
 
 export const fetchAllVenues = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+  try {
+    const venues = await Venue.find();
+  }
+  
+  catch(error: any) {
+
+  }
+
 
 }
 
@@ -26,7 +34,7 @@ export const fetchAllVenues = async (request: Request, response: Response, next:
 // @access    Private (Authorization Token Required)
 
 export const fetchVenueByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+  const venueId = request.params.venueId;
 }
 
 // @desc      Fetch All Event Tickets
@@ -35,7 +43,7 @@ export const fetchVenueByID = async (request: Request, response: Response, next:
 // @access    Private (Authorization Token Required)
 
 export const createVenue = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+  
 }
 
 // @desc      Fetch All Event Tickets
@@ -53,7 +61,7 @@ export const editVenueByID = async (request: Request, response: Response, next: 
 // @access    Private (Authorization Token Required)
 
 export const deleteVenueByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+  const venueId = request.params.venueId;
 }
 
 // @desc      Fetch All Event Tickets
@@ -70,6 +78,10 @@ export const deleteAllVenues = async (request: Request, response: Response, next
 // @access    Private (Authorization Token Required)
 
 export const fetchVenuesWithinRadius = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+  const venueId = request.params.venueId;
+  const postCode = request.params.postCode;
+  const radius = request.params.radius;
+
 
 }
 

@@ -14,9 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+require('dotenv').config();
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-require('dotenv').config();
+// Roles a user can take
 var UserRoles;
 (function (UserRoles) {
     UserRoles["Admin"] = "Admin";
@@ -26,10 +27,10 @@ var UserRoles;
 })(UserRoles || (UserRoles = {}));
 var AccountType;
 (function (AccountType) {
-    AccountType[AccountType["Basic"] = 0] = "Basic";
-    AccountType[AccountType["Standard"] = 1] = "Standard";
-    AccountType[AccountType["Premium"] = 2] = "Premium";
-    AccountType[AccountType["Platinum"] = 3] = "Platinum";
+    AccountType["Basic"] = "Basic";
+    AccountType["Standard"] = "Standard";
+    AccountType["Premium"] = "Premium";
+    AccountType["Platinum"] = "Platinum";
 })(AccountType || (AccountType = {}));
 // Working on the auth feature branch
 const UserSchema = new mongoose_1.default.Schema({
@@ -68,6 +69,9 @@ const UserSchema = new mongoose_1.default.Schema({
     // The user's password
     password: {
         type: String,
+        trim: true,
+        maxlength: 20,
+        minlength: 6,
         required: [true, "Please provide a valid password"]
     },
     passwordConfirm: {
@@ -108,9 +112,10 @@ const UserSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false
     },
-    premiumAccount: {
-        type: Boolean,
-        default: false
+    accountType: {
+        type: String,
+        default: AccountType.Basic,
+        required: [true, "Please specify type of account"]
     },
     virtualCredits: {
         type: Number,

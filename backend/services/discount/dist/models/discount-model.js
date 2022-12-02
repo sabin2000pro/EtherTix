@@ -25,13 +25,20 @@ const DiscountSchema = new mongoose_1.default.Schema({
             type: String,
             default: null
         },
+        applier: {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
         ticket: {
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "Ticket"
+            ref: "Ticket",
+            required: true
         },
         event: {
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "Event"
+            ref: "Event",
+            required: true
         }
     }
 }, { timestamps: true, toJSON: { virtuals: true } });

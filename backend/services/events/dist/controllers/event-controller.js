@@ -11,29 +11,66 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchEventsWithinRadius = exports.fetchTrendingEvents = exports.uploadEventPhoto = exports.deleteEventByID = exports.deleteEvents = exports.editEventByID = exports.createNewEvent = exports.fetchSingleEvent = exports.fetchAllEvents = void 0;
 const fetchAllEvents = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.fetchAllEvents = fetchAllEvents;
 const fetchSingleEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.fetchSingleEvent = fetchSingleEvent;
 const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.createNewEvent = createNewEvent;
 const editEventByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.editEventByID = editEventByID;
 const deleteEvents = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.deleteEvents = deleteEvents;
 const deleteEventByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.deleteEventByID = deleteEventByID;
 const uploadEventPhoto = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.uploadEventPhoto = uploadEventPhoto;
 const fetchTrendingEvents = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.fetchTrendingEvents = fetchTrendingEvents;
+// GET /api/v1/events/:postcode/:radius
 const fetchEventsWithinRadius = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.fetchEventsWithinRadius = fetchEventsWithinRadius;

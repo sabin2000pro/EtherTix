@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.restrictRolesTo = exports.protectAuth = void 0;
+exports.isUserOrganiser = exports.isUserAdmin = exports.isUserModerator = exports.restrictRolesTo = exports.protectAuth = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const error_handler_1 = require("./error-handler");
 const user_model_1 = require("../models/user-model");
@@ -30,9 +30,7 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN);
-        console.log(`Decoded : ${decoded}`);
         request.user = yield user_model_1.User.findById(decoded._id);
-        console.log(`User middleware data : `, request.user);
         return next();
     }
     catch (error) {
@@ -52,3 +50,40 @@ const restrictRolesTo = (...roles) => {
     };
 };
 exports.restrictRolesTo = restrictRolesTo;
+const isUserModerator = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const currentUser = yield user_model_1.User.findById(request.user._id);
+        if (currentUser.role !== 'moderator') {
+            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+        else {
+            return next();
+        }
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+    }
+});
+exports.isUserModerator = isUserModerator;
+const isUserAdmin = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const currentUser = yield user_model_1.User.findById(request.user._id);
+        if (currentUser.role !== 'admin') {
+            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+        else {
+            return next();
+        }
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+    }
+});
+exports.isUserAdmin = isUserAdmin;
+const isUserOrganiser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.isUserOrganiser = isUserOrganiser;

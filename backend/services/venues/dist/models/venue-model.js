@@ -8,9 +8,14 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const VenueSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
-        required: [true, "Please include a valid name for the name"]
+        trim: true,
+        required: [true, "Please include a valid name for the name"],
+        maxlength: 64,
+        minlength: 6
     },
-    slug: String,
+    slug: {
+        type: String
+    },
     website: {
         type: String,
         match: [
@@ -49,10 +54,12 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     hasPublicAccess: {
         type: Boolean,
+        required: [true, "Please specify if the venue has public access or not"],
         default: false
     },
     smokingAllowed: {
         type: Boolean,
+        required: [true, "Please specify if smoking is allowed at the venue"],
         default: false
     },
     photo: {
@@ -85,30 +92,15 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: true
     },
-    event: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Event" }]
+    event: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Event", required: true }],
+    ticket: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Ticket", required: true }]
 }, {
     timestamps: true,
     toJSON: { virtuals: true }
 });
-// // Geocode & create location field
-// VenueSchema.pre('save', async function(next) {
-//   const loc = await geocoder(this.address);
-//   this.location = {
-//     type: 'Point',
-//     coordinates: [loc[0].longitude, loc[0].latitude],
-//     formattedAddress: loc[0].formattedAddress,
-//     street: loc[0].streetName,
-//     city: loc[0].city,
-//     state: loc[0].stateCode,
-//     zipcode: loc[0].zipcode,
-//     country: loc[0].countryCode
-//   };
-//   // Do not save address in DB
-//   this.address = undefined;
-//   return next();
-// });
 VenueSchema.virtual('events', {
     ref: 'Event',
     foreignField: 'event',

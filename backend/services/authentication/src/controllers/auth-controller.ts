@@ -44,10 +44,6 @@ export interface IRequestUser extends Request {
     user: IUserData
 }
 
-export interface IFileData extends Request {
-   fil
-}
-
 
 export interface TypedRequestQuery<T extends Query> extends Express.Request {
     query: T
@@ -150,6 +146,10 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message, success: false})
         }
 
+    }
+
+    finally {
+        console.log("Error processed");
     }
 
 } )
@@ -638,6 +638,10 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 
     }
 
+    finally {
+        return console.log(`Error gracefully handled`)
+    }
+
 
 }
 
@@ -715,6 +719,10 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
+    }
+
+    finally {
+        return console.log(`Error gracefully handled`)
     }
 
 
@@ -802,6 +810,10 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
 
     }
 
+    finally {
+        return console.log(`Error gracefully handled`)
+    }
+
 
 })
 
@@ -836,6 +848,10 @@ export const editUserByID = async (request: Express.Request, response: Response,
 
 
    }
+
+   finally {
+    return console.log(`Error gracefully handled`)
+}
 
 
 }
@@ -910,6 +926,10 @@ export const lockUserAccount = async (request: IRequestUser, response: Response,
 
    }
 
+   finally {
+    return console.log(`Error gracefully handled`)
+}
+
 
 }
 
@@ -929,6 +949,10 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
+    }
+
+    finally {
+        return console.log(`Error gracefully handled`)
     }
 
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchTrendingVenues = exports.uploadVenuePhoto = exports.fetchVenuesWithinRadius = exports.deleteAllVenues = exports.deleteVenueByID = exports.editVenueByID = exports.createVenue = exports.fetchVenueByID = exports.fetchAllVenues = void 0;
+exports.uploadVenuePhoto = exports.fetchVenuesWithinRadius = exports.deleteAllVenues = exports.deleteVenueByID = exports.editVenueByID = exports.createVenue = exports.fetchVenueByID = exports.fetchAllVenues = void 0;
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
@@ -36,6 +36,7 @@ exports.createVenue = createVenue;
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 const editVenueByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const venueId = request.params.venueId;
 });
 exports.editVenueByID = editVenueByID;
 // @desc      Fetch All Event Tickets
@@ -52,23 +53,15 @@ exports.deleteVenueByID = deleteVenueByID;
 const deleteAllVenues = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.deleteAllVenues = deleteAllVenues;
-// @desc      Fetch All Event Tickets
-// @route     GET /api/v1/tickets
-// @route     GET /api/v1/events/:eventId/tickets
+// @desc      Fetch All Event Venues Within Radius
+// @route     GET /api/v1/events/:venueId/:postalcode/:radius
 // @access    Private (Authorization Token Required)
 const fetchVenuesWithinRadius = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.fetchVenuesWithinRadius = fetchVenuesWithinRadius;
-// @desc      Fetch All Event Tickets
-// @route     GET /api/v1/tickets
-// @route     GET /api/v1/events/:eventId/tickets
+// @desc      Upload Venue Photo
+// @route     PUT /api/v1/venues/upload
 // @access    Private (Authorization Token Required)
 const uploadVenuePhoto = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.uploadVenuePhoto = uploadVenuePhoto;
-// @desc      Fetch Trending Venues That Are Popular
-// @route     GET /api/v1/venues/trending
-// @access    Public (No Authorization Token Required)
-const fetchTrendingVenues = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-});
-exports.fetchTrendingVenues = fetchTrendingVenues;

@@ -1,5 +1,6 @@
 [
     {
+        "_id": "6389d0cea88bee21dba066e2",
         "name": "Royal Highland Center Venue",
         "ageRestriction": "AGE_RESTRICTION_ALL_AGES",
         "venueCapacity": 10500,
@@ -13,6 +14,7 @@
     },
 
     {
+        "_id": "6389d0cea88bee21dba066e3",
         "name": "Usher Hall Venue",
         "ageRestriction": "AGE_RESTRICTION_ALL_AGES",
         "venueCapacity": 2200,
@@ -25,6 +27,7 @@
     },
 
     {
+        "_id": "6389d0cea88bee21dba066e4",
         "name": "Three Sisters Cowgate Venue",
         "ageRestriction": "AGE_RESTRICTION_MIN_EIGHTEEN",
         "venueCapacity": 150,

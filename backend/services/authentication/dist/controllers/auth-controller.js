@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unlockUserAccount = exports.lockUserAccount = exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.fetchPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
+exports.unlockUserAccount = exports.lockUserAccount = exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.getAllUserPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
 const error_handler_1 = require("./../middleware/error-handler");
 const send_email_1 = require("./../utils/send-email");
 const user_model_1 = require("../models/user-model");
@@ -26,6 +26,7 @@ const mongoose_1 = require("mongoose");
 const two_factor_model_1 = require("../models/two-factor-model");
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const generateResetPasswordToken_1 = require("../utils/generateResetPasswordToken");
+const path_1 = __importDefault(require("path"));
 // @description: Sends the verify confirmation e-mail to the user after registering an account
 // @parameters: Transporter Object, User Object, Randomly Generated User OTP
 // @returns: void
@@ -328,6 +329,7 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
         const user = yield user_model_1.User.findOne({ email });
         // Check if we have an e-mail in the body of the request
         if (!email) {
+            return next(new error_handler_2.BadRequestError(`User with that e-mail not found`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (!user) {
             return next(new error_handler_1.NotFoundError("No user found with that e-mail address", http_status_codes_1.StatusCodes.NOT_FOUND));
@@ -391,7 +393,6 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
 }));
 exports.getCurrentUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = request.user;
-    console.log(user);
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
 }));
 const sendResetPasswordTokenStatus = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -436,12 +437,13 @@ const deactivateUserAccount = (request, response, next) => __awaiter(void 0, voi
     const user = yield user_model_1.User.findById(userId);
     // If no user exists
     if (!user) {
-        return next(new error_handler_1.NotFoundError("No user found with that ID", 404));
+        return next(new error_handler_1.NotFoundError("No user found with that ID", http_status_codes_1.StatusCodes.NOT_FOUND));
     }
     if (!user.isValid || !user.isActive) {
-        return next(new error_handler_2.BadRequestError("User account is already inactive", 400));
+        return next(new error_handler_2.BadRequestError("User account is already inactive", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     if (user.isActive && user.isValid) {
+        // Change the is active and is valid fields to false
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
         yield user.save();
@@ -450,15 +452,47 @@ const deactivateUserAccount = (request, response, next) => __awaiter(void 0, voi
 });
 exports.deactivateUserAccount = deactivateUserAccount;
 exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Avatar Uploaded" });
-}));
-exports.fetchPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Aggregation pipeline to fetch the total number of premium accounts
+        if (request.method === 'PUT') {
+            const userId = request.params.userId;
+            const file = request.files.file;
+            const currentUser = yield user_model_1.User.findById(userId); // Find the current user
+            if (!currentUser) {
+                return next(new error_handler_1.NotFoundError("User Not found with that ID", http_status_codes_1.StatusCodes.NOT_FOUND));
+            }
+            if (!request.files) {
+                return next(new error_handler_2.BadRequestError(`Please upload a valid avatar for the user`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+            }
+            // 1. Ensure that the file is an actual image
+            if (!file.mimetype.startsWith("image")) {
+                return next(new error_handler_2.BadRequestError("Please make sure the uploaded file is an image", http_status_codes_1.StatusCodes.BAD_REQUEST));
+            }
+            // Validate File size. Check if file size exceeds the maximum size
+            if (file.size > process.env.MAX_FILE_UPLOAD_SIZE) {
+                return next(new error_handler_2.BadRequestError("File Size Too Large", http_status_codes_1.StatusCodes.BAD_REQUEST));
+            }
+            // Create custom filename
+            file.name = `photo_${currentUser._id}${path_1.default.parse(file.name).ext}`;
+            file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, (error) => __awaiter(void 0, void 0, void 0, function* () {
+                if (error) {
+                    return next(new error_handler_2.BadRequestError("Problem with file upload", http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR));
+                }
+                yield user_model_1.User.findByIdAndUpdate(request.params.id, { photo: file.name }); // Update the NFT by its ID and add the respective file
+                return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now()) });
+            }));
+        }
     }
     catch (error) {
         if (error) {
-            console.error(error);
+            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
+}));
+exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+        if (error) {
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
@@ -483,6 +517,7 @@ exports.fetchUserByID = (0, express_async_handler_1.default)((request, response,
         if (request.method === 'GET') {
             const userId = request.params.userId;
             if (!userId) {
+                return next(new error_handler_2.BadRequestError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
             }
         }
     }
@@ -496,7 +531,7 @@ exports.createNewUser = (0, express_async_handler_1.default)((request, response,
     try {
         const body = request.body;
         const user = yield user_model_1.User.create(body);
-        return response.status(201).json({ success: true, data: user });
+        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ success: true, data: user });
     }
     catch (error) {
         if (error) {
@@ -508,7 +543,7 @@ const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void
     try {
         const userId = request.params.userId;
         if (!userId) {
-            return next(new error_handler_1.NotFoundError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
+            return next(new error_handler_2.BadRequestError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         let user = yield user_model_1.User.findById(userId);
         if (!user) {
@@ -516,7 +551,7 @@ const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void
         }
         user = yield user_model_1.User.findByIdAndUpdate(userId, request.body, { new: true, runValidators: true });
         yield user.save();
-        return response.status(200).json({ success: true, data: user });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
     }
     catch (error) {
         if (error) {
@@ -529,7 +564,10 @@ const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, vo
     try {
         const userId = request.params.userId;
         if (!userId) {
+            return next(new error_handler_2.BadRequestError(`User with that ID not found`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
+        yield user_model_1.User.findByIdAndDelete(userId);
+        return response.status(http_status_codes_1.StatusCodes.NO_CONTENT).json({ success: true, message: "User Deleted", data: null });
     }
     catch (error) {
         if (error) {
@@ -540,6 +578,10 @@ const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, vo
 exports.deleteUserByID = deleteUserByID;
 const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if (request.method === 'DELETE') {
+            yield user_model_1.User.deleteMany();
+            return response.status(http_status_codes_1.StatusCodes.NO_CONTENT).json({ success: true, data: {} });
+        }
     }
     catch (error) {
         if (error) {
@@ -549,15 +591,27 @@ const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, vo
 });
 exports.deleteAllUsers = deleteAllUsers;
 const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = request.user._id;
-    const user = yield user_model_1.User.findById(userId);
-    if (!user) {
+    try {
+        const userId = request.user._id;
+        const user = yield user_model_1.User.findById(userId);
+        if (!user) {
+            return next(new error_handler_2.BadRequestError("That user is not found not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Account Locked" });
     }
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Account Locked" });
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
+    }
 });
 exports.lockUserAccount = lockUserAccount;
 exports.unlockUserAccount = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // 1. Find the User Account to unlock with the user ID
+        // 2. If user ID does not exist, return error
+        // 3. Update the user account with ID by setting the isLocked flag to true and set is active to false
+        // 4. Return response
     }
     catch (error) {
         if (error) {
