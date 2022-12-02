@@ -42,7 +42,6 @@ export const loadAllData = async (): Promise<any> => {
 
             if(dataImported) {
                 console.log(`Data imported to the database.`);
-
                 return process.exit(1);
             }
         

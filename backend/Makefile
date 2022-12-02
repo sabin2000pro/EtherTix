@@ -6,9 +6,9 @@ clean:
 	- docker stop
 	- docker system prune
 
-deploy-containers:
-	- cd infrastructure/k8s
-	- cat ingress-service.yaml
+process-data-script:
+	- cd services/shared && ts-node global-data-seeder.ts --delete
+	- cd services/shared && ts-node global-data-seeder.ts --import
 
 build-services:
 
@@ -20,9 +20,6 @@ build-services:
 	- cd services/posts* && npm run build
 	- cd services/comments* && npm run build
 	- cd services/chat* && npm run build
-
-	- cd services/shared && ts-node global-data-seeder.ts --delete
-	- cd services/shared && ts-node global-data-seeder.ts --import
 
 	- docker login
 
@@ -38,4 +35,4 @@ build-services:
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 
 stop-services:
-	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml down
+	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml down --remove-orphans

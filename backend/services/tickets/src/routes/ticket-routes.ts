@@ -3,5 +3,4 @@ import express from "express";
 
 const TicketRouter: Router = express.Router();
 
-
 export {TicketRouter}

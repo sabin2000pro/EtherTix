@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
 import asyncHandler from 'express-async-handler'
@@ -17,12 +18,10 @@ declare namespace Express {
 // @access    Private (Authorization Token Required)
 
 export const getAllEventTickets = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any| Response> => {
-    let query;
-    const reqQuery = request.query;
     const totalTickets = await Ticket.countDocuments({});
-    
     const tickets = await Ticket.find();
-    return response.status(200).json({success: true, data: tickets, count: tickets.length});
+
+    return response.status(StatusCodes.OK).json({success: true, data: tickets, totalTickets, sentAt: new Date(Date.now( ))});
 })
 
 // @desc      Get Event Ticket By ID
@@ -32,12 +31,7 @@ export const getAllEventTickets = asyncHandler(async (request: Request, response
 
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const ticketId = request.params.ticketId;
-
-    if(!ticketId) {
-
-    }
-
-
+    return response.status(StatusCodes.OK).json({success: true, message: "All Event Tickets Here", sentAt: new Date(Date.now( ))})
 }
 
 // @desc      Create New Event Ticket

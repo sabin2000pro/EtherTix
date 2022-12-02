@@ -13,6 +13,8 @@ import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import asyncHandler from 'express-async-handler';                        
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
+import fs from 'fs'
+import path from 'path'
 
 declare namespace Express {
     export interface Request {
@@ -41,6 +43,11 @@ declare namespace Express {
 export interface IRequestUser extends Request {
     user: IUserData
 }
+
+export interface IFileData extends Request {
+   fil
+}
+
 
 export interface TypedRequestQuery<T extends Query> extends Express.Request {
     query: T
@@ -669,16 +676,16 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
             const currentUser = await User.findById(userId); // Find the current user
         
             if(!currentUser) {
-                return next(new NotFoundError("NFT Not found with that ID", StatusCodes.NOT_FOUND));
+                return next(new NotFoundError("User Not found with that ID", StatusCodes.NOT_FOUND));
             }
         
             if(!request.files) {
-                return next(new BadRequestError(`Please upload a file`, StatusCodes.BAD_REQUEST));
+                return next(new BadRequestError(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
             }
         
             // 1. Ensure that the file is an actual image
         
-            if(!file.mimetype .startsWith("image")) {
+            if(!file.mimetype.startsWith("image")) {
                 return next(new BadRequestError("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
             }
         
@@ -693,23 +700,21 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
           file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
         
                 if(error) {
-                   return next(new BadRequestError("Problem with file upload", 500));
+                   return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
                 }
         
                 await User.findByIdAndUpdate(request.params.id, { photo: file.name }); // Update the NFT by its ID and add the respective file
-        
-                // Send the file to the upload path
-                return response.status(StatusCodes.OK).json({success: true, message: "File Uploaded"})
+                return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
           })
 
-
-            return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded"});
     
         }
     }
     
     catch(error: any) {
-
+        if(error) {
+            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+        }
     }
 
 
