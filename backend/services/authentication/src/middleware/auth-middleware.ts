@@ -5,10 +5,10 @@ import { User } from '../models/user-model';
 import jwt from "jsonwebtoken";
 import { ForbiddenError } from './error-handler';
 require('dotenv').config();
-
   export interface IUserData {
     user: any
     role: string;
+    _id: any;
 }
 
 export interface IRequestUser extends Request {
@@ -17,6 +17,11 @@ export interface IRequestUser extends Request {
 
 export type IAuthRequest = IRequestUser & {
     headers: {authorization: string}
+}
+
+
+export interface IGetUserAuthInfoRequest extends Request {
+    user: any // or any other type
 }
 
 export const protectAuth = async (request: IAuthRequest & IRequestUser, response: Response, next: NextFunction): Promise<any> => {
@@ -63,4 +68,58 @@ export const restrictRolesTo = (...roles) => {
         return next();
 
     }
+}
+
+export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest, response: Response, next: NextFunction) => {
+    try {
+
+        const currentUser = await User.findById(request.user._id);
+        
+        if(currentUser.role !== 'moderator') {
+            return next(new UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
+        }
+
+        else {
+            return next();
+        }
+
+
+    } 
+    
+    catch(error: any) {
+
+        if(error) {
+            return next(new UnauthorizedError(error, StatusCodes.UNAUTHORIZED))
+        }
+
+    }
+
+
+}
+
+export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, response, next) => {
+    try {
+
+        const currentUser = await User.findById(request.user._id);
+        
+        if(currentUser.role !== 'admin') {
+            return next(new UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
+        }
+
+        else {
+            return next();
+        }
+    } 
+    
+    catch(error: any) {
+
+        if(error) {
+            return next(new UnauthorizedError(error, StatusCodes.UNAUTHORIZED))
+        }
+
+    }
+}
+
+export const isUserOrganiser = async (request, response, next) => {
+
 }

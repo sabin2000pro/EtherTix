@@ -22,6 +22,7 @@ interface IVenueAttributes {
 
     organiser: mongoose.Schema.Types.ObjectId
     event: mongoose.Schema.Types.ObjectId
+    ticket: mongoose.Schema.Types.ObjectId
 }
 
 interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
@@ -44,6 +45,8 @@ interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
     location: Object;
     organiser: mongoose.Schema.Types.ObjectId
     event: mongoose.Schema.Types.ObjectId
+    ticket: mongoose.Schema.Types.ObjectId
+
 }
 
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
@@ -150,40 +153,23 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             ref: "User"
         },
 
-        event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}]
+        event: {
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "Event", 
+          required: true
+        },
+
+        ticket: { // Ticket Corresponding to an event (1 Venue has many tickets) -> 1..* relationship
+           type: mongoose.Schema.Types.ObjectId,
+           ref: "Ticket",
+           required: true
+        }
 
 }, {
 
   timestamps: true,
   toJSON: {virtuals: true}
-
-
 }) 
-
-// // Geocode & create location field
-// VenueSchema.pre('save', async function(next) {
-
-//   const loc = await geocoder(this.address);
-
-//   this.location = {
-
-//     type: 'Point',
-//     coordinates: [loc[0].longitude, loc[0].latitude],
-//     formattedAddress: loc[0].formattedAddress,
-//     street: loc[0].streetName,
-//     city: loc[0].city,
-//     state: loc[0].stateCode,
-//     zipcode: loc[0].zipcode,
-//     country: loc[0].countryCode
-//   };
-
-//   // Do not save address in DB
-//   this.address = undefined;
-
-
-//   return next();
-// });
-
 
 VenueSchema.virtual('events', {
   ref: 'Event',
