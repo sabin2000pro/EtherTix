@@ -97,18 +97,21 @@ export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest
 
 }
 
-export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, response, next) => {
+export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _response: Response, next: NextFunction) => {
+
     try {
 
         const currentUser = await User.findById(request.user._id);
         
-        if(currentUser.role !== 'admin') {
+        if(currentUser.role !== 'admin') { // If the user is not an admin - send back an unauthorized error
             return next(new UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
         }
 
         else {
             return next();
         }
+
+
     } 
     
     catch(error: any) {
@@ -118,8 +121,18 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, re
         }
 
     }
+
+    finally {
+        return console.log(`Is user admin middleware errors handled gracefully`)
+    }
 }
 
 export const isUserOrganiser = async (request, response, next) => {
+    try {
 
+    }
+    
+    catch(error: any) {
+
+    }
 }
