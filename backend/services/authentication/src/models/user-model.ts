@@ -3,6 +3,7 @@ require('dotenv').config();
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+
 interface IUserAttributes {
     forename: string;
     surname: string;
@@ -207,7 +208,6 @@ UserSchema.methods.comparePasswords = async function(password: string): Promise<
     return await bcrypt.compare(password, hashedPassword);
 }
 
- // Sign JWT Token and retrieve it
 UserSchema.methods.getAuthenticationToken = function() {
    return jwt.sign({id: this._id}, process.env.JWT_TOKEN!, {expiresIn: process.env.JWT_EXPIRES_IN!});
 }

@@ -31,7 +31,7 @@ export abstract class CustomError extends Error {
 export const errorHandler = (err: Error, request: Request, response: Response, next: NextFunction) => {
 
     if(err instanceof CustomError) {
-        return response.status(404).json({message: err.message, errors: err.processErrors() })
+        return response.status(StatusCodes.NOT_FOUND).json({message: err.message, errors: err.processErrors() })
     }
 
     return next();
@@ -47,7 +47,6 @@ export class BadRequestError extends CustomError {
   }
 
 }
-
 
 export class NotFoundError extends CustomError {
     statusCode = StatusCodes.BAD_REQUEST;
@@ -111,13 +110,7 @@ export class ForbiddenError extends Error {
     }
     
 }
-
-export class ImproperHTTPMethod extends Error {
-
-}
-
 export class UnauthenticatedError extends Error {
-
     statusCode = StatusCodes.UNAUTHORIZED;
 
     constructor(message: string, statusCode: number) {
@@ -143,12 +136,32 @@ export class AccountVerifiedError extends Error {
         super(message);
         this.statusCode = statusCode;
   }
+
 }
 
+export class AccountNotVerified extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
+
+}
 export class DuplicateFieldError extends Error {
-    
+    statusCode = StatusCodes.BAD_REQUEST;
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 }
 
 export class JwtTokenNotFoundError extends Error {
+    statusCode = StatusCodes.BAD_REQUEST;
 
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+  }
 }

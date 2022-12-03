@@ -1,3 +1,4 @@
+import { FileTooLargeError } from './../../../events/src/middlewares/error-handler';
 import { Query, ParamsDictionary } from 'express-serve-static-core';
 import { NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
@@ -549,42 +550,73 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 }
 
 export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
-    const currentPassword = request.body.currentPassword;
-    const newPassword = request.body.newPassword;
-    const resetToken = request.params.resetToken;
+   try {
+        const currentPassword = request.body.currentPassword;
+        const newPassword = request.body.newPassword;
+        const resetToken = request.params.resetToken;
 
-    // Validate Fields
-    if(!currentPassword) {
-        return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-    }
+        // Validate Fields
+        if(!currentPassword) {
+            return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        }
+    
+        if(!newPassword) {
+            return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
+        }
+    
+        const user = await User.findOne({owner: request.user._id, token: resetToken});
+    
+        if(!user) {
+            return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+        }
+    
+        const userPasswordsMatch = await user.comparePasswords(currentPassword);
+    
+        if(!userPasswordsMatch) {
+           return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        }
+    
+        user.password = newPassword;
+        user.passwordConfirm = undefined;
+    
+        await user.save(); // Save new user after reset the password
+    
+        return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
+   } 
+   
+   catch(error: any) {
+      if(error) {
+        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+      }
+   }
 
-    if(!newPassword) {
-        return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
-    }
+   finally {
+      return console.log(`Errors gracefully handled`)
+   }
 
-    const user = await User.findOne({owner: request.user._id, token: resetToken});
 
-    if(!user) {
-        return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-    }
-
-    const userPasswordsMatch = await user.comparePasswords(currentPassword);
-
-    if(!userPasswordsMatch) {
-       return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
-    }
-
-    user.password = newPassword;
-    user.passwordConfirm = undefined;
-
-    await user.save(); // Save new user after reset the password
-
-    return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
 })
 
 export const getCurrentUser = asyncHandler(async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
-    const user = request.user;
-    return response.status(StatusCodes.OK).json({success: true, data: user});
+
+    try {
+        const user = request.user;
+        return response.status(StatusCodes.OK).json({success: true, data: user});
+    } 
+    
+    catch(error: any) {
+
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        }
+
+    }
+
+    finally {
+        return console.log(`Potential errors gracefully handled`)
+    }
+
+
 });
 
 export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -654,15 +686,15 @@ export const deactivateUserAccount = async (request: Request, response: Response
         return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
     }
 
-    if(!user.isValid || !user.isActive) {
+    if( (!user.isValid) || (!user.isActive) ) {
         return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
     }
 
-    if(user.isActive && user.isValid) {
-
+    if(user.isActive && user.isValid) { // If the current user account is active and the user account is valid
         // Change the is active and is valid fields to false
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
+
         await user.save();
     }
 
@@ -671,6 +703,7 @@ export const deactivateUserAccount = async (request: Request, response: Response
 }
 
 export const uploadUserProfilePicture = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+
     try {
 
         if(request.method === 'PUT') {
@@ -695,7 +728,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: Request, re
         
             // Validate File size. Check if file size exceeds the maximum size
             if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-                return next(new BadRequestError("File Size Too Large", StatusCodes.BAD_REQUEST));
+                return next(new FileTooLargeError("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
             }
         
              // Create custom filename
@@ -923,7 +956,6 @@ export const lockUserAccount = async (request: IRequestUser, response: Response,
         return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
      }
 
-
    }
 
    finally {
@@ -940,7 +972,6 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
        // 2. If user ID does not exist, return error
        // 3. Update the user account with ID by setting the isLocked flag to true and set is active to false
        // 4. Return response
-
 
     } 
     

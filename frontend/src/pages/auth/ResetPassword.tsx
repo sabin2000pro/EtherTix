@@ -1,6 +1,10 @@
 import React from 'react'
 
-const ResetPassword: React.FC = (props) => {
+type IResetPasswordProps = {
+
+}
+
+const ResetPassword: React.FC = (props: IResetPasswordProps) => {
 
   return (
     <>

@@ -1,8 +1,8 @@
-name: ci-auth
+name: Authentication Service Deployment
 
 on:
-
   push:
+  
     branches: [master]
 
 jobs:

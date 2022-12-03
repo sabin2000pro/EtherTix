@@ -13,6 +13,7 @@ beforeAll(async() => {
 describe("Register Account Test Suite", () => {
 
     it("Register Account with invalid e-mail address", async () => {
+
         const invalidBodyData = [{username: "bob2000", email: "bob0wef.com", password: "123mini12", passwordConfirm: "123mini12", forename: "Sabin", surname: "Lungu"}]
 
         for(const data of invalidBodyData) {
@@ -26,7 +27,7 @@ describe("Register Account Test Suite", () => {
 
         for(const data of missingBodyData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            return expect(response.statusCode).toBe(400)
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
          }
     })
 
@@ -40,7 +41,7 @@ describe("Login Account Test Suite", () => {
 
         for(const loginData of loginFields) {
             const response = await request(app).post('/api/v1/auth/login').send(loginData)
-            return expect(response.statusCode).toBe(200)
+            return expect(response.statusCode).toBe(StatusCodes.OK)
         }
 
 
@@ -51,7 +52,7 @@ describe("Login Account Test Suite", () => {
 
         for(const loginData of loginFields) {
             const response = await request(app).post('/api/v1/auth/login').send(loginData)
-            return expect(response.statusCode).toBe(400)
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
         }
 
     })
@@ -71,12 +72,14 @@ describe("Login Account Test Suite", () => {
 describe("Verify E-mail Address Test Suite", () => {
 
     it("Verify E-mail Address With Invalid Entries", async () => {
+
         const invalidOtpFields = [{userId: "", OTP: "09"}]
 
         for(const data of invalidOtpFields) {
-            const response = await request(app).post("/api/v1/auth/verify-email").send(data);
 
+            const response = await request(app).post("/api/v1/auth/verify-email").send(data);
             return expect(response.statusCode).toBe(400)
+ 
         }
 
     })

@@ -1,11 +1,8 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 const UserProfile: React.FC = (props: any) => {
-  
 
   useEffect(() => {
-
-     // Process the JWT from local storage
 
      const getAuthToken = () => {
 
