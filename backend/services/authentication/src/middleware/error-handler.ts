@@ -70,6 +70,17 @@ export class JwtTokenError extends Error {
 
 }
 
+export class ValidationError extends Error {
+    statusCode = StatusCodes.UNPROCESSABLE_ENTITY;
+
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.statusCode = statusCode;
+    }
+
+    
+}
+
 export class FileTooLargeError extends Error {
     statusCode = StatusCodes.BAD_REQUEST;
     status = "The file size of the file you uploaded is too large. Check again."

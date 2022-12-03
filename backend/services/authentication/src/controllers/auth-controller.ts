@@ -299,6 +299,10 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
 
     }
 
+    finally {
+        return console.log('Errors handled gracefully')
+    }
+
 
 }
 
@@ -429,6 +433,10 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
     }
 
+    finally {
+        return console.log(`Errors handled gracefully`)
+    }
+
 }
 
 export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -461,6 +469,10 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
         }
 
+    }
+
+    finally {
+        return console.log(`Errors handled grafeully`)
     }
 }
 
