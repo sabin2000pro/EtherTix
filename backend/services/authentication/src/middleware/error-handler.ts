@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from "http-status-codes";
-
 export interface IErrorResponse { // Error Response interface
     message: string;
     statusCode: number | undefined;
@@ -60,8 +59,7 @@ export class NotFoundError extends CustomError {
 }
 
 export class JwtTokenError extends Error {
-    statusCode = StatusCodes.BAD_REQUEST;
-    status = "JWT Token Invalid. Please check the token again."
+    statusCode = StatusCodes.FORBIDDEN;
 
     constructor(message: string, statusCode: number) {
         super(message);
@@ -78,7 +76,7 @@ export class ValidationError extends Error {
         this.statusCode = statusCode;
     }
 
-    
+
 }
 
 export class FileTooLargeError extends Error {
@@ -169,7 +167,7 @@ export class DuplicateFieldError extends Error {
 }
 
 export class JwtTokenNotFoundError extends Error {
-    statusCode = StatusCodes.BAD_REQUEST;
+    statusCode = StatusCodes.FORBIDDEN;
 
     constructor(message: string, statusCode: number) {
         super(message);
