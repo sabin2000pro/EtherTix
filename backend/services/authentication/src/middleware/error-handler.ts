@@ -12,7 +12,6 @@ export interface IError { // Error Interface
     statusCode: number;
     status: string;
 }
-
 export abstract class CustomError extends Error {
     abstract statusCode: number;
     abstract status: string;

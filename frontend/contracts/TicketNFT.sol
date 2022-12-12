@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-contract EventMarket {
+import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-    address contractOwner = msg.sender;
-    uint256 msgValue = msg.value;
+contract TicketNFT is ERC721URIStorage {
+    using Counters for Counters.Counter;
 
-    uint256[] public availableTokens;
+    uint listingNftPrice = 0.015 ether; // How much we want to put the NFT on sale for
 
-    constructor() {}
-
-    function listNftOnSale(uint256 tokenId, uint256 tokenPrice) public view returns(uint256) {}
-    function buyToken(uint256 tokenId, uint256 tokenPrice) public {}
-    
+    constructor() ERC721("Tickets NFT", "TNFT") {}
 
 }
