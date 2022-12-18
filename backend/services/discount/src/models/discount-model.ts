@@ -17,7 +17,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
         enum: ["access", "coded", "hold", "public"]
     },
 
-    discountCode: { // The discount code
+    discountCode: { // The discount code to apply when purchasing tickets at the checkout
       type: String,
       default: "abcd",
       required: [true, "Please specify the discount code."]
@@ -28,12 +28,13 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
         default: null
     },
  
-    percentOff: { // Percentage off for the ticket
+    percentOff: { // Percentage off for the ticket (25%)
         type: String,
+        required: [true, "Please specify the percentage to take off the ticket"],
         default: null
     },
 
-    applier: {
+    applier: { // The applier of the ticket (User ID)
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
@@ -45,7 +46,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
       required: true
    },
 
-   event: {
+   event: { // The event for which the discount is applied to 
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
       required: true

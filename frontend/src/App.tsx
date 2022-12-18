@@ -6,10 +6,6 @@ const App = () => {
   return (
 
       <>
-      
-        <Routes>
-
-        </Routes>
 
 
       </>
