@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
-import {UnauthorizedError } from './error-handler';
+import {UnauthorizedError, ForbiddenError } from './error-handler';
 import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
 import jwt from "jsonwebtoken";
-import { ForbiddenError } from './error-handler';
+
 require('dotenv').config();
   export interface IUserData {
     user: any
@@ -127,7 +127,7 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _r
     }
 }
 
-export const isUserOrganiser = async (request, response, next) => {
+export const isUserEventOrganiser = async (request: Request, response: Response, next: NextFunction) => {
     try {
 
     }

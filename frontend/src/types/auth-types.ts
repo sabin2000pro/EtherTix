@@ -4,7 +4,7 @@ export type AuthRoleTypes = {
     roleTypes: AuthRoles
 }
 
-export type AuthAttributes =  {
+export type AuthAttributes =  { // Authentication Atributes
     email: string;
     password: string;
     username: string;
