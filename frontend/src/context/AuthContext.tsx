@@ -16,7 +16,6 @@ const AuthProvider = createContext(defaultAuthState);
 export const AuthReducer = (type: any, action: any) => {
     switch(action.type) {
 
-
         default:
             return defaultAuthState
     }

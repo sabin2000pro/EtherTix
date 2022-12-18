@@ -1,6 +1,5 @@
-import { FileTooLargeError } from './../../../events/src/middlewares/error-handler';
+import { FileTooLargeError, NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { Query, ParamsDictionary } from 'express-serve-static-core';
-import { NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -14,7 +13,6 @@ import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import asyncHandler from 'express-async-handler';                        
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
-import fs from 'fs'
 import path from 'path'
 
 declare namespace Express {
@@ -25,6 +23,7 @@ declare namespace Express {
         params: any;
         method: any;
         query: any;
+        files?: Record<any,any>
     }
 
   }
@@ -32,6 +31,10 @@ declare namespace Express {
   export interface IGetUserAuthInfoRequest extends Request {
       user: any // or any other type
   }
+
+export interface FileRequest extends Request {
+    file: any;
+}
 
   export interface IUserData {
     _id: string;
@@ -434,7 +437,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     }
 
     finally {
-        return console.log(`Errors handled gracefully`)
+        console.log(`Errors handled gracefully`)
     }
 
 }
@@ -714,14 +717,15 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 }
 
-export const uploadUserProfilePicture = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const uploadUserProfilePicture = asyncHandler(async (request: any, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
         if(request.method === 'PUT') {
 
             const userId = request.params.userId as any;
-            const file = request.files!.file as unknown as any;
+            const file = request.files!.file as any;
+
             const currentUser = await User.findById(userId); // Find the current user
         
             if(!currentUser) {
@@ -796,6 +800,7 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
     try {
 
         if(request.method === 'GET') {
+
             const users = await User.find();
             return response.status(StatusCodes.OK).json({success: true, users});
         }
@@ -829,9 +834,11 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
     } 
     
     catch(error: any) {
+
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
+
     }
 
 
@@ -895,6 +902,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
    }
 
    finally {
+
     return console.log(`Error gracefully handled`)
 }
 

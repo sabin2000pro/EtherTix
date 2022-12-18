@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ImproperHTTPMethod = exports.ForbiddenError = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.errorHandler = exports.CustomError = void 0;
+exports.JwtTokenNotFoundError = exports.DuplicateFieldError = exports.AccountNotVerified = exports.AccountVerifiedError = exports.AccountNotActiveError = exports.UnauthenticatedError = exports.ForbiddenError = exports.UnauthorizedError = exports.ServerError = exports.FileTooLargeError = exports.ValidationError = exports.JwtTokenError = exports.NotFoundError = exports.BadRequestError = exports.errorHandler = exports.CustomError = void 0;
 const http_status_codes_1 = require("http-status-codes");
 class CustomError extends Error {
     constructor(message) {
@@ -13,7 +13,7 @@ class CustomError extends Error {
 exports.CustomError = CustomError;
 const errorHandler = (err, request, response, next) => {
     if (err instanceof CustomError) {
-        return response.status(404).json({ message: err.message, errors: err.processErrors() });
+        return response.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ message: err.message, errors: err.processErrors() });
     }
     return next();
 };
@@ -39,12 +39,19 @@ exports.NotFoundError = NotFoundError;
 class JwtTokenError extends Error {
     constructor(message, statusCode) {
         super(message);
-        this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
-        this.status = "JWT Token Invalid. Please check the token again.";
+        this.statusCode = http_status_codes_1.StatusCodes.FORBIDDEN;
         this.statusCode = statusCode;
     }
 }
 exports.JwtTokenError = JwtTokenError;
+class ValidationError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.UNPROCESSABLE_ENTITY;
+        this.statusCode = statusCode;
+    }
+}
+exports.ValidationError = ValidationError;
 class FileTooLargeError extends Error {
     constructor(message, statusCode) {
         super(message);
@@ -79,9 +86,6 @@ class ForbiddenError extends Error {
     }
 }
 exports.ForbiddenError = ForbiddenError;
-class ImproperHTTPMethod extends Error {
-}
-exports.ImproperHTTPMethod = ImproperHTTPMethod;
 class UnauthenticatedError extends Error {
     constructor(message, statusCode) {
         super(message);
@@ -106,9 +110,27 @@ class AccountVerifiedError extends Error {
     }
 }
 exports.AccountVerifiedError = AccountVerifiedError;
+class AccountNotVerified extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
+        this.statusCode = statusCode;
+    }
+}
+exports.AccountNotVerified = AccountNotVerified;
 class DuplicateFieldError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST;
+        this.statusCode = statusCode;
+    }
 }
 exports.DuplicateFieldError = DuplicateFieldError;
 class JwtTokenNotFoundError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = http_status_codes_1.StatusCodes.FORBIDDEN;
+        this.statusCode = statusCode;
+    }
 }
 exports.JwtTokenNotFoundError = JwtTokenNotFoundError;

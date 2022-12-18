@@ -10,11 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadVenuePhoto = exports.fetchVenuesWithinRadius = exports.deleteAllVenues = exports.deleteVenueByID = exports.editVenueByID = exports.createVenue = exports.fetchVenueByID = exports.fetchAllVenues = void 0;
+const venue_model_1 = require("../models/venue-model");
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 const fetchAllVenues = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const venues = yield venue_model_1.Venue.find();
+    }
+    catch (error) {
+    }
 });
 exports.fetchAllVenues = fetchAllVenues;
 // @desc      Fetch All Event Tickets
@@ -22,6 +28,7 @@ exports.fetchAllVenues = fetchAllVenues;
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 const fetchVenueByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const venueId = request.params.venueId;
 });
 exports.fetchVenueByID = fetchVenueByID;
 // @desc      Fetch All Event Tickets
@@ -44,6 +51,7 @@ exports.editVenueByID = editVenueByID;
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 const deleteVenueByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const venueId = request.params.venueId;
 });
 exports.deleteVenueByID = deleteVenueByID;
 // @desc      Fetch All Event Tickets
@@ -57,6 +65,9 @@ exports.deleteAllVenues = deleteAllVenues;
 // @route     GET /api/v1/events/:venueId/:postalcode/:radius
 // @access    Private (Authorization Token Required)
 const fetchVenuesWithinRadius = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const venueId = request.params.venueId;
+    const postCode = request.params.postCode;
+    const radius = request.params.radius;
 });
 exports.fetchVenuesWithinRadius = fetchVenuesWithinRadius;
 // @desc      Upload Venue Photo

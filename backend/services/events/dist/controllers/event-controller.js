@@ -15,12 +15,16 @@ const fetchAllEvents = (request, response, next) => __awaiter(void 0, void 0, vo
     }
     catch (error) {
     }
+    finally {
+    }
 });
 exports.fetchAllEvents = fetchAllEvents;
 const fetchSingleEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
+    }
+    finally {
     }
 });
 exports.fetchSingleEvent = fetchSingleEvent;
@@ -29,12 +33,16 @@ const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, vo
     }
     catch (error) {
     }
+    finally {
+    }
 });
 exports.createNewEvent = createNewEvent;
 const editEventByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
+    }
+    finally {
     }
 });
 exports.editEventByID = editEventByID;
@@ -50,12 +58,16 @@ const deleteEventByID = (request, response, next) => __awaiter(void 0, void 0, v
     }
     catch (error) {
     }
+    finally {
+    }
 });
 exports.deleteEventByID = deleteEventByID;
 const uploadEventPhoto = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
+    }
+    finally {
     }
 });
 exports.uploadEventPhoto = uploadEventPhoto;
@@ -64,13 +76,16 @@ const fetchTrendingEvents = (request, response, next) => __awaiter(void 0, void 
     }
     catch (error) {
     }
+    finally {
+    }
 });
 exports.fetchTrendingEvents = fetchTrendingEvents;
-// GET /api/v1/events/:postcode/:radius
 const fetchEventsWithinRadius = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
+    }
+    finally {
     }
 });
 exports.fetchEventsWithinRadius = fetchEventsWithinRadius;

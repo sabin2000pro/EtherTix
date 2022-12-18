@@ -141,7 +141,6 @@ UserSchema.methods.comparePasswords = function (password) {
         return yield bcryptjs_1.default.compare(password, hashedPassword);
     });
 };
-// Sign JWT Token and retrieve it
 UserSchema.methods.getAuthenticationToken = function () {
     return jsonwebtoken_1.default.sign({ id: this._id }, process.env.JWT_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN });
 };

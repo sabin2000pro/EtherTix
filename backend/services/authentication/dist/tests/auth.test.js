@@ -33,7 +33,7 @@ describe("Register Account Test Suite", () => {
         const missingBodyData = [{ username: "bob2000", email: "bob0wef.com", forename: "Sabin", surname: "Lungu" }];
         for (const data of missingBodyData) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
-            return expect(response.statusCode).toBe(400);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
 });
@@ -42,14 +42,14 @@ describe("Login Account Test Suite", () => {
         const loginFields = [{ email: "sabinlungu293@gmail.com", password: "123mini123" }];
         for (const loginData of loginFields) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
-            return expect(response.statusCode).toBe(200);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
         }
     }));
     it("Login with invalid password", () => __awaiter(void 0, void 0, void 0, function* () {
         const loginFields = [{ email: "sabinlungu293@gmail.com", password: "invalidpassword" }];
         for (const loginData of loginFields) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
-            return expect(response.statusCode).toBe(400);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
     it("Login with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {

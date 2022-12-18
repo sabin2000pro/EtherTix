@@ -12,35 +12,85 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.restrictRoleTo = exports.protectAuth = void 0;
+exports.isUserOrganiser = exports.isUserAdmin = exports.isUserModerator = exports.restrictRolesTo = exports.protectAuth = void 0;
+const http_status_codes_1 = require("http-status-codes");
 const error_handler_1 = require("./error-handler");
 const user_model_1 = require("../models/user-model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const error_handler_2 = require("./error-handler");
+require('dotenv').config();
 const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
-    if (request.headers.authorization && request.headers.authorization.includes("Bearer ")) {
+    // Check to see if the authorization header starts with Bearer
+    if (request.headers.authorization && request.headers.authorization.includes("Bearer")) {
         token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
     if (!token) {
-        return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action", 400));
+        return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        request.user = yield user_model_1.User.findById(decoded.id);
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN);
+        request.user = yield user_model_1.User.findById(decoded._id);
         return next();
     }
     catch (error) {
         if (error) {
-            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action", 400));
+            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
 });
 exports.protectAuth = protectAuth;
-const restrictRoleTo = (...roles) => {
+// Middleware Function to restrict certain actions to specific user roles
+const restrictRolesTo = (...roles) => {
     return (request, response, next) => {
-        // @TODO
-        if (!roles.includes(request.user.role)) {
+        if (!request.user.role.includes(roles)) { // Check to see if the specified user object role in the body of the request matches
+            return next(new error_handler_2.ForbiddenError("Your role is unauthorized to perform this action", http_status_codes_1.StatusCodes.FORBIDDEN));
         }
+        return next();
     };
 };
-exports.restrictRoleTo = restrictRoleTo;
+exports.restrictRolesTo = restrictRolesTo;
+const isUserModerator = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const currentUser = yield user_model_1.User.findById(request.user._id);
+        if (currentUser.role !== 'moderator') {
+            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+        else {
+            return next();
+        }
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+    }
+});
+exports.isUserModerator = isUserModerator;
+const isUserAdmin = (request, _response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const currentUser = yield user_model_1.User.findById(request.user._id);
+        if (currentUser.role !== 'admin') { // If the user is not an admin - send back an unauthorized error
+            return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+        else {
+            return next();
+        }
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
+    }
+    finally {
+        return console.log(`Is user admin middleware errors handled gracefully`);
+    }
+});
+exports.isUserAdmin = isUserAdmin;
+const isUserOrganiser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
+});
+exports.isUserOrganiser = isUserOrganiser;

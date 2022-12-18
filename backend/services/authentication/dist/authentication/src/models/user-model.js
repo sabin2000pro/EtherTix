@@ -14,15 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+require('dotenv').config();
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: '../../config.env' });
+// Roles a user can take
+var UserRoles;
+(function (UserRoles) {
+    UserRoles["Admin"] = "Admin";
+    UserRoles["User"] = "User";
+    UserRoles["Moderator"] = "Moderator";
+    UserRoles["Organiser"] = "Organiser";
+})(UserRoles || (UserRoles = {}));
+var AccountType;
+(function (AccountType) {
+    AccountType["Basic"] = "Basic";
+    AccountType["Standard"] = "Standard";
+    AccountType["Premium"] = "Premium";
+    AccountType["Platinum"] = "Platinum";
+})(AccountType || (AccountType = {}));
 // Working on the auth feature branch
 const UserSchema = new mongoose_1.default.Schema({
     forename: {
         type: String,
-        required: [true, "Please provide your forename"]
+        trim: true,
+        required: [true, "Please provide your forename"],
+        maxlength: [10, "Forename cannot exceed 10 characters"],
+        minlength: [3, "Forename cannot be less than 3 characters"]
     },
     surname: {
         type: String,
@@ -42,7 +59,7 @@ const UserSchema = new mongoose_1.default.Schema({
     // User's e-mail address
     email: {
         type: String,
-        required: true,
+        required: [true, "Please specify a valid e-mail address for the user"],
         unique: true
     },
     photo: {
@@ -52,6 +69,9 @@ const UserSchema = new mongoose_1.default.Schema({
     // The user's password
     password: {
         type: String,
+        trim: true,
+        maxlength: 20,
+        minlength: 6,
         required: [true, "Please provide a valid password"]
     },
     passwordConfirm: {
@@ -60,8 +80,9 @@ const UserSchema = new mongoose_1.default.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "moderator", "organiser", "user"],
-        default: "user"
+        enum: [UserRoles.Admin, UserRoles.Moderator, UserRoles.Organiser, UserRoles.User],
+        required: [true, "Please specify the role of the user"],
+        default: UserRoles.User
     },
     ticketsOwned: {
         type: Number,
@@ -90,6 +111,16 @@ const UserSchema = new mongoose_1.default.Schema({
     isValid: {
         type: Boolean,
         default: false
+    },
+    accountType: {
+        type: String,
+        default: AccountType.Basic,
+        required: [true, "Please specify type of account"]
+    },
+    virtualCredits: {
+        type: Number,
+        default: 0,
+        required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
     }
 }, { timestamps: true, toJSON: { virtuals: true } });
 // @description: Before saving a user to the database, hash their password
@@ -110,7 +141,6 @@ UserSchema.methods.comparePasswords = function (password) {
         return yield bcryptjs_1.default.compare(password, hashedPassword);
     });
 };
-// Sign JWT Token and retrieve it
 UserSchema.methods.getAuthenticationToken = function () {
     return jsonwebtoken_1.default.sign({ id: this._id }, process.env.JWT_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN });
 };

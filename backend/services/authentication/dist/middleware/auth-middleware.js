@@ -67,10 +67,10 @@ const isUserModerator = (request, response, next) => __awaiter(void 0, void 0, v
     }
 });
 exports.isUserModerator = isUserModerator;
-const isUserAdmin = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+const isUserAdmin = (request, _response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = yield user_model_1.User.findById(request.user._id);
-        if (currentUser.role !== 'admin') {
+        if (currentUser.role !== 'admin') { // If the user is not an admin - send back an unauthorized error
             return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
         else {
@@ -82,8 +82,15 @@ const isUserAdmin = (request, response, next) => __awaiter(void 0, void 0, void 
             return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
     }
+    finally {
+        return console.log(`Is user admin middleware errors handled gracefully`);
+    }
 });
 exports.isUserAdmin = isUserAdmin;
 const isUserOrganiser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.isUserOrganiser = isUserOrganiser;

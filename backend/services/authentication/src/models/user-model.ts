@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 require('dotenv').config();
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-
-
 interface IUserAttributes {
     forename: string;
     surname: string;

@@ -13,16 +13,6 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnected, conn
   const [accountLoaded, setAccountLoaded] = useState<boolean>(walletConnected);
   const [accountBalance, setAccountBalance] = useState<string>("");
 
-  // const initProvider = new ethers.providers.JsonRpcSigner("");
-
-  const verifyConnectWallet = async () => {
-     
-  }
-
-  const handleConnectWallet = async () => {
-     
-  }
-
   useEffect(() => {
 
   }, [])

@@ -68,6 +68,7 @@ export const editEventByID = async (request: Request, response: Response, next: 
 }
 
 export const deleteEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     try {
 
     }
@@ -78,6 +79,7 @@ export const deleteEvents = async (request: Request, response: Response, next: N
 }
 
 export const deleteEventByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     try {
 
     }
@@ -142,3 +144,12 @@ export const fetchEventsWithinRadius = async (request: Request, response: Respon
 
 
 }
+
+export const likeEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
+}
+
+export const dislikeEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
+}
+

@@ -1,4 +1,3 @@
-import { BadRequestError } from './../../../authentication/src/middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
@@ -30,15 +29,10 @@ export const getAllEventTickets = asyncHandler(async (request: Request, response
    
    catch(error: any) {
 
-       if(error) {
-         return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-       }
-
-
    }
 
    finally {
-     return console.log(`Gracefully handled error`)
+      console.log(`Gracefully handled error`)
    }
 
 
@@ -51,20 +45,13 @@ export const getAllEventTickets = asyncHandler(async (request: Request, response
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
   try {
 
-    const ticketId = request.params.ticketId;
     
-    if(!ticketId) {
-        return next(new BadRequestError("No ticket found with that ID", StatusCodes.BAD_REQUEST));
-    }
-
     return response.status(StatusCodes.OK).json({success: true, message: "Single Event Ticket", sentAt: new Date(Date.now( ))})
   } 
   
   catch(error: any) {
 
-    if(error) {
-        return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-    }
+
 
   }
 
