@@ -1,3 +1,4 @@
+import { BadRequestError } from '../middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
@@ -16,19 +17,26 @@ declare namespace Express {
 // @route     GET /api/v1/tickets
 // @access    Private (Authorization Token Required)
 
-export const getAllEventTickets = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchAllTickets = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
    try {
-
-        const totalTickets = await Ticket.countDocuments({});
+        
         const tickets = await Ticket.find().populate("event")
+        const totalTickets = await Ticket.countDocuments({});
+
+        const searchQuery = request.query.search as any;
+        const regexInit = new RegExp(searchQuery, 'i');
+
+        const foundTickets = tickets.map(ticketData => ticketData.name.match(regexInit))
     
-        return response.status(StatusCodes.OK).json({success: true, tickets, totalTickets, sentAt: new Date(Date.now()  )});
+        return response.status(StatusCodes.OK).json({success: true, tickets, sentAt: new Date(Date.now()  )});
 
    } 
    
    catch(error: any) {
-
+      if(error) {
+        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+      }
    }
 
    finally {
@@ -45,8 +53,11 @@ export const getAllEventTickets = asyncHandler(async (request: Request, response
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
   try {
 
-    
-    return response.status(StatusCodes.OK).json({success: true, message: "Single Event Ticket", sentAt: new Date(Date.now( ))})
+      const ticketId = request.params.ticketId;
+      const ticket = await Ticket.findById(ticketId).populate("event") // Find the ticket and populate it with the event that it corresponds to
+
+
+      return response.status(StatusCodes.OK).json({success: true, ticket, sentAt: new Date(Date.now( ))})
   } 
   
   catch(error: any) {
@@ -65,9 +76,9 @@ export const getEventTicketById = async (request: Request, response: Response, n
 // @route     POST /api/v1/tickets/:eventId
 // @access    Private (JWT Authorization Token Required)
 
-export const createNewEventTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const createNewTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
    try {
-        const eventId = request.params.id; // Get the event ID
         const body = request.body;
    } 
    
@@ -94,10 +105,23 @@ export const deleteAllTickets = async (request: Request, response: Response, nex
 
 }
 
-// @desc      Remove An Event Ticket By ID
-// @route     POST /api/v1/events/:eventId/tickets
-// @access    Private (JWT Authorization Token Required)
 
 export const deleteTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
+}
+
+export const fetchPremiumTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
+}
+
+export const fetchStandardTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
+}
+
+export const fetchVipTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
+}
+
+export const fetchTicketsSoldLastThirtyDays = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     
 }

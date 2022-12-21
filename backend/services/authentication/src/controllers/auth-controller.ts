@@ -298,12 +298,10 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
-
-
     }
 
     finally {
-        return console.log('Errors handled gracefully')
+        console.log('Errors handled gracefully')
     }
 
 
@@ -460,8 +458,6 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
         // 5. Fetch Generated Two Factor code
         const mfaToken = generateMfaToken();
-        console.log(`Your MFA token : ${mfaToken}`);
-
 
         return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
     }
@@ -1006,5 +1002,9 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
         return console.log(`Error gracefully handled`)
     }
 
+
+})
+
+export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
 })

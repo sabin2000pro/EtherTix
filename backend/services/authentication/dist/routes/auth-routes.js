@@ -26,3 +26,4 @@ exports.authRouter.route('/reset-password').post(rateLimiter, auth_controller_2.
 exports.authRouter.route('/update-password').post(rateLimiter, auth_controller_1.updateUserPassword);
 exports.authRouter.route('/update-profile').put(rateLimiter, auth_controller_1.updateUserProfile);
 exports.authRouter.route('/me').get(rateLimiter, auth_middleware_1.protectAuth, auth_controller_2.getCurrentUser);
+exports.authRouter.route('/get/user-count').get(rateLimiter, auth_middleware_1.protectAuth, auth_controller_2.fetchTotalUsers);

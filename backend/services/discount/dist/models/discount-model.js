@@ -23,6 +23,7 @@ const DiscountSchema = new mongoose_1.default.Schema({
         },
         percentOff: {
             type: String,
+            required: [true, "Please specify the percentage to take off the ticket"],
             default: null
         },
         applier: {

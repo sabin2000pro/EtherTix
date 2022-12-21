@@ -1,6 +1,7 @@
 import { Response, Request, Router } from 'express';
 import express from "express";
+import { fetchAllTickets } from '../controllers/ticket-controller';
 
-const TicketRouter: Router = express.Router();
+export const ticketRouter: Router = express.Router({mergeParams: true});
 
-export {TicketRouter}
+ticketRouter.route('/').get(fetchAllTickets as any);

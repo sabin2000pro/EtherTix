@@ -53,7 +53,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
         name: {
             type: String,
             trim: true,
-            required: [true, "Please include a valid name for the name"],
+            required: [true, "Please include a valid name for the venue"],
             maxlength: 64,
             minlength: 6
         },
@@ -156,12 +156,11 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
         organiser: { // Event Venue Organiser
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true
+            ref: "User"
         },
 
-        event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true}],
-        ticket: [{type: mongoose.Schema.Types.ObjectId,ref: "Ticket", required: true}]
+        event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}],
+        ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}]
 
 }, {
 

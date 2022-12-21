@@ -4,4 +4,4 @@ import { fetchAllEvents, fetchSingleEvent, createNewEvent, editEventByID, delete
 export const eventRouter: Router = express.Router({mergeParams: true});
 
 eventRouter.route('/').get(fetchAllEvents).post(createNewEvent).delete(deleteEvents);
-eventRouter.route('/:id').get(fetchSingleEvent).put(editEventByID);
+// eventRouter.route('/:id').get(fetchSingleEvent).put(editEventByID);

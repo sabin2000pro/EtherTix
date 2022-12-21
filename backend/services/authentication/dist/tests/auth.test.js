@@ -72,14 +72,14 @@ describe("Verify E-mail Address Test Suite", () => {
         const malformedInputs = [{ userId: "5dfa", OTP: "909890" }];
         for (const data of malformedInputs) {
             const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
-            return expect(response.statusCode).toBe(400);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
     it("Verify E-mail Address With Missing User ID", () => __awaiter(void 0, void 0, void 0, function* () {
         const malformedInputs = [{ OTP: "909890" }];
         for (const data of malformedInputs) {
             const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
-            return expect(response.statusCode).toBe(404);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.NOT_FOUND);
         }
     }));
 });

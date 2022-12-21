@@ -30,7 +30,7 @@ app.use(cors({
 }));
 app.use(helmet());
 
-app.use('/api/v1', eventRouter);
+app.use('/api/v1/events', eventRouter);
 
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Event - Root Route"})

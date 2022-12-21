@@ -1,9 +1,13 @@
 import express, { Application, Request, Response } from "express";
+import connectTicketsSchema from './database/tickets-db';
 import morgan from "morgan"
 import hpp from "hpp"
 import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
+import { ticketRouter } from "./routes/ticket-routes";
+
+connectTicketsSchema();
 
 const app: Application = express();
 
@@ -18,10 +22,14 @@ if(process.env.NODE_ENV === 'production') {
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ['GET', 'POST', 'PUT', "DELETE"]
+}));
+
 app.use(helmet());
 
-// Include error handling middleware here for the venues
+app.use('/api/v1/tickets', ticketRouter);
 
 app.get("/", (request: Request, response: Response) => {
     return response.json({message: "Tickets Root Route"})

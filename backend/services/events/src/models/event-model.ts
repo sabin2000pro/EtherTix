@@ -1,5 +1,8 @@
-import mongoose from "mongoose";
 
+// @ts-nocheck
+// @ts-ignore
+/* tslint:disable */
+import mongoose from "mongoose";
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
@@ -35,7 +38,7 @@ interface EventAttributes { // Interface for the event attributes
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
-    ticket: mongoose.Schema.Types.ObjectId
+    ticket: mongoose.Schema.Types.ObjectId;
     issue: mongoose.Schema.Types.ObjectId;
     review: mongoose.Schema.Types.ObjectId;
 
@@ -286,7 +289,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         ref: "Venue"
     },
 
-    ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}],
+    ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "ticket"}],
     review: [{type: mongoose.Schema.Types.ObjectId, ref: "Review"}]
 
 }, {
@@ -296,7 +299,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
 // Virtual populate
 EventSchema.virtual('tickets', {
-    ref: 'Ticket',
+    ref: 'ticket',
     foreignField: 'ticket',
     localField: '_id'
 });

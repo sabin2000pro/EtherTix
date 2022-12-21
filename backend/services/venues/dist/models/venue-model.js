@@ -9,7 +9,7 @@ const VenueSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         trim: true,
-        required: [true, "Please include a valid name for the name"],
+        required: [true, "Please include a valid name for the venue"],
         maxlength: 64,
         minlength: 6
     },
@@ -92,11 +92,10 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: "User"
     },
-    event: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Event", required: true }],
-    ticket: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Ticket", required: true }]
+    event: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Event" }],
+    ticket: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Ticket" }]
 }, {
     timestamps: true,
     toJSON: { virtuals: true }

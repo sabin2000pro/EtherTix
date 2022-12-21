@@ -31,7 +31,7 @@ app.use((0, cors_1.default)({
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
 app.use((0, helmet_1.default)());
-app.use('/api/v1', event_routes_1.eventRouter);
+app.use('/api/v1/events', event_routes_1.eventRouter);
 app.get("/", (request, response) => {
     return response.json({ message: "Event - Root Route" });
 });

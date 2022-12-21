@@ -8,4 +8,4 @@ const express_1 = __importDefault(require("express"));
 const event_controller_1 = require("../controllers/event-controller");
 exports.eventRouter = express_1.default.Router({ mergeParams: true });
 exports.eventRouter.route('/').get(event_controller_1.fetchAllEvents).post(event_controller_1.createNewEvent).delete(event_controller_1.deleteEvents);
-exports.eventRouter.route('/:id').get(event_controller_1.fetchSingleEvent).put(event_controller_1.editEventByID);
+// eventRouter.route('/:id').get(fetchSingleEvent).put(editEventByID);

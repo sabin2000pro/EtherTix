@@ -90,7 +90,7 @@ describe("Verify E-mail Address Test Suite", () => {
         for(const data of malformedInputs) {
             const response = await request(app).post("/api/v1/auth/verify-email").send(data);
 
-            return expect(response.statusCode).toBe(400)
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
         }
 
     })
@@ -101,7 +101,7 @@ describe("Verify E-mail Address Test Suite", () => {
         for(const data of malformedInputs) {
             const response = await request(app).post("/api/v1/auth/verify-email").send(data);
 
-            return expect(response.statusCode).toBe(404)
+            return expect(response.statusCode).toBe(StatusCodes.NOT_FOUND)
         }
     })
 

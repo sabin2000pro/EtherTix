@@ -1,7 +1,7 @@
 import { registerUserValidationAgent } from './../middleware/validation-middleware';
 import { updateUserPassword, updateUserProfile } from './../controllers/auth-controller';
 import express, { Router } from "express";
-import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser} from "../controllers/auth-controller";
+import {registerUser, loginUser, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
@@ -26,3 +26,5 @@ authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
 authRouter.route('/update-password').post(rateLimiter, updateUserPassword as any)
 authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
 authRouter.route('/me').get(rateLimiter, protectAuth as any, getCurrentUser as any);
+
+authRouter.route('/get/user-count').get(rateLimiter, protectAuth as any, fetchTotalUsers)

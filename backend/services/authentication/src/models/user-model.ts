@@ -184,6 +184,8 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
     }
 
+    // Fields for orders, coupons & discounts
+
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 // @description: Before saving a user to the database, hash their password

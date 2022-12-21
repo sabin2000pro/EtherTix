@@ -14,6 +14,7 @@ export const defaultAuthState = {
 const AuthProvider = createContext(defaultAuthState);
 
 export const AuthReducer = (type: any, action: any) => {
+    
     switch(action.type) {
 
         default:
@@ -21,14 +22,13 @@ export const AuthReducer = (type: any, action: any) => {
     }
 }
 
-
 export const AuthContext: React.FC<ChildrenProps> = ({children}) => {
 
     const [authState, setAuthState] = useState(defaultAuthState);
 
-    useEffect(() => {
+    // useEffect(() => {
         
-    }, [])
+    // }, [])
 
     return <AuthProvider.Provider value = {authState}>
         {children}
