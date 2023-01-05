@@ -960,7 +960,7 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
         const user = await User.findById(request.params.id);
 
         if (!user) {
-          return response.status(404).json({ msg: 'User not found with that ID' });
+          return response.status(StatusCodes.NOT_FOUND).json({ msg: 'User not found with that ID' });
         }
 
         if(user.isLocked) {
@@ -968,7 +968,7 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
             user.isLocked = false // If the user is currently locked, set the isLocked flag to false
             await user.save();
 
-            return response.status(200).json({success: true, message: "User account unlocked", isLocked: user.isLocked});
+            return response.status(StatusCodes.OK).json({success: true, message: "User account unlocked", isLocked: user.isLocked});
         }
 
 
@@ -985,5 +985,5 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
 
 export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
     const totalUsers = await User.countDocuments({});
-    return response.status(200).json({success: true, count: totalUsers});
+    return response.status(StatusCodes.OK).json({success: true, count: totalUsers});
 })
