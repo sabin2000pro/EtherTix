@@ -301,11 +301,6 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         }
     }
 
-    finally {
-        console.log('Errors handled gracefully')
-    }
-
-
 }
 
 const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
