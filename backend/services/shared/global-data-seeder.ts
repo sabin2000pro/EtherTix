@@ -7,13 +7,11 @@ import {connectAuthDatabase} from '../authentication/src/database/auth-db';
 import connectEventsDatabase from '../events/src/database/event-db';
 import connectTicketsDatabase from '../tickets/src/database/tickets-db';
 import connectVenuesDatabase from '../venues/src/database/venues-db';
-import fs from "fs";
-import path from 'path';
 
-const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../authentication/src/data/users.json')).toString()) as unknown as string;
-const events = JSON.parse(fs.readFileSync(path.join(__dirname, '../events/src/data/events.json')).toString()) as unknown as string;
-const tickets = JSON.parse(fs.readFileSync(path.join(__dirname, '../tickets/src/data/tickets.json')).toString()) as unknown as string;
-const venues = JSON.parse(fs.readFileSync(path.join(__dirname, '../venues/src/data/venues.json')).toString()) as unknown as string;
+const users = require('../authentication/src/data/users.js')
+const events = require('../events/src/data/events.js')
+const tickets = require('../tickets/src/data/tickets.js')
+const venues = require('../venues/src/data/venues.js');
 
 const connectServicesToDb = () => {
     connectAuthDatabase();
@@ -26,27 +24,22 @@ connectServicesToDb();
 
 export const loadAllData = async (): Promise<any> => {
     
-    let dataImported = false;
-
     try {
-
-        if(users !== null && events !== null && tickets != null && venues != null) {
+            await User.deleteMany();
+            await Event.deleteMany();
+            await Ticket.deleteMany();
+            await Venue.deleteMany();
 
             await User.create(users);
             await Event.create(events);
 
             await Ticket.create(tickets);
             await Venue.create(venues);
-
-            dataImported = (!dataImported) as boolean;
-
-            if(dataImported) {
-                console.log(`Data imported to the database.`);
-                return process.exit(1);
-            }
         
-        }
-
+        console.log(`Data imported to the database.`);
+        return process.exit(1);
+ 
+    
     } 
     
     catch(err: any) {

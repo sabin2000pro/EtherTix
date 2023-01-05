@@ -23,7 +23,6 @@ exports.default = () => {
                 else {
                     return console.log(`Could not connect to DB`);
                 }
-                connectTicketsSchema();
             });
         }
         catch (error) {

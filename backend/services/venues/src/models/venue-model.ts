@@ -159,8 +159,15 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             ref: "User"
         },
 
-        event: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}],
-        ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "Ticket"}]
+        event: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Event"
+        },
+
+        ticket: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "ticket"
+        }]
 
 }, {
 

@@ -9,32 +9,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchEvent = exports.unfollowEvent = exports.followEvent = exports.dislikeEvent = exports.likeEvent = exports.fetchEventsWithinRadius = exports.fetchTrendingEvents = exports.uploadEventPhoto = exports.deleteEventByID = exports.deleteEvents = exports.editEventByID = exports.createNewEvent = exports.fetchSingleEvent = exports.getEventCount = exports.fetchAllEvents = void 0;
+exports.unfollowEvent = exports.followEvent = exports.dislikeEvent = exports.likeEvent = exports.fetchEventsWithinRadius = exports.fetchTrendingEvents = exports.uploadEventPhoto = exports.deleteEventByID = exports.deleteEvents = exports.editEventByID = exports.createNewEvent = exports.fetchSingleEvent = exports.getEventCount = exports.fetchAllEvents = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const error_handler_1 = require("../middlewares/error-handler");
 const event_model_1 = require("../models/event-model");
 const fetchAllEvents = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const events = yield event_model_1.Event.find().populate({ path: 'ticket' });
-    return response.status(200).json(events);
+    try {
+        const events = yield event_model_1.Event.find();
+        return response.status(200).json(events);
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
 });
 exports.fetchAllEvents = fetchAllEvents;
 const getEventCount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const events = yield event_model_1.Event.countDocuments({});
+        return response.status(200).json({ success: true, count: events });
+    }
+    catch (error) {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+    }
 });
 exports.getEventCount = getEventCount;
 const fetchSingleEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const eventId = request.params.eventId;
-        let event = yield event_model_1.Event.findById(eventId).populate('ticket'); // Fetch the event and populate it with the ticket data
+        let event = yield event_model_1.Event.findById(eventId);
         if (!eventId) {
             return next(new error_handler_1.NotFoundError("Event with that ID not found", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
         if (!event) {
             return next(new error_handler_1.NotFoundError("Event with that ID not found", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: event });
     }
     catch (error) {
-    }
-    finally {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.fetchSingleEvent = fetchSingleEvent;
@@ -42,8 +60,9 @@ const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, vo
     try {
     }
     catch (error) {
-    }
-    finally {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.createNewEvent = createNewEvent;
@@ -51,8 +70,6 @@ const editEventByID = (request, response, next) => __awaiter(void 0, void 0, voi
     try {
     }
     catch (error) {
-    }
-    finally {
     }
 });
 exports.editEventByID = editEventByID;
@@ -68,8 +85,6 @@ const deleteEventByID = (request, response, next) => __awaiter(void 0, void 0, v
     }
     catch (error) {
     }
-    finally {
-    }
 });
 exports.deleteEventByID = deleteEventByID;
 const uploadEventPhoto = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,16 +93,12 @@ const uploadEventPhoto = (request, response, next) => __awaiter(void 0, void 0, 
     }
     catch (error) {
     }
-    finally {
-    }
 });
 exports.uploadEventPhoto = uploadEventPhoto;
 const fetchTrendingEvents = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
-    }
-    finally {
     }
 });
 exports.fetchTrendingEvents = fetchTrendingEvents;
@@ -96,14 +107,28 @@ const fetchEventsWithinRadius = (request, response, next) => __awaiter(void 0, v
     }
     catch (error) {
     }
-    finally {
-    }
 });
 exports.fetchEventsWithinRadius = fetchEventsWithinRadius;
 const likeEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let eventId = request.params.eventId;
+    const event = yield event_model_1.Event.findById(eventId);
+    let eventLikes = event.likes;
+    if (!event) {
+        return response.status(404).json({ msg: 'Event not found with that ID' });
+    }
+    // Increment the number of likes for the event
+    eventLikes += 1;
+    yield event.save();
+    return response.status(200).json({ success: true, likes: eventLikes });
 });
 exports.likeEvent = likeEvent;
 const dislikeEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let eventId = request.params.eventId;
+    const event = yield event_model_1.Event.findById(eventId);
+    let currentLikes = event.likes;
+    if (!event) {
+        return response.status(404).json({ msg: 'Event not found with that ID' });
+    }
 });
 exports.dislikeEvent = dislikeEvent;
 const followEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -112,12 +137,3 @@ exports.followEvent = followEvent;
 const unfollowEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.unfollowEvent = unfollowEvent;
-const searchEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let matchingEvents;
-    const searchQuery = request.query.search;
-    const searchRegex = new RegExp(searchQuery, 'i');
-    const events = yield event_model_1.Event.find();
-    matchingEvents = events.filter(event => event.name.match(searchRegex));
-    return response.status(200).json(matchingEvents);
-});
-exports.searchEvent = searchEvent;

@@ -1,14 +1,40 @@
 import { StatusCodes } from 'http-status-codes';
-import { NotFoundError } from '../middlewares/error-handler';
+import { NotFoundError, BadRequestError } from '../middlewares/error-handler';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
 
 export const fetchAllEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-        const events = await Event.find().populate({path: 'ticket'})
+
+    try {
+        const events = await Event.find()
         return response.status(200).json(events);
+    } 
+    
+    catch(error) {
+
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        }
+
+    }
+
+
 }
 
 export const getEventCount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    try {
+
+        const events = await Event.countDocuments({});
+        return response.status(200).json({success: true, count: events});
+    } 
+    
+    catch(error) {   
+
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        }
+    }
+
 
 }
 
@@ -16,7 +42,7 @@ export const fetchSingleEvent = async (request: Request, response: Response, nex
     try {
 
         const eventId = request.params.eventId;
-        let event = await Event.findById(eventId).populate('ticket'); // Fetch the event and populate it with the ticket data
+        let event = await Event.findById(eventId)
 
         if(!eventId) {
             return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND));
@@ -26,37 +52,36 @@ export const fetchSingleEvent = async (request: Request, response: Response, nex
             return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND)); 
         }
 
+        return response.status(StatusCodes.OK).json({success: true, data: event});
+
 
     }
     
     catch(error) {
-
-    }
-    
-    finally {
-
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+        }
     }
 
 
 }
 
 export const createNewEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    try {
+    try {    
 
-    }
+    }    
     
     catch(error) {
-
+        
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+        }
     }
-
-    finally {
-
-    }
-
 
 }
 
 export const editEventByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
     try {
 
     }
@@ -64,12 +89,6 @@ export const editEventByID = async (request: Request, response: Response, next: 
     catch(error) {
 
     }
-
-
-    finally {
-
-    }
-
 
 }
 
@@ -95,10 +114,6 @@ export const deleteEventByID = async (request: Request, response: Response, next
     }
 
 
-    finally {
-
-    }
-
 }
 
 export const uploadEventPhoto = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -110,24 +125,15 @@ export const uploadEventPhoto = async (request: Request, response: Response, nex
 
     }
 
-    finally {
-
-    }
-
-
 }
 
 export const fetchTrendingEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     
     try {
-
+    
     }
     
     catch(error) {
-
-    }
-
-    finally {
 
     }
 
@@ -144,18 +150,36 @@ export const fetchEventsWithinRadius = async (request: Request, response: Respon
 
     }
 
-    finally {
-
-    }
-
-
 }
 
 export const likeEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
+    let eventId = request.params.eventId;
+    const event = await Event.findById(eventId);
+    let eventLikes = event.likes;
+
+    if(!event) {
+        return response.status(404).json({ msg: 'Event not found with that ID' });
+    }
+
+    // Increment the number of likes for the event
+    eventLikes += 1 as any;
+    await event.save();
+    
+    return response.status(200).json({success: true, likes: eventLikes});
+
 }
 
 export const dislikeEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
+    let eventId = request.params.eventId;
+    const event = await Event.findById(eventId);
+    let currentLikes = event.likes;
+
+    if(!event) {
+        return response.status(404).json({ msg: 'Event not found with that ID' });
+    }
+
 
 }
 
@@ -165,16 +189,4 @@ export const followEvent = async (request: Request, response: Response, next: Ne
 
 export const unfollowEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
-}
-
-export const searchEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    let matchingEvents;
-
-    const searchQuery = request.query.search;
-    const searchRegex = new RegExp(searchQuery as any, 'i');
-    const events = await Event.find();
-
-    matchingEvents = events.filter(event => event.name.match(searchRegex));
-
-    return response.status(200).json(matchingEvents);
 }

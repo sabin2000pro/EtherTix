@@ -16,9 +16,6 @@ const connectTicketsSchema = async (...args: unknown[]) => {
                 return console.log(`Could not connect to DB`)
             }
 
-
-            connectTicketsSchema();
-
         })
 
     } 

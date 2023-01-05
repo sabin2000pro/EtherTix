@@ -4,9 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
-// @ts-nocheck
-// @ts-ignore
-/* tslint:disable */
 const mongoose_1 = __importDefault(require("mongoose"));
 const EventSchema = new mongoose_1.default.Schema({
     name: {
@@ -162,6 +159,10 @@ const EventSchema = new mongoose_1.default.Schema({
             default: Date.now
         }
     },
+    likes: {
+        type: Number,
+        default: 0
+    },
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "User"
@@ -170,8 +171,10 @@ const EventSchema = new mongoose_1.default.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "Venue"
     },
-    ticket: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "ticket" }],
-    review: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Review" }]
+    ticket: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "ticket"
+        }]
 }, {
     timestamps: true,
     toJSON: { virtuals: true }

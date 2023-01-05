@@ -21,15 +21,13 @@ export const fetchAllTickets = asyncHandler(async (request: Request, response: R
 
    try {
         
-        const tickets = await Ticket.find().populate("event")
-        const totalTickets = await Ticket.countDocuments({});
-
+        const tickets = await Ticket.find().populate({path: 'event', select: "name"});
         const searchQuery = request.query.search as any;
         const regexInit = new RegExp(searchQuery, 'i');
 
         const foundTickets = tickets.map(ticketData => ticketData.name.match(regexInit))
     
-        return response.status(StatusCodes.OK).json({success: true, tickets, sentAt: new Date(Date.now()  )});
+        return response.status(StatusCodes.OK).json({success: true, data: tickets, sentAt: new Date(Date.now()  )});
 
    } 
    
@@ -39,47 +37,42 @@ export const fetchAllTickets = asyncHandler(async (request: Request, response: R
       }
    }
 
-   finally {
-      console.log(`Gracefully handled error`)
-   }
-
 
 })
 
 // @desc      Get Event Ticket By ID
-// @route     GET /api/v1/tickets/:ticketId
+// @route     GET /api/v1/tickets/:id
 // @access    Private (Authorization Token Required)
 
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
   try {
 
-      const ticketId = request.params.ticketId;
-      const ticket = await Ticket.findById(ticketId).populate("event") // Find the ticket and populate it with the event that it corresponds to
-
+      const id = request.params.id;
+      const ticket = await Ticket.findById(id)
 
       return response.status(StatusCodes.OK).json({success: true, ticket, sentAt: new Date(Date.now( ))})
   } 
   
   catch(error: any) {
-
-
-
-  }
-
-  finally {
-    return console.log(`Error Handled Gracefully`)
+     if(error) {
+      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+     }
   }
 
 }
 
 // @desc      Create New Event Ticket
-// @route     POST /api/v1/tickets/:eventId
+// @route     POST /api/v1/tickets/:id
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
    try {
-        const body = request.body;
+        const {name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage} = request.body;
+        const ticket = await Ticket.create({name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage})
+
+        await ticket.save();
+        return response.status(201).json({success: true, ticket});
    } 
    
    catch(error: any) {
@@ -102,7 +95,8 @@ export const editTicketByID = async (request: Request, response: Response, next:
 // @access    Private (JWT Authorization Token Required)
 
 export const deleteAllTickets = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-
+  await Ticket.deleteMany();
+  return response.status(204).json({success: true, data: {}, message: "Tickets Deleted"});
 }
 
 

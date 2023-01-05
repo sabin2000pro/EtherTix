@@ -3,6 +3,7 @@ ARG DEVMODE=dev
 WORKDIR '/app'
 COPY package.json .
 COPY package-lock.json .
+COPY nodemon.json .
 COPY tsconfig.json .
 RUN npm install --silent
 COPY . .

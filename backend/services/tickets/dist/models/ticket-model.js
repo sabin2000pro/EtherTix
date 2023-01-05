@@ -8,58 +8,57 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const TicketSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
-        required: [true, "Please specify the name of the ticket class"],
-        default: null
+        required: true
     },
     ticketClass: {
         type: String,
-        required: [true, "Please specify the ticket class for this event"],
+        required: true,
         enum: ["premium", "standard", "basic", "vip"]
     },
     ticketToken: {
         type: String,
-        required: [true, "Please specify the format of the ticket"],
+        required: true,
         enum: ["Barcode", "QR Code", "Image", "PDF"]
     },
     capacity: {
         type: Number,
-        required: [true, "Please specify the number of tickets available for sale"],
+        required: true,
         default: 0,
     },
     minimumQuantityPurchase: {
         type: Number,
-        required: [true, "Please specify the minimum number of tickets that can be purchased for this event"],
+        required: true,
         default: 1
     },
     maximumQuantityPurchase: {
         type: Number,
-        required: [true, "Please specify the maximum number of tickets that can be purchased for this event"],
+        required: true,
         default: 5
     },
     description: {
         type: String,
-        required: [true, "Provide a valid description for the ticket"]
+        required: true
     },
     cost: {
         type: Number,
-        required: [true, "Please specify how much the ticket costs"],
+        required: true,
         default: 0.010
     },
     isFree: {
         type: Boolean,
-        required: [true, "Please specify if the ticket is free or not"],
+        required: true,
         default: false
     },
     deliveryMethods: {
         type: String,
-        required: [true, "Please specify the type of delivery method"],
+        required: true,
         default: "SMS",
         enum: ["Will Call", "SMS", "Electronic", "E-mail"]
     },
     onSaleStatus: {
         type: String,
         enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
-        required: [true, "Please specify the on sale status of the ticket"]
+        required: true
     },
     saleStartsAt: {
         type: Date,
@@ -71,14 +70,13 @@ const TicketSchema = new mongoose_1.default.Schema({
     },
     confirmationMessage: {
         type: String,
-        required: [true, "Please specify the confirmation message for the purchased event ticket"],
+        required: true,
         minlength: [10, "Minimum of 10 characters for the confirmation message"],
         maxlength: [200, "Confirmation message cannot exceed 200 characters"]
     },
     ticketSold: {
         type: Boolean,
-        default: false,
-        required: [true, "Please specify if the ticket has been sold or not"]
+        default: false
     },
     event: {
         type: mongoose_1.default.Schema.Types.ObjectId,
@@ -89,8 +87,7 @@ const TicketSchema = new mongoose_1.default.Schema({
         ref: "User"
     }
 }, {
-    timestamps: true,
-    toJSON: { virtuals: true }
+    timestamps: true
 });
-const Ticket = mongoose_1.default.model("ticket", TicketSchema);
+const Ticket = mongoose_1.default.model("Ticket", TicketSchema);
 exports.Ticket = Ticket;

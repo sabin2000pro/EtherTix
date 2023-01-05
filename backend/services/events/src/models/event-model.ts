@@ -1,7 +1,4 @@
 
-// @ts-nocheck
-// @ts-ignore
-/* tslint:disable */
 import mongoose from "mongoose";
 interface EventAttributes { // Interface for the event attributes
     name: string
@@ -35,13 +32,11 @@ interface EventAttributes { // Interface for the event attributes
     isPremium: boolean;
 
     eventSalesStatus: Object;
+    likes: Number;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
-    issue: mongoose.Schema.Types.ObjectId;
-    review: mongoose.Schema.Types.ObjectId;
-
 }
 
 interface EventDocument extends mongoose.Model<EventAttributes> {
@@ -77,12 +72,11 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
 
     eventSalesStatus: Object;
     isPremium: boolean;
+    likes: Number;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
-    issue: mongoose.Schema.Types.ObjectId; // MAPPING: ONE EVENT -> MANY ISSUE SUPPORT TICKETS
-    review: mongoose.Schema.Types.ObjectId; // MAPPING: ONE EVENT -> MANY REVIEWS
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -273,10 +267,16 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             default: Date.now
         },
 
-        salesEnd: {
+        salesEnd: { // The date at which the event ticket sales end
             type: Date,
             default: Date.now
         }
+        
+    },
+
+    likes: {
+        type: Number,
+        default: 0
     },
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
@@ -289,8 +289,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         ref: "Venue"
     },
 
-    ticket: [{type: mongoose.Schema.Types.ObjectId, ref: "ticket"}],
-    review: [{type: mongoose.Schema.Types.ObjectId, ref: "Review"}]
+    ticket: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ticket"
+    }]
 
 }, {
     timestamps: true,

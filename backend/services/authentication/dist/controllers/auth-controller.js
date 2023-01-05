@@ -94,9 +94,6 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message, success: false });
         }
     }
-    finally {
-        console.log("Error processed");
-    }
 }));
 const sendTokenResponse = (request, user, statusCode, response) => {
     const token = user.getAuthenticationToken();
@@ -315,9 +312,6 @@ const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, 
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message });
         }
     }
-    finally {
-        return console.log(`Errors handled grafeully`);
-    }
 });
 exports.resendTwoFactorLoginCode = resendTwoFactorLoginCode;
 const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -408,9 +402,6 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
             return next(new error_handler_2.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
-    finally {
-        return console.log(`Errors gracefully handled`);
-    }
 }));
 exports.getCurrentUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -421,9 +412,6 @@ exports.getCurrentUser = (0, express_async_handler_1.default)((request, response
         if (error) {
             return next(new error_handler_2.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-    }
-    finally {
-        return console.log(`Potential errors gracefully handled`);
     }
 }));
 const sendResetPasswordTokenStatus = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -460,9 +448,6 @@ const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0,
         if (error) {
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
-    }
-    finally {
-        return console.log(`Error gracefully handled`);
     }
 });
 exports.updateUserProfile = updateUserProfile;
@@ -527,6 +512,8 @@ exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request
 }));
 exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const premiumUsers = yield user_model_1.User.find({ premium: true });
+        return response.status(200).json({ success: true, data: premiumUsers });
     }
     catch (error) {
         if (error) {
@@ -598,9 +585,6 @@ const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        return console.log(`Error gracefully handled`);
-    }
 });
 exports.editUserByID = editUserByID;
 const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -647,26 +631,28 @@ const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, v
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        return console.log(`Error gracefully handled`);
-    }
 });
 exports.lockUserAccount = lockUserAccount;
 exports.unlockUserAccount = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // 1. Find the User Account to unlock with the user ID
-        // 2. If user ID does not exist, return error
-        // 3. Update the user account with ID by setting the isLocked flag to true and set is active to false
-        // 4. Return response
+        // Find the user by their ID
+        const user = yield user_model_1.User.findById(request.params.id);
+        if (!user) {
+            return response.status(404).json({ msg: 'User not found with that ID' });
+        }
+        if (user.isLocked) {
+            user.isLocked = false; // If the user is currently locked, set the isLocked flag to false
+            yield user.save();
+            return response.status(200).json({ success: true, message: "User account unlocked", isLocked: user.isLocked });
+        }
     }
     catch (error) {
         if (error) {
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        return console.log(`Error gracefully handled`);
-    }
 }));
 exports.fetchTotalUsers = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const totalUsers = yield user_model_1.User.countDocuments({});
+    return response.status(200).json({ success: true, count: totalUsers });
 }));

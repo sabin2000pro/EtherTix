@@ -152,10 +152,6 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
 
     }
 
-    finally {
-        console.log("Error processed");
-    }
-
 } )
 
 const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
@@ -458,6 +454,7 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
         // 5. Fetch Generated Two Factor code
         const mfaToken = generateMfaToken();
+        
 
         return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
     }
@@ -469,10 +466,7 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
         }
 
     }
-
-    finally {
-        return console.log(`Errors handled grafeully`)
-    }
+    
 }
 
 export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -596,13 +590,11 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
    } 
    
    catch(error: any) {
+
       if(error) {
         return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
       }
-   }
 
-   finally {
-      return console.log(`Errors gracefully handled`)
    }
 
 
@@ -622,11 +614,6 @@ export const getCurrentUser = asyncHandler(async (request: IRequestUser, respons
         }
 
     }
-
-    finally {
-        return console.log(`Potential errors gracefully handled`)
-    }
-
 
 });
 
@@ -681,10 +668,6 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 
     }
 
-    finally {
-        return console.log(`Error gracefully handled`)
-    }
-
 
 }
 
@@ -697,7 +680,7 @@ export const deactivateUserAccount = async (request: Request, response: Response
         return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
     }
 
-    if( (!user.isValid) || (!user.isActive) ) {
+    if((!user.isValid) || (!user.isActive) ) {
         return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
     }
 
@@ -776,7 +759,8 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
-        
+        const premiumUsers = await User.find({premium: true});
+        return response.status(200).json({success: true, data: premiumUsers});
     }
     
     catch(error: any) {
@@ -893,15 +877,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
       if(error) {
         return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
       }    
-
-
    }
-
-   finally {
-
-    return console.log(`Error gracefully handled`)
-}
-
 
 }
 
@@ -974,20 +950,26 @@ export const lockUserAccount = async (request: IRequestUser, response: Response,
 
    }
 
-   finally {
-    return console.log(`Error gracefully handled`)
-}
-
-
 }
 
 export const unlockUserAccount = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
-       // 1. Find the User Account to unlock with the user ID
-       // 2. If user ID does not exist, return error
-       // 3. Update the user account with ID by setting the isLocked flag to true and set is active to false
-       // 4. Return response
+          // Find the user by their ID
+        const user = await User.findById(request.params.id);
+
+        if (!user) {
+          return response.status(404).json({ msg: 'User not found with that ID' });
+        }
+
+        if(user.isLocked) {
+
+            user.isLocked = false // If the user is currently locked, set the isLocked flag to false
+            await user.save();
+
+            return response.status(200).json({success: true, message: "User account unlocked", isLocked: user.isLocked});
+        }
+
 
     } 
     
@@ -998,13 +980,9 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
         }
     }
 
-    finally {
-        return console.log(`Error gracefully handled`)
-    }
-
-
 })
 
 export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
-
+    const totalUsers = await User.countDocuments({});
+    return response.status(200).json({success: true, count: totalUsers});
 })

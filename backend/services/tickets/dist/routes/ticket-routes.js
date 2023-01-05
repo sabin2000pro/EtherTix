@@ -7,4 +7,5 @@ exports.ticketRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const ticket_controller_1 = require("../controllers/ticket-controller");
 exports.ticketRouter = express_1.default.Router({ mergeParams: true });
-exports.ticketRouter.route('/').get(ticket_controller_1.fetchAllTickets);
+exports.ticketRouter.route('/').get(ticket_controller_1.fetchAllTickets).post(ticket_controller_1.createNewTicket);
+exports.ticketRouter.route('/:id').get(ticket_controller_1.getEventTicketById);

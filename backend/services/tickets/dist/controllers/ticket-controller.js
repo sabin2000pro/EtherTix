@@ -22,35 +22,31 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 // @access    Private (Authorization Token Required)
 exports.fetchAllTickets = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tickets = yield ticket_model_1.Ticket.find().populate("event");
-        const totalTickets = yield ticket_model_1.Ticket.countDocuments({});
+        const tickets = yield ticket_model_1.Ticket.find().populate({ path: 'event', select: "name" });
         const searchQuery = request.query.search;
         const regexInit = new RegExp(searchQuery, 'i');
         const foundTickets = tickets.map(ticketData => ticketData.name.match(regexInit));
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, tickets, sentAt: new Date(Date.now()) });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: tickets, sentAt: new Date(Date.now()) });
     }
     catch (error) {
         if (error) {
             return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
-    finally {
-        console.log(`Gracefully handled error`);
-    }
 }));
 // @desc      Get Event Ticket By ID
-// @route     GET /api/v1/tickets/:ticketId
+// @route     GET /api/v1/tickets/:id
 // @access    Private (Authorization Token Required)
 const getEventTicketById = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ticketId = request.params.ticketId;
-        const ticket = yield ticket_model_1.Ticket.findById(ticketId).populate("event"); // Find the ticket and populate it with the event that it corresponds to
+        const id = request.params.id;
+        const ticket = yield ticket_model_1.Ticket.findById(id);
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, ticket, sentAt: new Date(Date.now()) });
     }
     catch (error) {
-    }
-    finally {
-        return console.log(`Error Handled Gracefully`);
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.getEventTicketById = getEventTicketById;
@@ -59,7 +55,10 @@ exports.getEventTicketById = getEventTicketById;
 // @access    Private (JWT Authorization Token Required)
 const createNewTicket = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const body = request.body;
+        const { name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage } = request.body;
+        const ticket = yield ticket_model_1.Ticket.create({ name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage });
+        yield ticket.save();
+        return response.status(201).json({ success: true, ticket });
     }
     catch (error) {
     }

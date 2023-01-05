@@ -94,8 +94,14 @@ const VenueSchema = new mongoose_1.default.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "User"
     },
-    event: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Event" }],
-    ticket: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Ticket" }]
+    event: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Event"
+    },
+    ticket: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "ticket"
+        }]
 }, {
     timestamps: true,
     toJSON: { virtuals: true }
