@@ -154,6 +154,11 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
 
 } )
 
+  // @description: Send The JWT Token Response
+  // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
+  // @returns: Server Response Promise Including the User Object and Token
+  // @access: Public (NO Bearer Token Required)
+
 const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
     const token = user.getAuthenticationToken();
     request.session = {token}; // Store the token in the session
@@ -208,9 +213,9 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
             return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
 
-        if(otpTokensMatch) {
+        if(otpTokensMatch) { // If the OTP Tokens Match
 
-            user.isVerified = true
+            user.isVerified = true // Set theu ser is Verified field to true
             user.accountActive = true;
     
             await user.save();
@@ -931,6 +936,7 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
 }
 
 export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+
    try {
         const userId = request.user._id;
         const user = await User.findById(userId);
