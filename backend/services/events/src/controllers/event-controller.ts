@@ -176,6 +176,10 @@ export const dislikeEvent = async (request: Request, response: Response, next: N
     const event = await Event.findById(eventId);
     let currentLikes = event.likes;
 
+    if(currentLikes < event.likes) {
+       // currentLikes -=1 as unknown as any;
+    }
+
     if(!event) {
         return response.status(404).json({ msg: 'Event not found with that ID' });
     }

@@ -18,3 +18,9 @@ export type AuthMeta = { // Authentication Meta Data is an array of auth attribu
 export type Auth = {
     meta: AuthMeta
 } & AuthAttributes
+
+export interface AuthTypes {
+    username: string,
+    email: string,
+    password: string
+}

@@ -3,6 +3,7 @@ import Joi from "joi";
 export const registerUserValidationAgent = Joi.object({
     username: Joi.string().required(),
     forename: Joi.string().required(),
+    
     email: Joi.string().email().lowercase().required(),
     password: Joi.string().min(5).required(),
     role: Joi.string().required()

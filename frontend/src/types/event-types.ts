@@ -1,3 +1,3 @@
-export type EventAttributes = {
+export interface EventTypes {
     
 }

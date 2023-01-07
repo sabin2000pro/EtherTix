@@ -14,7 +14,7 @@ const rateLimiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
-authRouter.route('/register').post(rateLimiter, registerUser as any);
+authRouter.route('/register').post(rateLimiter, registerUserValidationAgent as any, registerUser as any);
 authRouter.route('/verify-email').post(rateLimiter, verifyEmailAddress as any);
 authRouter.route('/login').post(rateLimiter, loginUser as any);
 authRouter.route('/verify-login-mfa').post(rateLimiter, verifyLoginToken as any)

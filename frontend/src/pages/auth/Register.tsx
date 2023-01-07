@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
+import { AuthTypes } from 'types/auth-types';
 
-const Register: React.FC = () => {
+
+const Register = () => { // Register User Component
+  const [userData, setUserData] = useState<AuthTypes[]>([{username: '', email: "", password: ""}])
 
   return (
 
@@ -11,7 +14,6 @@ const Register: React.FC = () => {
     </div>
 
     </>
-
 
   )
 }

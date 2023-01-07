@@ -95,6 +95,10 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
         }
     }
 }));
+// @description: Send The JWT Token Response
+// @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
+// @returns: Server Response Promise Including the User Object and Token
+// @access: Public (NO Bearer Token Required)
 const sendTokenResponse = (request, user, statusCode, response) => {
     const token = user.getAuthenticationToken();
     request.session = { token }; // Store the token in the session
@@ -134,8 +138,8 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
         if (!otpTokensMatch) {
             return next(new error_handler_2.BadRequestError(`The token you entered does not match the one in the database.`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        if (otpTokensMatch) {
-            user.isVerified = true;
+        if (otpTokensMatch) { // If the OTP Tokens Match
+            user.isVerified = true; // Set theu ser is Verified field to true
             user.accountActive = true;
             yield user.save();
             yield email_verification_model_1.EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
@@ -193,9 +197,6 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
         if (error) {
             return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-    }
-    finally {
-        console.log('Errors handled gracefully');
     }
 });
 exports.resendEmailVerificationCode = resendEmailVerificationCode;
@@ -638,12 +639,12 @@ exports.unlockUserAccount = (0, express_async_handler_1.default)((request, respo
         // Find the user by their ID
         const user = yield user_model_1.User.findById(request.params.id);
         if (!user) {
-            return response.status(404).json({ msg: 'User not found with that ID' });
+            return response.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ msg: 'User not found with that ID' });
         }
         if (user.isLocked) {
             user.isLocked = false; // If the user is currently locked, set the isLocked flag to false
             yield user.save();
-            return response.status(200).json({ success: true, message: "User account unlocked", isLocked: user.isLocked });
+            return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User account unlocked", isLocked: user.isLocked });
         }
     }
     catch (error) {
@@ -654,5 +655,5 @@ exports.unlockUserAccount = (0, express_async_handler_1.default)((request, respo
 }));
 exports.fetchTotalUsers = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const totalUsers = yield user_model_1.User.countDocuments({});
-    return response.status(200).json({ success: true, count: totalUsers });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, count: totalUsers });
 }));

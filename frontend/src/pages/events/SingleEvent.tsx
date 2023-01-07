@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import {useNavigate} from 'react-router-dom';
 
 type SingleEventProps = {
    listEvent: () => Promise<any>
    isListed: Boolean
 }
 
-// @description: Component that renders a single component on the screen
-// @props: Method to list event
 const SingleEvent: React.FC<SingleEventProps> = ({isListed}) => {
+  const navigate = useNavigate();
   const [singleEvent, setSingleEvent] = useState([]);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({isListed}) => {
     const listEvent = async (...args: unknown[]): Promise<any> => {
 
       try {        
-         
+         // Code here to call the API to list a single event
       }
       
       catch(error: any) {
@@ -36,9 +36,10 @@ const SingleEvent: React.FC<SingleEventProps> = ({isListed}) => {
   return (
     <>
 
-    <div>
+    <div className = "">
 
     </div>
+    
 
     </>
   )
