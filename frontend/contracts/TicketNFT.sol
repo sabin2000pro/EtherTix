@@ -8,6 +8,10 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract TicketNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
+
+    mapping(uint256 => address) private _tokenOwner; // Mapping from token ID to owner
+    
+
     
     constructor() ERC721("Tickets NFT", "TNFT") {}
 

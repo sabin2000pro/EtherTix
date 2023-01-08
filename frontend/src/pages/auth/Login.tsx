@@ -1,20 +1,21 @@
 import { useAuth } from 'context/AuthContext'
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
-type LoginProps = {
+interface LoginProps {
   email: string
   password: string
 }
 
 // @description: Login Component
-const Login: React.FC<LoginProps> = ({email, password}) => {
+const Login: React.FC<LoginProps> = ({email, password}: LoginProps) => {
   const {authContext} = useAuth();
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean | undefined>(false);
 
   return (
     <>
    
-    <div>
-       Login Page
+    <div className = 'login-container'>
+      
     </div>
 
     </>

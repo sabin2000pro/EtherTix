@@ -47,6 +47,7 @@ export class BadRequestError extends CustomError {
 }
 
 export class NotFoundError extends CustomError {
+    
     statusCode = StatusCodes.BAD_REQUEST;
     status = "Resource not found on the server"
 

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 interface ITicketAttributes {
     name: String,
     ticketClass: String,
@@ -124,7 +123,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             maxlength: [200, "Confirmation message cannot exceed 200 characters"]
         },
 
-        ticketSold: {
+        ticketSold: { // Determines if the ticket ahs been sold or not
             type: Boolean,
             default: false
         },

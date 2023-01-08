@@ -98,6 +98,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             required: [true, "Please include a description for the event"],
             trim: true
         }
+
+        
     },
 
     event_url: {

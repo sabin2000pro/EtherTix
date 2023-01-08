@@ -60,7 +60,7 @@ export const resendEmailVerification = async (_args?: any): Promise<any> => {
 
 export const login = async (loginPayload: Object): Promise<any> => {
     try {
-
+    // Write code here to send HTTP request to the backend
     } 
     
     catch(err: any) {

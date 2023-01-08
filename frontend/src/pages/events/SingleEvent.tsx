@@ -39,7 +39,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({isListed}) => {
     <div className = "">
 
     </div>
-    
+
 
     </>
   )
