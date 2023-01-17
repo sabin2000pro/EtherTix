@@ -48,16 +48,23 @@ export const fetchCategoryByID = async (request: Express.Request, response: Expr
     } 
     
     catch(error) {
-      
+
+       if(error) {
+            
+       }
+
     }
 
 
 }
 
 export const createNewCategory = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response | any> => {
-    try {
 
+    try {
         const body = request.body;
+        const category = await Category.create(body);
+
+        return response.status(StatusCodes.CREATED).json({success: true, category});
     } 
     
     catch(error) {

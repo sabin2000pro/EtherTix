@@ -50,7 +50,6 @@ const users = [
     },
 
     {
-    
         forename: "Stefan",
         surname: "Heikenberg",
         username: "stefan209",

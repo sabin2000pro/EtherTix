@@ -3,11 +3,13 @@ interface CategoryAttributes {
     name: string;
     icon: string;
     categoryType: string;
+    isTrending: boolean;
 }
 interface CategoryDocument extends mongoose.Model<CategoryAttributes> {
     name: string;
     icon: string;
     categoryType: string;
+    isTrending: boolean;
 }
 
 const CategorySchema = new mongoose.Schema<CategoryDocument>({
