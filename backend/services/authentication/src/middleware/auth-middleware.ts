@@ -39,9 +39,6 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
         
         const decoded: any = jwt.verify(token, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify");
         request.user = await User.findById(decoded.id);
-
-        console.log(`Decoded : `, decoded);
-
         return next();
     } 
     

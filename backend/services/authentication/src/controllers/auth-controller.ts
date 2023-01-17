@@ -792,12 +792,14 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
     try {
 
-        if(request.method === 'GET') {
+        const users = await User.find();
 
-            const users = await User.find();
-            return response.status(StatusCodes.OK).json({success: true, users});
+        if(!users) {
+            return next(new BadRequestError("No users found in the database", StatusCodes.NOT_FOUND));
         }
 
+        return response.status(StatusCodes.OK).json({success: true, users});
+    
     }
     
     catch(error: any) {
@@ -805,6 +807,8 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
+
+
     }
 
 }
@@ -813,17 +817,15 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
 
     try {
 
-        if(request.method === 'GET') {
+        const userId = request.params.userId;
+        const user = await User.findById(userId);
 
-            const userId = request.params.userId;
-
-            if(!userId) {
-                return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-            }
-    
+         if(!userId) {
+            return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
         }
 
-
+        return response.status(StatusCodes.OK).json({success: true, user})
+    
     } 
     
     catch(error: any) {
@@ -885,6 +887,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
       if(error) {
         return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
       }    
+
    }
 
 }
