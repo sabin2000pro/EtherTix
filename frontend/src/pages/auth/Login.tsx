@@ -1,15 +1,17 @@
 import { useAuth } from 'context/AuthContext'
-import React, {useState} from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+
+type LoginProps = {
+
+}
 
 // @description: Login Component
 const Login = () => {
-  
+
   return (
     <>
-   
-    <div className = 'login-container'>
-      
-    </div>
+  
 
     </>
   )

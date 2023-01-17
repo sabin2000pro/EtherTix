@@ -5,8 +5,7 @@ interface ITicketAttributes {
     ticketClass: String,
     ticketToken: String,
     capacity: Number,
-    minimumQuantityPurchase: Number,
-    maximumQuantityPurchase: Number,
+    quantityPurchase: String,
     description: String,
     cost: Number,
     isFree: Boolean,
@@ -26,8 +25,7 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    ticketClass: String,
    ticketToken: String,
    capacity: Number,
-   minimumQuantityPurchase: Number,
-   maximumQuantityPurchase: Number,
+   quantityPurchase: Number,
    description: String,
    cost: Number,
    isFree: Boolean,
@@ -69,16 +67,12 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             max: [10, "You cannot place more than 10 tickets for sale at once"]
         },
 
-        minimumQuantityPurchase: { // Minimum quantity for a ticket that can be purchased, by default we can purchase 1
+        quantityPurchase: { // The minimum and maximum amount of tickets that can be purchased
             type: Number,
-            required: true,
-            default: 1
-        },
-
-        maximumQuantityPurchase: {
-            type: Number,
-            required: true,
-            default: 5
+            required: [true, "Please specify how many tickets can be bought at a single time"],
+            default: 1,
+            min: 1,
+            max: 5
         },
 
         description: { // Ticket Description for an event
@@ -108,7 +102,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
             type: String,
             enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
-            required: true
+            required: [true, "Please specfify whether or not the event is available, sold out or pending to start"]
         },
 
         saleStartsAt: {

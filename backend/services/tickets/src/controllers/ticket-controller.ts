@@ -1,3 +1,4 @@
+import { NotFoundError } from '../middleware/error-handler';
 import { BadRequestError } from '../middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
@@ -45,18 +46,25 @@ export const fetchAllTickets = asyncHandler(async (request: Request, response: R
 // @access    Private (Authorization Token Required)
 
 export const getEventTicketById = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
   try {
 
       const id = request.params.id;
       const ticket = await Ticket.findById(id)
 
+      if(!ticket) {
+         return next(new NotFoundError("Ticket with that ID not found", 404))
+      }
+
       return response.status(StatusCodes.OK).json({success: true, ticket, sentAt: new Date(Date.now( ))})
   } 
   
   catch(error: any) {
+
      if(error) {
-      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
      }
+
   }
 
 }
@@ -68,15 +76,17 @@ export const getEventTicketById = async (request: Request, response: Response, n
 export const createNewTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
    try {
-        const {name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage} = request.body;
-        const ticket = await Ticket.create({name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage})
+        const ticketData = request.body;
+        const ticket = await Ticket.create({ticketData});
 
         await ticket.save();
-        return response.status(201).json({success: true, ticket});
+        return response.status(StatusCodes.CREATED).json({success: true, ticket});
    } 
    
    catch(error: any) {
-
+      if(error) {
+        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+      }
    }
 
 
