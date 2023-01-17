@@ -451,8 +451,27 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
         // 5. Fetch Generated Two Factor code
         const mfaToken = generateMfaToken();
+        const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent"});
+        if(!resentToken) {
+           return next(new NotFoundError("MFA Token could not be found", StatusCodes.NOT_FOUND))
+        }
+
+        const resentTokensMatch = resentToken.compareMfaTokens(mfaToken as any);
+
+        // Check if the resent token matches the one in the database or not
+
+        if(!resentTokensMatch) {
+           return next(new BadRequestError("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
+        }
+
+        currentUser.isVerified = true; // User account is now verified
+        currentUser.isActive = true; // And user account is active
+        
+        resentToken.mfaToken = undefined; // Clear the generated token from the database
+        await currentUser.save();
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
     }
     
     catch(error: any) {
@@ -511,7 +530,7 @@ export const forgotPassword = async (request: TypedRequestBody<{email: string}>,
     
         const token = generateRandomResetPasswordToken();
     
-        if(token === undefined) {
+        if(token === undefined) { // If no token exists
             return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
         }
     
