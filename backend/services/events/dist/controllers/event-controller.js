@@ -126,6 +126,9 @@ const dislikeEvent = (request, response, next) => __awaiter(void 0, void 0, void
     let eventId = request.params.eventId;
     const event = yield event_model_1.Event.findById(eventId);
     let currentLikes = event.likes;
+    if (currentLikes < event.likes) {
+        // currentLikes -=1 as unknown as any;
+    }
     if (!event) {
         return response.status(404).json({ msg: 'Event not found with that ID' });
     }

@@ -165,7 +165,7 @@ const EventSchema = new mongoose_1.default.Schema({
     },
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
     },
     venue: {
         type: mongoose_1.default.Schema.Types.ObjectId,

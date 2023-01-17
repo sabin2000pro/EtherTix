@@ -1,5 +1,7 @@
 
 import mongoose from "mongoose";
+
+
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
@@ -195,7 +197,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     showRemaining: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify the number of remaining slots"]
+        required: [true, "Please specify if there are any remaining slots for this event"]
     },
 
     isPremium: {
@@ -283,7 +285,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
     },
 
     venue: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)

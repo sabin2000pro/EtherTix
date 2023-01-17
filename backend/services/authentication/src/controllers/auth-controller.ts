@@ -277,8 +277,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
             return next(new NotFoundError("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
         }
 
-        // Find associating user token
-        const token = await EmailVerification.findOne({owner: userId});
+        const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
 
         if(!token) {
             return next(new BadRequestError("User verification token not found", StatusCodes.BAD_REQUEST));
@@ -454,9 +453,14 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
         // 5. Fetch Generated Two Factor code
         const mfaToken = generateMfaToken();
-        
+    
+        if(mfaToken === undefined) {
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
+        }
+
+
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent"});
     }
     
     catch(error: any) {
@@ -555,7 +559,9 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 }
 
 export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+
    try {
+
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
         const resetToken = request.params.resetToken;
@@ -575,7 +581,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
             return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
         }
     
-        const userPasswordsMatch = await user.comparePasswords(currentPassword);
+        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
         if(!userPasswordsMatch) {
            return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
@@ -672,6 +678,7 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 }
 
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
     const {userId} = request.body;
     const user = await User.findById(userId);
 

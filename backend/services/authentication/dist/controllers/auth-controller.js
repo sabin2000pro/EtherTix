@@ -389,7 +389,7 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
         if (!user) {
             return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        const userPasswordsMatch = yield user.comparePasswords(currentPassword);
+        const userPasswordsMatch = yield user.comparePasswords(currentPassword); // Check if passwords match before resetting password
         if (!userPasswordsMatch) {
             return next(new error_handler_2.BadRequestError("Current Password Invalid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }

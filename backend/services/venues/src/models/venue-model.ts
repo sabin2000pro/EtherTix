@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import geocoder from "node-geocoder";
+
 interface IVenueAttributes {
     venue: Object;
     name: string;
@@ -50,7 +51,7 @@ interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
 
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
-        name: {
+        name: { // Name of the venue that will be created
             type: String,
             trim: true,
             required: [true, "Please include a valid name for the venue"],
@@ -58,7 +59,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             minlength: 6
         },
         
-        slug: {
+        slug: { // Slug URL for the venue
           type: String
         },
   
@@ -69,16 +70,19 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
             'Please use a valid URL with HTTP or HTTPS'
           ]
+
         },
 
-        phone: {
+        phone: { // Phone number for the venue
           type: String,
-          maxlength: [20, 'Phone number can not be longer than 20 characters']
+          max: [20, 'Phone number can not be longer than 20 characters'],
+          min: [6, "Phone number must have at least 6 characters"]
         },
 
-        email: {
+        email: { // Contact e-mail address for the venue
 
           type: String,
+
           match: [
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
             'Please add a valid email'
@@ -97,31 +101,31 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             default: 0
         },
 
-        openTime: {
-          type: Date,
-          default: Date.now
+        openTime: { // The opening time of the venue
+           type: Date,
+           default: Date.now
         },
 
-        closeTime: {  // Closing time of the venue
-          type: Date,
-          default: Date.now
+        closeTime: {  // The current time at which the venue shuts
+           type: Date,
+           default: Date.now
         },
 
-        hasPublicAccess: {
-          type: Boolean,
-          required: [true, "Please specify if the venue has public access or not"],
-          default: false
+        hasPublicAccess: { // Field that identifies if the venue allows public access or not
+           type: Boolean,
+           required: [true, "Please specify if the venue has public access or not"],
+           default: false
         },
 
-        smokingAllowed: {
-          type: Boolean,
-          required: [true, "Please specify if smoking is allowed at the venue"],
-          default: false
+        smokingAllowed: { // Field identifies if smoking is allowed at the venue grounds
+           type: Boolean,
+           required: [true, "Please specify if smoking is allowed at the venue"],
+           default: false
         },
 
-        photo: {
-          type: String,
-          default: 'no-photo.jpg'
+        photo: { // Photo field is useful to show how the venue looks like before purchasing tickets
+           type: String,
+           default: 'no-photo.jpg'
         },
 
         address: { // Address of the venue
@@ -132,13 +136,13 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           location: { // GeoJSON Point For the location
             
             type: {
-              type: String,
-              enum: ['Point']
+               type: String,
+               enum: ['Point']
             },
 
-            coordinates: {
-              type: [Number],
-              index: '2dsphere'
+            coordinates: { // Coordinates of the venue that will be used for real-time map functionality
+                type: [Number],
+                index: '2dsphere'
             },
 
             formattedAddress: String,
@@ -149,22 +153,22 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             country: String
           },
 
-          createdAt: {
+          createdAt: { // The date at which the event was created
             type: Date,
             default: Date.now
           },
 
-        organiser: { // Event Venue Organiser
+        organiser: { // Event Venue Organiser: One venue at a time can have only one organiser
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
 
-        event: {
+        event: [{ // One venue can have multiple events being hosted at different dates
           type: mongoose.Schema.Types.ObjectId,
           ref: "Event"
-        },
+        }],
 
-        ticket: [{
+        ticket: [{ // One venue can have many tickets available associated to it
           type: mongoose.Schema.Types.ObjectId,
           ref: "ticket"
         }]

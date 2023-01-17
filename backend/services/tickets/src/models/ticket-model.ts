@@ -17,7 +17,8 @@ interface ITicketAttributes {
     confirmationMessage: String,
     ticketSold: Boolean,
     event: mongoose.Schema.Types.ObjectId,
-    issuer: mongoose.Schema.Types.ObjectId
+    issuer: mongoose.Schema.Types.ObjectId,
+    venue: mongoose.Schema.Types.ObjectId
 }
 
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
@@ -37,10 +38,12 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    confirmationMessage: String,
    ticketSold: Boolean,
    event: mongoose.Schema.Types.ObjectId,
-   issuer: mongoose.Schema.Types.ObjectId
+   issuer: mongoose.Schema.Types.ObjectId,
+   venue: mongoose.Schema.Types.ObjectId
 }
 
 const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
+
         name: { // Name of the ticket
             type: String,
             required: true
@@ -60,11 +63,13 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         capacity: { // Number of tickets for sale (0, 1, 2,3)
             type: Number,
-            required: true,
-            default: 0,
+            required: [true, "Please specify how many tickets can be placed for sale"],
+            default: 1,
+            min: [1, "At least one single ticket must be placed for sale"],
+            max: [10, "You cannot place more than 10 tickets for sale at once"]
         },
 
-        minimumQuantityPurchase: {
+        minimumQuantityPurchase: { // Minimum quantity for a ticket that can be purchased, by default we can purchase 1
             type: Number,
             required: true,
             default: 1
@@ -128,15 +133,23 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: false
         },
 
-        event: {
+        event: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Event"
-        },
+            ref: "Event",
+            required: [true, "Please specify the event that this ticket is available for"]
+        }],
 
-        issuer: { // The issuer of the ticket
+        issuer: [{ // The issuer of the ticket
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }
+            ref: "User",
+            required: [true, "Please specify the issuer(s) of the ticket"]
+        }],
+
+        venue: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Venue",
+            required: [true, "Please specify the venue that this ticket is associated to"]
+        }]
     
 }, {
     timestamps: true
