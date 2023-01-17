@@ -51,13 +51,13 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         ticketClass: { // The ticket class. VIP ones are the most expensive and basic are the cheapest.
             type: String,
-            required: true,
+            required: [true, "Please specify the ticket class for this ticket"],
             enum: ["premium", "standard", "basic", "vip"]
         },
 
         ticketToken: { // The format of the ticket that will be sent to the buyer
             type: String,
-            required: true,
+            required: [true, "Please specify how this ticket is going to be delivered"],
             enum: ["Barcode", "QR Code", "Image", "PDF"]
         },
 
@@ -83,7 +83,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         description: { // Ticket Description for an event
             type: String,
-            required: true
+            required: [true, "Please specify the description for this ticket"]
         },
 
         cost: { // The ticket cost in ETHER
