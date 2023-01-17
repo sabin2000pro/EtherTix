@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 interface CategoryAttributes {
     name: string;
     icon: string;

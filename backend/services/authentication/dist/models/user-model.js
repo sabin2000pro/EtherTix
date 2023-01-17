@@ -70,8 +70,6 @@ const UserSchema = new mongoose_1.default.Schema({
     password: {
         type: String,
         trim: true,
-        maxlength: 20,
-        minlength: 6,
         required: [true, "Please provide a valid password"]
     },
     passwordConfirm: {

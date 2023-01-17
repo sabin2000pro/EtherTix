@@ -1,10 +1,9 @@
+require('dotenv').config();
 import { StatusCodes } from 'http-status-codes';
 import {UnauthorizedError, ForbiddenError } from './error-handler';
 import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
 import jwt from "jsonwebtoken";
-
-require('dotenv').config();
   export interface IUserData {
     user: any
     role: string;
@@ -38,8 +37,10 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
 
     try {
         
-        const decoded: any = jwt.verify(token, process.env.JWT_TOKEN!);
-        request.user = await User.findById(decoded._id);
+        const decoded: any = jwt.verify(token, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify");
+        request.user = await User.findById(decoded.id);
+
+        console.log(`Decoded : `, decoded);
 
         return next();
     } 
@@ -122,9 +123,6 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _r
 
     }
 
-    finally {
-        return console.log(`Is user admin middleware errors handled gracefully`)
-    }
 }
 
 export const isUserEventOrganiser = async (request: Request, response: Response, next: NextFunction) => {

@@ -287,9 +287,6 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
             return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        console.log(`Errors handled gracefully`);
-    }
 });
 exports.verifyLoginToken = verifyLoginToken;
 const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -407,8 +404,8 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
 }));
 exports.getCurrentUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = request.user;
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
+        const user = request.user.id;
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, user });
     }
     catch (error) {
         if (error) {
@@ -564,9 +561,6 @@ exports.createNewUser = (0, express_async_handler_1.default)((request, response,
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        return console.log(`Error gracefully handled`);
-    }
 }));
 const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -621,7 +615,7 @@ const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, vo
 exports.deleteAllUsers = deleteAllUsers;
 const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = request.user._id;
+        const userId = request.user.id;
         const user = yield user_model_1.User.findById(userId);
         if (!user) {
             return next(new error_handler_2.BadRequestError("That user is not found not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));

@@ -18,6 +18,7 @@ import path from 'path'
 declare namespace Express {
     export interface Request {
         user: any;
+        id: any;
         body: any;
         session: any;
         params: any;
@@ -37,7 +38,7 @@ export interface FileRequest extends Request {
 }
 
   export interface IUserData {
-    _id: string;
+    id: string;
     email: string;
     username: string
     password: string;
@@ -45,7 +46,8 @@ export interface FileRequest extends Request {
 }
 
 export interface IRequestUser extends Request {
-    user: IUserData
+    user: IUserData;
+
 }
 
 
@@ -429,10 +431,6 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
     }
 
-    finally {
-        console.log(`Errors handled gracefully`)
-    }
-
 }
 
 export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -453,12 +451,6 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
         // 5. Fetch Generated Two Factor code
         const mfaToken = generateMfaToken();
-    
-        if(mfaToken === undefined) {
-
-        }
-
-
 
         return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent"});
     }
@@ -610,7 +602,7 @@ export const getCurrentUser = asyncHandler(async (request: IRequestUser, respons
 
     try {
         const user = request.user;
-        return response.status(StatusCodes.OK).json({success: true, data: user});
+        return response.status(StatusCodes.OK).json({success: true, user});
     } 
     
     catch(error: any) {
@@ -673,7 +665,6 @@ export const updateUserProfile = async (request: Request, response: Response, ne
        }
 
     }
-
 
 }
 
@@ -754,10 +745,6 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
-    }
-
-    finally {
-        return console.log(`Error gracefully handled`)
     }
 
 
@@ -849,11 +836,6 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
 
     }
 
-    finally {
-        return console.log(`Error gracefully handled`)
-    }
-
-
 })
 
 export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any| Response> => {
@@ -940,7 +922,7 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
 export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
 
    try {
-        const userId = request.user._id;
+        const userId = request.user.id;
         const user = await User.findById(userId);
     
         if(!user) {

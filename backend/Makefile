@@ -16,7 +16,7 @@ build-services:
 	- cd services/events* && npm run build
 	
 	- cd services/venues* && npm run build
-	- cd serices/categories* && npm run build
+	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
 	- cd services/posts* && npm run build
 	- cd services/comments* && npm run build

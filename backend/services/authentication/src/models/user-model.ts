@@ -23,6 +23,7 @@ interface IUserAttributes {
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
+    isLoggedIn: boolean;
     isValid: boolean;
 
     virtualCredits: number;
@@ -58,6 +59,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
+    isLoggedIn: boolean;
     isValid: boolean;
     premiumAccount: boolean;
 
@@ -120,8 +122,6 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         trim: true,
-        maxlength: 20,
-        minlength: 6,
         required: [true, "Please provide a valid password"]
     },
 
@@ -172,6 +172,11 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
 
+    isLoggedIn: {
+        type: Boolean,
+        default: false
+    },
+
     accountType: {
         type: String,
         default: AccountType.Basic,
@@ -183,8 +188,6 @@ const UserSchema = new mongoose.Schema({
         default: 0,
         required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
     }
-
-    // Fields for orders, coupons & discounts
 
 }, {timestamps: true, toJSON: {virtuals: true}});
 

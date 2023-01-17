@@ -22,7 +22,7 @@ authRouter.route('/logout').get(rateLimiter, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter, forgotPassword as any);
 authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
 
- authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
+authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
 authRouter.route('/me').get(rateLimiter, protectAuth as any, getCurrentUser as any);
 
 authRouter.route('/get/user-count').get(rateLimiter, protectAuth as any, fetchTotalUsers)

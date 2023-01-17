@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import request from "supertest"
 import mongoose from "mongoose"
-require('dotenv').config("../.env")
+require('dotenv').config();
 
 import {app} from '../app';
 

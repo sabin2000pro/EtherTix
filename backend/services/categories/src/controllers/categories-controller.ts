@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import {Category} from '../models/categories-model';
 import {Request, Response, NextFunction} from 'express'
+import { NotFoundError } from '../middleware/error-handler';
 
 declare namespace Express {
     export interface Request {
@@ -22,8 +23,8 @@ declare namespace Express {
 
 export const fetchAllCategories = async (request: any, response: Express.Response, next: NextFunction): Promise<any | Response> => {
     try {
-        const categories = await Category.find();
 
+        const categories = await Category.find();
         return response.status(StatusCodes.OK).json({success: true, categories})
     } 
     
@@ -33,16 +34,30 @@ export const fetchAllCategories = async (request: any, response: Express.Respons
 
 }
 
-export const fetchCategoryByID = async (request: Express.Request, response: Response, next: NextFunction) => {
+export const fetchCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any | Express.Response> => {
     try {
 
       const id = request.params.id;
-      let category = await Category.findById(id);
+      const category = await Category.findById(id);
 
       if(!category) {
-
+         return next(new NotFoundError("Category with that ID cannot be found", StatusCodes.NOT_FOUND));
       }
+
+      return response.status(StatusCodes).json({success: true, category});
+    } 
+    
+    catch(error) {
       
+    }
+
+
+}
+
+export const createNewCategory = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response | any> => {
+    try {
+
+        const body = request.body;
     } 
     
     catch(error) {
@@ -52,14 +67,14 @@ export const fetchCategoryByID = async (request: Express.Request, response: Resp
 
 }
 
-export const createNewCategory = async (request: Request, response: Response, next: NextFunction) => {
-    try {
+export const editCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
 
-    } 
-    
-    catch(error) {
+}
 
-    }
+export const deleteCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
 
+}
+
+export const deleteCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
 
 }
