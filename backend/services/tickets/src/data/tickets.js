@@ -1,7 +1,6 @@
 const tickets = [
 
     {
-           
             name: "Highland Basic Event Ticket",
             ticketClass: "basic", 
             capacity: 10,
@@ -17,7 +16,6 @@ const tickets = [
             ticketSold: false
         },
     
-
     {
 
             name: "Highland Standard Event Ticket",
@@ -205,4 +203,4 @@ const tickets = [
 
 ]
 
-module.exports = tickets
+module.exports = tickets;

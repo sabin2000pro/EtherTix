@@ -1,6 +1,7 @@
 const events = [
+
    {  
-  
+
       name: "Edinburgh Outdoor Highland Tour",
       summary: "Come with us on our tour where we visit the beautiful highlands of Edinburgh, you will not regret it. A fun experience for all adults and teenagers. A great event that lets you see the beautiful landmarks of Edinburgh",
 
@@ -41,12 +42,10 @@ const events = [
       isFree: false,
       reservedSeating: true,
 
-      eventSalesStatus: {
-         salesStatus: "unavailable",
-         salesStart: "2023-05-11T11:00:00.817Z",
-         salesEnd: "2023-05-12T11:09:00.817Z"
-      }
-
+      salesStatus: "unavailable",
+      salesStart: "2023-05-11T11:00:00.817Z",
+      salesEnd: "2023-05-12T11:09:00.817Z"
+    
    },
 
    {
@@ -90,13 +89,9 @@ const events = [
     hideEndDate: false,
     isFree: false,
     reservedSeating: false,
-
-    eventSalesStatus: {
-       salesStatus: "unavailable",
-       salesStart: "2023-11-30T15:00:00.817Z",
-       salesEnd: "2023-11-30T11:22:00.817Z"
-    }
-
+    salesStatus: "unavailable",
+    salesStart: "2023-11-30T15:00:00.817Z",
+    salesEnd: "2023-11-30T11:22:00.817Z"
  },
 
  {
@@ -139,12 +134,10 @@ const events = [
     hideEndDate: false,
     isFree: false,
     reservedSeating: false,
+    salesStatus: "unavailable",
+    salesStart: "2023-11-30T15:00:00.817Z",
+    salesEnd: "2023-11-30T11:22:00.817Z"
 
-    eventSalesStatus: {
-       salesStatus: "unavailable",
-       salesStart: "2023-11-30T15:00:00.817Z",
-       salesEnd: "2023-11-30T11:22:00.817Z"
-    }
  }
 
 ]

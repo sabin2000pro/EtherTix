@@ -1,5 +1,4 @@
-import { NotFoundError } from '../middleware/error-handler';
-import { BadRequestError } from '../middleware/error-handler';
+import { NotFoundError, BadRequestError } from '../middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
@@ -10,6 +9,9 @@ declare namespace Express {
         user: any;
         body: any;
         session: any
+    }
+    export interface Response {
+       response: any;
     }
 
   }
@@ -76,8 +78,14 @@ export const getEventTicketById = async (request: Request, response: Response, n
 export const createNewTicket = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
    try {
+        const event = request.body.event;
+
+        if(!event) {
+           return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND));
+        }
+
         const ticketData = request.body;
-        const ticket = await Ticket.create({ticketData});
+        const ticket = new Ticket(ticketData, event);
 
         await ticket.save();
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
@@ -97,7 +105,22 @@ export const createNewTicket = async (request: Request, response: Response, next
 // @access    Private (JWT Authorization Token Required)
 
 export const editTicketByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    const ticketId = request.params.ticketId;
+   try {
+      const id = request.params.id;
+      let ticket = await Ticket.findById(id);
+
+      if(!ticket) {
+
+      }
+
+      
+   } 
+   
+   catch(error) {
+
+   }
+
+
 }
 
 // @desc      Delete All Tickets For A specific event

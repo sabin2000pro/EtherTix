@@ -1,7 +1,6 @@
 
 import mongoose from "mongoose";
 
-
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
@@ -33,8 +32,10 @@ interface EventAttributes { // Interface for the event attributes
     isFree: boolean;
     isPremium: boolean;
 
-    eventSalesStatus: Object;
-    likes: Number;
+    salesStatus: string,
+    salesStart: Date,
+    salesEnd: Date,
+    likes: number;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -72,9 +73,11 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     reservedSeating: boolean;
     isFree: boolean;
 
-    eventSalesStatus: Object;
+    salesStatus: string;
+    salesStart: Date;
+    salesEnd: Date;
     isPremium: boolean;
-    likes: Number;
+    likes: number;
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
@@ -100,7 +103,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             required: [true, "Please include a description for the event"],
             trim: true
         }
-
         
     },
 
@@ -258,8 +260,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if this event has reserved seating or not"]
     },
 
-    eventSalesStatus: { // Enumeration object that stores the status of the event sales. Event can be on sale, not on sale, sale ended, event is sold out or unavailable
-
         salesStatus: {
             type: String,
             enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
@@ -274,9 +274,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         salesEnd: { // The date at which the event ticket sales end
             type: Date,
             default: Date.now
-        }
-        
-    },
+        },
 
     likes: {
         type: Number,
@@ -285,13 +283,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
     },
 
-    venue: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
+    venue: [{ // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Venue"
-    },
+        ref: "venue"
+    }],
 
     ticket: [{
         type: mongoose.Schema.Types.ObjectId,

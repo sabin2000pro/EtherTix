@@ -67,6 +67,7 @@ export const fetchSingleEvent = async (request: Request, response: Response, nex
 }
 
 export const createNewEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
     try {    
 
     }    

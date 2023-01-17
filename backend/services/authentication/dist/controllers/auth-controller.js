@@ -182,8 +182,7 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
         if (!OTP) {
             return next(new error_handler_1.NotFoundError("OTP Not found. Please check again", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
-        // Find associating user token
-        const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId });
+        const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId }); // Find associating user token
         if (!token) {
             return next(new error_handler_2.BadRequestError("User verification token not found", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -306,7 +305,9 @@ const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, 
         }
         // 5. Fetch Generated Two Factor code
         const mfaToken = (0, generate_mfa_1.generateMfaToken)();
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
+        if (mfaToken === undefined) {
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Two Factor Verification Code Resent" });
     }
     catch (error) {
         if (error) {
