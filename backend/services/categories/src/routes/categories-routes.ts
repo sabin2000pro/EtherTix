@@ -1,6 +1,6 @@
-import express from 'express';
-import {} from "../controllers/categories-controller";
+import express, {Router} from 'express';
+import {fetchAllCategories, fetchCategoryByID} from "../controllers/categories-controller";
 
-const categoriesRouter = express.Router({});
+export const categoriesRouter: Router = express.Router({});
 
-export {categoriesRouter}
+categoriesRouter.route('/').get(fetchAllCategories)
