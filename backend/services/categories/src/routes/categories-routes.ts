@@ -3,4 +3,5 @@ import {fetchAllCategories, fetchCategoryByID} from "../controllers/categories-c
 
 export const categoriesRouter: Router = express.Router({});
 
-categoriesRouter.route('/').get(fetchAllCategories)
+categoriesRouter.route('/').get(fetchAllCategories as any)
+categoriesRouter.route('/:id').get(fetchCategoryByID as any);

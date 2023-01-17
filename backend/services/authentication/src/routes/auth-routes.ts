@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import {registerUser, updateUserPassword, updateUserProfile, loginUser, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
+import {registerUser, updateUserPassword, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
@@ -22,8 +22,12 @@ authRouter.route('/logout').get(rateLimiter, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter, forgotPassword as any);
 authRouter.route('/reset-password').post(rateLimiter, resetPassword as any);
 
-authRouter.route('/update-profile').put(rateLimiter, updateUserProfile as any)
+authRouter.route('/update-profile').put(rateLimiter, protectAuth as any, updateUserProfile as any)
+authRouter.route('/update-password').put(rateLimiter, protectAuth as any, updateUserPassword as any);
 authRouter.route('/me').get(rateLimiter, protectAuth as any, getCurrentUser as any);
 
 authRouter.route('/get/user-count').get(rateLimiter, protectAuth as any, fetchTotalUsers)
 authRouter.route('/deactivate-account').put(rateLimiter, protectAuth as any, deactivateUserAccount);
+
+authRouter.route('/resend-mfa').post(rateLimiter, resendEmailVerificationCode as any);
+authRouter.route('/resend-login-mfa').post(rateLimiter, resendTwoFactorLoginCode);
