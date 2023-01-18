@@ -18,6 +18,7 @@ import path from 'path'
 declare namespace Express {
     export interface Request {
         user: any;
+        id: any;
         body: any;
         session: any;
         params: any;
@@ -37,7 +38,7 @@ export interface FileRequest extends Request {
 }
 
   export interface IUserData {
-    _id: string;
+    id: string;
     email: string;
     username: string
     password: string;
@@ -45,7 +46,8 @@ export interface FileRequest extends Request {
 }
 
 export interface IRequestUser extends Request {
-    user: IUserData
+    user: IUserData;
+
 }
 
 
@@ -277,8 +279,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
             return next(new NotFoundError("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
         }
 
-        // Find associating user token
-        const token = await EmailVerification.findOne({owner: userId});
+        const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
 
         if(!token) {
             return next(new BadRequestError("User verification token not found", StatusCodes.BAD_REQUEST));
@@ -430,10 +431,6 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
     }
 
-    finally {
-        console.log(`Errors handled gracefully`)
-    }
-
 }
 
 export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
@@ -454,9 +451,27 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
 
         // 5. Fetch Generated Two Factor code
         const mfaToken = generateMfaToken();
-        
+        const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Resend Two Factor Code Here"});
+        if(!resentToken) {
+           return next(new NotFoundError("MFA Token could not be found", StatusCodes.NOT_FOUND))
+        }
+
+        const resentTokensMatch = resentToken.compareMfaTokens(mfaToken as any);
+
+        // Check if the resent token matches the one in the database or not
+
+        if(!resentTokensMatch) {
+           return next(new BadRequestError("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
+        }
+
+        currentUser.isVerified = true; // User account is now verified
+        currentUser.isActive = true; // And user account is active
+        
+        resentToken.mfaToken = undefined; // Clear the generated token from the database
+        await currentUser.save();
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
     }
     
     catch(error: any) {
@@ -515,7 +530,7 @@ export const forgotPassword = async (request: TypedRequestBody<{email: string}>,
     
         const token = generateRandomResetPasswordToken();
     
-        if(token === undefined) {
+        if(token === undefined) { // If no token exists
             return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
         }
     
@@ -555,7 +570,9 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 }
 
 export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+
    try {
+
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
         const resetToken = request.params.resetToken;
@@ -575,7 +592,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
             return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
         }
     
-        const userPasswordsMatch = await user.comparePasswords(currentPassword);
+        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
         if(!userPasswordsMatch) {
            return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
@@ -604,7 +621,7 @@ export const getCurrentUser = asyncHandler(async (request: IRequestUser, respons
 
     try {
         const user = request.user;
-        return response.status(StatusCodes.OK).json({success: true, data: user});
+        return response.status(StatusCodes.OK).json({success: true, user});
     } 
     
     catch(error: any) {
@@ -668,10 +685,10 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 
     }
 
-
 }
 
 export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+    
     const {userId} = request.body;
     const user = await User.findById(userId);
 
@@ -749,10 +766,6 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
         }
     }
 
-    finally {
-        return console.log(`Error gracefully handled`)
-    }
-
 
 })
 
@@ -779,12 +792,14 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
     try {
 
-        if(request.method === 'GET') {
+        const users = await User.find();
 
-            const users = await User.find();
-            return response.status(StatusCodes.OK).json({success: true, users});
+        if(!users) {
+            return next(new BadRequestError("No users found in the database", StatusCodes.NOT_FOUND));
         }
 
+        return response.status(StatusCodes.OK).json({success: true, users});
+    
     }
     
     catch(error: any) {
@@ -792,6 +807,8 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
+
+
     }
 
 }
@@ -800,17 +817,15 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
 
     try {
 
-        if(request.method === 'GET') {
+        const userId = request.params.userId;
+        const user = await User.findById(userId);
 
-            const userId = request.params.userId;
-
-            if(!userId) {
-                return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-            }
-    
+         if(!userId) {
+            return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
         }
 
-
+        return response.status(StatusCodes.OK).json({success: true, user})
+    
     } 
     
     catch(error: any) {
@@ -842,11 +857,6 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
 
     }
 
-    finally {
-        return console.log(`Error gracefully handled`)
-    }
-
-
 })
 
 export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any| Response> => {
@@ -877,6 +887,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
       if(error) {
         return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
       }    
+
    }
 
 }
@@ -933,7 +944,7 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
 export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
 
    try {
-        const userId = request.user._id;
+        const userId = request.user.id;
         const user = await User.findById(userId);
     
         if(!user) {

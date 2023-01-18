@@ -29,6 +29,21 @@ services:
       volumes:
         - /app/node_modules
         - ../backend/services/events:/app
+  
+  categories-service:
+      image: sabin2000/ethertix-categories-service
+      build:
+        context: ../backend/services/categories
+        dockerfile: Dockerfile
+
+      restart: always
+
+      ports:
+        - "5300:5300"
+
+      volumes:
+        - /app/node_modules
+        - ../backend/services/categories:/app
 
   venues-service:
     image: sabin2000/ethertix-venues-service

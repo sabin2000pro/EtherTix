@@ -182,8 +182,7 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
         if (!OTP) {
             return next(new error_handler_1.NotFoundError("OTP Not found. Please check again", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
-        // Find associating user token
-        const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId });
+        const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId }); // Find associating user token
         if (!token) {
             return next(new error_handler_2.BadRequestError("User verification token not found", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -288,9 +287,6 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
             return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        console.log(`Errors handled gracefully`);
-    }
 });
 exports.verifyLoginToken = verifyLoginToken;
 const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -306,7 +302,9 @@ const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, 
         }
         // 5. Fetch Generated Two Factor code
         const mfaToken = (0, generate_mfa_1.generateMfaToken)();
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Resend Two Factor Code Here" });
+        if (mfaToken === undefined) {
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Two Factor Verification Code Resent" });
     }
     catch (error) {
         if (error) {
@@ -389,7 +387,7 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
         if (!user) {
             return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        const userPasswordsMatch = yield user.comparePasswords(currentPassword);
+        const userPasswordsMatch = yield user.comparePasswords(currentPassword); // Check if passwords match before resetting password
         if (!userPasswordsMatch) {
             return next(new error_handler_2.BadRequestError("Current Password Invalid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -406,8 +404,8 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
 }));
 exports.getCurrentUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = request.user;
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
+        const user = request.user.id;
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, user });
     }
     catch (error) {
         if (error) {
@@ -563,9 +561,6 @@ exports.createNewUser = (0, express_async_handler_1.default)((request, response,
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-    finally {
-        return console.log(`Error gracefully handled`);
-    }
 }));
 const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -620,7 +615,7 @@ const deleteAllUsers = (request, response, next) => __awaiter(void 0, void 0, vo
 exports.deleteAllUsers = deleteAllUsers;
 const lockUserAccount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = request.user._id;
+        const userId = request.user.id;
         const user = yield user_model_1.User.findById(userId);
         if (!user) {
             return next(new error_handler_2.BadRequestError("That user is not found not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));

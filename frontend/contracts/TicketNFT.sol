@@ -6,13 +6,11 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-contract TicketNFT is ERC721URIStorage {
+contract TicketNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
-    mapping(uint256 => address) private _tokenOwner; // Mapping from token ID to owner
-    
+    mapping(string => bool) private usedTokens; // Mapping between a string and bool for used tokens
 
-    
-    constructor() ERC721("Tickets NFT", "TNFT") {}
+    constructor() ERC721("Event Tickets NFT", "TNFT") {}
 
 }

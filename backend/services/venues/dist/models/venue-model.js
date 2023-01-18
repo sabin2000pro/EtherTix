@@ -25,7 +25,8 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     phone: {
         type: String,
-        maxlength: [20, 'Phone number can not be longer than 20 characters']
+        max: [20, 'Phone number can not be longer than 20 characters'],
+        min: [6, "Phone number must have at least 6 characters"]
     },
     email: {
         type: String,
@@ -94,10 +95,10 @@ const VenueSchema = new mongoose_1.default.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "User"
     },
-    event: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Event"
-    },
+    event: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "Event"
+        }],
     ticket: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
             ref: "ticket"

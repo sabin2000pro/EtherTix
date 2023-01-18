@@ -1,7 +1,6 @@
 const users = [
 
     {   
-       
         forename: "Jamie",
         surname: "Brown",
         username: "jamiebrown2000",
@@ -27,7 +26,6 @@ const users = [
     },
 
     {
-       
         forename: "Amy",
         surname: "Stones",
         username: "amystones928",
@@ -40,7 +38,6 @@ const users = [
     },
 
     {
-       
         forename: "Jake",
         surname: "Barrows",
         username: "jakeybarrow",
@@ -53,7 +50,6 @@ const users = [
     },
 
     {
-    
         forename: "Stefan",
         surname: "Heikenberg",
         username: "stefan209",
@@ -66,7 +62,6 @@ const users = [
     },
 
     {
-       
         forename: "Sabin",
         surname: "Lungu",
         username: "sabin2000",
@@ -79,7 +74,6 @@ const users = [
     },
 
     {
-       
         forename: "John",
         surname: "Geremi",
         username: "johnny2309",

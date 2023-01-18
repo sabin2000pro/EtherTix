@@ -28,4 +28,3 @@ export const connectAuthDatabase = async (...args: unknown[]) => {
 
     }
 }
-

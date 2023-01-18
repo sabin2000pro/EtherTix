@@ -95,7 +95,7 @@ const EventSchema = new mongoose_1.default.Schema({
     showRemaining: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify the number of remaining slots"]
+        required: [true, "Please specify if there are any remaining slots for this event"]
     },
     isPremium: {
         type: Boolean,
@@ -144,20 +144,18 @@ const EventSchema = new mongoose_1.default.Schema({
         default: false,
         required: [true, "Please specify if this event has reserved seating or not"]
     },
-    eventSalesStatus: {
-        salesStatus: {
-            type: String,
-            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
-            required: [true, "Please specify the sales status of the event."]
-        },
-        salesStart: {
-            type: Date,
-            default: Date.now
-        },
-        salesEnd: {
-            type: Date,
-            default: Date.now
-        }
+    salesStatus: {
+        type: String,
+        enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
+        required: [true, "Please specify the sales status of the event."]
+    },
+    salesStart: {
+        type: Date,
+        default: Date.now
+    },
+    salesEnd: {
+        type: Date,
+        default: Date.now
     },
     likes: {
         type: Number,
@@ -165,12 +163,12 @@ const EventSchema = new mongoose_1.default.Schema({
     },
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "user",
     },
-    venue: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Venue"
-    },
+    venue: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "venue"
+        }],
     ticket: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
             ref: "ticket"

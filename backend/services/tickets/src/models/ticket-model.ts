@@ -5,8 +5,7 @@ interface ITicketAttributes {
     ticketClass: String,
     ticketToken: String,
     capacity: Number,
-    minimumQuantityPurchase: Number,
-    maximumQuantityPurchase: Number,
+    quantityPurchase: String,
     description: String,
     cost: Number,
     isFree: Boolean,
@@ -17,7 +16,8 @@ interface ITicketAttributes {
     confirmationMessage: String,
     ticketSold: Boolean,
     event: mongoose.Schema.Types.ObjectId,
-    issuer: mongoose.Schema.Types.ObjectId
+    issuer: mongoose.Schema.Types.ObjectId,
+    venue: mongoose.Schema.Types.ObjectId
 }
 
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
@@ -25,8 +25,7 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    ticketClass: String,
    ticketToken: String,
    capacity: Number,
-   minimumQuantityPurchase: Number,
-   maximumQuantityPurchase: Number,
+   quantityPurchase: Number,
    description: String,
    cost: Number,
    isFree: Boolean,
@@ -37,10 +36,12 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    confirmationMessage: String,
    ticketSold: Boolean,
    event: mongoose.Schema.Types.ObjectId,
-   issuer: mongoose.Schema.Types.ObjectId
+   issuer: mongoose.Schema.Types.ObjectId,
+   venue: mongoose.Schema.Types.ObjectId
 }
 
 const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
+
         name: { // Name of the ticket
             type: String,
             required: true
@@ -48,37 +49,35 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         ticketClass: { // The ticket class. VIP ones are the most expensive and basic are the cheapest.
             type: String,
-            required: true,
+            required: [true, "Please specify the ticket class for this ticket"],
             enum: ["premium", "standard", "basic", "vip"]
         },
 
         ticketToken: { // The format of the ticket that will be sent to the buyer
             type: String,
-            required: true,
+            required: [true, "Please specify how this ticket is going to be delivered"],
             enum: ["Barcode", "QR Code", "Image", "PDF"]
         },
 
         capacity: { // Number of tickets for sale (0, 1, 2,3)
             type: Number,
-            required: true,
-            default: 0,
+            required: [true, "Please specify how many tickets can be placed for sale"],
+            default: 1,
+            min: [1, "At least one single ticket must be placed for sale"],
+            max: [10, "You cannot place more than 10 tickets for sale at once"]
         },
 
-        minimumQuantityPurchase: {
+        quantityPurchase: { // The minimum and maximum amount of tickets that can be purchased
             type: Number,
-            required: true,
-            default: 1
-        },
-
-        maximumQuantityPurchase: {
-            type: Number,
-            required: true,
-            default: 5
+            required: [true, "Please specify how many tickets can be bought at a single time"],
+            default: 1,
+            min: 1,
+            max: 5
         },
 
         description: { // Ticket Description for an event
             type: String,
-            required: true
+            required: [true, "Please specify the description for this ticket"]
         },
 
         cost: { // The ticket cost in ETHER
@@ -103,7 +102,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
             type: String,
             enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
-            required: true
+            required: [true, "Please specfify whether or not the event is available, sold out or pending to start"]
         },
 
         saleStartsAt: {
@@ -128,15 +127,20 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: false
         },
 
-        event: {
+        event: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Event"
-        },
+            ref: "event"
+        }],
 
-        issuer: { // The issuer of the ticket
+        issuer: [{ // The issuer of the ticket
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }
+            ref: "user"
+        }],
+
+        venue: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "venue"
+        }]
     
 }, {
     timestamps: true

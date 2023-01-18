@@ -1,6 +1,7 @@
 name: Authentication Service Deployment
 
 on:
+
   push:
     branches: [master]
 
