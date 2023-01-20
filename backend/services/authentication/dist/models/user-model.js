@@ -59,8 +59,9 @@ const UserSchema = new mongoose_1.default.Schema({
     // User's e-mail address
     email: {
         type: String,
-        required: [true, "Please specify a valid e-mail address for the user"],
-        unique: true
+        required: [true, "Please specify a valid e-mail address"],
+        unique: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
     photo: {
         type: String,
@@ -110,17 +111,10 @@ const UserSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false
     },
-    accountType: {
-        type: String,
-        default: AccountType.Basic,
-        required: [true, "Please specify type of account"]
-    },
-    virtualCredits: {
-        type: Number,
-        default: 0,
-        required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
+    isLoggedIn: {
+        type: Boolean,
+        default: false
     }
-    // Fields for orders, coupons & discounts
 }, { timestamps: true, toJSON: { virtuals: true } });
 // @description: Before saving a user to the database, hash their password
 UserSchema.pre('save', function (next) {

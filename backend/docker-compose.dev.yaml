@@ -11,10 +11,19 @@ services:
 
     ports:
       - "5299:5299"
+      
     volumes:
        - /app/node_modules
        - ../backend/services/authentication:/app
+  auth-tests: # Tests Service
+    build:
+      context: ../backend/services/authentication
+      dockerfile: Dockerfile
+      
+    volumes:
+      - /app/node_modules
 
+    command: ["npm", "run", "auth:test"]
   events-service:
       image: sabin2000/ethertix-events-service
       build:

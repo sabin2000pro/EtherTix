@@ -1,4 +1,4 @@
-FROM node:alpine AS dev
+FROM node:alpine AS build-stage
 ARG DEVMODE=dev
 WORKDIR '/app'
 COPY package.json .

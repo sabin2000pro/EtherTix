@@ -13,7 +13,7 @@ class CustomError extends Error {
 exports.CustomError = CustomError;
 const errorHandler = (err, request, response, next) => {
     if (err instanceof CustomError) {
-        return response.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ message: err.message, errors: err.processErrors() });
+        return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ message: err.message, errors: err.processErrors() });
     }
     return next();
 };

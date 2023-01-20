@@ -32,12 +32,16 @@ const fetchCategoryByID = (request, response, next) => __awaiter(void 0, void 0,
         return response.status(http_status_codes_1.StatusCodes).json({ success: true, category });
     }
     catch (error) {
+        if (error) {
+        }
     }
 });
 exports.fetchCategoryByID = fetchCategoryByID;
 const createNewCategory = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = request.body;
+        const category = yield categories_model_1.Category.create(body);
+        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ success: true, category });
     }
     catch (error) {
     }

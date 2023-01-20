@@ -58,10 +58,10 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
         const passwordConfirm = request.body.passwordConfirm;
         const role = request.body.role;
         if (!forename) {
-            return next(new error_handler_1.NotFoundError("Forename is missing. Please try enter again", http_status_codes_1.StatusCodes.NOT_FOUND));
+            return next(new error_handler_1.NotFoundError("Forename is missing. Please try enter again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (!surname) {
-            return next(new error_handler_1.NotFoundError("Surname is missing. Please try enter again", http_status_codes_1.StatusCodes.NOT_FOUND));
+            return next(new error_handler_1.NotFoundError("Surname is missing. Please try enter again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         if (!email) {
             return next(new error_handler_2.BadRequestError("No E-mail provided. Please check your entries", http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -91,7 +91,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
     }
     catch (error) {
         if (error) {
-            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message, success: false });
+            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ message: error.message, success: false });
         }
     }
 }));
@@ -247,7 +247,6 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
     }
     catch (error) {
         if (error) {
-            console.error(error.message);
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
@@ -302,9 +301,20 @@ const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, 
         }
         // 5. Fetch Generated Two Factor code
         const mfaToken = (0, generate_mfa_1.generateMfaToken)();
-        if (mfaToken === undefined) {
+        const resentToken = yield two_factor_model_1.TwoFactorVerification.findOne({ owner: userId }); // Find the resent token by the owner ID
+        if (!resentToken) {
+            return next(new error_handler_1.NotFoundError("MFA Token could not be found", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Two Factor Verification Code Resent" });
+        const resentTokensMatch = resentToken.compareMfaTokens(mfaToken);
+        // Check if the resent token matches the one in the database or not
+        if (!resentTokensMatch) {
+            return next(new error_handler_2.BadRequestError("Tokens do not match. Please try again later.", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        currentUser.isVerified = true; // User account is now verified
+        currentUser.isActive = true; // And user account is active
+        resentToken.mfaToken = undefined; // Clear the generated token from the database
+        yield currentUser.save();
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now()) });
     }
     catch (error) {
         if (error) {
@@ -343,7 +353,7 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
             return next(new error_handler_2.BadRequestError("User already has the password reset token", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const token = (0, generateResetPasswordToken_1.generateRandomResetPasswordToken)();
-        if (token === undefined) {
+        if (token === undefined) { // If no token exists
             return next(new error_handler_2.BadRequestError("Reset Password Token is invalid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const resetPasswordToken = yield password_reset_model_1.PasswordReset.create({ owner: user._id, resetToken: token }); // Create an instance of the Password Reset model
@@ -404,7 +414,7 @@ exports.resetPassword = (0, express_async_handler_1.default)((request, response,
 }));
 exports.getCurrentUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = request.user.id;
+        const user = request.user;
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, user });
     }
     catch (error) {
@@ -505,9 +515,6 @@ exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request
             return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
-    finally {
-        return console.log(`Error gracefully handled`);
-    }
 }));
 exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -523,10 +530,11 @@ exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((reques
 // ADMIN CONTROLLERS
 const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (request.method === 'GET') {
-            const users = yield user_model_1.User.find();
-            return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, users });
+        const users = yield user_model_1.User.find();
+        if (!users) {
+            return next(new error_handler_2.BadRequestError("No users found in the database", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, users });
     }
     catch (error) {
         if (error) {
@@ -537,12 +545,12 @@ const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, voi
 exports.fetchAllUsers = fetchAllUsers;
 exports.fetchUserByID = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (request.method === 'GET') {
-            const userId = request.params.userId;
-            if (!userId) {
-                return next(new error_handler_2.BadRequestError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
-            }
+        const userId = request.params.userId;
+        const user = yield user_model_1.User.findById(userId);
+        if (!userId) {
+            return next(new error_handler_2.BadRequestError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, user });
     }
     catch (error) {
         if (error) {

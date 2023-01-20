@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isUserEventOrganiser = exports.isUserAdmin = exports.isUserModerator = exports.restrictRolesTo = exports.protectAuth = void 0;
+require('dotenv').config();
 const http_status_codes_1 = require("http-status-codes");
 const error_handler_1 = require("./error-handler");
 const user_model_1 = require("../models/user-model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-require('dotenv').config();
 const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
     // Check to see if the authorization header starts with Bearer
@@ -28,8 +28,8 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
         return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN);
-        request.user = yield user_model_1.User.findById(decoded._id);
+        const decoded = jsonwebtoken_1.default.verify(token, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify");
+        request.user = yield user_model_1.User.findById(decoded.id);
         return next();
     }
     catch (error) {
@@ -80,9 +80,6 @@ const isUserAdmin = (request, _response, next) => __awaiter(void 0, void 0, void
         if (error) {
             return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
-    }
-    finally {
-        return console.log(`Is user admin middleware errors handled gracefully`);
     }
 });
 exports.isUserAdmin = isUserAdmin;
