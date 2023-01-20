@@ -23,7 +23,14 @@ describe("Register Account Test Suite", () => {
     })
 
     it("Register account with valid details", async () => {
+        const validRegisterData = [{forename: "John", surname: "Owens", username: "johnn32948", email: "john00@gmail.com", password: "test00", passwordConfirm: "test00", role: "User"}]
+
+        for(const data of validRegisterData) {
+            const response = await request(app).post('/api/v1/auth/register').send(data)
+            return expect(response.statusCode).toBe(StatusCodes.CREATED);
         
+         }
+
     })
 
     it("Register Account with passwords not matching", async () => {
@@ -31,7 +38,7 @@ describe("Register Account Test Suite", () => {
 
         for(const data of invalidBodyData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            return expect(response.statusCode).not.toBe(StatusCodes.BAD_REQUEST);
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
 
     })
@@ -67,14 +74,38 @@ describe("Login Test Suite", () => {
         for(const data of missingEmailData) {
             const response = await request(app).post('/api/v1/auth/login').send(data)
             
-            return expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
+    })
+
+    it("Login with invalid password", async () => {
+        const invalidPasswordData = [{email: "jake00@gmail.com.com", password: "dojfgisfjij"}]
+
+        for(const data of invalidPasswordData) {
+            const response = await request(app).post('/api/v1/auth/login').send(data)
+            
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+         }
+
     })
 
 })
 
 describe("Verify E-mail Address Test Suite", () => {
 
+})
+
+describe("Verify Login MFA Test Suite", () => {
+
+})
+
+describe("Logout Test Suite", () => {
+    
+    it("Logout user success", async () => {
+        const response = await request(app).get('/api/v1/auth/logout');
+            
+        return expect(response.statusCode).toBe(StatusCodes.OK);
+    })
 })
 
 

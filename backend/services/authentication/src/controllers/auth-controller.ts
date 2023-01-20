@@ -371,8 +371,6 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
     catch(error) {
 
         if(error) {
-            console.error(error.message);
-
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
 
