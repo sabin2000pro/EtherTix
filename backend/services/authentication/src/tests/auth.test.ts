@@ -22,6 +22,10 @@ describe("Register Account Test Suite", () => {
 
     })
 
+    it("Register account with valid details", async () => {
+        
+    })
+
     it("Register Account with passwords not matching", async () => {
         const invalidBodyData = [{forename: "James", surname: "Brown", email: "jamesbronw09@gmail.com", password: "123mini123", passwordConfirm: "lol12345", role: "User"}]
 
@@ -44,7 +48,7 @@ describe("Register Account Test Suite", () => {
 
 })
 
-describe("Login Test Suite", async () => {
+describe("Login Test Suite", () => {
 
     it("Login with valid credentials", async () => {
         const validLoginData = [{email: "jake00@gmail.com.com", password: "123mini123"}]
@@ -52,14 +56,24 @@ describe("Login Test Suite", async () => {
         for(const data of validLoginData) {
             const response = await request(app).post('/api/v1/auth/login').send(data)
             
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+            return expect(response.statusCode).toBe(StatusCodes.OK);
          }
 
     })
 
+    it("Login with missing e-mail address", async () => {
+        const missingEmailData = [{password: "123mini123"}]
+
+        for(const data of missingEmailData) {
+            const response = await request(app).post('/api/v1/auth/login').send(data)
+            
+            return expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
+         }
+    })
+
 })
 
-describe("Verify E-mail Address Test Suite", async () => {
+describe("Verify E-mail Address Test Suite", () => {
 
 })
 
