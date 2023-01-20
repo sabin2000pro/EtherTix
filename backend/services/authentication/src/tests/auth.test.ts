@@ -47,7 +47,14 @@ describe("Register Account Test Suite", () => {
 describe("Login Test Suite", async () => {
 
     it("Login with valid credentials", async () => {
-        const validLoginData = [{email: ""}]
+        const validLoginData = [{email: "jake00@gmail.com.com", password: "123mini123"}]
+
+        for(const data of validLoginData) {
+            const response = await request(app).post('/api/v1/auth/login').send(data)
+            
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+         }
+
     })
 
 })
