@@ -109,8 +109,9 @@ const UserSchema = new mongoose.Schema({
     // User's e-mail address
     email: {
         type: String,
-        required: [true, "Please specify a valid e-mail address for the user"],
-        unique: true
+        required: [true, "Please specify a valid e-mail address"],
+        unique: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
     photo: { // Photo for the user
@@ -175,18 +176,6 @@ const UserSchema = new mongoose.Schema({
     isLoggedIn: {
         type: Boolean,
         default: false
-    },
-
-    accountType: {
-        type: String,
-        default: AccountType.Basic,
-        required: [true, "Please specify type of account"]
-    },
-
-    virtualCredits: { // Number of virtual credits the user has when entering the live auction against other individuals
-        type: Number,
-        default: 0,
-        required: [true, "Please specify how many virtual credits to allocate to this user for bidding"]
     }
 
 }, {timestamps: true, toJSON: {virtuals: true}});

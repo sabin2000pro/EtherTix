@@ -101,11 +101,11 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         const role = request.body.role;
 
         if(!forename) {
-            return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.NOT_FOUND));
+            return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.BAD_REQUEST));
         }
 
         if(!surname) {
-            return next(new NotFoundError("Surname is missing. Please try enter again", StatusCodes.NOT_FOUND));
+            return next(new NotFoundError("Surname is missing. Please try enter again", StatusCodes.BAD_REQUEST));
         }
 
         if(!email) {
@@ -149,7 +149,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
     catch(error: any) {
 
         if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message, success: false})
+            return response.status(StatusCodes.BAD_REQUEST).json({message: error.message, success: false})
         }
 
     }
