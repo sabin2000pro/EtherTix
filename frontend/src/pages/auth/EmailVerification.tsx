@@ -4,12 +4,10 @@ const EmailVerification: React.FC = () => {
 
   return (
     <>
-    
-    <div>
 
-    </div>
 
     </>
+
     
   )
 }
