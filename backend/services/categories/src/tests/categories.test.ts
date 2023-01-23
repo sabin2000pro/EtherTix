@@ -10,10 +10,19 @@ beforeAll(async () => {
 
 describe("Fetch All Categories Test Suite", () => {
 
+    it("Return list of categories unit test", () => {
+
+    })
+
+    it("Return empty list of categories unit test", () => {
+        
+    })
+
+
 })
 
 describe("Create Categories Test Suite", () => {
-
+    
 })
 
 describe("Edit Categories Test Suite", () => {
@@ -21,7 +30,15 @@ describe("Edit Categories Test Suite", () => {
 })
 
 describe("Fetch Category By ID Test Suite", () => {
-    
+
+})
+
+describe("Delete Categories By ID Test Suite", () => {
+
+})
+
+describe("Delete Single Category By ID Test Suite", () => {
+
 })
 
 // Close the connection to the server after all tests are ran for the Categories Service
