@@ -238,10 +238,10 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
                     `
                 })
     
-                const jwtToken = user.getAuthenticationToken();
-                request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+            const jwtToken = user.getAuthenticationToken();
+            request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
     
-                return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
         }
        
     } 
@@ -257,7 +257,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
 })
 
 
-   // @description: Resend the E-mail Verification code to the user if not received
+  // @description: Resend the E-mail Verification code to the user if not received
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
@@ -290,6 +290,10 @@ export const resendEmailVerificationCode = asyncHandler(async (request: Request,
         // Fetch the generated token
         const otpToken = generateOTPVerificationToken(); 
 
+        if(!otpToken) {
+            return next(new BadRequestError("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
+        }
+
         const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
@@ -302,6 +306,7 @@ export const resendEmailVerificationCode = asyncHandler(async (request: Request,
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
+
     }
 
 })
@@ -1013,7 +1018,7 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
 })
 
 export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
-    
+
    try {
         const totalUsers = await User.countDocuments({});
         return response.status(StatusCodes.OK).json({success: true, count: totalUsers});
