@@ -7,7 +7,7 @@ import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import {connectAuthDatabase} from './database/auth-db';
-import {authRouter} from './routes/auth-routes';
+import {authRouter} from './tests/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 
 const app: Application = express();

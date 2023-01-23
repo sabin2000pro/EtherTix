@@ -22,6 +22,7 @@ declare namespace Express {
   }
 
 export const fetchAllCategories = async (request: any, response: Express.Response, next: NextFunction): Promise<any | Response> => {
+
     try {
 
         const categories = await Category.find();
@@ -61,6 +62,7 @@ export const fetchCategoryByID = async (request: Express.Request, response: Expr
 export const createNewCategory = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response | any> => {
 
     try {
+        
         const body = request.body;
         const category = await Category.create(body);
 
@@ -75,6 +77,14 @@ export const createNewCategory = async (request: Express.Request, response: Expr
 }
 
 export const editCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
+    try {
+    
+    } 
+    
+    catch(error) {
+
+    }
+
 
 }
 

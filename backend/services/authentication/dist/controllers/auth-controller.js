@@ -80,7 +80,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
         }
         const currentUser = user._id; // Get the current user's ID
         yield user.save();
-        const userOTP = (0, generate_otp_1.generateOTPVerificationToken)();
+        const userOTP = (0, generate_otp_1.generateOTPVerificationToken)(); // Function that generates the OTP token
         const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
         yield verificationToken.save();
         const transporter = (0, send_email_1.emailTransporter)();
@@ -519,7 +519,7 @@ exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request
 exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const premiumUsers = yield user_model_1.User.find({ premium: true });
-        return response.status(200).json({ success: true, data: premiumUsers });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: premiumUsers });
     }
     catch (error) {
         if (error) {

@@ -33,4 +33,3 @@ const connectTicketsSchema = async (...args: unknown[]) => {
 connectTicketsSchema();
 
 }
-

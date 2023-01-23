@@ -16,7 +16,7 @@ const event_model_1 = require("../models/event-model");
 const fetchAllEvents = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const events = yield event_model_1.Event.find();
-        return response.status(200).json(events);
+        return response.status(http_status_codes_1.StatusCodes.OK).json(events);
     }
     catch (error) {
         if (error) {
@@ -28,7 +28,7 @@ exports.fetchAllEvents = fetchAllEvents;
 const getEventCount = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const events = yield event_model_1.Event.countDocuments({});
-        return response.status(200).json({ success: true, count: events });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, count: events });
     }
     catch (error) {
         if (error) {
@@ -58,6 +58,7 @@ const fetchSingleEvent = (request, response, next) => __awaiter(void 0, void 0, 
 exports.fetchSingleEvent = fetchSingleEvent;
 const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const eventData = request.body;
     }
     catch (error) {
         if (error) {
@@ -68,8 +69,15 @@ const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, vo
 exports.createNewEvent = createNewEvent;
 const editEventByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const id = request.params.id;
+        let event = yield event_model_1.Event.findById(id);
+        if (!event) {
+        }
     }
     catch (error) {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.editEventByID = editEventByID;
@@ -84,6 +92,9 @@ const deleteEventByID = (request, response, next) => __awaiter(void 0, void 0, v
     try {
     }
     catch (error) {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.deleteEventByID = deleteEventByID;
@@ -99,6 +110,9 @@ const fetchTrendingEvents = (request, response, next) => __awaiter(void 0, void 
     try {
     }
     catch (error) {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.fetchTrendingEvents = fetchTrendingEvents;
@@ -119,18 +133,21 @@ const likeEvent = (request, response, next) => __awaiter(void 0, void 0, void 0,
     // Increment the number of likes for the event
     eventLikes += 1;
     yield event.save();
-    return response.status(200).json({ success: true, likes: eventLikes });
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, likes: eventLikes });
 });
 exports.likeEvent = likeEvent;
 const dislikeEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let eventId = request.params.eventId;
-    const event = yield event_model_1.Event.findById(eventId);
-    let currentLikes = event.likes;
-    if (currentLikes < event.likes) {
-        // currentLikes -=1 as unknown as any;
+    try {
+        let eventId = request.params.eventId;
+        const event = yield event_model_1.Event.findById(eventId);
+        let currentLikes = event.likes;
+        if (currentLikes < event.likes) {
+        }
+        if (!event) {
+            return response.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ msg: 'Event not found with that ID' });
+        }
     }
-    if (!event) {
-        return response.status(404).json({ msg: 'Event not found with that ID' });
+    catch (error) {
     }
 });
 exports.dislikeEvent = dislikeEvent;

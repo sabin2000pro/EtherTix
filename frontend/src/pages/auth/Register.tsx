@@ -1,17 +1,11 @@
-import React, {useState} from 'react'
-import { AuthTypes } from 'types/auth-types';
+import React from 'react'
 
-const Register = () => { // Register User Component
-  const [userData, setUserData] = useState<AuthTypes[]>([{username: '', email: "", password: ""}])
+const Register = () => { // Register Component
 
   return (
 
     <>
-   
-     <div>
-
-    </div>
-
+      <h1>Register Page</h1>
     </>
 
   )

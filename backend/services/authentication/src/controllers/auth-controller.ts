@@ -132,7 +132,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         const currentUser = user._id; // Get the current user's ID
         await user.save();
 
-        const userOTP = generateOTPVerificationToken();
+        const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
 
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
@@ -759,6 +759,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
     }
     
     catch(error: any) {
+
         if(error) {
             return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
         }
@@ -771,7 +772,7 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
 
     try {
         const premiumUsers = await User.find({premium: true});
-        return response.status(200).json({success: true, data: premiumUsers});
+        return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
     }
     
     catch(error: any) {

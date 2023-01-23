@@ -66,6 +66,13 @@ describe("Login Test Suite", () => {
             return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
+    it("Login with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidEmailData = [{ email: "123mini123" }];
+        for (const data of invalidEmailData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(data);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        }
+    }));
     it("Login with invalid password", () => __awaiter(void 0, void 0, void 0, function* () {
         const invalidPasswordData = [{ email: "jake00@gmail.com.com", password: "dojfgisfjij" }];
         for (const data of invalidPasswordData) {
@@ -74,14 +81,35 @@ describe("Login Test Suite", () => {
         }
     }));
 });
+// Test suite for verifying e-mail address
 describe("Verify E-mail Address Test Suite", () => {
+    it("Verify E-mail Address with invalid OTP code entered", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Verify E-mail address with missing OTP value", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Verify E-mail address with valid UserID and OTP values", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Verify e-mail address with invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
 });
+// Test suite for verifying the MFA code verification test suite
 describe("Verify Login MFA Test Suite", () => {
 });
 describe("Logout Test Suite", () => {
     it("Logout user success", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app_1.app).get('/api/v1/auth/logout');
         return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
+    }));
+});
+describe("Forgot Password Test Suite ", () => {
+    it("");
+});
+describe("Reset Password Test Suite", () => {
+});
+describe("Update User Passwords Test Suite", () => {
+});
+describe("Fetch All Users Test Suite", () => {
+    it("Fetch All Users Unit Test", () => __awaiter(void 0, void 0, void 0, function* () {
     }));
 });
 // Close the connection to the server after all tests are ran

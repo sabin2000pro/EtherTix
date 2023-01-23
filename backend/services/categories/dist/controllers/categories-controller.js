@@ -48,6 +48,10 @@ const createNewCategory = (request, response, next) => __awaiter(void 0, void 0,
 });
 exports.createNewCategory = createNewCategory;
 const editCategoryByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.editCategoryByID = editCategoryByID;
 const deleteCategoryByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {

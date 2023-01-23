@@ -34,6 +34,7 @@ describe("Register Account Test Suite", () => {
     })
 
     it("Register Account with passwords not matching", async () => {
+
         const invalidBodyData = [{forename: "James", surname: "Brown", email: "jamesbronw09@gmail.com", password: "123mini123", passwordConfirm: "lol12345", role: "User"}]
 
         for(const data of invalidBodyData) {
@@ -78,6 +79,17 @@ describe("Login Test Suite", () => {
          }
     })
 
+    it("Login with invalid e-mail address", async () => {
+        const invalidEmailData = [{email: "123mini123"}]
+
+        for(const data of invalidEmailData) {
+            const response = await request(app).post('/api/v1/auth/login').send(data)
+            
+            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+         }
+
+    })
+
     it("Login with invalid password", async () => {
         const invalidPasswordData = [{email: "jake00@gmail.com.com", password: "dojfgisfjij"}]
 
@@ -91,22 +103,78 @@ describe("Login Test Suite", () => {
 
 })
 
+// Test suite for verifying e-mail address
 describe("Verify E-mail Address Test Suite", () => {
+
+    it("Verify E-mail Address with invalid OTP code entered", async () => {
+        const emailVerificationBodyData = [{userId: "63ce8f17dbde8e822781c701", OTP: "019ksdfj"}]
+
+        for (const bodyData of emailVerificationBodyData) {
+            const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
+
+            return expect(response.statusCode).toBe(StatusCodes.OK);
+        }
+    })
+
+    it("Verify E-mail address with missing OTP value", async () => {
+        const missingOtpData = [{userId: "63ce8f17dbde8e822781c701", OTP: ""}]
+
+        for (const bodyData of missingOtpData) {
+            const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
+
+            return expect(response.statusCode).not.toBe(StatusCodes.OK);
+        }
+    })
+
+    it("Verify E-mail address with valid UserID and OTP values", async () => {
+
+    })
+
+    it("Verify e-mail address with invalid User ID", async () => {
+
+    })
+
 
 })
 
+// Test suite for verifying the MFA code verification test suite
 describe("Verify Login MFA Test Suite", () => {
 
 })
 
 describe("Logout Test Suite", () => {
     
-    it("Logout user success", async () => {
+    it("Logout user success", async () => { // Test for logging out user
+
         const response = await request(app).get('/api/v1/auth/logout');
             
         return expect(response.statusCode).toBe(StatusCodes.OK);
+
     })
 })
+
+describe("Forgot Password Test Suite ", () => {
+    it("")
+})
+
+describe("Reset Password Test Suite", () => {
+
+})
+
+describe("Update User Passwords Test Suite", () => {
+
+})
+
+describe("Fetch All Users Test Suite", () => {
+
+    it("Fetch All Users Unit Test", async () => {
+
+    })
+
+
+})
+
+
 
 
 // Close the connection to the server after all tests are ran

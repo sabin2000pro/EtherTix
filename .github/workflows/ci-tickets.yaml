@@ -3,7 +3,6 @@ name: Tickets Service Deployment
 on:
 
   push:
-
     branches:
       - "master"
 

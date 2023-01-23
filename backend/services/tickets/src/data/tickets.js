@@ -22,7 +22,7 @@ const tickets = [
             ticketClass: "standard",
             capacity: 10,
             minimumQuantityPurchase: 1,
-             maximumQuantityPurchase: 5,
+            maximumQuantityPurchase: 5,
             description: "Standard Ticket for the highland tour event",
             cost: 0.0050,
             ticketToken: "QR Code",
@@ -34,7 +34,6 @@ const tickets = [
         },
 
     {
-            
             name: "Highland Premium Event Ticket",
             ticketClass: "premium",
             capacity: 5,
