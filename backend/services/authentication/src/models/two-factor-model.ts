@@ -59,7 +59,7 @@ TwoFactorVerificationSchema.pre('save', async function(next) {
 })
 
 TwoFactorVerificationSchema.methods.compareVerificationTokens = async function(enteredToken: string): Promise<boolean> {
-    return await bcrypt.compare(enteredToken, this.token);
+    return await bcrypt.compare(enteredToken, this.mfaToken);
 }
 
 const TwoFactorVerification = mongoose.model<TwoFactorVerificationDocument>("TwoFactorVerification", TwoFactorVerificationSchema);
