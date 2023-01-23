@@ -372,13 +372,6 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         }
 
          request.session = {jwt: token}; // Store the token in the session as a cookie
-         user.isLoggedIn = true;
-
-         if(user.isLoggedIn) {
-            return next(new BadRequestError("You are already logged in", StatusCodes.BAD_REQUEST));
-         }
-
-         
          return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
