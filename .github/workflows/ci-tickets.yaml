@@ -3,6 +3,7 @@ name: Tickets Service Deployment
 on:
 
   push:
+
     branches:
       - "master"
 
@@ -14,7 +15,7 @@ jobs:
 
     steps:
 
-      - name: Get Auth Code
+      - name: Get Tickets Code
         uses: actions/checkout@v3
 
       - name: Install NodeJS
@@ -25,6 +26,3 @@ jobs:
 
       - name: Build Tickets Service
         run: npm run build
-
-        with:
-          node-version: 18

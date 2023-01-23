@@ -3,17 +3,25 @@ name: Events Service Deployment
 on:
 
   push:
-    branches: [master]
+    branches:
+      - "master"
 
 jobs:
+
   build-auth-service:
 
     runs-on: self-hosted
 
     steps:
-    
-      - uses: actions/checkout@v2
 
-      - name: Build / Deploy Available Events Service
-        run:
-          |
+      - name: Get Events Code
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+
+      - name: Install Events Dependencies
+        run: npm install
+
+      - name: Build Events Service
+        run: npm run build
