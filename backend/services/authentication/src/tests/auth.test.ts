@@ -144,6 +144,14 @@ describe("Verify Login MFA Test Suite", () => {
 
     })
 
+    it("Verify Login MFA - Valid Correct MFA Code", async () => {
+
+    })
+
+    it("Verify Login MFA - Invalid User ID", async () => {
+
+    })
+
 })
 
 describe("Logout Test Suite", () => {
@@ -157,7 +165,7 @@ describe("Logout Test Suite", () => {
 })
 
 describe("Forgot Password Test Suite ", () => {
-    
+
     it("Forgot Password Test - Invalid E-mail Address", async () => {
         try {
 
@@ -182,7 +190,13 @@ describe("Forgot Password Test Suite ", () => {
 })
 
 describe("Reset Password Test Suite", () => {
+    it("Reset Password Test - Missing password", async () => {
 
+    })
+
+    it("Reset Password Test - Valid Password", async () => {
+
+    })
 })
 
 describe("Update User Passwords Test Suite", () => {
