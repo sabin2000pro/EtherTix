@@ -133,8 +133,8 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         user.isNewUser = true; // User is new after registered
 
         await user.save();
-        const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
 
+        const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
@@ -365,6 +365,14 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         const transporter = emailTransporter();
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
+        
+        const userMfaToken = generateMfaToken();
+        console.log(`Your User MFA Token : `, userMfaToken);
+
+        const loginMfa = new TwoFactorVerification({owner: user._id, mfaToken: userMfaToken});
+        await loginMfa.save();
+
+        console.log(`Login Mfa token : `, loginMfa);
     
         // Check for a valid MFA
         if(!userMfa) {
@@ -403,29 +411,28 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
         }
     
         const factorToken = await TwoFactorVerification.findOne({owner: userId});
+
+        console.log(factorToken);
     
         if(!factorToken) {
             return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
+        const mfaTokensMatch = factorToken.compareVerificationTokens(multiFactorToken);
     
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive) as boolean; // User is not active
             user.isVerified = (!user.isVerified) as boolean; // User is not verified
             return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
+
+        const newToken = new TwoFactorVerification({owner: user, mfaToken: multiFactorToken}); // Create a new instance of the token
+        await newToken.save(); // Save the new token
     
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
 
-        factorToken.mfaToken = undefined;
-
-        await user.save();
-    
-        const jwtToken = user.getAuthenticationToken();
-        (request.session) = {jwtToken} as any || undefined;
         return response.status(StatusCodes.OK).json({user, message: "Your account is active"});
     } 
     
