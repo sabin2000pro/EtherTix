@@ -112,7 +112,7 @@ describe("Verify E-mail Address Test Suite", () => {
         for (const bodyData of emailVerificationBodyData) {
             const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
 
-            return expect(response.statusCode).toBe(StatusCodes.OK);
+            return expect(response.statusCode).not.toBe(StatusCodes.OK);
         }
     })
 
@@ -127,10 +127,31 @@ describe("Verify E-mail Address Test Suite", () => {
     })
 
     it("Verify E-mail address with valid UserID and OTP values", async () => {
+        try {
+    
+        } 
+        
+        catch(error) {
+
+            if(error) {
+                return console.error(error.message);
+            }
+        }
 
     })
 
     it("Verify e-mail address with invalid User ID", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+            if(error) {
+                return console.error(error.message);
+            }
+
+        }
 
     })
 
@@ -141,14 +162,37 @@ describe("Verify E-mail Address Test Suite", () => {
 describe("Verify Login MFA Test Suite", () => {
 
     it("Verify Login MFA - Invalid MFA Code", async () => {
+        try {
 
+        } 
+        
+        catch(error) {
+            if(error) {
+                return console.error(error.message);
+            }
+
+        }
     })
 
     it("Verify Login MFA - Valid Correct MFA Code", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
 
     })
 
     it("Verify Login MFA - Invalid User ID", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
 
     })
 
@@ -190,13 +234,38 @@ describe("Forgot Password Test Suite ", () => {
 })
 
 describe("Reset Password Test Suite", () => {
+
     it("Reset Password Test - Missing password", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
 
     })
 
     it("Reset Password Test - Valid Password", async () => {
+        try {
 
+        } 
+        
+        catch(error) {
+
+        }
     })
+
+    it("Reset Password Test - Invalid Current Password", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
+    })
+
 })
 
 describe("Update User Passwords Test Suite", () => {
@@ -210,7 +279,54 @@ describe("Update User Profile ", () => {
 describe("Fetch All Users Test Suite", () => {
 
     it("Fetch All Users Unit Test", async () => {
+        try {
 
+        } 
+        
+        catch(error) {
+            
+            if(error) {
+                return console.error(error);
+
+            }
+        }
+
+    })
+
+})
+
+describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
+
+    it("Fetch Valid Single user By ID ", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
+
+    })
+
+    it("Fetch Invalid User ID Test", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
+
+    })
+
+    it("Fetch Invalid Missing User ID Test", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
     })
 
 

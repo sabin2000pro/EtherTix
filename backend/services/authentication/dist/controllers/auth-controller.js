@@ -79,6 +79,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
             return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const currentUser = user._id; // Get the current user's ID
+        user.isNewUser = true; // User is new after registered
         yield user.save();
         const userOTP = (0, generate_otp_1.generateOTPVerificationToken)(); // Function that generates the OTP token
         const verificationToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: userOTP });
@@ -267,9 +268,9 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
         }
         // Check to see if the tokens match
         const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
-        if (!mfaTokensMatch) {
-            user.isActive = (!user.isActive);
-            user.isVerified = (!user.isVerified);
+        if (!mfaTokensMatch) { // If tokens don't match
+            user.isActive = (!user.isActive); // User is not active
+            user.isVerified = (!user.isVerified); // User is not verified
             return next(new error_handler_2.BadRequestError("The MFA token you entered is invalid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         user.isVerified = true; // User account is now verified
@@ -327,7 +328,7 @@ const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0
         if (request.session !== undefined) {
             request.session = null; // Clear the session object
         }
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: {} });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: {}, message: "You have logged out" });
     }
     catch (error) {
         if (error) {
@@ -338,7 +339,7 @@ const logoutUser = (request, response, next) => __awaiter(void 0, void 0, void 0
 exports.logoutUser = logoutUser;
 const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const email = request.body;
+        const { email } = request.body;
         const user = yield user_model_1.User.findOne({ email });
         // Check if we have an e-mail in the body of the request
         if (!email) {
@@ -359,7 +360,7 @@ const forgotPassword = (request, response, next) => __awaiter(void 0, void 0, vo
         yield resetPasswordToken.save();
         const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}`; // Create the reset password URL
         sendPasswordResetEmail(user, resetPasswordURL);
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent", sentAt: new Date(Date.now().toFixed()) });
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent", });
     }
     catch (error) {
         if (error) {
@@ -426,25 +427,31 @@ const sendResetPasswordTokenStatus = (request, response, next) => __awaiter(void
     return response.status(http_status_codes_1.StatusCodes.OK).json({ isValid: true });
 });
 exports.sendResetPasswordTokenStatus = sendResetPasswordTokenStatus;
-const updateUserPassword = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const currentPassword = request.body.currentPassword;
-    const newPassword = request.body.newPassword;
-    if (!newPassword) {
-        return next(new error_handler_2.BadRequestError("Please provide your new password", http_status_codes_1.StatusCodes.BAD_REQUEST));
+exports.updateUserPassword = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const currentPassword = request.body.currentPassword;
+        const newPassword = request.body.newPassword;
+        if (!newPassword) {
+            return next(new error_handler_2.BadRequestError("Please provide your new password", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const user = yield user_model_1.User.findById(request.user._id);
+        if (!user) {
+            return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        const currentPasswordMatch = user.comparePasswords(currentPassword);
+        if (!currentPasswordMatch) { // If passwords do not match
+            return next(new error_handler_2.BadRequestError("Current password is invalid.", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        user.password = request.body.newPassword;
+        yield user.save(); // Save new user
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Password Updated" });
     }
-    const user = yield user_model_1.User.findById(request.user._id);
-    if (!user) {
-        return next(new error_handler_2.BadRequestError("No user found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+    catch (error) {
+        if (error) {
+            return next(new error_handler_2.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
-    const currentPasswordMatch = user.comparePasswords(currentPassword);
-    if (!currentPasswordMatch) { // If passwords do not match
-        return next(new error_handler_2.BadRequestError("Current password is invalid.", http_status_codes_1.StatusCodes.BAD_REQUEST));
-    }
-    user.password = request.body.newPassword;
-    yield user.save(); // Save new user
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Password Updated" });
-});
-exports.updateUserPassword = updateUserPassword;
+}));
 const updateUserProfile = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const fieldsToUpdate = { email: request.body.email, username: request.body.username, role: request.body.role };
@@ -518,6 +525,9 @@ exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request
 exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const premiumUsers = yield user_model_1.User.find({ premium: true });
+        if (!premiumUsers) {
+            return next(new error_handler_2.BadRequestError("No premium users found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: premiumUsers });
     }
     catch (error) {

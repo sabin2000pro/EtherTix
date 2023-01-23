@@ -130,8 +130,8 @@ services:
      - "5306:5306"
 
    volumes:
-        - /app/node_modules
-        - ../backend/services/comments:/app
+      - /app/node_modules
+      - ../backend/services/comments:/app
 
    depends_on:
     - posts-service
@@ -159,7 +159,7 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile
-    
+
     volumes:
       - /app/node_modules
       - ../frontend:/app

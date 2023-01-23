@@ -106,6 +106,10 @@ describe("Verify E-mail Address Test Suite", () => {
 describe("Verify Login MFA Test Suite", () => {
     it("Verify Login MFA - Invalid MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
     }));
+    it("Verify Login MFA - Valid Correct MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Verify Login MFA - Invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
 });
 describe("Logout Test Suite", () => {
     it("Logout user success", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -128,6 +132,10 @@ describe("Forgot Password Test Suite ", () => {
     }));
 });
 describe("Reset Password Test Suite", () => {
+    it("Reset Password Test - Missing password", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
+    it("Reset Password Test - Valid Password", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
 });
 describe("Update User Passwords Test Suite", () => {
 });
