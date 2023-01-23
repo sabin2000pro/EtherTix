@@ -130,6 +130,8 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         }
 
         const currentUser = user._id; // Get the current user's ID
+        user.isNewUser = true; // User is new after registered
+
         await user.save();
 
         const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
@@ -504,11 +506,11 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 
 }
 
-export const forgotPassword = async (request: TypedRequestBody<{email: string}>, response: Response, next: NextFunction): Promise<any> => {
+export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
 
-        const email = request.body;
+        const {email} = request.body;
         const user = await User.findOne({email});
 
         // Check if we have an e-mail in the body of the request
@@ -538,7 +540,7 @@ export const forgotPassword = async (request: TypedRequestBody<{email: string}>,
         const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
         sendPasswordResetEmail(user, resetPasswordURL);
     
-        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", sentAt: new Date(Date.now().toFixed())});
+        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", });
     } 
     
     catch(error: any) {
