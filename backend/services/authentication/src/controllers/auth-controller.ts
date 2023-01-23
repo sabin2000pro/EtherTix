@@ -133,7 +133,6 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         user.isNewUser = true; // User is new after registered
 
         await user.save();
-
         const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
 
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
@@ -201,7 +200,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
             return next(new BadRequestError(`User account is already verified`, StatusCodes.BAD_REQUEST));
         }
 
-        if(user.isActive) {
+        if(user.isActive) { // If the user account is already active before verifying their e-mail address, send back error
             return next(new AccountVerifiedError(`User account is already active`, StatusCodes.BAD_REQUEST));
         }
 
@@ -229,6 +228,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
     
                 // Send welcome e-mail
                 transporter.sendMail({
+                    
                     from: 'welcome@ethertix.com',
                     to: user.email,
                     subject: 'E-mail Confirmation Success',
@@ -644,7 +644,9 @@ export const sendResetPasswordTokenStatus = async (request: Request, response: R
 }
 
 export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+
    try {
+
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
     
@@ -810,7 +812,7 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchAllUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -833,7 +835,7 @@ export const fetchAllUsers = async (request: TypedRequestQuery<{sort: string}>, 
 
     }
 
-}
+})
 
 export const fetchUserByID = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
 

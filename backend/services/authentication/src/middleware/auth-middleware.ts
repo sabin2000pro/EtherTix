@@ -48,10 +48,8 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
             return next(new UnauthorizedError("You are unauthorized to perform this action", StatusCodes.BAD_REQUEST));
         }
 
-        
     }
 
-    
 }
 
 // Middleware Function to restrict certain actions to specific user roles
@@ -69,6 +67,7 @@ export const restrictRolesTo = (...roles) => {
 }
 
 export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest, response: Response, next: NextFunction) => {
+
     try {
 
         const currentUser = await User.findById(request.user._id);
@@ -124,10 +123,15 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _r
 
 export const isUserEventOrganiser = async (request: Request, response: Response, next: NextFunction) => {
     try {
-
+        
     }
     
     catch(error: any) {
+        
+        if(error) {
+            return next(new UnauthorizedError(error, StatusCodes.UNAUTHORIZED))
+        }
 
     }
+
 }
