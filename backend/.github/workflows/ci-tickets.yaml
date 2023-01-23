@@ -1,0 +1,27 @@
+name: Ticket Deployment
+
+on:
+  push:
+
+    branches:
+      - "master"
+
+jobs:
+
+  build-auth-service:
+
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Get Ticket Service Code
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+
+      - name: Build Tickets Service
+        run: npm run build
+
+        with:
+          node-version: 18

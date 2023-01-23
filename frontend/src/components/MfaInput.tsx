@@ -7,6 +7,7 @@ type MfaInputProps = {
 const MFA_LENGTH = 6;
 
 const MfaInput: React.FC<MfaInputProps> = ({}) => {
+  
     const [mfa, setMfa] = useState<number[]>()
     const [mfaValid, setMfaValid] = useState<boolean>(false);
     const [mfaSubmitted, setMfaSubmitted] = useState<boolean>(false);

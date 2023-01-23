@@ -9,12 +9,14 @@ const App = () => { // Main App Component
   return (
 
       <>
+      <h1>Home</h1>
 
          <Routes>
             <Route path = '/register' element = {<Register />} />
             <Route path = '/login' element = {<Login />} />
            
             <Route path = 'forgot-password' element = {<ForgotPassword />} />
+
          </Routes>
 
       </>

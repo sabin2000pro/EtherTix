@@ -11,9 +11,8 @@ const CreateUser: React.FC = (props: ICreateUserProps) => {
     <>
 
      <div>
-        Create User Here - Admin Dashboard
+        Create User Component
      </div>
-
 
     </>
 
