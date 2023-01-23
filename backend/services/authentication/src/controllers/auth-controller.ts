@@ -366,14 +366,11 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
         
-        const userMfaToken = generateMfaToken();
-        console.log(`Your User MFA Token : `, userMfaToken);
-
-        const loginMfa = new TwoFactorVerification({owner: user._id, mfaToken: userMfaToken});
+        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
         await loginMfa.save();
 
-        console.log(`Login Mfa token : `, loginMfa);
-    
+        console.log(loginMfa);
+
         // Check for a valid MFA
         if(!userMfa) {
            return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
@@ -411,15 +408,13 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
         }
     
         const factorToken = await TwoFactorVerification.findOne({owner: userId});
-
-        console.log(factorToken);
     
         if(!factorToken) {
             return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken);
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
     
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive) as boolean; // User is not active

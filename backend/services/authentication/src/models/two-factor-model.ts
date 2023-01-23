@@ -49,7 +49,7 @@ const TwoFactorVerificationSchema = new mongoose.Schema<TwoFactorVerificationDoc
 
 TwoFactorVerificationSchema.pre('save', async function(next) {
 
-    if(!this.isModified('token')) {
+    if(!this.isModified('mfaToken')) {
         return next();
     }
 
