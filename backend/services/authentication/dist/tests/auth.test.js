@@ -87,7 +87,7 @@ describe("Verify E-mail Address Test Suite", () => {
         const emailVerificationBodyData = [{ userId: "63ce8f17dbde8e822781c701", OTP: "019ksdfj" }];
         for (const bodyData of emailVerificationBodyData) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
-            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
+            return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
         }
     }));
     it("Verify E-mail address with missing OTP value", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -98,17 +98,47 @@ describe("Verify E-mail Address Test Suite", () => {
         }
     }));
     it("Verify E-mail address with valid UserID and OTP values", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error.message);
+            }
+        }
     }));
     it("Verify e-mail address with invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error.message);
+            }
+        }
     }));
 });
 // Test suite for verifying the MFA code verification test suite
 describe("Verify Login MFA Test Suite", () => {
     it("Verify Login MFA - Invalid MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const invalidMfaCodeData = [{ userId: "63ce8f17dbde8e822781c701" }];
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error.message);
+            }
+        }
     }));
     it("Verify Login MFA - Valid Correct MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
     }));
     it("Verify Login MFA - Invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
     }));
 });
 describe("Logout Test Suite", () => {
@@ -133,8 +163,22 @@ describe("Forgot Password Test Suite ", () => {
 });
 describe("Reset Password Test Suite", () => {
     it("Reset Password Test - Missing password", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
     }));
     it("Reset Password Test - Valid Password", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Reset Password Test - Invalid Current Password", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
     }));
 });
 describe("Update User Passwords Test Suite", () => {
@@ -143,6 +187,33 @@ describe("Update User Profile ", () => {
 });
 describe("Fetch All Users Test Suite", () => {
     it("Fetch All Users Unit Test", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error);
+            }
+        }
+    }));
+});
+describe("Fetch Single User - Organiser Dashboard Test Suite", () => {
+    it("Fetch Valid Single user By ID ", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Fetch Invalid User ID Test", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Fetch Invalid Missing User ID Test", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
     }));
 });
 // Close the connection to the server after all tests are ran

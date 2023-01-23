@@ -1013,6 +1013,18 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
 })
 
 export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
-    const totalUsers = await User.countDocuments({});
-    return response.status(StatusCodes.OK).json({success: true, count: totalUsers});
+    
+   try {
+        const totalUsers = await User.countDocuments({});
+        return response.status(StatusCodes.OK).json({success: true, count: totalUsers});
+   } 
+   
+   catch(error) {
+
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+        }
+
+   }
+
 })

@@ -59,6 +59,7 @@ describe("Register Account Test Suite", () => {
 describe("Login Test Suite", () => {
 
     it("Login with valid credentials", async () => {
+
         const validLoginData = [{email: "jake00@gmail.com.com", password: "123mini123"}]
 
         for(const data of validLoginData) {
@@ -127,8 +128,9 @@ describe("Verify E-mail Address Test Suite", () => {
     })
 
     it("Verify E-mail address with valid UserID and OTP values", async () => {
+
         try {
-    
+            
         } 
         
         catch(error) {
@@ -162,11 +164,13 @@ describe("Verify E-mail Address Test Suite", () => {
 describe("Verify Login MFA Test Suite", () => {
 
     it("Verify Login MFA - Invalid MFA Code", async () => {
-        try {
 
+        try {
+            const invalidMfaCodeData = [{userId: "63ce8f17dbde8e822781c701"}]
         } 
         
         catch(error) {
+
             if(error) {
                 return console.error(error.message);
             }
@@ -175,6 +179,7 @@ describe("Verify Login MFA Test Suite", () => {
     })
 
     it("Verify Login MFA - Valid Correct MFA Code", async () => {
+
         try {
 
         } 
@@ -284,7 +289,7 @@ describe("Fetch All Users Test Suite", () => {
         } 
         
         catch(error) {
-            
+
             if(error) {
                 return console.error(error);
 
