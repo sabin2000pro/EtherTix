@@ -25,6 +25,3 @@ jobs:
 
       - name: Build Auth Service
         run: npm run build
-
-        with:
-          node-version: 18
