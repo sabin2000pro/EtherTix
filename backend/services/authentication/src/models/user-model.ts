@@ -138,7 +138,7 @@ const UserSchema = new mongoose.Schema({
         default: UserRoles.User
     },
 
-    ticketsOwned: {
+    ticketsOwned: { // The number of tickets the user owns (This number increments after the user books a ticket and sends ether to the organiser's wallet )
         type: Number,
         default: 0
     },  

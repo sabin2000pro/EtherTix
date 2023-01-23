@@ -404,16 +404,16 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
         // Check to see if the tokens match
         const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
     
-        if(!mfaTokensMatch) {
-            user.isActive = (!user.isActive) as boolean;
-            user.isVerified = (!user.isVerified) as boolean;
+        if(!mfaTokensMatch) { // If tokens don't match
+            user.isActive = (!user.isActive) as boolean; // User is not active
+            user.isVerified = (!user.isVerified) as boolean; // User is not verified
             return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
     
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
-        
         factorToken.mfaToken = undefined;
+
         await user.save();
     
         const jwtToken = user.getAuthenticationToken();
@@ -490,7 +490,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
             request.session = null; // Clear the session object
         }
     
-        return response.status(StatusCodes.OK).json({success: true, data: {}});
+        return response.status(StatusCodes.OK).json({success: true, data: {}, message: "You have logged out"});
     } 
     
     catch(error: any) {
@@ -607,7 +607,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
    catch(error: any) {
 
       if(error) {
-        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+         return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
       }
 
    }
@@ -636,31 +636,41 @@ export const sendResetPasswordTokenStatus = async (request: Request, response: R
     return response.status(StatusCodes.OK).json({isValid: true})
 }
 
-export const updateUserPassword = async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
-    const currentPassword = request.body.currentPassword;
-    const newPassword = request.body.newPassword;
+export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+   try {
+        const currentPassword = request.body.currentPassword;
+        const newPassword = request.body.newPassword;
+    
+        if(!newPassword) {
+            return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
+        }
+    
+        const user = await User.findById(<any>request.user._id);
+    
+        if(!user) {
+            return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+        }
+    
+        const currentPasswordMatch = user.comparePasswords(currentPassword);
+    
+        if(!currentPasswordMatch) { // If passwords do not match
+            return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
+        }
+    
+        user.password = request.body.newPassword
+        await user.save(); // Save new user
+    
+        return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
+   } 
+   
+   catch(error) {
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        }
+   }
 
-    if(!newPassword) {
-        return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
-    }
 
-    const user = await User.findById(<any>request.user._id);
-
-    if(!user) {
-        return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-    }
-
-    const currentPasswordMatch = user.comparePasswords(currentPassword);
-
-    if(!currentPasswordMatch) { // If passwords do not match
-        return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
-    }
-
-    user.password = request.body.newPassword
-    await user.save(); // Save new user
-
-    return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
-}
+})
 
 export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
@@ -772,6 +782,12 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
 
     try {
         const premiumUsers = await User.find({premium: true});
+
+        if(!premiumUsers) {
+            return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
+        }
+
+
         return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
     }
     
