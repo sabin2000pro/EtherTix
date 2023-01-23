@@ -24,6 +24,17 @@ services:
       - /app/node_modules
 
     command: ["npm", "run", "auth:test"]
+
+  categories-tests:
+    build:
+      context: ../backend/services/categories
+      dockerfile: Dockerfile
+
+    volumes:
+        - /app/node_modules
+        
+    command: ["npm", "run", "categories:test"]
+
   events-service:
       image: sabin2000/ethertix-events-service
       build:

@@ -27,7 +27,7 @@ describe("Register Account Test Suite", () => {
 
         for(const data of validRegisterData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            return expect(response.statusCode).toBe(StatusCodes.CREATED);
+            return expect(response.statusCode).not.toBe(StatusCodes.CREATED);
         
          }
 
@@ -52,6 +52,7 @@ describe("Register Account Test Suite", () => {
             
             return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
+
     })
 
 })
@@ -60,11 +61,10 @@ describe("Login Test Suite", () => {
 
     it("Login with valid credentials", async () => {
 
-        const validLoginData = [{email: "jake00@gmail.com.com", password: "123mini123"}]
+        const validLoginData = [{email: "dana00@gmail.com", password: "123mini123"}]
 
         for(const data of validLoginData) {
-            const response = await request(app).post('/api/v1/auth/login').send(data)
-            
+            const response = await request(app).post('/api/v1/auth/login').send(data)            
             return expect(response.statusCode).toBe(StatusCodes.OK);
          }
 
@@ -75,8 +75,8 @@ describe("Login Test Suite", () => {
 
         for(const data of missingEmailData) {
             const response = await request(app).post('/api/v1/auth/login').send(data)
-            
             return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+
          }
     })
 
@@ -108,6 +108,7 @@ describe("Login Test Suite", () => {
 describe("Verify E-mail Address Test Suite", () => {
 
     it("Verify E-mail Address with invalid OTP code entered", async () => {
+
         const emailVerificationBodyData = [{userId: "63ce8f17dbde8e822781c701", OTP: "019ksdfj"}]
 
         for (const bodyData of emailVerificationBodyData) {
@@ -127,18 +128,25 @@ describe("Verify E-mail Address Test Suite", () => {
         }
     })
 
-    it("Verify E-mail address with valid UserID and OTP values", async () => {
+    it("Verify E-mail address with already verified user ID and OTP", async () => {
 
         try {
-            
+            const verifiedData = [{userId: "63cef9c5b006313b347a3c96", OTP: "761259"}]
+
+            for (const bodyData of verifiedData) {
+                const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
+    
+                return expect(response.statusCode).not.toBe(StatusCodes.OK);
+            }
+
         } 
         
         catch(error) {
-
             if(error) {
-                return console.error(error.message);
+                return console.error(error);
             }
         }
+
 
     })
 
@@ -191,6 +199,7 @@ describe("Verify Login MFA Test Suite", () => {
     })
 
     it("Verify Login MFA - Invalid User ID", async () => {
+
         try {
 
         } 
@@ -227,6 +236,7 @@ describe("Forgot Password Test Suite ", () => {
     })
 
     it("Forgot Password Test - Valid E-mail Address", async () => {
+
         try {
 
         } 

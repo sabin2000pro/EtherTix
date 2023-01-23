@@ -228,7 +228,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
     
                 // Send welcome e-mail
                 transporter.sendMail({
-                    
+
                     from: 'welcome@ethertix.com',
                     to: user.email,
                     subject: 'E-mail Confirmation Success',
@@ -372,6 +372,13 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         }
 
          request.session = {jwt: token}; // Store the token in the session as a cookie
+         user.isLoggedIn = true;
+
+         if(user.isLoggedIn) {
+            return next(new BadRequestError("You are already logged in", StatusCodes.BAD_REQUEST));
+         }
+
+         
          return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
@@ -398,7 +405,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
         }
     
         if(!multiFactorToken) {
-            user.isActive = !user.isActive;
+            user.isActive = false; // User is not active yet
             return next(new BadRequestError("Please provide your MFA token", StatusCodes.BAD_REQUEST));
         }
     
@@ -419,6 +426,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
     
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
+
         factorToken.mfaToken = undefined;
 
         await user.save();
