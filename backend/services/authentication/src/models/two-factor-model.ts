@@ -7,7 +7,7 @@ interface ITwoFactorVerification {
     createdAt: Date;
     expiresAt: Date;
 
-    compareMfaTokens: (enteredToken: string) => Promise<boolean>
+    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
 }
 
 interface TwoFactorVerificationDocument extends mongoose.Model<ITwoFactorVerification> {
@@ -17,7 +17,7 @@ interface TwoFactorVerificationDocument extends mongoose.Model<ITwoFactorVerific
     createdAt: Date;
     expiresAt: Date;
 
-    compareMfaTokens: (enteredToken: string) => Promise<boolean>
+    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
 }
 
 // @schema: E-mail Verification Model

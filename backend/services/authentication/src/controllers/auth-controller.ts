@@ -419,7 +419,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = factorToken.compareVerificationTokens(multiFactorToken);
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken);
     
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive) as boolean; // User is not active
@@ -470,7 +470,7 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
            return next(new NotFoundError("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
 
-        const resentTokensMatch = resentToken.compareMfaTokens(mfaToken as any);
+        const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
 
         // Check if the resent token matches the one in the database or not
 
