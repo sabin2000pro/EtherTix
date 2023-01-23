@@ -20,7 +20,7 @@ const CategorySchema = new mongoose.Schema<CategoryDocument>({
         default: ''
     },
 
-    icon: {
+    icon: { // Icon for the category
         type: String,
         default: ''
     },

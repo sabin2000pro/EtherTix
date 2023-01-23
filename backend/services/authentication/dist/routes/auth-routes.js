@@ -9,8 +9,9 @@ const auth_controller_1 = require("../controllers/auth-controller");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const auth_middleware_1 = require("../middleware/auth-middleware");
 exports.authRouter = express_1.default.Router({ mergeParams: true });
+const RATE_LIMIT_MINUTES = 10 * 60 * 1000;
 const rateLimiter = (0, express_rate_limit_1.default)({
-    windowMs: 10 * 60 * 1000,
+    windowMs: RATE_LIMIT_MINUTES,
     max: 30,
     standardHeaders: true,
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers

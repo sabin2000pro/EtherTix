@@ -260,7 +260,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-export const resendEmailVerificationCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const resendEmailVerificationCode = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -302,7 +302,7 @@ export const resendEmailVerificationCode = async (request: Request, response: Re
         }
     }
 
-}
+})
 
 const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
 
@@ -989,6 +989,7 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
+
     }
 
 })

@@ -84,8 +84,18 @@ describe("Login Test Suite", () => {
 // Test suite for verifying e-mail address
 describe("Verify E-mail Address Test Suite", () => {
     it("Verify E-mail Address with invalid OTP code entered", () => __awaiter(void 0, void 0, void 0, function* () {
+        const emailVerificationBodyData = [{ userId: "63ce8f17dbde8e822781c701", OTP: "019ksdfj" }];
+        for (const bodyData of emailVerificationBodyData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
+        }
     }));
     it("Verify E-mail address with missing OTP value", () => __awaiter(void 0, void 0, void 0, function* () {
+        const missingOtpData = [{ userId: "63ce8f17dbde8e822781c701", OTP: "" }];
+        for (const bodyData of missingOtpData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
+            return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
+        }
     }));
     it("Verify E-mail address with valid UserID and OTP values", () => __awaiter(void 0, void 0, void 0, function* () {
     }));
@@ -94,6 +104,8 @@ describe("Verify E-mail Address Test Suite", () => {
 });
 // Test suite for verifying the MFA code verification test suite
 describe("Verify Login MFA Test Suite", () => {
+    it("Verify Login MFA - Invalid MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
+    }));
 });
 describe("Logout Test Suite", () => {
     it("Logout user success", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -102,11 +114,24 @@ describe("Logout Test Suite", () => {
     }));
 });
 describe("Forgot Password Test Suite ", () => {
-    it("");
+    it("Forgot Password Test - Invalid E-mail Address", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Forgot Password Test - Valid E-mail Address", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
 });
 describe("Reset Password Test Suite", () => {
 });
 describe("Update User Passwords Test Suite", () => {
+});
+describe("Update User Profile ", () => {
 });
 describe("Fetch All Users Test Suite", () => {
     it("Fetch All Users Unit Test", () => __awaiter(void 0, void 0, void 0, function* () {

@@ -169,7 +169,7 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise
 // @public: True (No Authorization Token Required)
-const resendEmailVerificationCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.resendEmailVerificationCode = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
         const currentUser = yield user_model_1.User.findById(userId);
@@ -197,8 +197,7 @@ const resendEmailVerificationCode = (request, response, next) => __awaiter(void 
             return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
     }
-});
-exports.resendEmailVerificationCode = resendEmailVerificationCode;
+}));
 const sendLoginMfa = (transporter, user, userMfa) => {
     return transporter.sendMail({
         from: 'mfa@ethertix.com',

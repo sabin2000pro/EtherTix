@@ -8,10 +8,8 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "dev": "nodemon dist/index.js",
-    "start:server": "npm run dev",
-    "auth:test": "jest tests/auth.test.ts --bail"
+    "start:server": "npm run dev"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -38,7 +36,6 @@
     "nodemon": "^2.0.20",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
-    "tsc": "^2.0.4"
+    "ts-node-dev": "^2.0.0"
   }
 }

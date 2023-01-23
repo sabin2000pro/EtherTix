@@ -140,6 +140,10 @@ describe("Verify E-mail Address Test Suite", () => {
 // Test suite for verifying the MFA code verification test suite
 describe("Verify Login MFA Test Suite", () => {
 
+    it("Verify Login MFA - Invalid MFA Code", async () => {
+
+    })
+
 })
 
 describe("Logout Test Suite", () => {
@@ -147,14 +151,34 @@ describe("Logout Test Suite", () => {
     it("Logout user success", async () => { // Test for logging out user
 
         const response = await request(app).get('/api/v1/auth/logout');
-            
         return expect(response.statusCode).toBe(StatusCodes.OK);
 
     })
 })
 
 describe("Forgot Password Test Suite ", () => {
-    it("")
+    
+    it("Forgot Password Test - Invalid E-mail Address", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
+
+    })
+
+    it("Forgot Password Test - Valid E-mail Address", async () => {
+        try {
+
+        } 
+        
+        catch(error) {
+
+        }
+
+    })
 })
 
 describe("Reset Password Test Suite", () => {
@@ -162,6 +186,10 @@ describe("Reset Password Test Suite", () => {
 })
 
 describe("Update User Passwords Test Suite", () => {
+
+})
+
+describe("Update User Profile ", () => {
 
 })
 
@@ -173,8 +201,6 @@ describe("Fetch All Users Test Suite", () => {
 
 
 })
-
-
 
 
 // Close the connection to the server after all tests are ran
