@@ -68,13 +68,15 @@ export const fetchCategoryByID = async (request: Express.Request, response: Expr
 export const createNewCategory = async (request: any, response: Express.Response, next: NextFunction): Promise<any> => {
 
     try {
-        
-        const {name, categoryType, isTrending, isNew} = request.body;
-        const event = request.body.event;
-        const category = await Category.create({name, categoryType, isTrending, isNew, event});
 
-        console.log(category);
-        console.log(name);
+        const event = request.body.event;
+        const {name, categoryType, isTrending, isNew} = request.body;
+
+        if(!name || !categoryType || !isTrending || !isNew) {
+            return next(new BadRequestError("One of the categories fields are missing, please check again", StatusCodes.NOT_FOUND));
+        }
+
+        const category = await Category.create({name, categoryType, isTrending, isNew, event});
 
         await category.save();
 
@@ -84,7 +86,6 @@ export const createNewCategory = async (request: any, response: Express.Response
     catch(error) {
 
         if(error) {
-            console.error(error);
             return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
        }
 
@@ -119,14 +120,25 @@ export const editCategoryByID = async (request: Express.Request, response: Expre
 
 }
 
-export const deleteCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
+export const deleteCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
     try {
+
+        const id = request.params.id;
+        let category = await Category.findById(id);
+
+        if(!category) {
+
+        }
 
     }
     
     catch(error) {
 
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+       }
     }
+
 }
 
 export const deleteCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
@@ -138,4 +150,14 @@ export const deleteCategories = async (request: Express.Request, response: Expre
 
     }
     
+}
+
+export const fetchTrendingCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response> => {
+    try {
+
+    } 
+    
+    catch(error) {
+
+    }
 }
