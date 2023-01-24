@@ -1,7 +1,7 @@
 import { BadRequestError } from '../middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import {Category} from '../models/categories-model';
-import {Request, Response, NextFunction} from 'express'
+import {Response, NextFunction} from 'express'
 import { NotFoundError } from '../middleware/error-handler';
 
 declare namespace Express {
@@ -31,6 +31,10 @@ export const fetchAllCategories = async (request: any, response: Express.Respons
     } 
     
     catch(error) {
+
+        if(error) {
+        
+        }
 
     }
 

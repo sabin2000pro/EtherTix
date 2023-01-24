@@ -11,6 +11,7 @@
     "start:server": "npm run dev",
     "categories:test": "jest tests/auth.test.ts --bail"
   },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -10,7 +10,13 @@ connectCategoriesDatabase();
 
 const app: Application = express();
 
-app.use(morgan('dev') as any)
+if(process.env.NODE_ENV === 'production') {
+    app.use(mongoSanitize())
+}
+
+if(process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev') as any)
+}    
 
 app.use(cors({
     origin: "*",
@@ -18,11 +24,9 @@ app.use(cors({
 }) as any)
 
 app.get('/', (request, response, next) => {
-    
+   return response.status(200).json({success: true, message: "Categories Root Route"}) 
 })
 
-if(process.env.NODE_ENV === 'production') {
-    app.use(mongoSanitize())
-}
+app.use('/api/v1/categories', categoriesRouter);
 
 export {app}
