@@ -1,7 +1,7 @@
 import { BadRequestError } from '../middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import {Category} from '../models/categories-model';
-import {Response, NextFunction} from 'express'
+import {Request, Response, NextFunction} from 'express'
 import { NotFoundError } from '../middleware/error-handler';
 
 declare namespace Express {
@@ -65,12 +65,18 @@ export const fetchCategoryByID = async (request: Express.Request, response: Expr
 
 }
 
-export const createNewCategory = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response | any> => {
+export const createNewCategory = async (request: any, response: Express.Response, next: NextFunction): Promise<any> => {
 
     try {
         
-        const body = request.body;
-        const category = await Category.create(body);
+        const {name, categoryType, isTrending, isNew} = request.body;
+        const event = request.body.event;
+        const category = await Category.create({name, categoryType, isTrending, isNew, event});
+
+        console.log(category);
+        console.log(name);
+
+        await category.save();
 
         return response.status(StatusCodes.CREATED).json({success: true, category});
     } 
@@ -78,6 +84,7 @@ export const createNewCategory = async (request: Express.Request, response: Expr
     catch(error) {
 
         if(error) {
+            console.error(error);
             return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
        }
 

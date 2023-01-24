@@ -1,7 +1,6 @@
 const events = [
 
    {  
-
       name: "Edinburgh Outdoor Highland Tour",
       summary: "Come with us on our tour where we visit the beautiful highlands of Edinburgh, you will not regret it. A fun experience for all adults and teenagers. A great event that lets you see the beautiful landmarks of Edinburgh",
 

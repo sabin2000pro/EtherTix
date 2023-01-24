@@ -10,6 +10,8 @@ connectCategoriesDatabase();
 
 const app: Application = express();
 
+app.use(express.json() as any);
+
 if(process.env.NODE_ENV === 'production') {
     app.use(mongoSanitize())
 }
