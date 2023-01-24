@@ -369,8 +369,6 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
         await loginMfa.save();
 
-        console.log(loginMfa);
-
         // Check for a valid MFA
         if(!userMfa) {
            return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
@@ -388,7 +386,6 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
 
     }
 
-       
 })
 
 export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
