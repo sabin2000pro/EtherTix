@@ -1,8 +1,7 @@
-import { BadRequestError } from '../middleware/error-handler';
+import { BadRequestError, NotFoundError } from '../middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import {Category} from '../models/categories-model';
 import {Request, Response, NextFunction} from 'express'
-import { NotFoundError } from '../middleware/error-handler';
 
 declare namespace Express {
     export interface Request {
@@ -27,13 +26,18 @@ export const fetchAllCategories = async (request: any, response: Express.Respons
     try {
 
         const categories = await Category.find();
+
+        if(!categories) {
+            return next(new NotFoundError("No categories found", StatusCodes.NOT_FOUND))
+        }
+
         return response.status(StatusCodes.OK).json({success: true, categories})
     } 
     
     catch(error) {
 
         if(error) {
-        
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
         }
 
     }
@@ -51,7 +55,8 @@ export const fetchCategoryByID = async (request: Express.Request, response: Expr
          return next(new NotFoundError("Category with that ID cannot be found", StatusCodes.NOT_FOUND));
       }
 
-        return response.status(StatusCodes).json({success: true, category});
+       return response.status(StatusCodes).json({success: true, category});
+       
     } 
     
     catch(error) {
@@ -77,7 +82,6 @@ export const createNewCategory = async (request: any, response: Express.Response
         }
 
         const category = await Category.create({name, categoryType, isTrending, isNew, event});
-
         await category.save();
 
         return response.status(StatusCodes.CREATED).json({success: true, category});
@@ -122,14 +126,8 @@ export const editCategoryByID = async (request: Express.Request, response: Expre
 
 export const deleteCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
     try {
-
-        const id = request.params.id;
-        let category = await Category.findById(id);
-
-        if(!category) {
-
-        }
-
+        await Category.findByIdAndRemove(request.params.id);
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Category Deleted"});
     }
     
     catch(error) {
@@ -143,16 +141,39 @@ export const deleteCategoryByID = async (request: Express.Request, response: Exp
 
 export const deleteCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
     try {
-
+        await Category.deleteMany();
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Categories deleted"})
     }
     
     catch(error) {
+
+        if(error) {
+            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+       }
 
     }
     
 }
 
-export const fetchTrendingCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response> => {
+export const fetchTrendingCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
+    try {
+
+        const trendingCategories = await Category.find({isTrending: true});
+
+        if(!trendingCategories) {
+
+        }
+
+
+    } 
+    
+    catch(error) {
+
+    }
+
+}
+
+export const fetchNewCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
     try {
 
     } 
@@ -160,4 +181,5 @@ export const fetchTrendingCategories = async (request: Express.Request, response
     catch(error) {
 
     }
+    
 }
