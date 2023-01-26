@@ -47,5 +47,3 @@ yarn-debug.log*
 yarn-error.log*
 .vscode/
 *.o
-/package.json
-/package-lock.json
