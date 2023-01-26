@@ -87,6 +87,9 @@ const isUserEventOrganiser = (request, response, next) => __awaiter(void 0, void
     try {
     }
     catch (error) {
+        if (error) {
+            return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
     }
 });
 exports.isUserEventOrganiser = isUserEventOrganiser;

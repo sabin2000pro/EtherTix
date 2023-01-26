@@ -1,14 +1,23 @@
 [
     {
-       
+       "categoryType": "Outdoor",
+       "isTrending": false,
+       "isNew": false,
+       "event": ""
     },
 
     {
-
+        "categoryType": "Food/Drink", 
+        "isTrending": true,
+        "isNew": true,
+        "event": ""
     },
 
     {
-
+        "categoryType": "Conference",
+        "isTrending": true,
+        "isNew": true,
+        "event": ""
     },
 
     {

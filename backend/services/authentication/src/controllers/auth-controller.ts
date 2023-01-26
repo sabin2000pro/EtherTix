@@ -64,7 +64,6 @@ export interface TypedRequestBody<T extends ParamsDictionary> extends Request {
   // @returns: void
   // @public: True (No Authorization Required)
 
-
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 
     return transporter.sendMail({

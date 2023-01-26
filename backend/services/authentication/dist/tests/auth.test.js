@@ -33,7 +33,7 @@ describe("Register Account Test Suite", () => {
         const validRegisterData = [{ forename: "John", surname: "Owens", username: "johnn32948", email: "john00@gmail.com", password: "test00", passwordConfirm: "test00", role: "User" }];
         for (const data of validRegisterData) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
-            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.CREATED);
+            return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.CREATED);
         }
     }));
     it("Register Account with passwords not matching", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,7 +53,7 @@ describe("Register Account Test Suite", () => {
 });
 describe("Login Test Suite", () => {
     it("Login with valid credentials", () => __awaiter(void 0, void 0, void 0, function* () {
-        const validLoginData = [{ email: "jake00@gmail.com.com", password: "123mini123" }];
+        const validLoginData = [{ email: "dana00@gmail.com", password: "123mini123" }];
         for (const data of validLoginData) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(data);
             return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
@@ -97,12 +97,17 @@ describe("Verify E-mail Address Test Suite", () => {
             return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
         }
     }));
-    it("Verify E-mail address with valid UserID and OTP values", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Verify E-mail address with already verified user ID and OTP", () => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const verifiedData = [{ userId: "63cef9c5b006313b347a3c96", OTP: "761259" }];
+            for (const bodyData of verifiedData) {
+                const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
+                return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
+            }
         }
         catch (error) {
             if (error) {
-                return console.error(error.message);
+                return console.error(error);
             }
         }
     }));

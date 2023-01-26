@@ -128,7 +128,7 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
         if (user.isVerified) {
             return next(new error_handler_2.BadRequestError(`User account is already verified`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        if (user.isActive) {
+        if (user.isActive) { // If the user account is already active before verifying their e-mail address, send back error
             return next(new error_handler_1.AccountVerifiedError(`User account is already active`, http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const token = yield email_verification_model_1.EmailVerification.findOne({ owner: userId }); // Find a verification token
@@ -189,6 +189,9 @@ exports.resendEmailVerificationCode = (0, express_async_handler_1.default)((requ
         }
         // Fetch the generated token
         const otpToken = (0, generate_otp_1.generateOTPVerificationToken)();
+        if (!otpToken) {
+            return next(new error_handler_2.BadRequestError("OTP Token generated is invalid.", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
         const newToken = new email_verification_model_1.EmailVerification({ owner: currentUser, token: otpToken }); // Create a new instance of the token
         yield newToken.save(); // Save the new token
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "E-mail Verification Re-sent" });
@@ -238,6 +241,8 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
         const userMfa = (0, generate_mfa_1.generateMfaToken)();
         const transporter = (0, send_email_1.emailTransporter)();
         sendLoginMfa(transporter, user, userMfa);
+        const loginMfa = new two_factor_model_1.TwoFactorVerification({ owner: user, mfaToken: userMfa });
+        yield loginMfa.save();
         // Check for a valid MFA
         if (!userMfa) {
             return next(new error_handler_2.BadRequestError("User MFA not valid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -259,7 +264,7 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
             return next(new error_handler_2.BadRequestError(`This user ID is not valid. Please try again`, http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
         if (!multiFactorToken) {
-            user.isActive = !user.isActive;
+            user.isActive = false; // User is not active yet
             return next(new error_handler_2.BadRequestError("Please provide your MFA token", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const factorToken = yield two_factor_model_1.TwoFactorVerification.findOne({ owner: userId });
@@ -267,18 +272,16 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
             return next(new error_handler_2.BadRequestError(`The 2FA token associated to the user is invalid `, http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
         // Check to see if the tokens match
-        const mfaTokensMatch = factorToken.compareMfaTokens(multiFactorToken);
+        const mfaTokensMatch = yield factorToken.compareVerificationTokens(multiFactorToken);
         if (!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive); // User is not active
             user.isVerified = (!user.isVerified); // User is not verified
             return next(new error_handler_2.BadRequestError("The MFA token you entered is invalid. Try again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
+        const newToken = new two_factor_model_1.TwoFactorVerification({ owner: user, mfaToken: multiFactorToken }); // Create a new instance of the token
+        yield newToken.save(); // Save the new token
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
-        factorToken.mfaToken = undefined;
-        yield user.save();
-        const jwtToken = user.getAuthenticationToken();
-        (request.session) = { jwtToken } || undefined;
         return response.status(http_status_codes_1.StatusCodes.OK).json({ user, message: "Your account is active" });
     }
     catch (error) {
@@ -305,7 +308,7 @@ const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, 
         if (!resentToken) {
             return next(new error_handler_1.NotFoundError("MFA Token could not be found", http_status_codes_1.StatusCodes.NOT_FOUND));
         }
-        const resentTokensMatch = resentToken.compareMfaTokens(mfaToken);
+        const resentTokensMatch = yield resentToken.compareVerificationTokens(mfaToken);
         // Check if the resent token matches the one in the database or not
         if (!resentTokensMatch) {
             return next(new error_handler_2.BadRequestError("Tokens do not match. Please try again later.", http_status_codes_1.StatusCodes.BAD_REQUEST));
@@ -537,7 +540,7 @@ exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((reques
     }
 }));
 // ADMIN CONTROLLERS
-const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.fetchAllUsers = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_model_1.User.find();
         if (!users) {
@@ -550,8 +553,7 @@ const fetchAllUsers = (request, response, next) => __awaiter(void 0, void 0, voi
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
         }
     }
-});
-exports.fetchAllUsers = fetchAllUsers;
+}));
 exports.fetchUserByID = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = request.params.userId;
@@ -666,6 +668,13 @@ exports.unlockUserAccount = (0, express_async_handler_1.default)((request, respo
     }
 }));
 exports.fetchTotalUsers = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const totalUsers = yield user_model_1.User.countDocuments({});
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, count: totalUsers });
+    try {
+        const totalUsers = yield user_model_1.User.countDocuments({});
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, count: totalUsers });
+    }
+    catch (error) {
+        if (error) {
+            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
+    }
 }));

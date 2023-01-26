@@ -8,10 +8,10 @@ import connectEventsDatabase from '../events/src/database/event-db';
 import connectTicketsDatabase from '../tickets/src/database/tickets-db';
 import connectVenuesDatabase from '../venues/src/database/venues-db';
 
-const users = require('../authentication/src/data/users.js')
-const events = require('../events/src/data/events.js')
-const tickets = require('../tickets/src/data/tickets.js')
-const venues = require('../venues/src/data/venues.js');
+const users = require('../authentication/src/data/users.json')
+const events = require('../events/src/data/events.json')
+const tickets = require('../tickets/src/data/tickets.json')
+const venues = require('../venues/src/data/venues.json');
 
 const connectServicesToDb = () => {
     connectAuthDatabase();

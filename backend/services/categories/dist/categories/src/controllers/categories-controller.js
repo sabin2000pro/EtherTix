@@ -111,14 +111,9 @@ const fetchTrendingCategories = (request, response, next) => __awaiter(void 0, v
     try {
         const trendingCategories = yield categories_model_1.Category.find({ isTrending: true });
         if (!trendingCategories) {
-            return next(new error_handler_1.BadRequestError("No trending categories found", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, trendingCategories });
     }
     catch (error) {
-        if (error) {
-            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
-        }
     }
 });
 exports.fetchTrendingCategories = fetchTrendingCategories;
