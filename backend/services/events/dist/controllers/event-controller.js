@@ -58,7 +58,7 @@ const fetchSingleEvent = (request, response, next) => __awaiter(void 0, void 0, 
 exports.fetchSingleEvent = fetchSingleEvent;
 const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const eventData = request.body;
+        // @TODO
     }
     catch (error) {
         if (error) {

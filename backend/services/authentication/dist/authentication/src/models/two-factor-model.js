@@ -38,7 +38,7 @@ const TwoFactorVerificationSchema = new mongoose_1.default.Schema({
 });
 TwoFactorVerificationSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!this.isModified('token')) {
+        if (!this.isModified('mfaToken')) {
             return next();
         }
         // Hash the token
@@ -48,7 +48,7 @@ TwoFactorVerificationSchema.pre('save', function (next) {
 });
 TwoFactorVerificationSchema.methods.compareVerificationTokens = function (enteredToken) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield bcryptjs_1.default.compare(enteredToken, this.token);
+        return yield bcryptjs_1.default.compare(enteredToken, this.mfaToken);
     });
 };
 const TwoFactorVerification = mongoose_1.default.model("TwoFactorVerification", TwoFactorVerificationSchema);

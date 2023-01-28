@@ -40,7 +40,7 @@ const CategorySchema = new mongoose.Schema<CategoryDocument>({
         required: [true, "Please specify whether or not the category is newly created or not"]
     },
 
-    event: {
+    event: { // Category -> Event Relationship
         type: mongoose.Schema.Types.ObjectId,
         ref: "Event",
         required: [true, "Please specify the event that this category belongs to"]

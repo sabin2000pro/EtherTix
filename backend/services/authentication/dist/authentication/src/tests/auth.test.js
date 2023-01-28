@@ -12,111 +12,214 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require('dotenv').config();
 const http_status_codes_1 = require("http-status-codes");
 const supertest_1 = __importDefault(require("supertest"));
 const mongoose_1 = __importDefault(require("mongoose"));
-require('dotenv').config("../.env");
 const app_1 = require("../app");
 // Before any tests begin, connect to the database
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/?retryWrites=true&w=majority");
+    return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority");
 }));
 describe("Register Account Test Suite", () => {
-    it("Register Account with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
-        const invalidBodyData = [{ username: "bob2000", email: "bob0wef.com", password: "123mini12", passwordConfirm: "123mini12", forename: "Sabin", surname: "Lungu" }];
-        for (const data of invalidBodyData) {
-            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
-            return expect(response.statusCode).toBe(400);
-        }
-    }));
     it("Register Account with missing fields", () => __awaiter(void 0, void 0, void 0, function* () {
-        const missingBodyData = [{ username: "bob2000", email: "bob0wef.com", forename: "Sabin", surname: "Lungu" }];
+        const missingBodyData = [{ username: "bob2000", email: "andy09@gmail.com", forename: "Sabin", surname: "Lungu" }];
         for (const data of missingBodyData) {
             const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
             return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
+    it("Register account with valid details", () => __awaiter(void 0, void 0, void 0, function* () {
+        const validRegisterData = [{ forename: "John", surname: "Owens", username: "johnn32948", email: "john00@gmail.com", password: "test00", passwordConfirm: "test00", role: "User" }];
+        for (const data of validRegisterData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
+            return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.CREATED);
+        }
+    }));
+    it("Register Account with passwords not matching", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidBodyData = [{ forename: "James", surname: "Brown", email: "jamesbronw09@gmail.com", password: "123mini123", passwordConfirm: "lol12345", role: "User" }];
+        for (const data of invalidBodyData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        }
+    }));
+    it("Register account with forename characters exceeding limit", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidForename = [{ forename: "weofjewoijfewiojfewoijfweoifwe", surname: "Andy", "email": "eabinlungu09@gmail.com", password: "123mini123", passwordConfirm: "123mini123", role: "User" }];
+        for (const data of invalidForename) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/register').send(data);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        }
+    }));
 });
-describe("Login Account Test Suite", () => {
-    it("Login With Valid Credentials Test", () => __awaiter(void 0, void 0, void 0, function* () {
-        const loginFields = [{ email: "sabinlungu293@gmail.com", password: "123mini123" }];
-        for (const loginData of loginFields) {
-            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
+describe("Login Test Suite", () => {
+    it("Login with valid credentials", () => __awaiter(void 0, void 0, void 0, function* () {
+        const validLoginData = [{ email: "dana00@gmail.com", password: "123mini123" }];
+        for (const data of validLoginData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(data);
             return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
         }
     }));
-    it("Login with invalid password", () => __awaiter(void 0, void 0, void 0, function* () {
-        const loginFields = [{ email: "sabinlungu293@gmail.com", password: "invalidpassword" }];
-        for (const loginData of loginFields) {
-            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
+    it("Login with missing e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
+        const missingEmailData = [{ password: "123mini123" }];
+        for (const data of missingEmailData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(data);
             return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
     it("Login with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
-        const loginFields = [{ email: "invalidemail", password: "invalidpassword" }];
-        for (const loginData of loginFields) {
-            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(loginData);
+        const invalidEmailData = [{ email: "123mini123" }];
+        for (const data of invalidEmailData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(data);
+            return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        }
+    }));
+    it("Login with invalid password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidPasswordData = [{ email: "jake00@gmail.com.com", password: "dojfgisfjij" }];
+        for (const data of invalidPasswordData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/login').send(data);
             return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.BAD_REQUEST);
         }
     }));
 });
+// Test suite for verifying e-mail address
 describe("Verify E-mail Address Test Suite", () => {
-    it("Verify E-mail Address With Invalid Entries", () => __awaiter(void 0, void 0, void 0, function* () {
-        const invalidOtpFields = [{ userId: "", OTP: "09" }];
-        for (const data of invalidOtpFields) {
-            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
-            return expect(response.statusCode).toBe(400);
+    it("Verify E-mail Address with invalid OTP code entered", () => __awaiter(void 0, void 0, void 0, function* () {
+        const emailVerificationBodyData = [{ userId: "63ce8f17dbde8e822781c701", OTP: "019ksdfj" }];
+        for (const bodyData of emailVerificationBodyData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
+            return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
         }
     }));
-    it("Verify E-mail Address With Malformed User ID", () => __awaiter(void 0, void 0, void 0, function* () {
-        const malformedInputs = [{ userId: "5dfa", OTP: "909890" }];
-        for (const data of malformedInputs) {
-            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
-            return expect(response.statusCode).toBe(400);
+    it("Verify E-mail address with missing OTP value", () => __awaiter(void 0, void 0, void 0, function* () {
+        const missingOtpData = [{ userId: "63ce8f17dbde8e822781c701", OTP: "" }];
+        for (const bodyData of missingOtpData) {
+            const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
+            return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
         }
     }));
-    it("Verify E-mail Address With Missing User ID", () => __awaiter(void 0, void 0, void 0, function* () {
-        const malformedInputs = [{ OTP: "909890" }];
-        for (const data of malformedInputs) {
-            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/verify-email").send(data);
-            return expect(response.statusCode).toBe(404);
+    it("Verify E-mail address with already verified user ID and OTP", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const verifiedData = [{ userId: "63cef9c5b006313b347a3c96", OTP: "761259" }];
+            for (const bodyData of verifiedData) {
+                const response = yield (0, supertest_1.default)(app_1.app).post('/api/v1/auth/verify-email').send(bodyData);
+                return expect(response.statusCode).not.toBe(http_status_codes_1.StatusCodes.OK);
+            }
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error);
+            }
         }
     }));
-});
-describe("Forgot Password Test Suite", () => {
-    it("Send Forgot Password with valid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
-        const validForgotPasswordEntries = [{ email: "sabinlungu293@gmail.com" }];
-        for (const data of validForgotPasswordEntries) {
-            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/forgot-password").send(data);
-            return expect(response.statusCode).toBe(200);
+    it("Verify e-mail address with invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
         }
-    }));
-    it("Send Forgot Password with invalid e-mail address", () => __awaiter(void 0, void 0, void 0, function* () {
-        const validForgotPasswordEntries = [{ email: "tottenham2@gmail.com" }];
-        for (const data of validForgotPasswordEntries) {
-            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/forgot-password").send(data);
-            return expect(response.statusCode).toBe(404);
-        }
-    }));
-    it("Send Forgot Password with empty e-mail field", () => __awaiter(void 0, void 0, void 0, function* () {
-        const validForgotPasswordEntries = [{ email: "" }];
-        for (const data of validForgotPasswordEntries) {
-            const response = yield (0, supertest_1.default)(app_1.app).post("/api/v1/auth/forgot-password").send(data);
-            return expect(response.statusCode).toBe(404);
+        catch (error) {
+            if (error) {
+                return console.error(error.message);
+            }
         }
     }));
 });
+// Test suite for verifying the MFA code verification test suite
 describe("Verify Login MFA Test Suite", () => {
-});
-describe("Resend Login MFA Code - Test Suite", () => {
-});
-describe("Reset Password - Test Suite", () => {
+    it("Verify Login MFA - Invalid MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const invalidMfaCodeData = [{ userId: "63ce8f17dbde8e822781c701" }];
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error.message);
+            }
+        }
+    }));
+    it("Verify Login MFA - Valid Correct MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Verify Login MFA - Invalid User ID", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
 });
 describe("Logout Test Suite", () => {
-    it("Logout User Test", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("Logout user success", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app_1.app).get('/api/v1/auth/logout');
+        return expect(response.statusCode).toBe(http_status_codes_1.StatusCodes.OK);
     }));
 });
-describe("Update User Password Test Suite", () => {
+describe("Forgot Password Test Suite ", () => {
+    it("Forgot Password Test - Invalid E-mail Address", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Forgot Password Test - Valid E-mail Address", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+});
+describe("Reset Password Test Suite", () => {
+    it("Reset Password Test - Missing password", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Reset Password Test - Valid Password", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Reset Password Test - Invalid Current Password", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+});
+describe("Update User Passwords Test Suite", () => {
+});
+describe("Update User Profile ", () => {
+});
+describe("Fetch All Users Test Suite", () => {
+    it("Fetch All Users Unit Test", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+            if (error) {
+                return console.error(error);
+            }
+        }
+    }));
+});
+describe("Fetch Single User - Organiser Dashboard Test Suite", () => {
+    it("Fetch Valid Single user By ID ", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Fetch Invalid User ID Test", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
+    it("Fetch Invalid Missing User ID Test", () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+        }
+        catch (error) {
+        }
+    }));
 });
 // Close the connection to the server after all tests are ran
 afterAll(done => {

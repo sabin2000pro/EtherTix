@@ -9,7 +9,7 @@ import cors from "cors";
 import { StatusCodes } from 'http-status-codes';
 import {eventRouter} from './routes/event-routes';
 
-const app: Application = express();
+const app: any = express();
 
 connectEventDatabase();
 
@@ -32,11 +32,11 @@ app.use(helmet());
 
 app.use('/api/v1/events', eventRouter);
 
-app.get("/", (request: Request, response: Response) => {
+app.get("/", (request: any, response: any) => {
     return response.json({message: "Event - Root Route"})
 });
 
-app.all('*', (err: Error, request: Request, response: Response, next: NextFunction) => {
+app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
 
     if(err instanceof CustomError) {
         return response.status(StatusCodes.NOT_FOUND).json({message: err.message, errors: err.processErrors(), stack: err.stack})

@@ -15,15 +15,14 @@ const EventSchema = new mongoose_1.default.Schema({
         required: [true, "Please provide a summary for the event"]
     },
     description: {
-        text: {
-            type: String,
-            required: [true, "Please include a description for the event"],
-            trim: true
-        }
+        type: String,
+        required: [true, "Please include a description for the event"],
+        trim: true
     },
     event_url: {
         type: String
     },
+    slug: String,
     startAt: {
         type: Date,
         required: [true, "Please include when the event starts"],
@@ -58,56 +57,35 @@ const EventSchema = new mongoose_1.default.Schema({
         default: 'no-photo.jpg'
     },
     format: {
-        id: {
-            type: String
-        },
-        name: {
-            type: String,
-            required: [true, "Please specify the format name"],
-            enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
-        }
-    },
-    category: {
-        id: {
-            type: String
-        },
-        name: {
-            type: String,
-            required: [true, "Please specify the category of the event"],
-            enum: ["Food/Drink", "Sports", "Free", "Charity", "Nature", "Talk", "Conference"]
-        }
+        type: String,
+        required: [true, "Please specify the format name"],
+        enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
     },
     isOnline: {
         type: Boolean,
         required: [true, "Please specify whether or not the event is online"],
         default: false
     },
-    maxCapacity: {
+    capacity: {
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
-        default: 0
-    },
-    minCapacity: {
-        type: Number,
-        required: [true, "Please specify the minimum number of people that can attend the event"],
-        default: 0
+        min: [3, "There must be at least 3 minimum people at the event"],
+        max: [150, "There cannot be more than 150 people at the current event"]
     },
     showRemaining: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify the number of remaining slots"]
+        required: [true, "Please specify if there are any remaining slots for this event"]
     },
     isPremium: {
         type: Boolean,
         required: [true, "Please specify if the event is premium or not"],
         default: false
     },
-    ticketAvailability: {
-        hasAvailableTickets: {
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if this event has available tickets"]
-        }
+    hasAvailableTickets: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if this event has available tickets"]
     },
     isLocked: {
         type: Boolean,
@@ -144,49 +122,59 @@ const EventSchema = new mongoose_1.default.Schema({
         default: false,
         required: [true, "Please specify if this event has reserved seating or not"]
     },
-    eventSalesStatus: {
-        salesStatus: {
-            type: String,
-            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
-            required: [true, "Please specify the sales status of the event."]
-        },
-        salesStart: {
-            type: Date,
-            default: Date.now
-        },
-        salesEnd: {
-            type: Date,
-            default: Date.now
-        }
+    salesStatus: {
+        type: String,
+        enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
+        required: [true, "Please specify the sales status of the event."]
     },
+    salesStart: {
+        type: Date,
+        default: Date.now
+    },
+    salesEnd: {
+        type: Date,
+        default: Date.now
+    },
+    likes: [],
+    followers: [],
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: [true, "Please specify the Organiser ID of this event"]
     },
     venue: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Venue"
+        ref: "Venue",
+        required: [true, "Please specify a valid venue ID for this event"]
     },
-    ticket: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Ticket" }],
-    review: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Review" }]
+    ticket: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Ticket",
+        required: [true, "Please specify a valid Ticket ID for this event"]
+    },
+    category: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Category",
+        required: [true, "Please specify a valid Category ID for this event"]
+    }
 }, {
     timestamps: true,
     toJSON: { virtuals: true }
 });
 // Virtual populate
 EventSchema.virtual('tickets', {
-    ref: 'Ticket',
-    foreignField: 'ticket',
+    ref: 'ticket',
+    foreignField: 'Ticket',
     localField: '_id'
 });
 EventSchema.virtual('reviews', {
     ref: 'Review',
-    foreignField: 'review',
+    foreignField: 'Review',
     localField: '_id'
 });
 EventSchema.virtual('venues', {
     ref: 'Venue',
-    foreignField: 'venue',
+    foreignField: 'Venue',
     localField: '_id'
 });
 const Event = mongoose_1.default.model("Event", EventSchema);

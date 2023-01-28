@@ -11,8 +11,8 @@ const emailTransporter = () => {
         host: "smtp.mailtrap.io",
         port: 2525,
         auth: {
-            user: "ef8f21393bb3ed",
-            pass: "bb1318de95aa3f"
+            user: "31c4555f29ccbb",
+            pass: "66af38be36d489"
         }
     });
 };

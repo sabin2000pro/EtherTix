@@ -3,7 +3,7 @@ import { NotFoundError, BadRequestError } from '../middlewares/error-handler';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
 
-export const fetchAllEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchAllEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -22,7 +22,7 @@ export const fetchAllEvents = async (request: Request, response: Response, next:
 
 }
 
-export const getEventCount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const getEventCount = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
         const events = await Event.countDocuments({});
@@ -40,7 +40,7 @@ export const getEventCount = async (request: Request, response: Response, next: 
 
 }
 
-export const fetchSingleEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     try {
 
         const eventId = request.params.eventId;
@@ -70,11 +70,10 @@ export const fetchSingleEvent = async (request: Request, response: Response, nex
 
 }
 
-export const createNewEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
     try {    
-
-        const eventData = request.body;
+        // @TODO
     }    
     
     catch(error) {
@@ -87,7 +86,7 @@ export const createNewEvent = async (request: Request, response: Response, next:
 
 }
 
-export const editEventByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
         const id = request.params.id;
@@ -108,7 +107,7 @@ export const editEventByID = async (request: Request, response: Response, next: 
 
 }
 
-export const deleteEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const deleteEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -120,7 +119,7 @@ export const deleteEvents = async (request: Request, response: Response, next: N
 
 }
 
-export const deleteEventByID = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const deleteEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -136,7 +135,7 @@ export const deleteEventByID = async (request: Request, response: Response, next
 
 }
 
-export const uploadEventPhoto = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const uploadEventPhoto = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
         // API Code here to upload a photo for an event using multer or express file upload
@@ -175,7 +174,7 @@ export const fetchEventsWithinRadius = async (request: Request, response: Respon
 
 }
 
-export const likeEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const likeEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     let eventId = request.params.eventId;
     const event = await Event.findById(eventId);
@@ -193,7 +192,7 @@ export const likeEvent = async (request: Request, response: Response, next: Next
 
 }
 
-export const dislikeEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const dislikeEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
    try {
         let eventId = request.params.eventId;
@@ -216,10 +215,10 @@ export const dislikeEvent = async (request: Request, response: Response, next: N
 
 }
 
-export const followEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const followEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
 }
 
-export const unfollowEvent = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const unfollowEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
 }

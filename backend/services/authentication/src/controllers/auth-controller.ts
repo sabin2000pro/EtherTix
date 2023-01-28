@@ -1,5 +1,4 @@
 import { FileTooLargeError, NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
-import { Query, ParamsDictionary } from 'express-serve-static-core';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -9,7 +8,7 @@ import {StatusCodes} from "http-status-codes";
 import { generateOTPVerificationToken } from '../utils/generate-otp';
 import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Query } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import asyncHandler from 'express-async-handler';                        
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
@@ -50,15 +49,6 @@ export interface IRequestUser extends Request {
 
 }
 
-
-export interface TypedRequestQuery<T extends Query> extends Express.Request {
-    query: T
-}
-
-export interface TypedRequestBody<T extends ParamsDictionary> extends Request {
-    body: T
-}
-
   // @description: Sends the verify confirmation e-mail to the user after registering an account
   // @parameters: Transporter Object, User Object, Randomly Generated User OTP
   // @returns: void
@@ -85,7 +75,7 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
   
-export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, role: string, username: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
+export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -173,7 +163,7 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-export const verifyEmailAddress = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -261,7 +251,7 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-export const resendEmailVerificationCode = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -331,7 +321,7 @@ const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-export const loginUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -387,7 +377,7 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
 
 })
 
-export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const verifyLoginToken = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -437,7 +427,7 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
 }
 
-export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const resendTwoFactorLoginCode = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -488,7 +478,7 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
     
 }
 
-export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const logoutUser = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -510,7 +500,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 
 }
 
-export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const forgotPassword = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -573,7 +563,7 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 }
 
-export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
 
@@ -621,7 +611,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
 
 })
 
-export const getCurrentUser = asyncHandler(async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
         const user = request.user;
@@ -638,11 +628,11 @@ export const getCurrentUser = asyncHandler(async (request: IRequestUser, respons
 
 });
 
-export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
     return response.status(StatusCodes.OK).json({isValid: true})
 }
 
-export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+export const updateUserPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
 
@@ -682,7 +672,7 @@ export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoR
 
 })
 
-export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -705,7 +695,7 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 
 }
 
-export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const deactivateUserAccount = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
     const {userId} = request.body;
     const user = await User.findById(userId);
@@ -731,7 +721,7 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 }
 
-export const uploadUserProfilePicture = asyncHandler(async (request: any, response: Response, next: NextFunction): Promise<any | Response> => {
+export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -788,7 +778,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
 })
 
-export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const getAllUserPremiumAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
         const premiumUsers = await User.find({premium: true});
@@ -813,7 +803,7 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchAllUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -838,7 +828,7 @@ export const fetchAllUsers = asyncHandler(async (request: Request, response: Res
 
 })
 
-export const fetchUserByID = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -864,7 +854,7 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
 
 })
 
-export const createNewUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any| Response> => {
+export const createNewUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any| Response> => {
 
     try {
 
@@ -884,7 +874,7 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
 
 })
 
-export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any| Response> => {
+export const editUserByID = async (request: any, response: any, next: NextFunction): Promise<any| Response> => {
 
    try {
 
@@ -917,7 +907,7 @@ export const editUserByID = async (request: Express.Request, response: Response,
 
 }
 
-export const deleteUserByID = async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const deleteUserByID = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -943,7 +933,7 @@ export const deleteUserByID = async (request: Request, response: Response, next:
  
 }
 
-export const deleteAllUsers = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const deleteAllUsers = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -966,7 +956,7 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
  
 }
 
-export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+export const lockUserAccount = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
    try {
         const userId = request.user.id;
@@ -989,7 +979,7 @@ export const lockUserAccount = async (request: IRequestUser, response: Response,
 
 }
 
-export const unlockUserAccount = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const unlockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
           // Find the user by their ID
@@ -1020,7 +1010,7 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
 
 })
 
-export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchTotalUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
    try {
         const totalUsers = await User.countDocuments({});

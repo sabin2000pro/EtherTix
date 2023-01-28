@@ -6,7 +6,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import connectVenueSchema from './database/venues-db';
 
-const app: Application = express();
+const app: any = express();
 
 connectVenueSchema();
 
@@ -26,7 +26,7 @@ app.use(helmet());
 
 // Include error handling middleware here for the venues
 
-app.get("/", (request: Request, response: Response) => {
+app.get("/", (request: any, response: any) => {
     return response.json({message: "Venues Root Route"})
 })
 

@@ -11,12 +11,12 @@ import {connectAuthDatabase} from './database/auth-db';
 import {authRouter} from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 
-const app: Application = express();
+const app: any = express();
 
 connectAuthDatabase()
 
 if(process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
+    app.use(morgan('dev') as any);
 }
 
 if(process.env.NODE_ENV === 'production') {
@@ -37,7 +37,7 @@ app.use(cookieSession({
     keys: ['session']
 }));
 
-app.get("/", (request: Request, response: Response) => {
+app.get("/", (request: any, response: any) => {
     return response.status(StatusCodes.OK).json({success: true, message: "Auth Root Route API"});
 })
 

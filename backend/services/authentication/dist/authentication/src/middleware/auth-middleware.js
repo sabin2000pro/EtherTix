@@ -12,13 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isUserOrganiser = exports.isUserAdmin = exports.isUserModerator = exports.restrictRolesTo = exports.protectAuth = void 0;
+exports.isUserEventOrganiser = exports.isUserAdmin = exports.isUserModerator = exports.restrictRolesTo = exports.protectAuth = void 0;
+require('dotenv').config();
 const http_status_codes_1 = require("http-status-codes");
 const error_handler_1 = require("./error-handler");
 const user_model_1 = require("../models/user-model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const error_handler_2 = require("./error-handler");
-require('dotenv').config();
 const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
     // Check to see if the authorization header starts with Bearer
@@ -29,8 +28,8 @@ const protectAuth = (request, response, next) => __awaiter(void 0, void 0, void 
         return next(new error_handler_1.UnauthorizedError("You are not authorized to perform this action", http_status_codes_1.StatusCodes.BAD_REQUEST));
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_TOKEN);
-        request.user = yield user_model_1.User.findById(decoded._id);
+        const decoded = jsonwebtoken_1.default.verify(token, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify");
+        request.user = yield user_model_1.User.findById(decoded.id);
         return next();
     }
     catch (error) {
@@ -44,7 +43,7 @@ exports.protectAuth = protectAuth;
 const restrictRolesTo = (...roles) => {
     return (request, response, next) => {
         if (!request.user.role.includes(roles)) { // Check to see if the specified user object role in the body of the request matches
-            return next(new error_handler_2.ForbiddenError("Your role is unauthorized to perform this action", http_status_codes_1.StatusCodes.FORBIDDEN));
+            return next(new error_handler_1.ForbiddenError("Your role is unauthorized to perform this action", http_status_codes_1.StatusCodes.FORBIDDEN));
         }
         return next();
     };
@@ -82,15 +81,15 @@ const isUserAdmin = (request, _response, next) => __awaiter(void 0, void 0, void
             return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
     }
-    finally {
-        return console.log(`Is user admin middleware errors handled gracefully`);
-    }
 });
 exports.isUserAdmin = isUserAdmin;
-const isUserOrganiser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+const isUserEventOrganiser = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
+        if (error) {
+            return next(new error_handler_1.UnauthorizedError(error, http_status_codes_1.StatusCodes.UNAUTHORIZED));
+        }
     }
 });
-exports.isUserOrganiser = isUserOrganiser;
+exports.isUserEventOrganiser = isUserEventOrganiser;
