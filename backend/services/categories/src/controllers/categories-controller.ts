@@ -23,7 +23,7 @@ declare namespace Express {
   // @returns: Server Response - List of categories returned
   // @access: Public (NO Bearer Token Required)
 
-export const fetchAllCategories = async (request: any, response: Express.Response, next: NextFunction): Promise<any | Response> => {
+export const fetchAllCategories = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -46,7 +46,7 @@ export const fetchAllCategories = async (request: any, response: Express.Respons
 
 }
 
-export const fetchCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any | Express.Response> => {
+export const fetchCategoryByID = async (request: any, response: any, next: NextFunction): Promise<any | Express.Response> => {
 
     try {
 
@@ -72,7 +72,7 @@ export const fetchCategoryByID = async (request: Express.Request, response: Expr
 
 }
 
-export const createNewCategory = async (request: any, response: Express.Response, next: NextFunction): Promise<any> => {
+export const createNewCategory = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -99,7 +99,7 @@ export const createNewCategory = async (request: any, response: Express.Response
 
 }
 
-export const editCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
+export const editCategoryByID = async (request: any, response: any, next: NextFunction): Promise<Response| any> => {
 
     try {
 
@@ -126,7 +126,7 @@ export const editCategoryByID = async (request: Express.Request, response: Expre
 
 }
 
-export const deleteCategoryByID = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
+export const deleteCategoryByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
     try {
 
         await Category.findByIdAndRemove(request.params.id);
@@ -142,7 +142,7 @@ export const deleteCategoryByID = async (request: Express.Request, response: Exp
 
 }
 
-export const deleteCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<Response| any> => {
+export const deleteCategories = async (request: any, response: any, next: NextFunction): Promise<Response| any> => {
     try {
 
         await Category.deleteMany();
@@ -159,7 +159,7 @@ export const deleteCategories = async (request: Express.Request, response: Expre
     
 }
 
-export const fetchTrendingCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
+export const fetchTrendingCategories = async (request: any, response: any, next: NextFunction): Promise<any> => {
     try {
 
         const trendingCategories = await Category.find({isTrending: true});
@@ -181,7 +181,7 @@ export const fetchTrendingCategories = async (request: Express.Request, response
 
 }
 
-export const fetchNewCategories = async (request: Express.Request, response: Express.Response, next: NextFunction): Promise<any> => {
+export const fetchNewCategories = async (request: any, response: any, next: NextFunction): Promise<any> => {
     try {
 
     } 

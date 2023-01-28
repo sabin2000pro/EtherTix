@@ -11,7 +11,6 @@
     "start:server": "npm run dev",
     "categories:test": "jest tests/auth.test.ts --bail"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -22,6 +21,7 @@
     "@types/express-mongo-sanitize": "^2.1.0",
     "@types/express-serve-static-core": "^4.17.32",
     "@types/hpp": "^0.2.2",
+    "@types/http-status-codes": "^1.2.0",
     "@types/jest": "^29.2.6",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.4",

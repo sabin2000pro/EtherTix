@@ -8,7 +8,7 @@ import { connectCategoriesDatabase } from "./database/categories-db";
 
 connectCategoriesDatabase();
 
-const app: Application = express();
+const app: any = express();
 
 app.use(express.json() as any);
 
@@ -25,7 +25,7 @@ app.use(cors({
     methods: ["POST", "PUT", "GET"]
 }) as any)
 
-app.get('/', (request, response, next) => {
+app.get('/', (request: any, response: any, next) => {
    return response.status(200).json({success: true, message: "Categories Root Route"}) 
 })
 
