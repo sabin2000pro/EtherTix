@@ -14,7 +14,6 @@ const helmet_1 = __importDefault(require("helmet"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const cors_1 = __importDefault(require("cors"));
 const ticket_routes_1 = require("./routes/ticket-routes");
-const error_handler_2 = require("./middleware/error-handler");
 (0, tickets_db_1.default)();
 const app = (0, express_1.default)();
 exports.app = app;
@@ -38,7 +37,7 @@ app.get("/", (request, response) => {
 app.use('/api/v1/tickets', ticket_routes_1.ticketRouter);
 app.use(error_handler_1.errorHandler);
 app.all('*', (err, request, response, next) => {
-    if (err instanceof error_handler_2.CustomError) {
+    if (err instanceof error_handler_1.CustomError) {
         return response.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ message: err.message, errors: err.processErrors(), stack: err.stack });
     }
     return next();

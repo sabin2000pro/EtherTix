@@ -22,10 +22,7 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 // @access    Private (Authorization Token Required)
 exports.fetchAllTickets = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tickets = yield ticket_model_1.Ticket.find().populate({ path: 'event', select: "name" });
-        const searchQuery = request.query.search;
-        const regexInit = new RegExp(searchQuery, 'i');
-        const foundTickets = tickets.map(ticketData => ticketData.name.match(regexInit));
+        const tickets = yield ticket_model_1.Ticket.find();
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: tickets, sentAt: new Date(Date.now()) });
     }
     catch (error) {
@@ -41,6 +38,9 @@ const getEventTicketById = (request, response, next) => __awaiter(void 0, void 0
     try {
         const id = request.params.id;
         const ticket = yield ticket_model_1.Ticket.findById(id);
+        if (!ticket) {
+            return next(new error_handler_1.NotFoundError("Ticket with that ID not found", 404));
+        }
         return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, ticket, sentAt: new Date(Date.now()) });
     }
     catch (error) {
@@ -51,16 +51,23 @@ const getEventTicketById = (request, response, next) => __awaiter(void 0, void 0
 });
 exports.getEventTicketById = getEventTicketById;
 // @desc      Create New Event Ticket
-// @route     POST /api/v1/tickets/:eventId
+// @route     POST /api/v1/tickets/:id
 // @access    Private (JWT Authorization Token Required)
 const createNewTicket = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage } = request.body;
-        const ticket = yield ticket_model_1.Ticket.create({ name, ticketClass, capacity, minimumQuantityPurchase, maximumQuantityPurchase, description, cost, ticketToken, isFree, deliveryMethods, onSaleStatus, confirmationMessage });
+        const event = request.body.event;
+        if (!event) {
+            return next(new error_handler_1.NotFoundError("Event with that ID not found", http_status_codes_1.StatusCodes.NOT_FOUND));
+        }
+        const ticketData = request.body;
+        const ticket = new ticket_model_1.Ticket(ticketData, event);
         yield ticket.save();
-        return response.status(201).json({ success: true, ticket });
+        return response.status(http_status_codes_1.StatusCodes.CREATED).json({ success: true, ticket });
     }
     catch (error) {
+        if (error) {
+            return next(new error_handler_1.BadRequestError(error.message, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
     }
 });
 exports.createNewTicket = createNewTicket;
@@ -68,13 +75,26 @@ exports.createNewTicket = createNewTicket;
 // @route     POST /api/v1/tickets/:ticketId
 // @access    Private (JWT Authorization Token Required)
 const editTicketByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const ticketId = request.params.ticketId;
+    try {
+        const id = request.params.id;
+        let ticket = yield ticket_model_1.Ticket.findById(id);
+        if (!ticket) {
+        }
+    }
+    catch (error) {
+    }
 });
 exports.editTicketByID = editTicketByID;
 // @desc      Delete All Tickets For A specific event
 // @route     POST /api/v1/events/:eventId/tickets
 // @access    Private (JWT Authorization Token Required)
 const deleteAllTickets = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield ticket_model_1.Ticket.deleteMany();
+        return response.status(204).json({ success: true, data: {}, message: "Tickets Deleted" });
+    }
+    catch (error) {
+    }
 });
 exports.deleteAllTickets = deleteAllTickets;
 const deleteTicketByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {

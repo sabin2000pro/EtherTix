@@ -7,7 +7,7 @@ import {Request, Response, NextFunction} from 'express';
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 
-export const fetchAllVenues = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchAllVenues = async (request: any, response: any, next: NextFunction): Promise<any> => {
   try {
      // @todo
   }
