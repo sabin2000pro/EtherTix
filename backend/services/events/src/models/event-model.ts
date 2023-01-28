@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
-    description: Object;
+    description: string;
     event_url: string;
     startAt: Date;
     endsAt: Date;
@@ -15,36 +15,33 @@ interface EventAttributes { // Interface for the event attributes
     isOnline: boolean; // True or false if the event is online
     event_logo: string;
     format: Object;
-    category: Object;
-
     maxCapacity: number;
     minCapacity: number;
-
     showRemaining: boolean;
     hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
-
     hideStartDate: boolean;
     hideEndDate: boolean;
     isLocked: boolean;
     isFree: boolean;
     isPremium: boolean;
-
     salesStatus: string,
     salesStart: Date,
     salesEnd: Date,
-    likes: number;
+    likes: [],
+    followers: [],
 
     organiser: mongoose.Schema.Types.ObjectId;
     venue: mongoose.Schema.Types.ObjectId;
     ticket: mongoose.Schema.Types.ObjectId;
+    category: mongoose.Schema.Types.ObjectId;
 }
 
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
-    description: Object;
+    description: string;
     event_url: string;
     startAt: Date;
     endsAt: Date;
@@ -53,34 +50,31 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     changedAt: Date;
     event_status: string;
     currency: string;
-
     event_logo: string;
     isOnline: boolean;
     format: Object;
-    category: Object;
-
     maxCapacity: number;
     minCapacity: number;
     showRemaining: boolean;
-    ticketAvailability: Object;
+    hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
-    
     hideStartDate: boolean;
     hideEndDate: boolean;
     isLocked: boolean;
     reservedSeating: boolean;
     isFree: boolean;
-
     salesStatus: string;
     salesStart: Date;
     salesEnd: Date;
     isPremium: boolean;
-    likes: number;
+    likes: [];
+    followers: [];
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
     venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
     ticket: mongoose.Schema.Types.ObjectId; // Ticket corresponding to an event
+    category: mongoose.Schema.Types.ObjectId;
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -245,10 +239,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             default: Date.now
         },
 
-    likes: {
-        type: Number,
-        default: 0
-    },
+        likes: [],
+        followers: [],
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
