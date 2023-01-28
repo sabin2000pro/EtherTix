@@ -24,6 +24,7 @@ if(process.env.NODE_ENV === 'production') {
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
+
 app.use(cors({
     origin: "*",
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]

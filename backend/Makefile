@@ -6,18 +6,18 @@ clean:
 	- docker stop
 	- docker system prune
 
-# process-data-script:
-# 	- cd services/shared && ts-node global-data-seeder.ts --delete
-# 	- cd services/shared && ts-node global-data-seeder.ts --import
+process-data-script:
+	- cd services/shared && ts-node global-data-seeder.ts --delete
+	- cd services/shared && ts-node global-data-seeder.ts --import
 
 build-services:
 
 	- cd services/auth*&& npm run build
 	- cd services/events* && npm run build
-	
 	- cd services/venues* && npm run build
 	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
+
 	- docker login
 
 	- cd services/auth* && docker build -t sabin2000/ethertix-auth-service . && docker push sabin2000/ethertix-auth-service
