@@ -1,15 +1,17 @@
-import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config({path: '../../config.env'});
+dotenv.config({path: 'backend/services/authentication/config.env'});
+import mongoose from "mongoose";
+
+const AUTH_DB_URI = process.env.AUTH_DB_URI;
 
 export const connectAuthDatabase = async (...args: unknown[]) => {
 
     try {
 
-        return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+        return await mongoose.connect(AUTH_DB_URI).then(conn => {
 
             if(conn.connection) {
-                return console.log(`Connected to auth database...`)
+                return console.log(`Connected to authentication service database...`)
             }
 
             else {
