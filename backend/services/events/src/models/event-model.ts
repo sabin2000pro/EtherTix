@@ -14,9 +14,8 @@ interface EventAttributes { // Interface for the event attributes
     currency: string;
     isOnline: boolean; // True or false if the event is online
     event_logo: string;
-    format: Object;
-    maxCapacity: number;
-    minCapacity: number;
+    format: string;
+    capacity: number;
     showRemaining: boolean;
     slug: string;
     hasAvailableTickets: boolean;
@@ -54,8 +53,8 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     event_logo: string;
     slug: string;
     isOnline: boolean;
-    format: Object;
-    maxCapacity: number;
+    format: string;
+    capacity: number;
     minCapacity: number;
     showRemaining: boolean;
     hasAvailableTickets: boolean;
@@ -155,16 +154,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    maxCapacity: { // Maximum Capacity of people that can attend the event
+    capacity: {
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
-        default: 0
-    },
-
-    minCapacity: { // Minimum Capacity of people that can attend the event
-        type: Number,
-        required: [true, "Please specify the minimum number of people that can attend the event"],
-        default: 0
+        min: [3, "There must be at least 3 minimum people at the event"],
+        max: [150, "There cannot be more than 150 people at the current event"]
     },
 
     showRemaining: {
