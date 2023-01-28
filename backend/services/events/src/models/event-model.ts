@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 interface EventAttributes { // Interface for the event attributes
@@ -22,7 +21,7 @@ interface EventAttributes { // Interface for the event attributes
     minCapacity: number;
 
     showRemaining: boolean;
-    ticketAvailability: Object;
+    hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
 
@@ -79,9 +78,9 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     isPremium: boolean;
     likes: number;
 
-    organiser: mongoose.Schema.Types.ObjectId;
-    venue: mongoose.Schema.Types.ObjectId;
-    ticket: mongoose.Schema.Types.ObjectId;
+    organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
+    venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
+    ticket: mongoose.Schema.Types.ObjectId; // Ticket corresponding to an event
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -96,14 +95,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please provide a summary for the event"]
     },
 
-    description: { // Event Description with text object inside
-
-        text: {
-            type: String,
-            required: [true, "Please include a description for the event"],
-            trim: true
-        }
-        
+    description: { // Event Description with text object inside    
+        type: String,
+        required: [true, "Please include a description for the event"],
+        trim: true
     },
 
     event_url: {
@@ -156,20 +151,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
     },
 
-    category: { // Category object that stores what kind of category this event belongs to
-
-        id: {
-            type: String
-        },
-
-        name: {
-            type: String,
-            required: [true, "Please specify the category of the event"],
-            enum: ["Food/Drink", "Sports", "Free", "Charity", "Nature", "Talk", "Conference"]
-        }
-
-    },
-
     isOnline: { // Determines if the event is online or not
         type: Boolean,
         required: [true, "Please specify whether or not the event is online"],
@@ -200,14 +181,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    ticketAvailability: {
-
-        hasAvailableTickets: { // Object that stores data about the availability of tickets. True or false is stored
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if this event has available tickets"]
-        }
-        
+    hasAvailableTickets: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if this event has available tickets"]
     },
 
     isLocked: { // True or false if the event is locked or not. If the event is locked, then disable the button to view available times
@@ -276,17 +253,25 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        required: [true, "Please specify the Organiser ID of this event"]
     },
 
     venue: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Venue"
+        ref: "Venue",
+        required: [true, "Please specify a valid venue ID for this event"]
     },
 
     ticket: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Ticket",
-        required: [true, "Please specify a valid ticket for this event"]
+        required: [true, "Please specify a valid Ticket ID for this event"]
+    },
+
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: [true, "Please specify a valid Category ID for this event"]
     }
 
 }, {
