@@ -17,9 +17,12 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express_1.default.json());
 app.set('trust proxy', true);
 app.use((0, hpp_1.default)());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: "*",
+    methods: ["POST", "GET", "PUT", "DELETE"]
+}));
 app.use((0, helmet_1.default)());
 // Include error handling middleware here for the venues
 app.get("/", (request, response) => {
-    return response.json({ message: "Discount Root Route" });
+    return response.json({ message: "Discount Root Route Endpoint" });
 });

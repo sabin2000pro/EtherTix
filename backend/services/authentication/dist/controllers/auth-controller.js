@@ -1,5 +1,7 @@
 "use strict";
-//
+// Service: Authentication Service API
+// Authors: Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook
+// Copyright (c) 2023 - EtherTix (All Rights Reserved)
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -14,9 +16,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchTotalUsers = exports.unlockUserAccount = exports.lockUserAccount = exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.getAllUserPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = void 0;
-// Authors: Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook
-// Copyright (c) 2023 - EtherTix (All Rights Reserved)
-//
 const error_handler_1 = require("./../middleware/error-handler");
 const send_email_1 = require("./../utils/send-email");
 const user_model_1 = require("../models/user-model");

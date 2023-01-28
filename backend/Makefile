@@ -6,9 +6,9 @@ clean:
 	- docker stop
 	- docker system prune
 
-process-data-script:
-	- cd services/shared && ts-node global-data-seeder.ts --delete
-	- cd services/shared && ts-node global-data-seeder.ts --import
+# process-data-script:
+# 	- cd services/shared && ts-node global-data-seeder.ts --delete
+# 	- cd services/shared && ts-node global-data-seeder.ts --import
 
 build-services:
 
