@@ -150,18 +150,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: 'no-photo.jpg'
     },
 
-    format: { // Event Format
-
-        id: {
-            type: String
-        },
-
-        name: {
-            type: String,
-            required: [true, "Please specify the format name"],
-            enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
-        }
-
+    format: {
+        type: String,
+        required: [true, "Please specify the format name"],
+        enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
     },
 
     category: { // Category object that stores what kind of category this event belongs to
@@ -254,11 +246,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if the event is free or not"]
     },
 
-    reservedSeating: {
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if this event has reserved seating or not"]
-    },
+        reservedSeating: {
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if this event has reserved seating or not"]
+        },
 
         salesStatus: {
             type: String,
@@ -283,18 +275,19 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
     },
 
-    venue: [{ // Relationship between the event and the venue at which the event is held at (Event -> Venue)
+    venue: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "venue"
-    }],
+        ref: "Venue"
+    },
 
-    ticket: [{
+    ticket: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ticket"
-    }]
+        ref: "Ticket",
+        required: [true, "Please specify a valid ticket for this event"]
+    }
 
 }, {
     timestamps: true,
@@ -304,19 +297,19 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 // Virtual populate
 EventSchema.virtual('tickets', {
     ref: 'ticket',
-    foreignField: 'ticket',
+    foreignField: 'Ticket',
     localField: '_id'
 });
 
 EventSchema.virtual('reviews', {
     ref: 'Review',
-    foreignField: 'review',
+    foreignField: 'Review',
     localField: '_id'
 });
 
 EventSchema.virtual('venues', {
     ref: 'Venue',
-    foreignField: 'venue',
+    foreignField: 'Venue',
     localField: '_id'
 });
 

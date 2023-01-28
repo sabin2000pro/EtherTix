@@ -7,16 +7,7 @@ type ConnectWalletProps = {
    walletConnected: () => boolean;
 }
 
-// @description: Connet Metamask Wallet
 const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnected, connectWallet, walletConnected}) => {
-  
-  const [account, setAccount] = useState<string>("");
-  const [accountLoaded, setAccountLoaded] = useState<boolean>(walletConnected);
-  const [accountBalance, setAccountBalance] = useState<string>("");
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <>

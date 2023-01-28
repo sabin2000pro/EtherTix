@@ -672,9 +672,11 @@ export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoR
    } 
    
    catch(error) {
+
         if(error) {
             return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
         }
+        
    }
 
 

@@ -142,6 +142,7 @@ describe("Verify E-mail Address Test Suite", () => {
         } 
         
         catch(error) {
+            
             if(error) {
                 return console.error(error);
             }
