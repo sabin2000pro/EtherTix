@@ -18,6 +18,7 @@ interface EventAttributes { // Interface for the event attributes
     maxCapacity: number;
     minCapacity: number;
     showRemaining: boolean;
+    slug: string;
     hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
@@ -51,6 +52,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     event_status: string;
     currency: string;
     event_logo: string;
+    slug: string;
     isOnline: boolean;
     format: Object;
     maxCapacity: number;
@@ -98,6 +100,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     event_url: {
         type: String
     },
+
+    slug: String,
 
     startAt: { // Start Date of the event
         type: Date,
