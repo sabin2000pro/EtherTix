@@ -6,7 +6,7 @@ import hpp from "hpp"
 import helmet from "helmet"
 import cors from "cors";
 
-const app: Application = express();
+const app: any = express();
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -23,7 +23,7 @@ app.use(helmet());
 // Error Handler middleware
 
 
-app.get("/", (request: Request, response: Response) => {
+app.get("/", (request: any, response: any) => {
     return response.json({message: "Root Route"})
 })
 

@@ -27,7 +27,10 @@ exports.fetchAllVenues = fetchAllVenues;
 // @route     GET /api/v1/events/:eventId/tickets
 // @access    Private (Authorization Token Required)
 const fetchVenueByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const venueId = request.params.venueId;
+    try {
+    }
+    catch (error) {
+    }
 });
 exports.fetchVenueByID = fetchVenueByID;
 // @desc      Fetch All Event Tickets

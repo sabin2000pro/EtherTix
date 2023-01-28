@@ -4,8 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: 'config.env' });
 const http_status_codes_1 = require("http-status-codes");
-require('dotenv').config();
 const cookie_session_1 = __importDefault(require("cookie-session"));
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));

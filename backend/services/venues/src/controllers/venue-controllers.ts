@@ -25,7 +25,15 @@ export const fetchAllVenues = async (request: any, response: any, next: NextFunc
 // @access    Private (Authorization Token Required)
 
 export const fetchVenueByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
-  const venueId = request.params.venueId;
+  try {
+    
+  } 
+  
+  catch(error) {
+
+  }
+
+  
 }
 
 // @desc      Fetch All Event Tickets

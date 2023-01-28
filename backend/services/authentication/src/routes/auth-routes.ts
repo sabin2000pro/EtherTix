@@ -2,7 +2,6 @@ import express, { Router } from "express";
 import {registerUser, updateUserPassword, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
-import {Event} from '../../../events/src/models/event-model';
 
 export const authRouter: Router = express.Router({mergeParams: true});
 

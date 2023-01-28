@@ -1,3 +1,10 @@
+//
+
+    // Authors: Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook
+    // Copyright (c) 2023 - EtherTix (All Rights Reserved)
+//
+
+
 import { FileTooLargeError, NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';

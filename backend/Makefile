@@ -18,8 +18,6 @@ build-services:
 	- cd services/venues* && npm run build
 	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
-	- cd services/posts* && npm run build
-	- cd services/comments* && npm run build
 	- docker login
 
 	- cd services/auth* && docker build -t sabin2000/ethertix-auth-service . && docker push sabin2000/ethertix-auth-service
@@ -28,9 +26,7 @@ build-services:
 	- cd services/categories* && docker build -t sabin2000/ethertix-categories-service . && docker push sabin2000/ethertix-categories-service
 	- cd services/discount* && docker build -t sabin2000/ethertix-discount-service . && docker push sabin2000/ethertix-discount-service
 	- cd services/venues* && docker build -t sabin2000/ethertix-venues-service . && docker push sabin2000/ethertix-venues-service
-	- cd services/posts* && docker build -t sabin2000/ethertix-posts-service . && docker push sabin2000/ethertix-posts-service
-	- cd services/comments* && docker build -t sabin2000/ethertix-comments-service . && docker push sabin2000/ethertix-comments-service
-
+	
 	- docker volume prune && docker system prune
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 

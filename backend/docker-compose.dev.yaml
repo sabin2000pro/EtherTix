@@ -112,41 +112,6 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/discount:/app
-  posts-service:
-    image: sabin2000/ethertix-posts-service
-
-    build:
-      context: ../backend/services/posts
-      dockerfile: Dockerfile
-
-    restart: always
-
-    ports:
-      - "5305:5305"
-
-    volumes:
-      - /app/node_modules
-      - ../backend/services/posts:/app
-
-  comments-service:
-   image: sabin2000/ethertix-comments-service
-
-   build:
-    context: ../backend/services/comments
-    dockerfile: Dockerfile
-
-   restart: always
-
-   ports:
-     - "5306:5306"
-
-   volumes:
-      - /app/node_modules
-      - ../backend/services/comments:/app
-
-   depends_on:
-    - posts-service
-
   database-service:
     image: mongo
 
