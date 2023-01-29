@@ -5,6 +5,7 @@ clean:
 	- docker volume rm
 	- docker stop
 	- docker system prune
+	- docker image prune -a
 
 process-data-script:
 	- cd services/shared && ts-node global-data-seeder.ts --delete
