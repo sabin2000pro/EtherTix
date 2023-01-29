@@ -1,4 +1,6 @@
 import { app } from "./app"
+import dotenv from 'dotenv';
+dotenv.config({path: "backend/services/authentication/config.env"});
 
 const port = process.env.PORT || 5299;
 
@@ -6,7 +8,7 @@ const port = process.env.PORT || 5299;
 export const startAuthServer = async () => {
 
       return app.listen(port, () => {
-        console.log('Authentication Service Live On Port 5299');
+        console.log(`Authentication Service Live On Port 5299 in mode: ${process.env.NODE_ENV}`);
       });
 
 }
