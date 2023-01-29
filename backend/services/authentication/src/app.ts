@@ -33,7 +33,7 @@ app.use(cookieSession({
     keys: ['session']
 }));
 
-app.get("/", (request: any, response: any) => {
+app.get("/root", (request: any, response: any) => {
     return response.status(StatusCodes.OK).json({success: true, message: "Auth Root Route API"});
 })
 
