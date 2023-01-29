@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-dotenv.config({path: '../../config.env'});
+dotenv.config({path: 'backend/services/events/config.env'});
+
+const EVENT_DB_URI = process.env.EVENT_DB_URI;
 
 export default () => {
 
@@ -8,7 +10,7 @@ export default () => {
 
         try {
     
-            return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+            return await mongoose.connect(EVENT_DB_URI).then(conn => {
     
                 if(conn.connection) {
                     return console.log(`Connected to events database...`)
