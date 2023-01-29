@@ -13,14 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectAuthDatabase = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: '../../config.env' });
+dotenv_1.default.config({ path: 'backend/services/authentication/config.env' });
+const mongoose_1 = __importDefault(require("mongoose"));
+const AUTH_DB_URI = process.env.AUTH_DB_URI;
 const connectAuthDatabase = (...args) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+        return yield mongoose_1.default.connect(AUTH_DB_URI).then(conn => {
             if (conn.connection) {
-                return console.log(`Connected to auth database...`);
+                return console.log(`Connected to authentication service database...`);
             }
             else {
                 return console.log(`Could not connect to DB`);

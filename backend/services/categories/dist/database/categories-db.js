@@ -13,11 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectCategoriesDatabase = void 0;
-require('dotenv').config();
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: 'backend/services/categories/config.env' });
 const mongoose_1 = __importDefault(require("mongoose"));
+const CATEGORIES_DB_URI = process.env.CATEGORIES_DB_URI;
 const connectCategoriesDatabase = (...args) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+        return yield mongoose_1.default.connect(CATEGORIES_DB_URI).then(conn => {
             if (conn.connection) {
                 return console.log(`Connected to categories database...`);
             }
