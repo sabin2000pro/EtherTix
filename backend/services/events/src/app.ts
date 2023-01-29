@@ -12,19 +12,13 @@ import {eventRouter} from './routes/event-routes';
 const app: any = express();
 
 connectEventDatabase();
-
-if(process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-}
-
-if(process.env.NODE_ENV === 'production') {
-    app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
-}
  
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
+app.use(morgan('dev'));
 
+app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
 app.use(cors({
     origin: "*",
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
