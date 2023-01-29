@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env" });
+dotenv_1.default.config({ path: "config.env" });
 const mongoose_1 = __importDefault(require("mongoose"));
 const EVENT_DB_URI = process.env.EVENT_DB_URI;
 exports.default = () => {
