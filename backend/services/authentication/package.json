@@ -8,11 +8,11 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "dev": "nodemon dist/index.js",
-    "start:server": "npm run dev",
+    "start:server": "NODE_ENV=development npm run dev",
     "start:production": "NODE_ENV=production node dist/index.js",
     "auth:test": "jest tests/auth.test.ts --bail"
   },
-  
+
   "keywords": [],
   "author": "",
   "license": "ISC",
