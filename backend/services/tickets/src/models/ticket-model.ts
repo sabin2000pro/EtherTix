@@ -127,20 +127,23 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: false
         },
 
-        event: [{
+        event: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "event"
-        }],
+            ref: "Event",
+            required: [true, "Please specify the event that this ticket is related to"]
+        },
 
-        issuer: [{ // The issuer of the ticket
+        issuer: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "user"
-        }],
+            ref: "User",
+            required: [true, "Please specify who the issuer ID of this ticket is"]
+        },
 
-        venue: [{
+        venue: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "venue"
-        }]
+            ref: "Venue",
+            required: [true, "Please specify the venue ID that this ticket is associated to"]
+        }
     
 }, {
     timestamps: true
