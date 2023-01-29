@@ -38,3 +38,6 @@ run-backend-prod:
 
 build-frontend:
 	- cd ../frontend && npm run build && docker build -t sabin2000/ethertix-frontend-service . && docker push sabin2000/ethertix-frontend-service
+
+show-docker-images:
+	- docker image ls
