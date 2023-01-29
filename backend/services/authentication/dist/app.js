@@ -33,9 +33,9 @@ app.use((0, helmet_1.default)());
 app.use((0, cookie_session_1.default)({
     keys: ['session']
 }));
-app.get("/", (request, response) => {
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Auth Root Route API" });
+app.get('/root', (request, response, next) => {
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Auth Root Route" });
 });
 // Error Handler middleware
-app.use('/api/auth', auth_routes_1.authRouter);
+app.use('/api/v1/auth', auth_routes_1.authRouter);
 app.use(error_handler_1.errorHandler);

@@ -33,12 +33,12 @@ app.use(cookieSession({
     keys: ['session']
 }));
 
-app.get("/root", (request: any, response: any) => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Auth Root Route API"});
+app.get('/root', (request: any, response: any, next: any) => {
+    return response.status(StatusCodes.OK).json({success: true, message: "Auth Root Route"});
 })
 
 // Error Handler middleware
-app.use('/api/auth', authRouter);
+app.use('/api/v1/auth', authRouter);
 app.use(errorHandler);
 
 export {app}
