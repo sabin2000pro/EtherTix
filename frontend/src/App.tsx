@@ -14,6 +14,8 @@ const App = () => { // Main App Component
 
       <>
 
+      <h1>Ether Tix Platform</h1>
+
           <Routes>
               <Route path = '/register' element = {<Register />} />
               <Route path = '/login' element = {<Login />} />
