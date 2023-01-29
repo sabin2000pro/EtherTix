@@ -20,12 +20,8 @@ const error_handler_1 = require("./middleware/error-handler");
 const app = (0, express_1.default)();
 exports.app = app;
 (0, auth_db_1.connectAuthDatabase)();
-if (process.env.NODE_ENV === 'development') {
-    app.use((0, morgan_1.default)('dev'));
-}
-if (process.env.NODE_ENV === 'production') {
-    app.use((0, express_mongo_sanitize_1.default)()); // Prevent against NoSQL Injection attacks in production environment
-}
+app.use((0, morgan_1.default)('dev'));
+app.use((0, express_mongo_sanitize_1.default)()); // Prevent against NoSQL Injection attacks in production environment
 app.use(express_1.default.json());
 app.set('trust proxy', true);
 app.use((0, hpp_1.default)());
@@ -41,5 +37,5 @@ app.get("/", (request, response) => {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Auth Root Route API" });
 });
 // Error Handler middleware
-app.use('/api/v1/auth', auth_routes_1.authRouter);
+app.use('/api/auth', auth_routes_1.authRouter);
 app.use(error_handler_1.errorHandler);
