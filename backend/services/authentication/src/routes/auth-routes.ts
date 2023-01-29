@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import {registerUser, updateUserPassword, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
+import {registerUser, updateUserPassword, rootRoute, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
@@ -13,6 +13,8 @@ const rateLimiter = rateLimit({
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
+
+authRouter.route('/root').get(rootRoute as any);
 
 authRouter.route('/register').post(rateLimiter as any, registerUser as any);
 authRouter.route('/verify-email').post(rateLimiter as any, verifyEmailAddress as any);

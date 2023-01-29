@@ -80,6 +80,10 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
+
+  export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    return response.status(200).json({success: true, message: "Root Route Auth!"});
+  })
   
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 

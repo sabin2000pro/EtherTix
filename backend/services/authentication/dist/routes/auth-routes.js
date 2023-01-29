@@ -16,6 +16,7 @@ const rateLimiter = (0, express_rate_limit_1.default)({
     standardHeaders: true,
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
+exports.authRouter.route('/root').get(auth_controller_1.rootRoute);
 exports.authRouter.route('/register').post(rateLimiter, auth_controller_1.registerUser);
 exports.authRouter.route('/verify-email').post(rateLimiter, auth_controller_1.verifyEmailAddress);
 exports.authRouter.route('/login').post(rateLimiter, auth_controller_1.loginUser);
