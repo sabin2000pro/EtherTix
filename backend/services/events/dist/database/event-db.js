@@ -21,6 +21,7 @@ exports.default = () => {
         try {
             return yield mongoose_1.default.connect(EVENT_DB_URI).then(conn => {
                 if (conn.connection) {
+                    console.log(`Read env var successfully`);
                     return console.log(`Connected to events database...`);
                 }
                 else {
