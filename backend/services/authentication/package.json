@@ -10,7 +10,8 @@
     "dev": "nodemon dist/index.js",
     "start:server": "NODE_ENV=development npm run dev",
     "start:production": "NODE_ENV=production node dist/index.js",
-    "auth:test": "jest tests/auth.test.ts --bail"
+    "auth:test": "jest tests/auth.test.ts --bail",
+    "pm2:production": "NODE_ENV=production pm2 start dist/index.js --watch -i max"
   },
 
   "keywords": [],
