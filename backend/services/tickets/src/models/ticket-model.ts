@@ -13,8 +13,8 @@ interface ITicketAttributes {
     onSaleStatus: String,
     saleStartsAt: Date,
     saleEndsAt: Date,
-    confirmationMessage: String,
-    ticketSold: Boolean,
+    confirmationMessage: string,
+    ticketSold: boolean,
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
     venue: mongoose.Schema.Types.ObjectId
