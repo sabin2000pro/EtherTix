@@ -13,7 +13,7 @@ export default () => {
             return await mongoose.connect(EVENT_DB_URI).then(conn => {
     
                 if(conn.connection) {
-                    console.log(`Read env var successfully`);
+                    console.log(`Read env var successfully : ${EVENT_DB_URI}`);
 
                     return console.log(`Connected to events database...`)
                 }
