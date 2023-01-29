@@ -17,15 +17,11 @@ const event_routes_1 = require("./routes/event-routes");
 const app = (0, express_1.default)();
 exports.app = app;
 (0, event_db_1.default)();
-if (process.env.NODE_ENV === 'development') {
-    app.use((0, morgan_1.default)('dev'));
-}
-if (process.env.NODE_ENV === 'production') {
-    app.use((0, express_mongo_sanitize_1.default)()); // Prevent against NoSQL Injection attacks in production environment
-}
 app.use(express_1.default.json());
 app.set('trust proxy', true);
 app.use((0, hpp_1.default)());
+app.use((0, morgan_1.default)('dev'));
+app.use((0, express_mongo_sanitize_1.default)()); // Prevent against NoSQL Injection attacks in production environment
 app.use((0, cors_1.default)({
     origin: "*",
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
