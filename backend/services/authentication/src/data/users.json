@@ -29,7 +29,7 @@
         "surname": "Stones",
         "username": "amystones928",
         "email": "amystones928@yahoo.com",
-        "zip": "LD11 GXN",
+        "postCode": "LD11 GXN",
         "city": "London",
         "password": "amyorganiser123",
         "passwordConfirm": "amyorganiser123",
@@ -41,7 +41,8 @@
         "surname": "Barrows",
         "username": "jakeybarrow",
         "email": "jakebarrows@gmail.com",
-        "photo": "no-photo.jpg",
+        "postCode": "SH11 KLZ",
+        "city": "Southampton",
         "password": "jake123456789",
         "passwordConfirm": "jake123456789",
         "role": "User"
@@ -52,7 +53,8 @@
         "surname": "Heikenberg",
         "username": "stefan209",
         "email": "stefan209@yahoo.com",
-        "photo": "no-photo.jpg",
+        "postCode": "EH7 5DD",
+        "city": "Edinburgh",
         "password": "123mini123",
         "passwordConfirm": "123mini123",
         "role": "User"
@@ -63,7 +65,8 @@
         "surname": "Lungu",
         "username": "sabin2000",
         "email": "sabin2000@gmail.com",
-        "photo": "no-photo.jpg",
+        "postCode": "GA14 MXB",
+        "city": "Glasgow",
         "password": "123mini123",
         "passwordConfirm": "123mini123",
         "role": "User"
