@@ -4,6 +4,7 @@ services:
 
   auth-service:
     container_name: auth-api
+    hostname: auth-api
     image: sabin2000/ethertix-auth-service
     build:
       context: ../backend/services/authentication
