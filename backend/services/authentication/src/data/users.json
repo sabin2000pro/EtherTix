@@ -77,6 +77,8 @@
         "surname": "Geremi",
         "username": "johnny2309",
         "email": "johnny22@yahoo.com",
+        "postCode": "NR9 JKN",
+        "city": "Norwich",
         "password": "lol12345",
         "passwordConfirm": "lol12345",
         "role": "Moderator"
