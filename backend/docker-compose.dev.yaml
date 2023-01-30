@@ -92,6 +92,8 @@ services:
         - ../backend/services/tickets:/app
 
   discount-service:
+
+    container_name: discount-service
     image: sabin2000/ethertix-discount-service
 
     build:
