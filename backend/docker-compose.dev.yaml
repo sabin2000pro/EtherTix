@@ -2,19 +2,6 @@ version: '3.2'
 
 services:
 
-  nginx:
-    image: nginx
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    links:
-      - auth-api
-  auth-api:
-      image: sabin2000/ethertix-auth-service
-      ports:
-        - 5299:5299
-
   auth-service:
     container_name: auth-api
     image: sabin2000/ethertix-auth-service
