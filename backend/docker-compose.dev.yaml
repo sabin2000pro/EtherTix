@@ -14,7 +14,7 @@ services:
     network_mode: host
 
   auth-service:
-    container_name: auth-api
+    container_name: auth-service
     image: sabin2000/ethertix-auth-service
     build:
       context: ../backend/services/authentication
