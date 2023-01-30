@@ -20,12 +20,15 @@ interface EventAttributes { // Interface for the event attributes
     hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
+    averageRating: number;
+    averageCost: number
     hideStartDate: boolean;
     hideEndDate: boolean;
     isLocked: boolean;
     isFree: boolean;
     isPremium: boolean;
     salesStatus: string,
+    isTrending: boolean;
     salesStart: Date,
     salesEnd: Date,
 
@@ -52,6 +55,8 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     currency: string;
     event_logo: string;
     slug: string;
+    averageRating: number;
+    averageCost: number
     isOnline: boolean;
     format: string;
     capacity: number;
@@ -202,6 +207,16 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event should show when it starts or not"]
+    },
+
+    averageRating: {
+        type: Number,
+        default: 0
+    },
+
+    averageCost: {
+        type: Number,
+        default: 0
     },
 
     hideEndDate: { // Field that shows when an event starts or not

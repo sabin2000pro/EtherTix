@@ -53,19 +53,18 @@
     "venue": "",
     "ticket": "",
     "category": ""
-
   },
 
   {
     "_id": "5d713995b721c3bb38c1f5d2",
-    "name": "Three Sisters Drink N'Socialise",
-    "summary": "A thrilling outdoor event at the Three Sisters outdoor courtyard",
-    "description": "An exciding outdoor event where you can eat, drink and socialise with your friends",
-    "startAt": "2023-08-12 18:00:00",
-    "endsAt": "2023-08-12 21:00:00",
+    "name": "Agile Project Management Conference",
+    "summary": "This indoor event gives people a chance to learn more about how to manage projects.",
+    "description": "Throughout this event, various agile project management techniques such as Sprints, Kanban Boards, Sprint Boards are going to be covered to fully prepare you to succesfully manage projects as part of a team",
+    "startAt": "2023-03-07 12:00:00",
+    "endsAt": "2023-03-07 15:00:00",
     "eventStatus": "pending",
-    "currency": "GBP",
-    "format": "Outdoor",
+    "currency": "ETH",
+    "format": "Conference",
     "isOnline": false,
     "capacity": 200,
     "slotsAvailable": true,
