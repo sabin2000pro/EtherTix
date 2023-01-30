@@ -20,7 +20,9 @@ exports.app = app;
 app.use(express_1.default.json());
 app.set('trust proxy', true);
 app.use((0, hpp_1.default)());
-app.use((0, morgan_1.default)('dev'));
+if (process.env.NODE_ENV === 'development') {
+    app.use((0, morgan_1.default)('dev'));
+}
 app.use((0, express_mongo_sanitize_1.default)()); // Prevent against NoSQL Injection attacks in production environment
 app.use((0, cors_1.default)({
     origin: "*",

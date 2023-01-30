@@ -41,7 +41,7 @@ const EventSchema = new mongoose_1.default.Schema({
         type: Date,
         default: Date.now
     },
-    event_status: {
+    eventStatus: {
         type: String,
         default: "pending",
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
@@ -50,6 +50,7 @@ const EventSchema = new mongoose_1.default.Schema({
     currency: {
         type: String,
         required: [true, "Please specify the currency that this event will take payment in"],
+        enum: ['GBP', 'ETH'],
         default: 'ETH'
     },
     event_logo: {
@@ -58,7 +59,7 @@ const EventSchema = new mongoose_1.default.Schema({
     },
     format: {
         type: String,
-        required: [true, "Please specify the format name"],
+        required: [true, "Please specify the format that the event holds"],
         enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
     },
     isOnline: {
@@ -72,10 +73,10 @@ const EventSchema = new mongoose_1.default.Schema({
         min: [3, "There must be at least 3 minimum people at the event"],
         max: [150, "There cannot be more than 150 people at the current event"]
     },
-    showRemaining: {
+    slotsAvailable: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify if there are any remaining slots for this event"]
+        required: [true, "Please specify if there are any available slots left for this event"]
     },
     isPremium: {
         type: Boolean,
@@ -106,6 +107,14 @@ const EventSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event should show when it starts or not"]
+    },
+    averageRating: {
+        type: Number,
+        default: 0
+    },
+    averageCost: {
+        type: Number,
+        default: 0
     },
     hideEndDate: {
         type: Boolean,
