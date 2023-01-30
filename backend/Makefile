@@ -19,14 +19,6 @@ build-services:
 	- cd services/discount* && npm run build
 
 	- docker login
-
-	- cd services/auth* && docker build -t sabin2000/ethertix-auth-service . && docker push sabin2000/ethertix-auth-service
-	- cd services/events* && docker build -t sabin2000/ethertix-events-service . && docker push sabin2000/ethertix-events-service
-	- cd services/tickets* && docker build -t sabin2000/ethertix-tickets-service . && docker push sabin2000/ethertix-tickets-service
-	- cd services/categories* && docker build -t sabin2000/ethertix-categories-service . && docker push sabin2000/ethertix-categories-service
-	- cd services/discount* && docker build -t sabin2000/ethertix-discount-service . && docker push sabin2000/ethertix-discount-service
-	- cd services/venues* && docker build -t sabin2000/ethertix-venues-service . && docker push sabin2000/ethertix-venues-service
-
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build -d
 	- cd ../frontend && pm2 serve build 3000 --spa
 
