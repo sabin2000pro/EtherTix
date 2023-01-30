@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
@@ -10,13 +9,13 @@ interface EventAttributes { // Interface for the event attributes
     createdAt: Date;
     changedAt: Date;
     publishedAt: Date;
-    event_status: string;
+    eventStatus: string;
     currency: string;
     isOnline: boolean; // True or false if the event is online
     event_logo: string;
     format: string;
     capacity: number;
-    showRemaining: boolean;
+    slotsAvailable: boolean;
     slug: string;
     hasAvailableTickets: boolean;
     isSoldOut: boolean;
@@ -29,15 +28,16 @@ interface EventAttributes { // Interface for the event attributes
     salesStatus: string,
     salesStart: Date,
     salesEnd: Date,
+
     likes: [],
     followers: [],
+    bookmarks: [],
 
-    organiser: mongoose.Schema.Types.ObjectId;
-    venue: mongoose.Schema.Types.ObjectId;
-    ticket: mongoose.Schema.Types.ObjectId;
-    category: mongoose.Schema.Types.ObjectId;
+    organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
+    venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
+    ticket: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
+    category: mongoose.Schema.Types.ObjectId; // Category ID of the Specifid Event
 }
-
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
@@ -48,7 +48,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     createdAt: Date;
     publishedAt: Date;
     changedAt: Date;
-    event_status: string;
+    eventStatus: string;
     currency: string;
     event_logo: string;
     slug: string;
@@ -56,7 +56,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     format: string;
     capacity: number;
     minCapacity: number;
-    showRemaining: boolean;
+    slotsAvailable: boolean;
     hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
@@ -124,7 +124,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: Date.now
     },
 
-    event_status: { // Status of the event
+    eventStatus: { // Status of the event
         type: String,
         default: "pending",
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
@@ -134,6 +134,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     currency: { // The type of currency that the event takes payment in
         type: String,
         required: [true, "Please specify the currency that this event will take payment in"],
+        enum: ['GBP', 'ETH'],
         default: 'ETH'
     },
 
@@ -144,7 +145,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     format: {
         type: String,
-        required: [true, "Please specify the format name"],
+        required: [true, "Please specify the format that the event holds"],
         enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
     },
 
@@ -161,10 +162,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         max: [150, "There cannot be more than 150 people at the current event"]
     },
 
-    showRemaining: {
+    slotsAvailable: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify if there are any remaining slots for this event"]
+        required: [true, "Please specify if there are any available slots left for this event"]
     },
 
     isPremium: {
@@ -209,11 +210,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if the event should show when it ends or not"]
     },
 
-    isFree: { // If the event is free or not
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event is free or not"]
-    },
+        isFree: { // If the event is free or not
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if the event is free or not"]
+        },
 
         reservedSeating: {
             type: Boolean,
@@ -227,7 +228,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             required: [true, "Please specify the sales status of the event."]
         },
 
-        salesStart: { // Start date of the ticket sales
+        salesStart: { // Start date of event ticket sales
             type: Date,
             default: Date.now
         },

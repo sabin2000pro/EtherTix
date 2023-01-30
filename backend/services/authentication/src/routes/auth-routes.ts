@@ -15,16 +15,17 @@ const rateLimiter = rateLimit({
 })
 
 authRouter.route('/root').get(rootRoute as any);
-
 authRouter.route('/register').post(rateLimiter as any, registerUser as any);
 authRouter.route('/verify-email').post(rateLimiter as any, verifyEmailAddress as any);
+authRouter.route('/resend-email-verification').post(rateLimiter as any, resendEmailVerificationCode as any);
 
 authRouter.route('/login').post(rateLimiter as any, loginUser as any);
 authRouter.route('/verify-login-mfa').post(rateLimiter as any, verifyLoginToken as any)
+authRouter.route('/resend-login-mfa').post(rateLimiter as any, resendTwoFactorLoginCode);
 
 authRouter.route('/logout').get(rateLimiter as any, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter as any, forgotPassword as any);
-authRouter.route('/reset-password').post(rateLimiter as any, resetPassword as any);
+authRouter.route('/reset-password/:resetToken').post(rateLimiter as any, resetPassword as any);
 
 authRouter.route('/update-profile').put(rateLimiter as any, protectAuth as any, updateUserProfile as any)
 authRouter.route('/update-password').put(rateLimiter as any, protectAuth as any, updateUserPassword as any);
@@ -32,6 +33,3 @@ authRouter.route('/me').get(rateLimiter as any, protectAuth as any, getCurrentUs
 
 authRouter.route('/get/user-count').get(rateLimiter as any, protectAuth as any, fetchTotalUsers as any)
 authRouter.route('/deactivate-account').put(rateLimiter as any, protectAuth as any, deactivateUserAccount);
-
-authRouter.route('/resend-mfa').post(rateLimiter as any, resendEmailVerificationCode as any);
-authRouter.route('/resend-login-mfa').post(rateLimiter as any, resendTwoFactorLoginCode);

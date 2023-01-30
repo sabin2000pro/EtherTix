@@ -78,6 +78,7 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
   })
   
+  // API 1
   // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
@@ -163,6 +164,7 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
+  // API 2
 export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
@@ -245,12 +247,12 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 
 })
 
-
   // @description: Resend the E-mail Verification code to the user if not received
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
+  // API - 3
 export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
@@ -321,6 +323,8 @@ const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
+
+  // API - 4
 export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
@@ -354,8 +358,8 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         const transporter = emailTransporter();
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
-        
         const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
+
         await loginMfa.save();
 
         // Check for a valid MFA
@@ -370,12 +374,14 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
     catch(error) {
 
         if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+            return next(error)
         }
 
     }
 
 })
+
+// API - 5
 
 export const verifyLoginToken = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
@@ -426,6 +432,8 @@ export const verifyLoginToken = async (request: any, response: any, next: NextFu
     }
 
 }
+
+// API 6
 
 export const resendTwoFactorLoginCode = async (request: any, response: any, next: NextFunction): Promise<any> => {
 

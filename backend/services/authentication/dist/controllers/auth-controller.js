@@ -1,6 +1,5 @@
 "use strict";
-// Service: Authentication Service API
-// Authors: Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook
+// Service: Authentication Service
 // Copyright (c) 2023 - EtherTix (All Rights Reserved)
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -47,22 +46,17 @@ const sendConfirmationEmail = (transporter, newUser, userOTP) => {
         `
     });
 };
+exports.rootRoute = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Root Route Auth!" });
+}));
+// API 1
 // @description: Register New User Account
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise
 // @public: True (No Authorization Token Required)
-exports.rootRoute = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    return response.status(200).json({ success: true, message: "Root Route Auth!" });
-}));
 exports.registerUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const forename = request.body.forename;
-        const surname = request.body.surname;
-        const username = request.body.username;
-        const email = request.body.email;
-        const password = request.body.password;
-        const passwordConfirm = request.body.passwordConfirm;
-        const role = request.body.role;
+        const { forename, surname, username, email, password, postCode, city, passwordConfirm, role } = request.body;
         if (!forename) {
             return next(new error_handler_1.NotFoundError("Forename is missing. Please try enter again", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -80,7 +74,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
             return next(new error_handler_2.BadRequestError("User already exists", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
         const user = yield user_model_1.User.create({ forename, surname, username, email, role, password, passwordConfirm });
-        const token = user.getAuthenticationToken();
+        const token = user.getAuthenticationToken(); // Get the users JWT token
         if (!token) {
             return next(new error_handler_2.JwtTokenError("JWT Token invalid. Please ensure it is valid", http_status_codes_1.StatusCodes.BAD_REQUEST));
         }
@@ -98,7 +92,7 @@ exports.registerUser = (0, express_async_handler_1.default)((request, response, 
     }
     catch (error) {
         if (error) {
-            return response.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({ message: error.message, success: false });
+            return next(error);
         }
     }
 }));
@@ -115,6 +109,7 @@ const sendTokenResponse = (request, user, statusCode, response) => {
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
+// API 2
 exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
@@ -168,7 +163,7 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
     }
     catch (error) {
         if (error) {
-            return next(new error_handler_2.BadRequestError(error, http_status_codes_1.StatusCodes.BAD_REQUEST));
+            return next(error);
         }
     }
 }));
@@ -176,6 +171,7 @@ exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, resp
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise
 // @public: True (No Authorization Token Required)
+// API - 3
 exports.resendEmailVerificationCode = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
@@ -224,6 +220,7 @@ const sendLoginMfa = (transporter, user, userMfa) => {
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
+// API - 4
 exports.loginUser = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = request.body;
@@ -258,10 +255,11 @@ exports.loginUser = (0, express_async_handler_1.default)((request, response, nex
     }
     catch (error) {
         if (error) {
-            return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+            return next(error);
         }
     }
 }));
+// API - 5
 const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, multiFactorToken } = request.body;
@@ -297,6 +295,7 @@ const verifyLoginToken = (request, response, next) => __awaiter(void 0, void 0, 
     }
 });
 exports.verifyLoginToken = verifyLoginToken;
+// API 6
 const resendTwoFactorLoginCode = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, mfaCode } = request.body; // 1. Extract user id and the MFA code from the request body
