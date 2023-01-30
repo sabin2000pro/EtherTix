@@ -8,19 +8,17 @@ interface IVenueAttributes {
     venueCapacity: number;
     phone: string;
     ageRestriction: string;
-
     openTime: Date,
     closeTime: Date,
     hasPublicAccess: boolean;
     smokingAllowed: boolean;
     photo: string;
     createdAt: Date;
-
     website: string;
     location: Object;
     address: string
 
-    organiser: mongoose.Schema.Types.ObjectId
+    organiser: mongoose.Schema.Types.ObjectId // Organiser -> Venue Relationship
     event: mongoose.Schema.Types.ObjectId
     ticket: mongoose.Schema.Types.ObjectId
 }
