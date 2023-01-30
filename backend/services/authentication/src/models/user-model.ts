@@ -107,6 +107,16 @@ const UserSchema = new mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
+    zip: {
+        type: String,
+        required: [true, "Please provide the users zip code"]
+    },
+
+    city: {
+        type: String,
+        required: [true, "Please specify the city that the user resides in"]
+    },
+
     photo: { // Photo for the user
         type: String, // Type is string
         default: 'no-photo.jpg'
@@ -117,12 +127,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, "Please provide a valid password"]
-    },
-
-    passwordConfirm: {
-        type: String,
-        trim: true,
-        required: [true, "Please confirm your password"]
     },
 
     role: {
@@ -184,7 +188,6 @@ UserSchema.pre('save', async function(next: () => void) {
     }
 
    this.password = await bcrypt.hash(this.password, ROUNDS);
-   this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, ROUNDS);
 
    return next();
 })
