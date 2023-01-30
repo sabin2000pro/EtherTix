@@ -139,7 +139,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     catch(error: any) {
 
         if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({message: error.message, success: false})
+            return next(error);
         }
 
     }
@@ -238,7 +238,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     catch(error: any) {
 
         if(error) {
-            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+            return next(error);
         }
 
     }
