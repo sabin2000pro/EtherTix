@@ -16,13 +16,18 @@ connectEventDatabase();
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
-app.use(morgan('dev'));
+
+if(process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
 
 app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
+
 app.use(cors({
     origin: "*",
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
+
 app.use(helmet());
 
 app.get("/root", (request: any, response: any) => {

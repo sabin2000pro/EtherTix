@@ -41,3 +41,6 @@ build-frontend:
 
 show-docker-images:
 	- docker image ls
+
+launch-production:
+	- pm2 serve build 3000
