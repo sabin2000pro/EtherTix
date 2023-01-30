@@ -160,10 +160,11 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           required: [true, "Please specify a valid Event ID which is being hosted at this event at a given time"]
         },
 
-        ticket: [{ // One venue can have many tickets available associated to it
+        ticket: { // One venue can have many tickets available associated to it
           type: mongoose.Schema.Types.ObjectId,
-          ref: "ticket"
-        }]
+          ref: "Ticket",
+          required: [true, "Please specify a valid Ticket ID for this venue"]
+        }
 
 }, {
 
