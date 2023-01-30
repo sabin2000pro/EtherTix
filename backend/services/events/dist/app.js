@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: 'config.env' });
 const error_handler_1 = require("./middlewares/error-handler");
 const event_db_1 = __importDefault(require("./database/event-db"));
 const express_1 = __importDefault(require("express"));

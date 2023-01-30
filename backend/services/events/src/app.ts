@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config({path: 'config.env'});
 import { CustomError } from './middlewares/error-handler';
 import connectEventDatabase from './database/event-db';
 import express, { Application, Request, Response, NextFunction } from "express";
