@@ -33,7 +33,6 @@ interface IUserAttributes {
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
 }
-
 interface UserDocument extends mongoose.Model<IUserAttributes> { // User Document holding all of the information regarding a user
     forename: string;
     surname: string; // Users surname
@@ -49,13 +48,10 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     photo: string; // User avatar
     isNewUser: boolean;
     createdAt: Date;
-
     pastEventsHeld: number;
     upcomingEvents: number;
-
     virtualCredits: number;
     reputationPoints: number;
-
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
