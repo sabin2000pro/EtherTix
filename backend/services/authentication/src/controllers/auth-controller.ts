@@ -1,7 +1,4 @@
-
-
-// Service: Authentication Service API
-// Authors: Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook
+// Service: Authentication Service
 // Copyright (c) 2023 - EtherTix (All Rights Reserved)
 
 import { FileTooLargeError, NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
@@ -14,7 +11,7 @@ import {StatusCodes} from "http-status-codes";
 import { generateOTPVerificationToken } from '../utils/generate-otp';
 import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
-import { isValidObjectId, Query } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import asyncHandler from 'express-async-handler';                        
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
@@ -76,28 +73,21 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
+
+  export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
+  })
+  
   // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-  export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    return response.status(200).json({success: true, message: "Root Route Auth!"});
-  })
-  
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
-        const forename = request.body.forename;
-        const surname = request.body.surname;
-        
-        const username = request.body.username;
-        const email = request.body.email;
-        const password = request.body.password;
-
-        const passwordConfirm = request.body.passwordConfirm
-        const role = request.body.role;
+        const {forename, surname, username, email, password, postCode, city, passwordConfirm, role} = request.body;
 
         if(!forename) {
             return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.BAD_REQUEST));
@@ -122,7 +112,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         }
 
         const user = await User.create({forename, surname, username, email, role, password, passwordConfirm});
-        const token = user.getAuthenticationToken();
+        const token = user.getAuthenticationToken(); // Get the users JWT token
 
         if(!token) {
             return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))

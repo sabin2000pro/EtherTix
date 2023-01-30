@@ -14,7 +14,6 @@ interface IUserAttributes {
     accountVerified: boolean;
     accountLocked: boolean;
     isNewUser: boolean;
-
     photo: string;
     createdAt: Date;
     address: string;
@@ -26,7 +25,6 @@ interface IUserAttributes {
     isLoggedIn: boolean;
     isValid: boolean;
     postCode: string;
-
     virtualCredits: number;
     reputationPoints: number;
     premiumAccount: boolean;
