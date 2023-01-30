@@ -13,8 +13,6 @@ services:
 
     ports:
       - "5299:5299"
-    depends_on:
-      - nginx
       
     volumes:
        - /app/node_modules
