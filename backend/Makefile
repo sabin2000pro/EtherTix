@@ -26,8 +26,7 @@ build-services:
 	- cd services/categories* && docker build -t sabin2000/ethertix-categories-service . && docker push sabin2000/ethertix-categories-service
 	- cd services/discount* && docker build -t sabin2000/ethertix-discount-service . && docker push sabin2000/ethertix-discount-service
 	- cd services/venues* && docker build -t sabin2000/ethertix-venues-service . && docker push sabin2000/ethertix-venues-service
-	
-	- docker volume prune && docker system prune
+
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 
 stop-services:
@@ -41,6 +40,3 @@ build-frontend:
 
 show-docker-images:
 	- docker image ls
-
-launch-production:
-	- pm2 serve build 3000
