@@ -32,18 +32,19 @@ var AccountType;
     AccountType["Premium"] = "Premium";
     AccountType["Platinum"] = "Platinum";
 })(AccountType || (AccountType = {}));
-// Working on the auth feature branch
 const UserSchema = new mongoose_1.default.Schema({
     forename: {
         type: String,
         trim: true,
         required: [true, "Please provide your forename"],
-        maxlength: [10, "Forename cannot exceed 10 characters"],
-        minlength: [3, "Forename cannot be less than 3 characters"]
+        max: [10, "Forename cannot exceed 10 characters"],
+        min: [3, "Forename cannot be less than 3 characters"]
     },
     surname: {
         type: String,
-        required: [true, "Please provide your surname"]
+        required: [true, "Please provide your surname"],
+        min: [6, "Your surname must be at least 6 characters"],
+        max: [16, "Your surname cannot exceed 16 characters"]
     },
     // username of the user
     username: {
@@ -60,6 +61,14 @@ const UserSchema = new mongoose_1.default.Schema({
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
+    postCode: {
+        type: String,
+        required: [true, "Please provide the users post code"]
+    },
+    city: {
+        type: String,
+        required: [true, "Please specify the city that the user resides in"]
+    },
     photo: {
         type: String,
         default: 'no-photo.jpg'
@@ -72,7 +81,6 @@ const UserSchema = new mongoose_1.default.Schema({
     },
     passwordConfirm: {
         type: String,
-        trim: true,
         required: [true, "Please confirm your password"]
     },
     role: {
@@ -122,7 +130,6 @@ UserSchema.pre('save', function (next) {
             return next();
         }
         this.password = yield bcryptjs_1.default.hash(this.password, ROUNDS);
-        this.passwordConfirm = yield bcryptjs_1.default.hash(this.passwordConfirm, ROUNDS);
         return next();
     });
 });
