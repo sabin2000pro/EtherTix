@@ -175,20 +175,16 @@ export const fetchEventsWithinRadius = async (request: Request, response: Respon
 }
 
 export const likeEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
+    try {
 
-    let eventId = request.params.eventId;
-    const event = await Event.findById(eventId);
-    let eventLikes = event.likes;
-
-    if(!event) {
-        return response.status(404).json({ msg: 'Event not found with that ID' });
+    } 
+    
+    catch(error) {
+        if(error) {
+            return next(error);
+        }
     }
 
-    // Increment the number of likes for the event
-    eventLikes += 1 as any;
-    await event.save();
-    
-    return response.status(StatusCodes.OK).json({success: true, likes: eventLikes});
 
 }
 

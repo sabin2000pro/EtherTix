@@ -75,6 +75,7 @@ services:
         - ../backend/services/venues:/app
   
   tickets-service:
+    container_name: tickets-api
     image: sabin2000/ethertix-tickets-service
 
     build:
