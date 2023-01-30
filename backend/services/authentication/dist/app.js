@@ -20,7 +20,7 @@ const app = (0, express_1.default)();
 exports.app = app;
 (0, auth_db_1.connectAuthDatabase)();
 app.use((0, morgan_1.default)('dev'));
-app.use((0, express_mongo_sanitize_1.default)()); // Prevent against NoSQL Injection attacks in production environment
+app.use((0, express_mongo_sanitize_1.default)()); // Prevent againiojoijoijoijst NoSQL Injection attacks in production environment
 app.use(express_1.default.json());
 app.set('trust proxy', true);
 app.use((0, hpp_1.default)());

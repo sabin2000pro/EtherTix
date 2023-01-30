@@ -21,7 +21,7 @@ if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
+app.use(mongoSanitize()); // Prevent agaisnst NoSQL Injection attacks in production environment
 
 app.use(cors({
     origin: "*",
