@@ -1,4 +1,5 @@
 [
+  
   {
     "_id": "5d713995b721c3bb38c1f5d0",
     "name": "Edinburgh Highland Show Outdoor Event",
@@ -50,7 +51,7 @@
     "reservedSeating": false,
     "salesStatus": "pending",
     "organiser": "5d7a514b5d2c12c7449be042",
-    "venue": "",
+    "venue": "5d7a514b5d2c12c7449be022",
     "ticket": "",
     "category": ""
   },
@@ -78,7 +79,7 @@
     "reservedSeating": false,
     "salesStatus": "pending",
     "organiser": "5d7a514b5d2c12c7449be044",
-    "venue": "",
+    "venue": "5d7a514b5d2c12c7449be021",
     "ticket": "",
     "category": ""
   }
