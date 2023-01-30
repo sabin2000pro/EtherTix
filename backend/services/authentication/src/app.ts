@@ -34,7 +34,7 @@ app.use(cookieSession({
 }));
 
 // Error Handler middleware
-app.use('/api/v1/auth', authRouter);
+app.use('/api/auth', authRouter);
 app.use(errorHandler);
 
 export {app}
