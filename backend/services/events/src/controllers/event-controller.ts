@@ -180,6 +180,7 @@ export const likeEvent = async (request: any, response: any, next: NextFunction)
     } 
     
     catch(error) {
+
         if(error) {
             return next(error);
         }
@@ -191,20 +192,14 @@ export const likeEvent = async (request: any, response: any, next: NextFunction)
 export const dislikeEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
    try {
-        let eventId = request.params.eventId;
-        const event = await Event.findById(eventId);
-        let currentLikes = event.likes;
-    
-        if(currentLikes < event.likes) {
-          
-        }
-    
-        if(!event) {
-            return response.status(StatusCodes.NOT_FOUND).json({ msg: 'Event not found with that ID' });
-        }
+       
    } 
    
    catch(error) {
+    
+    if(error) {
+        return next(error);
+    }
 
    }
  
