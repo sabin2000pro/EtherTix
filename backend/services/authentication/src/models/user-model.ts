@@ -25,6 +25,7 @@ interface IUserAttributes {
     isVerified: boolean;
     isLoggedIn: boolean;
     isValid: boolean;
+    postCode: string;
 
     virtualCredits: number;
     reputationPoints: number;
@@ -49,6 +50,7 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     isNewUser: boolean;
     createdAt: Date;
     pastEventsHeld: number;
+    postCode: string;
     upcomingEvents: number;
     virtualCredits: number;
     reputationPoints: number;
@@ -107,9 +109,9 @@ const UserSchema = new mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
-    zip: {
+    postCode: {
         type: String,
-        required: [true, "Please provide the users zip code"]
+        required: [true, "Please provide the users post code"]
     },
 
     city: {
@@ -127,6 +129,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, "Please provide a valid password"]
+    },
+
+    passwordConfirm: {
+        type: String,
+        required: [true, "Please confirm your password"]
     },
 
     role: {
