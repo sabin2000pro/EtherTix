@@ -8,7 +8,10 @@
         "hasPublicAccess": false,
         "smokingAllowed": false,
         "photo": "no-photo.jpg",
-        "address": "Ingliston, Newbridge EH28 8NB"
+        "address": "Ingliston, Newbridge EH28 8NB",
+        "organiser": "",
+        "event": "",
+        "ticket": ""
     },
 
     {
