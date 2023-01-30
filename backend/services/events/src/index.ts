@@ -1,6 +1,9 @@
-require('dotenv').config();
 
 import { app } from "./app"
+import dotenv from 'dotenv';
+dotenv.config({path: "backend/services/authentication/config.env"});
+
+
 const port = process.env.PORT || 5301;
 
 export const startEventsServer = async () => {
