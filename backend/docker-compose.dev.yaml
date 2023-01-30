@@ -2,6 +2,7 @@ version: '3.2'
 
 services:
   auth-service:
+    container_name: auth-api
     image: sabin2000/ethertix-auth-service
     build:
       context: ../backend/services/authentication
@@ -26,6 +27,7 @@ services:
     command: ["npm", "run", "auth:test"]
 
   events-service:
+      container_name: events-api
       image: sabin2000/ethertix-events-service
       build:
         context: ../backend/services/events
@@ -41,6 +43,7 @@ services:
         - ../backend/services/events:/app
   
   categories-service:
+      container_name: categories-api
       image: sabin2000/ethertix-categories-service
       build:
         context: ../backend/services/categories
@@ -56,8 +59,8 @@ services:
         - ../backend/services/categories:/app
 
   venues-service:
+    container_name: venues-api
     image: sabin2000/ethertix-venues-service
-
     build:
       context: ../backend/services/venues
       dockerfile: Dockerfile
