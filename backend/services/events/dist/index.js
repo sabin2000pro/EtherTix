@@ -13,14 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startEventsServer = void 0;
-const app_1 = require("./app");
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "/backend/services/events/config.env" });
+dotenv_1.default.config({ path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env" });
+const app_1 = require("./app");
 const port = process.env.PORT || 5301;
 const startEventsServer = () => __awaiter(void 0, void 0, void 0, function* () {
     return app_1.app.listen(port, (error) => {
         if (!error) {
-            console.log(`Events service live on port ${port} in mode : ${process.env.NODE_ENV}`);
+            console.log(`Events Service is live on port ${port} in mode : ${process.env.NODE_ENV}`);
         }
         else {
             return console.error(error);
