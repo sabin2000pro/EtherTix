@@ -27,7 +27,8 @@ build-services:
 	- cd services/discount* && docker build -t sabin2000/ethertix-discount-service . && docker push sabin2000/ethertix-discount-service
 	- cd services/venues* && docker build -t sabin2000/ethertix-venues-service . && docker push sabin2000/ethertix-venues-service
 
-	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
+	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build -d
+	- cd ../frontend && pm2 serve build 3000 --spa
 
 stop-services:
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml down --remove-orphans
