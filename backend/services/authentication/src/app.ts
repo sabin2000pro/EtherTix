@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 dotenv.config({path: 'config.env'});
-import { StatusCodes } from 'http-status-codes';
 import cookieSession from 'cookie-session';
 import express, { Application, NextFunction, Request, Response } from "express";
 import morgan from "morgan"

@@ -25,9 +25,7 @@ app.use(cors({
 }));
 app.use(helmet());
 
-app.use('/api/v1/events', eventRouter);
-
-app.get("/", (request: any, response: any) => {
+app.get("/root", (request: any, response: any) => {
     return response.json({message: "Event - Root Route"})
 });
 
@@ -40,5 +38,7 @@ app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
     return next();
 
 })
+
+app.use('/api/events', eventRouter);
 
 export {app}
