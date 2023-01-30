@@ -73,20 +73,21 @@ enum AccountType {
     Basic = "Basic", Standard = "Standard", Premium = "Premium", Platinum = "Platinum"
 }
 
-// Working on the auth feature branch
 const UserSchema = new mongoose.Schema({
 
-    forename: {
+    forename: { // User's forename
         type: String,
         trim: true,
         required: [true, "Please provide your forename"],
-        maxlength: [10, "Forename cannot exceed 10 characters"],
-        minlength: [3, "Forename cannot be less than 3 characters"]
+        max: [10, "Forename cannot exceed 10 characters"],
+        min: [3, "Forename cannot be less than 3 characters"]
     },
 
-    surname: {
+    surname: { // Users surname
         type: String,
-        required: [true, "Please provide your surname"]
+        required: [true, "Please provide your surname"],
+        min: [6, "Your surname must be at least 6 characters"],
+        max: [16, "Your surname cannot exceed 16 characters"]
     },
     
     // username of the user
