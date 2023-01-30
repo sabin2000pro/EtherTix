@@ -13,11 +13,11 @@ import { errorHandler } from './middleware/error-handler';
 
 const app: any = express();
 
-connectAuthDatabase()
+connectAuthDatabase();
 
 app.use(morgan('dev') as any);
 
-app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
+app.use(mongoSanitize()); // Prevent againiojoijoijoijst NoSQL Injection attacks in production environment
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
