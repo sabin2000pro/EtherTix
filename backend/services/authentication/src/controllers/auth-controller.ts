@@ -734,10 +734,11 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
     try {
 
-        if(request.method === 'PUT') {
+        if(request.method === 'PUT') { // If the request is a PUT request
 
             const userId = request.params.userId as any;
             const file = request.files!.file as any;
+            const fileName = file.name as any;
 
             const currentUser = await User.findById(userId); // Find the current user
         
@@ -769,7 +770,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
                    return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
                 }
         
-                await User.findByIdAndUpdate(request.params.id, { photo: file.name }); // Update the NFT by its ID and add the respective file
+                await User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
                 return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
           })
 

@@ -208,7 +208,7 @@ describe("Verify Login MFA Test Suite", () => {
         } 
         
         catch(error) {
-            
+
             if(error) {
                 return console.error(error.message);
             }
@@ -317,7 +317,7 @@ describe("Fetch All Users Test Suite", () => {
 
 })
 
-describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
+describe("Fetch Single User - Organiser Dashboard Test Suite" , () => { // Test Suite for fetching a single user account details in JSON format
 
     it("Fetch Valid Single user By ID ", async () => {
         try {
@@ -325,7 +325,9 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
         } 
         
         catch(error) {
-
+            if(error){ 
+                return console.error(error);
+            }
         }
 
     })
@@ -336,7 +338,9 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
         } 
         
         catch(error) {
-
+            if(error){ 
+                return console.error(error);
+            }
         }
 
     })
@@ -348,7 +352,12 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
         
         catch(error) {
 
+            if(error){ 
+                return console.error(error);
+            }
+
         }
+
     })
 
 
