@@ -1,4 +1,4 @@
-name: Categories Backend Service CI/CD Deployment
+name: Discounts Backend Service CI/CD Deployment
 
 on:
 
@@ -9,20 +9,20 @@ on:
 
 jobs:
 
-  build-categories-service:
+  build-discounts-service:
 
     runs-on: self-hosted
 
     steps:
 
-      - name: Get Auth Code
+      - name: Get Discounts Code
         uses: actions/checkout@v3
 
       - name: Install NodeJS
         uses: actions/setup-node@v3
 
-      - name: Install Categories Dependencies
+      - name: Install Discounts Dependencies
         run: npm install
 
-      - name: Build Categories Service
+      - name: Build Discounts Service
         run: npm run build
