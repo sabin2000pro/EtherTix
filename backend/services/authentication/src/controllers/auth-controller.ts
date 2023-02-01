@@ -73,10 +73,11 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
-
   export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
+      return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
   })
+
+
   
   // API 1
   // @description: Register New User Account
@@ -816,7 +817,7 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: any, respo
 })
 
 export const fetchLockedUserAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-    
+
     try {
 
        const lockedUserAccounts = await User.find({accountLocked: !false});
@@ -916,22 +917,28 @@ export const editUserByID = async (request: any, response: any, next: NextFuncti
 
    try {
 
-      const userId = request.params.userId;
+    // Verify incoming HTTP method
 
-      if(!userId) {
-         return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+     if(request.method === 'PUT') {
+        const userId = request.params.userId; // Extract User ID
+
+        if(!userId) {
+           return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
+  
+        let user = await User.findById(userId);
+  
+        if(!user) {
+           return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
+        }
+  
+        user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
+        await user.save();
+  
+        return response.status(StatusCodes.OK).json({success: true, data: user});
       }
-
-      let user = await User.findById(userId);
-
-      if(!user) {
-         return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
-      }
-
-      user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
-      await user.save();
-
-      return response.status(StatusCodes.OK).json({success: true, data: user});
+ 
+     
 
    } 
    
@@ -949,14 +956,17 @@ export const deleteUserByID = async (request: any, response: any, next: NextFunc
 
     try {
 
-        const userId = request.params.userId;
+        if(request.method === 'DELETE') {
 
-        if(!userId) {
-            return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            const userId = request.params.userId;
+
+            if(!userId) {
+                return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            }
+    
+            await User.findByIdAndDelete(userId);
+            return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
         }
-
-        await User.findByIdAndDelete(userId);
-        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
 
     } 
     
