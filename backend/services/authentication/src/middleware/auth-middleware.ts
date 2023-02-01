@@ -72,7 +72,7 @@ export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest
 
         const currentUser = await User.findById(request.user._id);
         
-        if(currentUser.role !== 'moderator') {
+        if(currentUser.role !== 'moderator') { // If the user does not hold the role of moderator
             return next(new UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
         }
 
