@@ -15,10 +15,10 @@ jobs:
 
     steps:
 
-      - name: Get Auth Code
+      - name: Fetch Authentication Code
         uses: actions/checkout@v3
 
-      - name: Install NodeJS
+      - name: Install NodeJS Auth Dependency
         uses: actions/setup-node@v3
 
       - name: Install Authentication Dependencies
