@@ -1,7 +1,6 @@
-name: Authentication Service Deployment
+name: Authentication Service Backend CI/CD Deployment
 
 on:
-
   push:
 
     branches:
@@ -10,7 +9,6 @@ on:
 jobs:
 
   build-auth-service:
-
     runs-on: self-hosted
 
     steps:
