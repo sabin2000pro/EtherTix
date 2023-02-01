@@ -2,12 +2,13 @@ import mongoose from "mongoose";
 import bcrypt from 'bcryptjs'
 
 interface IEmailVerification {
+
     owner: mongoose.Schema.Types.ObjectId,
     token: string;
     createdAt: Date;
     expiresAt: Date;
 
-    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
+    compareVerificationTokens: (enteredToken: string) => Promise<boolean> // Function declaration that compares verification tokens of the user
 }
 
 interface EmailVerificationDocument extends mongoose.Model<IEmailVerification> {
