@@ -74,7 +74,7 @@ services:
         - /app/node_modules
         - ../backend/services/venues:/app
   
-  tickets-service:
+  tickets-service: ## Tickets Service Configuration
     container_name: tickets-api
     image: sabin2000/ethertix-tickets-service
 
@@ -120,5 +120,6 @@ services:
       - type: volume
         source: mongodb_data_volume
         target: /data/db
+        
 volumes:
   mongodb_data_volume:
