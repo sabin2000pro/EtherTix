@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
 export const register = async (registerPayload: any): Promise<any> => {
 
     try {
-      // Write code here to handle registering user
+       // Write code here to handle registering user
     } 
     
     catch(err: any) {

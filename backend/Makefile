@@ -17,10 +17,8 @@ build-services:
 	- cd services/venues* && npm run build
 	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
-
 	- docker login
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build -d
-	- cd ../frontend && pm2 serve build 3000 --spa
 
 stop-services:
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml down --remove-orphans

@@ -1,4 +1,5 @@
 import React from 'react'
+import { register } from 'api/auth/auth-api';
 
 const Register = () => { // Register Component
 
@@ -6,6 +7,7 @@ const Register = () => { // Register Component
 
     <>
       <h1>Register Page</h1>
+    
     </>
 
   )
