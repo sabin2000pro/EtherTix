@@ -1,4 +1,4 @@
-name: Events Service Deployment
+name: Events Backend Service CI/CD Deployment
 
 on:
 
