@@ -20,7 +20,7 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
    catch(error: any) {
 
       if(error) {
-        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+          return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
       }
 
    }
