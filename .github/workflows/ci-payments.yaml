@@ -1,4 +1,4 @@
-name: Authentication Service Backend CI/CD Deployment
+name: Payments Service Backend CI/CD Deployment
 
 on:
 
@@ -14,14 +14,14 @@ jobs:
 
     steps:
 
-      - name: Fetch Authentication Code
+      - name: Fetch Payments API Code
         uses: actions/checkout@v3
 
-      - name: Install NodeJS Auth Dependency
+      - name: Install NodeJS Payments Dependency
         uses: actions/setup-node@v3
 
-      - name: Install Authentication Dependencies
+      - name: Install Payments Dependencies
         run: npm install
 
-      - name: Build Auth Service
+      - name: Build Payments API Service
         run: npm run build
