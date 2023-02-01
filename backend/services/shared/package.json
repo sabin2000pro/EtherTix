@@ -4,12 +4,15 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build:shared": "tsc"
   },
+
+
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/http-status-codes": "^1.2.0",
     "http-status-codes": "^2.2.0"
   }
 }
