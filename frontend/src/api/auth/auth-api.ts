@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// Default config options
-const defaultOptions = {
+const defaultOptions = { // Default config options for authentication
     
     headers: {
       'Content-Type': 'application/json',
@@ -21,7 +20,7 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
 export const register = async (registerPayload: any): Promise<any> => {
 
     try {
-       // Write code here to handle registering user
+       // Write code here to handle registering user account
     } 
     
     catch(err: any) {
@@ -48,6 +47,7 @@ export const verifyEmailAddress = async (registerPayload: any): Promise<any> => 
 }
 
 export const resendEmailVerification = async (_args?: any): Promise<any> => {
+
     try {
 
     } 
@@ -58,7 +58,8 @@ export const resendEmailVerification = async (_args?: any): Promise<any> => {
 
 }
 
-export const login = async (loginPayload: Object): Promise<any> => {
+export const login = async (loginPayload: any): Promise<any> => {
+
     try {
     // Write code here to send HTTP request to the backend
     } 
@@ -70,6 +71,7 @@ export const login = async (loginPayload: Object): Promise<any> => {
 }
 
 export const sendLoginMfa = async (_args?: any): Promise<any> => {
+
     try {
 
     }
@@ -80,7 +82,8 @@ export const sendLoginMfa = async (_args?: any): Promise<any> => {
 }
 
 
-export const forgotPassword = async (registerPayload: Object): Promise<any> => {
+export const forgotPassword = async (): Promise<any> => {
+
     try {
 
     } 
