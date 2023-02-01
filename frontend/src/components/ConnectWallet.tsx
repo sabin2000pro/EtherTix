@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import { Contract, ethers } from 'ethers'
 
 type ConnectWalletProps = {
    checkWalletConnected: () => Promise<any>
@@ -10,9 +9,9 @@ type ConnectWalletProps = {
 const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnected, connectWallet, walletConnected}) => {
 
   return (
-    <>
 
-  
+    <>
+     <h2>Connect Wallet Button Component</h2>
     </>
 
   )

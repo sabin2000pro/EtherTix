@@ -164,7 +164,8 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-  // API 2
+  // API 2 - E-mail Address Verification
+  
 export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
