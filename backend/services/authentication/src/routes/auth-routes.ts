@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import {registerUser, updateUserPassword, rootRoute, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
+import {registerUser, updateUserPassword, fetchAllUsers, rootRoute, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
@@ -33,3 +33,7 @@ authRouter.route('/me').get(rateLimiter as any, protectAuth as any, getCurrentUs
 
 authRouter.route('/get/user-count').get(rateLimiter as any, protectAuth as any, fetchTotalUsers as any)
 authRouter.route('/deactivate-account').put(rateLimiter as any, protectAuth as any, deactivateUserAccount);
+
+// Routes for User Management (GET Users, Update Users, Delete Users) -> Assigned to users that holds the role organiser
+
+authRouter.route('/users/fetch-users').get(rateLimiter as any, protectAuth as any, fetchAllUsers as any);

@@ -938,8 +938,7 @@ export const editUserByID = async (request: any, response: any, next: NextFuncti
         return response.status(StatusCodes.OK).json({success: true, data: user});
       }
  
-     
-
+    
    } 
    
    catch(error: any) {
