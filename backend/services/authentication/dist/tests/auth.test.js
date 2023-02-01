@@ -135,6 +135,7 @@ describe("Verify Login MFA Test Suite", () => {
     }));
     it("Verify Login MFA - Valid Correct MFA Code", () => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const validMFABody = [{ userId: "", mfaCode: "909899" }];
         }
         catch (error) {
         }
@@ -143,6 +144,9 @@ describe("Verify Login MFA Test Suite", () => {
         try {
         }
         catch (error) {
+            if (error) {
+                return console.error(error.message);
+            }
         }
     }));
 });
@@ -206,18 +210,27 @@ describe("Fetch Single User - Organiser Dashboard Test Suite", () => {
         try {
         }
         catch (error) {
+            if (error) {
+                return console.error(error);
+            }
         }
     }));
     it("Fetch Invalid User ID Test", () => __awaiter(void 0, void 0, void 0, function* () {
         try {
         }
         catch (error) {
+            if (error) {
+                return console.error(error);
+            }
         }
     }));
     it("Fetch Invalid Missing User ID Test", () => __awaiter(void 0, void 0, void 0, function* () {
         try {
         }
         catch (error) {
+            if (error) {
+                return console.error(error);
+            }
         }
     }));
 });

@@ -791,14 +791,19 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 export const getAllUserPremiumAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
-        const premiumUsers = await User.find({premium: true});
 
-        if(!premiumUsers) {
-            return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
+        if(request.method === 'GET') {
+
+            const premiumUsers = await User.find({premium: true});
+
+            if(!premiumUsers) {
+                return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
+            }
+    
+    
+            return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
         }
-
-
-        return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
+      
     }
     
     catch(error: any) {
@@ -806,6 +811,18 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: any, respo
         if(error) {
             return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
         }
+    }
+
+
+})
+
+export const fetchLockedUserAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+    try {
+
+    } 
+    
+    catch(error) {
+    
     }
 
 

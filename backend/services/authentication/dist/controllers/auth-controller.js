@@ -109,7 +109,7 @@ const sendTokenResponse = (request, user, statusCode, response) => {
 // @parameters: request: Request Object, response: Response Object, next: Next Function
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
-// API 2
+// API 2 - E-mail Address Verification
 exports.verifyEmailAddress = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, OTP } = request.body;
@@ -495,9 +495,10 @@ const deactivateUserAccount = (request, response, next) => __awaiter(void 0, voi
 exports.deactivateUserAccount = deactivateUserAccount;
 exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (request.method === 'PUT') {
+        if (request.method === 'PUT') { // If the request is a PUT request
             const userId = request.params.userId;
             const file = request.files.file;
+            const fileName = file.name;
             const currentUser = yield user_model_1.User.findById(userId); // Find the current user
             if (!currentUser) {
                 return next(new error_handler_1.NotFoundError("User Not found with that ID", http_status_codes_1.StatusCodes.NOT_FOUND));
@@ -519,7 +520,7 @@ exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request
                 if (error) {
                     return next(new error_handler_2.BadRequestError("Problem with file upload", http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR));
                 }
-                yield user_model_1.User.findByIdAndUpdate(request.params.id, { photo: file.name }); // Update the NFT by its ID and add the respective file
+                yield user_model_1.User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
                 return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now()) });
             }));
         }
