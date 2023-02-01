@@ -816,6 +816,7 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: any, respo
 })
 
 export const fetchLockedUserAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+    
     try {
 
        const lockedUserAccounts = await User.find({accountLocked: !false});
@@ -824,8 +825,7 @@ export const fetchLockedUserAccounts = asyncHandler(async (request: any, respons
             return next(new BadRequestError("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
        }
 
-
-
+       return response.status(StatusCodes.OK).json({success: true, data: lockedUserAccounts});
     } 
     
     catch(error) {

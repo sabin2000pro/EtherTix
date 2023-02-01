@@ -7,7 +7,6 @@ services:
     build:
       context: ../backend/services/authentication
       dockerfile: Dockerfile
-    network_mode: host
     
     restart: always
 
