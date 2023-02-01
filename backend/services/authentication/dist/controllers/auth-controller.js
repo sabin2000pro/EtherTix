@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchTotalUsers = exports.unlockUserAccount = exports.lockUserAccount = exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.getAllUserPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = exports.rootRoute = void 0;
+exports.fetchTotalUsers = exports.unlockUserAccount = exports.lockUserAccount = exports.deleteAllUsers = exports.deleteUserByID = exports.editUserByID = exports.createNewUser = exports.fetchUserByID = exports.fetchAllUsers = exports.fetchLockedUserAccounts = exports.getAllUserPremiumAccounts = exports.uploadUserProfilePicture = exports.deactivateUserAccount = exports.updateUserProfile = exports.updateUserPassword = exports.sendResetPasswordTokenStatus = exports.getCurrentUser = exports.resetPassword = exports.forgotPassword = exports.logoutUser = exports.resendTwoFactorLoginCode = exports.verifyLoginToken = exports.loginUser = exports.resendEmailVerificationCode = exports.verifyEmailAddress = exports.registerUser = exports.rootRoute = void 0;
 const error_handler_1 = require("./../middleware/error-handler");
 const send_email_1 = require("./../utils/send-email");
 const user_model_1 = require("../models/user-model");
@@ -533,15 +533,31 @@ exports.uploadUserProfilePicture = (0, express_async_handler_1.default)((request
 }));
 exports.getAllUserPremiumAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const premiumUsers = yield user_model_1.User.find({ premium: true });
-        if (!premiumUsers) {
-            return next(new error_handler_2.BadRequestError("No premium users found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        if (request.method === 'GET') {
+            const premiumUsers = yield user_model_1.User.find({ premium: true });
+            if (!premiumUsers) {
+                return next(new error_handler_2.BadRequestError("No premium users found", http_status_codes_1.StatusCodes.BAD_REQUEST));
+            }
+            return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: premiumUsers });
         }
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: premiumUsers });
     }
     catch (error) {
         if (error) {
             return response.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: error.message, stack: error.stack });
+        }
+    }
+}));
+exports.fetchLockedUserAccounts = (0, express_async_handler_1.default)((request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const lockedUserAccounts = yield user_model_1.User.find({ accountLocked: !false });
+        if (!lockedUserAccounts) {
+            return next(new error_handler_2.BadRequestError("Could not find any locked user accounts", http_status_codes_1.StatusCodes.BAD_REQUEST));
+        }
+        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: lockedUserAccounts });
+    }
+    catch (error) {
+        if (error) {
+            return next(error);
         }
     }
 }));
@@ -589,17 +605,20 @@ exports.createNewUser = (0, express_async_handler_1.default)((request, response,
 }));
 const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = request.params.userId;
-        if (!userId) {
-            return next(new error_handler_2.BadRequestError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
+        // Verify incoming HTTP method
+        if (request.method === 'PUT') {
+            const userId = request.params.userId; // Extract User ID
+            if (!userId) {
+                return next(new error_handler_2.BadRequestError("User ID not found. Please check your query params", http_status_codes_1.StatusCodes.NOT_FOUND));
+            }
+            let user = yield user_model_1.User.findById(userId);
+            if (!user) {
+                return next(new error_handler_1.NotFoundError("User not found", http_status_codes_1.StatusCodes.NOT_FOUND));
+            }
+            user = yield user_model_1.User.findByIdAndUpdate(userId, request.body, { new: true, runValidators: true });
+            yield user.save();
+            return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
         }
-        let user = yield user_model_1.User.findById(userId);
-        if (!user) {
-            return next(new error_handler_1.NotFoundError("User not found", http_status_codes_1.StatusCodes.NOT_FOUND));
-        }
-        user = yield user_model_1.User.findByIdAndUpdate(userId, request.body, { new: true, runValidators: true });
-        yield user.save();
-        return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, data: user });
     }
     catch (error) {
         if (error) {
@@ -610,12 +629,14 @@ const editUserByID = (request, response, next) => __awaiter(void 0, void 0, void
 exports.editUserByID = editUserByID;
 const deleteUserByID = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = request.params.userId;
-        if (!userId) {
-            return next(new error_handler_2.BadRequestError(`User with that ID not found`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+        if (request.method === 'DELETE') {
+            const userId = request.params.userId;
+            if (!userId) {
+                return next(new error_handler_2.BadRequestError(`User with that ID not found`, http_status_codes_1.StatusCodes.BAD_REQUEST));
+            }
+            yield user_model_1.User.findByIdAndDelete(userId);
+            return response.status(http_status_codes_1.StatusCodes.NO_CONTENT).json({ success: true, message: "User Deleted", data: null });
         }
-        yield user_model_1.User.findByIdAndDelete(userId);
-        return response.status(http_status_codes_1.StatusCodes.NO_CONTENT).json({ success: true, message: "User Deleted", data: null });
     }
     catch (error) {
         if (error) {

@@ -31,3 +31,6 @@ exports.authRouter.route('/update-password').put(rateLimiter, auth_middleware_1.
 exports.authRouter.route('/me').get(rateLimiter, auth_middleware_1.protectAuth, auth_controller_1.getCurrentUser);
 exports.authRouter.route('/get/user-count').get(rateLimiter, auth_middleware_1.protectAuth, auth_controller_1.fetchTotalUsers);
 exports.authRouter.route('/deactivate-account').put(rateLimiter, auth_middleware_1.protectAuth, auth_controller_1.deactivateUserAccount);
+// Backend Protected Routes for User Management (GET Users, Update Users, Delete Users) -> Assigned to users that holds the role organiser
+exports.authRouter.route('/users/fetch-users').get(rateLimiter, auth_middleware_1.protectAuth, auth_controller_1.fetchAllUsers);
+exports.authRouter.route('/users/edit-user/:userId').put(rateLimiter, auth_middleware_1.protectAuth, auth_controller_1.editUserByID);
