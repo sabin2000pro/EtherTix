@@ -12,4 +12,8 @@ describe("Update Password Test Suite", () => {
 
     })
 
+    it("should call update password function with correct data when form is submitted", () => {
+       
+    })
+
 })
