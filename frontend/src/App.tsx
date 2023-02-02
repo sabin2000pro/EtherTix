@@ -14,7 +14,7 @@ const App = () => { // Main App Component
 
       <>
 
-      <h1>Ether Tix Platform</h1>
+      <h1>Ether Tix Home</h1>
 
           <Routes>
               <Route path = '/register' element = {<Register />} />
