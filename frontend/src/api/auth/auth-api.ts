@@ -18,14 +18,18 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
     return configData;
 })
 
-export const register = async (registerPayload: any): Promise<any> => {
+export const registerUser = async (registerPayload: any): Promise<any> => {
 
     try {
-      // Write code here to handle registering user
+
+        const response = await axios.post("register", registerPayload);
+        const data = await response.data;
+        console.log(data)
+        return data;
     } 
     
     catch(err: any) {
-
+       
         if(err) {
             return console.error(err);
         }
@@ -34,25 +38,35 @@ export const register = async (registerPayload: any): Promise<any> => {
 
 }
 
-export const verifyEmailAddress = async (registerPayload: any): Promise<any> => {
+export const verifyEmailAddress = async (verificationPayload: any): Promise<any> => {
 
     try {
-
+        const response = await axios.post("/verify-email", verificationPayload);
+        const data = await response.data;
+        return data;
     } 
     
     catch(err: any) {
 
+        if(err) {
+            return console.error(err);
+        }
     }
-
-
 }
 
-export const resendEmailVerification = async (_args?: any): Promise<any> => {
+export const resendEmailVerification = async (resendVerificationPayload: any): Promise<any> => {
     try {
+        const response = await axios.post("/resend", resendVerificationPayload);
+        const data = await response.data;
+        return data;
 
     } 
     
     catch(err: any) {
+
+        if(err) {
+            return console.error(err);
+        }
 
     }
 
@@ -60,32 +74,52 @@ export const resendEmailVerification = async (_args?: any): Promise<any> => {
 
 export const login = async (loginPayload: Object): Promise<any> => {
     try {
-    // Write code here to send HTTP request to the backend
+        const response = await axios.post("/login", loginPayload);
+        const data = await response.data;
+        return data;
     } 
     
     catch(err: any) {
+
+        if(err) {
+            return console.error(err);
+        }
 
     }
 
 }
 
-export const sendLoginMfa = async (_args?: any): Promise<any> => {
+export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
     try {
+    const response = await axios.post("<endpoint-url>/mfa", mfaPayload);
+    const data = await response.data;
+    return data;
 
     }
     
     catch(err: any) {
+
+        if(err) {
+            return console.error(err);
+        }
 
     }
 }
 
 
-export const forgotPassword = async (registerPayload: Object): Promise<any> => {
+export const forgotPassword = async (forgotPasswordPayload: Object): Promise<any> => {
     try {
+    const response = await axios.post("/forgot-password", forgotPasswordPayload);
+    const data = await response.data;
+    return data;
 
     } 
     
     catch(err: any) {
+
+        if(err) {
+            return console.error(err);
+        }
 
     }
 
