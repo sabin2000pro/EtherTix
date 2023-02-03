@@ -15,6 +15,7 @@ interface ITicketAttributes { // Interface that stores the ticket data
     saleEndsAt: Date,
     confirmationMessage: string,
     ticketSold: boolean,
+    hasSeating: boolean,
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
     venue: mongoose.Schema.Types.ObjectId
@@ -34,6 +35,7 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    onSaleStatus: String,
    saleStartsAt: Date,
    saleEndsAt: Date,
+   hasSeating: boolean,
    confirmationMessage: String,
    ticketSold: Boolean,
 
@@ -76,6 +78,12 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: 1,
             min: 1,
             max: 5
+        },
+
+        hasSeating: {
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if this event has seating available or not"]
         },
 
         description: { // Ticket Description for an event
