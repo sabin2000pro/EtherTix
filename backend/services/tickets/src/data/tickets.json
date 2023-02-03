@@ -1,6 +1,7 @@
 [
 
     {
+            "_id": "",
             "name": "Highland Basic Event Ticket",
             "ticketClass": "basic", 
             "capacity": 10,
@@ -13,10 +14,15 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false
+            "ticketSold": false,
+            "event": "",
+            "issuer": "",
+            "discount": "",
+            "venue": ""
         },
     
     {
+            "_id": "",
             "name": "Highland Standard Event Ticket",
             "ticketClass": "standard",
             "capacity": 10,
@@ -29,10 +35,15 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false
+            "ticketSold": false,
+            "event": "",
+            "issuer": "",
+            "discount": "",
+            "venue": ""
         },
 
     {
+            "_id": "",
             "name": "Highland Premium Event Ticket",
             "ticketClass": "premium",
             "capacity": 5,
@@ -45,11 +56,15 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false
+            "ticketSold": false,
+            "event": "",
+            "issuer": "",
+            "discount": "",
+            "venue": ""
         },
 
     {
-            
+            "_id": "",
             "name": "Highland VIP Event Ticket",
             "ticketClass": "vip",
             "capacity": 3,
@@ -66,7 +81,7 @@
         },
 
     {
-            
+            "_id": "",
             "name": "Three Sisters Drink n Socialise Basic Ticket",
             "ticketClass": "basic",
             "capacity": 10,
@@ -79,7 +94,11 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false
+            "ticketSold": false,
+            "event": "",
+            "issuer": "",
+            "discount": "",
+            "venue": ""
         },
 
     {
