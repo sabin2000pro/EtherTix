@@ -1,3 +1,4 @@
+import Home from 'pages/Home';
 import EmailVerification from 'pages/auth/EmailVerification';
 import ForgotPassword from 'pages/auth/ForgotPassword';
 import Login from 'pages/auth/Login';
@@ -14,9 +15,11 @@ const App = () => { // Main App Component
 
       <>
 
+         <Home />
+
           <Routes>
 
-            <Route path = '/register' element = {<Register />} />
+            <Route path = '/register' element = {<Register />} /> 
             <Route path = '/login' element = {<Login />} />
             <Route path = '/forgot-password' element = {<ForgotPassword />} />
 

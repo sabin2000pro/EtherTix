@@ -42,7 +42,7 @@ app.get("/", (request: Request, response: Response) => {
 })
 
 // Error Handler middleware
-app.use('/api/v1/auth', authRouter);
+app.use('/api/auth', authRouter);
 app.use(errorHandler);
 
 

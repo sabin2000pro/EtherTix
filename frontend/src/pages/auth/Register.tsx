@@ -6,6 +6,8 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState({
+    forename: "",
+    surname:"",
     username: "",
     email: "",
     password: "",
@@ -39,6 +41,24 @@ const Register: React.FC = () => {
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
 
+      <label htmlFor="forename">Forename:</label>
+        <input
+          type="text"
+          name="forename"
+          id="forename"
+          value={registerData.forename}
+          onChange={handleChange}
+        />
+        <br />
+        <label htmlFor="surname">Surname:</label>
+        <input
+          type="text"
+          name="surname"
+          id="surname"
+          value={registerData.surname}
+          onChange={handleChange}
+        />
+        <br />
         <label htmlFor="username">Username:</label>
         <input
           type="text"
@@ -63,6 +83,15 @@ const Register: React.FC = () => {
           name="password"
           id="password"
           value={registerData.password}
+          onChange={handleChange}
+        />
+        <br />
+        <label htmlFor="passwordConfirm">Confirm Password:</label>
+        <input
+          type="password"
+          name="passwordConfirm"
+          id="passwordConfirm"
+          value={registerData.passwordConfirm}
           onChange={handleChange}
         />
         <br />

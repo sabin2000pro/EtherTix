@@ -22,7 +22,7 @@ export const registerUser = async (registerPayload: any): Promise<any> => {
 
     try {
 
-        const response = await axios.post("register", registerPayload);
+        const response = await axios.post("/api/auth/register", registerPayload);
         const data = await response.data;
         console.log(data)
         return data;

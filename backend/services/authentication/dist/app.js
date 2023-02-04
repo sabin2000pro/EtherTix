@@ -40,5 +40,5 @@ app.get("/", (request, response) => {
     return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, message: "Auth Root Route API" });
 });
 // Error Handler middleware
-app.use('/api/v1/auth', auth_routes_1.authRouter);
+app.use('/api/auth', auth_routes_1.authRouter);
 app.use(error_handler_1.errorHandler);
