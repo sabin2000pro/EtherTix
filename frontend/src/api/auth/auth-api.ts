@@ -9,7 +9,7 @@ const defaultOptions = {
 
   };
 
-  let axiosInstance = axios.create(defaultOptions)
+let axiosInstance = axios.create(defaultOptions)
 
 axiosInstance.interceptors.request.use((configData: any | undefined) => {
     
