@@ -1,5 +1,7 @@
+// Service: Authentication Service
+// Copyright (c) 2023 - EtherTix (All Rights Reserved)
+
 import { FileTooLargeError, NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
-import { Query, ParamsDictionary } from 'express-serve-static-core';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -50,20 +52,10 @@ export interface IRequestUser extends Request {
 
 }
 
-
-export interface TypedRequestQuery<T extends Query> extends Express.Request {
-    query: T
-}
-
-export interface TypedRequestBody<T extends ParamsDictionary> extends Request {
-    body: T
-}
-
   // @description: Sends the verify confirmation e-mail to the user after registering an account
   // @parameters: Transporter Object, User Object, Randomly Generated User OTP
   // @returns: void
   // @public: True (No Authorization Required)
-
 
 const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 
@@ -81,24 +73,23 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
+  export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+      return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
+  })
+
+
+  
+  // API 1
   // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
-  
-export const registerUser = asyncHandler(async (request: TypedRequestBody<{email: string, role: string, username: string, password: string, passwordConfirm: string, forename: string, surname: string}>, response: Response, next: NextFunction): Promise<any | Response> => {
+
+export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
-        const forename = request.body.forename;
-        const surname = request.body.surname;
-        
-        const username = request.body.username;
-        const email = request.body.email;
-        const password = request.body.password;
-
-        const passwordConfirm = request.body.passwordConfirm
-        const role = request.body.role;
+        const {forename, surname, username, email, password, postCode, city, passwordConfirm, role} = request.body;
 
         if(!forename) {
             return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.BAD_REQUEST));
@@ -123,7 +114,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
         }
 
         const user = await User.create({forename, surname, username, email, role, password, passwordConfirm});
-        const token = user.getAuthenticationToken();
+        const token = user.getAuthenticationToken(); // Get the users JWT token
 
         if(!token) {
             return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
@@ -150,7 +141,7 @@ export const registerUser = asyncHandler(async (request: TypedRequestBody<{email
     catch(error: any) {
 
         if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({message: error.message, success: false})
+            return next(error);
         }
 
     }
@@ -174,7 +165,9 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-export const verifyEmailAddress = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+  // API 2 - E-mail Address Verification
+  
+export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -249,20 +242,20 @@ export const verifyEmailAddress = asyncHandler(async (request: Request, response
     catch(error: any) {
 
         if(error) {
-            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+            return next(error);
         }
 
     }
 
 })
 
-
   // @description: Resend the E-mail Verification code to the user if not received
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-export const resendEmailVerificationCode = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+  // API - 3
+export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -332,7 +325,9 @@ const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-export const loginUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+
+  // API - 4
+export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -365,8 +360,8 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
         const transporter = emailTransporter();
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
-        
         const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
+
         await loginMfa.save();
 
         // Check for a valid MFA
@@ -381,14 +376,16 @@ export const loginUser = asyncHandler(async (request: Request, response: Respons
     catch(error) {
 
         if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+            return next(error)
         }
 
     }
 
 })
 
-export const verifyLoginToken = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+// API - 5
+
+export const verifyLoginToken = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -438,7 +435,9 @@ export const verifyLoginToken = async (request: Request, response: Response, nex
 
 }
 
-export const resendTwoFactorLoginCode = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+// API 6
+
+export const resendTwoFactorLoginCode = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -489,7 +488,7 @@ export const resendTwoFactorLoginCode = async (request: Request, response: Respo
     
 }
 
-export const logoutUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const logoutUser = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -511,7 +510,7 @@ export const logoutUser = async (request: Request, response: Response, next: Nex
 
 }
 
-export const forgotPassword = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const forgotPassword = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -574,7 +573,7 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
 }
 
-export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
 
@@ -622,7 +621,7 @@ export const resetPassword = asyncHandler(async (request: IGetUserAuthInfoReques
 
 })
 
-export const getCurrentUser = asyncHandler(async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
         const user = request.user;
@@ -639,11 +638,11 @@ export const getCurrentUser = asyncHandler(async (request: IRequestUser, respons
 
 });
 
-export const sendResetPasswordTokenStatus = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
     return response.status(StatusCodes.OK).json({isValid: true})
 }
 
-export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoRequest, response: Response, next: NextFunction): Promise<any> => {
+export const updateUserPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
 
@@ -673,15 +672,17 @@ export const updateUserPassword = asyncHandler(async (request: IGetUserAuthInfoR
    } 
    
    catch(error) {
+
         if(error) {
             return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
         }
+        
    }
 
 
 })
 
-export const updateUserProfile = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -704,7 +705,7 @@ export const updateUserProfile = async (request: Request, response: Response, ne
 
 }
 
-export const deactivateUserAccount = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const deactivateUserAccount = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
     const {userId} = request.body;
     const user = await User.findById(userId);
@@ -730,14 +731,15 @@ export const deactivateUserAccount = async (request: Request, response: Response
 
 }
 
-export const uploadUserProfilePicture = asyncHandler(async (request: any, response: Response, next: NextFunction): Promise<any | Response> => {
+export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
-        if(request.method === 'PUT') {
+        if(request.method === 'PUT') { // If the request is a PUT request
 
             const userId = request.params.userId as any;
             const file = request.files!.file as any;
+            const fileName = file.name as any;
 
             const currentUser = await User.findById(userId); // Find the current user
         
@@ -769,7 +771,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
                    return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
                 }
         
-                await User.findByIdAndUpdate(request.params.id, { photo: file.name }); // Update the NFT by its ID and add the respective file
+                await User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
                 return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
           })
 
@@ -787,17 +789,22 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
 })
 
-export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const getAllUserPremiumAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
-        const premiumUsers = await User.find({premium: true});
 
-        if(!premiumUsers) {
-            return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
+        if(request.method === 'GET') {
+
+            const premiumUsers = await User.find({premium: true});
+
+            if(!premiumUsers) {
+                return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
+            }
+    
+    
+            return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
         }
-
-
-        return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
+      
     }
     
     catch(error: any) {
@@ -807,12 +814,35 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: Request, r
         }
     }
 
+})
+
+export const fetchLockedUserAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+
+    try {
+
+       const lockedUserAccounts = await User.find({accountLocked: !false});
+
+       if(!lockedUserAccounts) {
+            return next(new BadRequestError("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
+       }
+
+       return response.status(StatusCodes.OK).json({success: true, data: lockedUserAccounts});
+    } 
+    
+    catch(error) {
+
+        if(error) {
+            return next(error);
+        }
+
+    }
+
 
 })
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchAllUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -837,7 +867,7 @@ export const fetchAllUsers = asyncHandler(async (request: Request, response: Res
 
 })
 
-export const fetchUserByID = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
@@ -863,7 +893,7 @@ export const fetchUserByID = asyncHandler(async (request: Request, response: Res
 
 })
 
-export const createNewUser = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any| Response> => {
+export const createNewUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any| Response> => {
 
     try {
 
@@ -883,27 +913,32 @@ export const createNewUser = asyncHandler(async (request: Request, response: Res
 
 })
 
-export const editUserByID = async (request: Express.Request, response: Response, next: NextFunction): Promise<any| Response> => {
+export const editUserByID = async (request: any, response: any, next: NextFunction): Promise<any| Response> => {
 
    try {
 
-      const userId = request.params.userId;
+    // Verify incoming HTTP method
 
-      if(!userId) {
-         return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+     if(request.method === 'PUT') {
+        const userId = request.params.userId; // Extract User ID
+
+        if(!userId) {
+           return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
+  
+        let user = await User.findById(userId);
+  
+        if(!user) {
+           return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
+        }
+  
+        user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
+        await user.save();
+  
+        return response.status(StatusCodes.OK).json({success: true, data: user});
       }
-
-      let user = await User.findById(userId);
-
-      if(!user) {
-         return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
-      }
-
-      user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
-      await user.save();
-
-      return response.status(StatusCodes.OK).json({success: true, data: user});
-
+ 
+    
    } 
    
    catch(error: any) {
@@ -916,18 +951,21 @@ export const editUserByID = async (request: Express.Request, response: Response,
 
 }
 
-export const deleteUserByID = async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const deleteUserByID = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
-        const userId = request.params.userId;
+        if(request.method === 'DELETE') {
 
-        if(!userId) {
-            return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            const userId = request.params.userId;
+
+            if(!userId) {
+                return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            }
+    
+            await User.findByIdAndDelete(userId);
+            return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
         }
-
-        await User.findByIdAndDelete(userId);
-        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
 
     } 
     
@@ -942,7 +980,7 @@ export const deleteUserByID = async (request: Request, response: Response, next:
  
 }
 
-export const deleteAllUsers = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const deleteAllUsers = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -965,7 +1003,7 @@ export const deleteAllUsers = async (request: Request, response: Response, next:
  
 }
 
-export const lockUserAccount = async (request: IRequestUser, response: Response, next: NextFunction): Promise<any | Response> => {
+export const lockUserAccount = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
    try {
         const userId = request.user.id;
@@ -988,7 +1026,7 @@ export const lockUserAccount = async (request: IRequestUser, response: Response,
 
 }
 
-export const unlockUserAccount = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const unlockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
           // Find the user by their ID
@@ -1019,7 +1057,7 @@ export const unlockUserAccount = asyncHandler(async (request: Request, response:
 
 })
 
-export const fetchTotalUsers = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any | Response> => {
+export const fetchTotalUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
    try {
         const totalUsers = await User.countDocuments({});

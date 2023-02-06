@@ -1,11 +1,14 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config({path: 'backend/services/categories/config.env'})
 import mongoose from "mongoose";
+
+const CATEGORIES_DB_URI = process.env.CATEGORIES_DB_URI
 
 export const connectCategoriesDatabase = async (...args: unknown[]) => {
 
     try {
 
-        return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+        return await mongoose.connect(CATEGORIES_DB_URI).then(conn => {
 
             if(conn.connection) {
                 return console.log(`Connected to categories database...`)

@@ -2,6 +2,7 @@ version: '3.2'
 
 services:
   auth-service:
+    container_name: auth-service
     image: sabin2000/ethertix-auth-service
     build:
       context: ../backend/services/authentication
@@ -25,17 +26,8 @@ services:
 
     command: ["npm", "run", "auth:test"]
 
-  categories-tests:
-    build:
-      context: ../backend/services/categories
-      dockerfile: Dockerfile
-
-    volumes:
-        - /app/node_modules
-        
-    command: ["npm", "run", "categories:test"]
-
   events-service:
+      container_name: events-api
       image: sabin2000/ethertix-events-service
       build:
         context: ../backend/services/events
@@ -51,6 +43,7 @@ services:
         - ../backend/services/events:/app
   
   categories-service:
+      container_name: categories-api
       image: sabin2000/ethertix-categories-service
       build:
         context: ../backend/services/categories
@@ -66,8 +59,8 @@ services:
         - ../backend/services/categories:/app
 
   venues-service:
+    container_name: venues-api
     image: sabin2000/ethertix-venues-service
-
     build:
       context: ../backend/services/venues
       dockerfile: Dockerfile
@@ -81,7 +74,8 @@ services:
         - /app/node_modules
         - ../backend/services/venues:/app
   
-  tickets-service:
+  tickets-service: ## Tickets Service Configuration
+    container_name: tickets-api
     image: sabin2000/ethertix-tickets-service
 
     build:
@@ -98,6 +92,8 @@ services:
         - ../backend/services/tickets:/app
 
   discount-service:
+
+    container_name: discount-service
     image: sabin2000/ethertix-discount-service
 
     build:
@@ -112,41 +108,6 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/discount:/app
-  posts-service:
-    image: sabin2000/ethertix-posts-service
-
-    build:
-      context: ../backend/services/posts
-      dockerfile: Dockerfile
-
-    restart: always
-
-    ports:
-      - "5305:5305"
-
-    volumes:
-      - /app/node_modules
-      - ../backend/services/posts:/app
-
-  comments-service:
-   image: sabin2000/ethertix-comments-service
-
-   build:
-    context: ../backend/services/comments
-    dockerfile: Dockerfile
-
-   restart: always
-
-   ports:
-     - "5306:5306"
-
-   volumes:
-      - /app/node_modules
-      - ../backend/services/comments:/app
-
-   depends_on:
-    - posts-service
-
   database-service:
     image: mongo
 
@@ -159,21 +120,6 @@ services:
       - type: volume
         source: mongodb_data_volume
         target: /data/db
-
-  frontend-service:
-    image: sabin2000/ethertix-frontend-service
-    restart: always
-
-    ports:
-      - "3000:3000"
-
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
-
-    volumes:
-      - /app/node_modules
-      - ../frontend:/app
-
+        
 volumes:
   mongodb_data_volume:

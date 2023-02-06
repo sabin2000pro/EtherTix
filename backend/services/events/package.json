@@ -6,10 +6,12 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "prestart": "npm run build ",
+    "prestart": "npm run build",
     "dev": "nodemon dist/index.js",
-    "start:server": "npm run dev"
+    "start:development": "NODE_ENV=development npm run dev",
+    "start:production": "NODE_ENV=production node dist/index.js"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -22,6 +24,7 @@
     "@types/express-mongo-sanitize": "^2.1.0",
     "@types/helmet": "^4.0.0",
     "@types/hpp": "^0.2.2",
+    "@types/http-status-codes": "^1.2.0",
     "@types/jest": "^29.0.3",
     "@types/morgan": "^1.9.3",
     "@types/supertest": "^2.0.12",

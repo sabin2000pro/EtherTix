@@ -1,5 +1,5 @@
-import { StatusCodes } from 'http-status-codes';
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config({path: 'config.env'});
 import cookieSession from 'cookie-session';
 import express, { Application, NextFunction, Request, Response } from "express";
 import morgan from "morgan"
@@ -11,18 +11,13 @@ import {connectAuthDatabase} from './database/auth-db';
 import {authRouter} from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 
-const app: Application = express();
+const app: any = express();
 
-connectAuthDatabase()
+connectAuthDatabase();
 
-if(process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-}
+app.use(morgan('dev') as any);
 
-if(process.env.NODE_ENV === 'production') {
-    app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
-}
- 
+app.use(mongoSanitize()); // Prevent againiojoijoijoijst NoSQL Injection attacks in production environment
 app.use(express.json());
 app.set('trust proxy', true);
 app.use(hpp());
@@ -37,13 +32,8 @@ app.use(cookieSession({
     keys: ['session']
 }));
 
-app.get("/", (request: Request, response: Response) => {
-    return response.status(StatusCodes.OK).json({success: true, message: "Auth Root Route API"});
-})
-
 // Error Handler middleware
 app.use('/api/auth', authRouter);
 app.use(errorHandler);
-
 
 export {app}

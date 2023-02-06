@@ -7,6 +7,7 @@ export const fetchEventList = () => async (dispatch: any) => {
      catch(error: any) {
     
      }
+     
 }
 
 export const fetchSingleEvent = (id: number) => async (dispatch: any) => {
@@ -27,6 +28,8 @@ export const createNewEvent = () => async (dispatch: any) => {
     catch(error: any) {
    
     }
+
+
 }
 
 export const editEventByIDAction = (id: number) => async (dispatch: any) => {

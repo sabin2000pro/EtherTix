@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs'
-
 interface ITwoFactorVerification {
     owner: mongoose.Schema.Types.ObjectId,
     mfaToken: string;
@@ -13,7 +12,6 @@ interface ITwoFactorVerification {
 interface TwoFactorVerificationDocument extends mongoose.Model<ITwoFactorVerification> {
     owner: mongoose.Schema.Types.ObjectId,
     mfaToken: string; // Verification Token
-
     createdAt: Date;
     expiresAt: Date;
 

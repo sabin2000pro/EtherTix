@@ -1,87 +1,91 @@
-
 import mongoose from "mongoose";
-
 interface EventAttributes { // Interface for the event attributes
     name: string
     summary: string;
-    description: Object;
+    description: string;
     event_url: string;
     startAt: Date;
     endsAt: Date;
     createdAt: Date;
     changedAt: Date;
     publishedAt: Date;
-    event_status: string;
+    eventStatus: string;
     currency: string;
     isOnline: boolean; // True or false if the event is online
     event_logo: string;
-    format: Object;
-    category: Object;
-
-    maxCapacity: number;
-    minCapacity: number;
-
-    showRemaining: boolean;
-    ticketAvailability: Object;
+    eventLocation: string;
+    format: string;
+    capacity: number;
+    slotsAvailable: boolean;
+    slug: string;
+    hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
-
+    averageRating: number;
+    averageCost: number
     hideStartDate: boolean;
     hideEndDate: boolean;
     isLocked: boolean;
     isFree: boolean;
     isPremium: boolean;
-
     salesStatus: string,
+    eventSchedule: any,
+    isTrending: boolean;
     salesStart: Date,
-    salesEnd: Date,
-    likes: number;
+    salesEnd: Date
+    likes: [],
+    followers: [],
+    bookmarks: [],
 
-    organiser: mongoose.Schema.Types.ObjectId;
-    venue: mongoose.Schema.Types.ObjectId;
-    ticket: mongoose.Schema.Types.ObjectId;
+    organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
+    venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
+    ticket: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
+    category: mongoose.Schema.Types.ObjectId; // Category ID of the Specifid Event
+    review: mongoose.Schema.Types.ObjectId;
 }
-
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
-    description: Object;
+    description: string;
     event_url: string;
     startAt: Date;
     endsAt: Date;
     createdAt: Date;
     publishedAt: Date;
     changedAt: Date;
-    event_status: string;
+    eventStatus: string;
     currency: string;
-
     event_logo: string;
+    slug: string;
+    averageRating: number;
+    averageCost: number
     isOnline: boolean;
-    format: Object;
-    category: Object;
-
-    maxCapacity: number;
+    format: string;
+    capacity: number;
+    eventLocation: string;
+    eventSchedule: any;
     minCapacity: number;
-    showRemaining: boolean;
-    ticketAvailability: Object;
+    slotsAvailable: boolean;
+    hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
-    
     hideStartDate: boolean;
     hideEndDate: boolean;
     isLocked: boolean;
     reservedSeating: boolean;
     isFree: boolean;
-
     salesStatus: string;
     salesStart: Date;
     salesEnd: Date;
     isPremium: boolean;
-    likes: number;
+    likes: [];
+    followers: [];
 
-    organiser: mongoose.Schema.Types.ObjectId;
-    venue: mongoose.Schema.Types.ObjectId;
-    ticket: mongoose.Schema.Types.ObjectId;
+    organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
+    venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
+    ticket: mongoose.Schema.Types.ObjectId; // Ticket corresponding to an event
+    category: mongoose.Schema.Types.ObjectId;
+    review: mongoose.Schema.Types.ObjectId;
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -96,19 +100,22 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please provide a summary for the event"]
     },
 
-    description: { // Event Description with text object inside
-
-        text: {
-            type: String,
-            required: [true, "Please include a description for the event"],
-            trim: true
-        }
-        
+    description: { // Event Description with text object inside    
+        type: String,
+        required: [true, "Please include a description for the event"],
+        trim: true
     },
 
     event_url: {
         type: String
     },
+    
+    eventLocation: {
+        type: String,
+        required: [true, "Please specify the location of the event"]
+    },
+
+    slug: String,
 
     startAt: { // Start Date of the event
         type: Date,
@@ -132,16 +139,37 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: Date.now
     },
 
-    event_status: { // Status of the event
+    eventStatus: { // Status of the event
         type: String,
         default: "pending",
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
 
+    eventSchedule: { // Schedule 
+
+        hostName: { // Host name of the event (Mike Andrews)
+            type: String,
+            required: [true, "Please specify the host name of the event"]
+        },
+        
+        performanceTime: { // Time at which the host of the event is performing
+            type: Date,
+            default: Date.now
+        },
+
+        isVIP: { // Is the performer a VIP or not
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if the host of the event is a VIP or not"]
+        }
+
+    },
+
     currency: { // The type of currency that the event takes payment in
         type: String,
         required: [true, "Please specify the currency that this event will take payment in"],
+        enum: ['GBP', 'ETH'],
         default: 'ETH'
     },
 
@@ -150,32 +178,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: 'no-photo.jpg'
     },
 
-    format: { // Event Format
-
-        id: {
-            type: String
-        },
-
-        name: {
-            type: String,
-            required: [true, "Please specify the format name"],
-            enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
-        }
-
-    },
-
-    category: { // Category object that stores what kind of category this event belongs to
-
-        id: {
-            type: String
-        },
-
-        name: {
-            type: String,
-            required: [true, "Please specify the category of the event"],
-            enum: ["Food/Drink", "Sports", "Free", "Charity", "Nature", "Talk", "Conference"]
-        }
-
+    format: {
+        type: String,
+        required: [true, "Please specify the format that the event holds"],
+        enum: ["Seminar", "Talk", "Conference", "Outdoor", "Indoor", "Party", "Football"]
     },
 
     isOnline: { // Determines if the event is online or not
@@ -184,22 +190,17 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    maxCapacity: { // Maximum Capacity of people that can attend the event
+    capacity: {
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
-        default: 0
+        min: [3, "There must be at least 3 minimum people at the event"],
+        max: [150, "There cannot be more than 150 people at the current event"]
     },
 
-    minCapacity: { // Minimum Capacity of people that can attend the event
-        type: Number,
-        required: [true, "Please specify the minimum number of people that can attend the event"],
-        default: 0
-    },
-
-    showRemaining: {
+    slotsAvailable: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify if there are any remaining slots for this event"]
+        required: [true, "Please specify if there are any available slots left for this event"]
     },
 
     isPremium: {
@@ -208,14 +209,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    ticketAvailability: {
-
-        hasAvailableTickets: { // Object that stores data about the availability of tickets. True or false is stored
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if this event has available tickets"]
-        }
-        
+    hasAvailableTickets: {
+        type: Boolean,
+        default: false,
+        required: [true, "Please specify if this event has available tickets"]
     },
 
     isLocked: { // True or false if the event is locked or not. If the event is locked, then disable the button to view available times
@@ -242,23 +239,33 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if the event should show when it starts or not"]
     },
 
+    averageRating: {
+        type: Number,
+        default: 0
+    },
+
+    averageCost: {
+        type: Number,
+        default: 0
+    },
+
     hideEndDate: { // Field that shows when an event starts or not
         type: Boolean,
         default: false,
         required: [true, "Please specify if the event should show when it ends or not"]
     },
 
-    isFree: { // If the event is free or not
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event is free or not"]
-    },
+        isFree: { // If the event is free or not
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if the event is free or not"]
+        },
 
-    reservedSeating: {
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if this event has reserved seating or not"]
-    },
+        reservedSeating: {
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if this event has reserved seating or not"]
+        },
 
         salesStatus: {
             type: String,
@@ -266,7 +273,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             required: [true, "Please specify the sales status of the event."]
         },
 
-        salesStart: { // Start date of the ticket sales
+        salesStart: { // Start date of event ticket sales
             type: Date,
             default: Date.now
         },
@@ -276,25 +283,38 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             default: Date.now
         },
 
-    likes: {
-        type: Number,
-        default: 0
-    },
+        likes: [],
+        followers: [],
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
+        required: [true, "Please specify the Organiser ID of this event"]
     },
 
-    venue: [{ // Relationship between the event and the venue at which the event is held at (Event -> Venue)
+    venue: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "venue"
-    }],
+        ref: "Venue",
+        required: [true, "Please specify a valid venue ID for this event"]
+    },
 
-    ticket: [{
+    ticket: { // Event -> Ticket Relationship
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ticket"
-    }]
+        ref: "Ticket",
+        required: [true, "Please specify a valid Ticket ID for this event"]
+    },
+
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: [true, "Please specify a valid Category ID for this event"]
+    },
+
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+        required: [true, "Please specifgy a valid Review ID for this event"]
+    }
 
 }, {
     timestamps: true,
@@ -304,19 +324,19 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 // Virtual populate
 EventSchema.virtual('tickets', {
     ref: 'ticket',
-    foreignField: 'ticket',
+    foreignField: 'Ticket',
     localField: '_id'
 });
 
 EventSchema.virtual('reviews', {
     ref: 'Review',
-    foreignField: 'review',
+    foreignField: 'Review',
     localField: '_id'
 });
 
 EventSchema.virtual('venues', {
     ref: 'Venue',
-    foreignField: 'venue',
+    foreignField: 'Venue',
     localField: '_id'
 });
 

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
 export interface IErrorResponse { // Error Response interface
     message: string;
@@ -26,7 +26,7 @@ export abstract class CustomError extends Error {
 
 }
 
-export const errorHandler = (err: Error, request: Request, response: Response, next: NextFunction) => {
+export const errorHandler = (err: Error, request: any, response: any, next: NextFunction) => {
 
     if(err instanceof CustomError) {
         return response.status(StatusCodes.NOT_FOUND).json({message: err.message, errors: err.processErrors() })
@@ -56,8 +56,7 @@ export class NotFoundError extends CustomError {
   }
 
 }
-
-export class JwtTokenError extends Error {
+export class JwtTokenError extends Error { // Custom JWT Erorr: This type of error is thrown in the event of a JWT Token error happens
     statusCode = StatusCodes.FORBIDDEN;
 
     constructor(message: string, statusCode: number) {

@@ -13,15 +13,10 @@ const VenueSchema = new mongoose_1.default.Schema({
         maxlength: 64,
         minlength: 6
     },
-    slug: {
-        type: String
-    },
+    slug: String,
     website: {
         type: String,
-        match: [
-            /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
-            'Please use a valid URL with HTTP or HTTPS'
-        ]
+        match: [/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/, 'Please use a valid URL with HTTP or HTTPS']
     },
     phone: {
         type: String,
@@ -30,10 +25,8 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     email: {
         type: String,
-        match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            'Please add a valid email'
-        ]
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please add a valid e-mail address for the venue for contact purposes'],
+        required: [true, "Please specify the e-mail address for the Venue"]
     },
     ageRestriction: {
         type: String,
@@ -47,11 +40,13 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     openTime: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: [true, "Please specify the date at which the Venue Opens"]
     },
     closeTime: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: [true, "Please specify the date at which the shuts"]
     },
     hasPublicAccess: {
         type: Boolean,
@@ -93,16 +88,19 @@ const VenueSchema = new mongoose_1.default.Schema({
     },
     organiser: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: [true, "Please specify the Organiser ID at this Venue"]
     },
-    event: [{
-            type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "Event"
-        }],
-    ticket: [{
-            type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "ticket"
-        }]
+    event: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Event",
+        required: [true, "Please specify a valid Event ID which is being hosted at this event at a given time"]
+    },
+    ticket: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Ticket",
+        required: [true, "Please specify a valid Ticket ID for this venue"]
+    }
 }, {
     timestamps: true,
     toJSON: { virtuals: true }

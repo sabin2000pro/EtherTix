@@ -13,13 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env" });
 const mongoose_1 = __importDefault(require("mongoose"));
-dotenv_1.default.config({ path: '../../config.env' });
+const EVENT_DB_URI = process.env.EVENT_DB_URI;
 exports.default = () => {
     const connectEventsDatabase = (...args) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            return yield mongoose_1.default.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+            return yield mongoose_1.default.connect(EVENT_DB_URI).then(conn => {
                 if (conn.connection) {
+                    console.log(`Read env var successfully : ${EVENT_DB_URI}`);
                     return console.log(`Connected to events database...`);
                 }
                 else {

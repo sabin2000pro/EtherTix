@@ -8,10 +8,10 @@ import connectEventsDatabase from '../events/src/database/event-db';
 import connectTicketsDatabase from '../tickets/src/database/tickets-db';
 import connectVenuesDatabase from '../venues/src/database/venues-db';
 
-const users = require('../authentication/src/data/users.js')
-const events = require('../events/src/data/events.js')
-const tickets = require('../tickets/src/data/tickets.js')
-const venues = require('../venues/src/data/venues.js');
+const users = require('../authentication/src/data/users.json')
+const events = require('../events/src/data/events.json')
+const tickets = require('../tickets/src/data/tickets.json')
+const venues = require('../venues/src/data/venues.json');
 
 const connectServicesToDb = () => {
     connectAuthDatabase();
@@ -24,7 +24,8 @@ connectServicesToDb();
 
 export const loadAllData = async (): Promise<any> => {
     
-    try {
+        try {
+
             await User.deleteMany();
             await Event.deleteMany();
             await Ticket.deleteMany();
@@ -35,9 +36,11 @@ export const loadAllData = async (): Promise<any> => {
 
             await Ticket.create(tickets);
             await Venue.create(venues);
+
+            // Handle Reviews & Discount data
         
-        console.log(`Data imported to the database.`);
-        return process.exit(1);
+            console.log(`Data imported to the database.`);
+            return process.exit(1);
  
     
     } 
@@ -53,6 +56,7 @@ export const loadAllData = async (): Promise<any> => {
 }
 
 export const removeAllData = async (): Promise<any> => {
+
     let dataRemoved = false;
 
     try {
@@ -60,7 +64,6 @@ export const removeAllData = async (): Promise<any> => {
         await User.remove();
         await Event.remove();
         await Ticket.remove();
-       
         await Venue.remove();
         await EmailVerification.remove();
 
@@ -82,7 +85,7 @@ export const removeAllData = async (): Promise<any> => {
 
 }
 
-// Handle command line args
+// Handle command line args for --import and --delete
 if(process.argv[2] === '--import') {
    loadAllData();
 }

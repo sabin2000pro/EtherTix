@@ -14,7 +14,6 @@ interface IUserAttributes {
     accountVerified: boolean;
     accountLocked: boolean;
     isNewUser: boolean;
-
     photo: string;
     createdAt: Date;
     address: string;
@@ -25,7 +24,7 @@ interface IUserAttributes {
     isVerified: boolean;
     isLoggedIn: boolean;
     isValid: boolean;
-
+    postCode: string;
     virtualCredits: number;
     reputationPoints: number;
     premiumAccount: boolean;
@@ -33,7 +32,6 @@ interface IUserAttributes {
     comparePasswords: (enteredPassword: string) => Promise<boolean>;
     getAuthenticationToken: () => Promise<void>;
 }
-
 interface UserDocument extends mongoose.Model<IUserAttributes> { // User Document holding all of the information regarding a user
     forename: string;
     surname: string; // Users surname
@@ -49,13 +47,11 @@ interface UserDocument extends mongoose.Model<IUserAttributes> { // User Documen
     photo: string; // User avatar
     isNewUser: boolean;
     createdAt: Date;
-
     pastEventsHeld: number;
+    postCode: string;
     upcomingEvents: number;
-
     virtualCredits: number;
     reputationPoints: number;
-
     isActive: boolean;
     isLocked: boolean;
     isVerified: boolean;
@@ -77,20 +73,21 @@ enum AccountType {
     Basic = "Basic", Standard = "Standard", Premium = "Premium", Platinum = "Platinum"
 }
 
-// Working on the auth feature branch
 const UserSchema = new mongoose.Schema({
 
-    forename: {
+    forename: { // User's forename
         type: String,
         trim: true,
         required: [true, "Please provide your forename"],
-        maxlength: [10, "Forename cannot exceed 10 characters"],
-        minlength: [3, "Forename cannot be less than 3 characters"]
+        max: [10, "Forename cannot exceed 10 characters"],
+        min: [3, "Forename cannot be less than 3 characters"]
     },
 
-    surname: {
+    surname: { // Users surname
         type: String,
-        required: [true, "Please provide your surname"]
+        required: [true, "Please provide your surname"],
+        min: [6, "Your surname must be at least 6 characters"],
+        max: [16, "Your surname cannot exceed 16 characters"]
     },
     
     // username of the user
@@ -102,16 +99,22 @@ const UserSchema = new mongoose.Schema({
         trim: true
     },
 
-    address: { // IMPORTANT FIELD. THIS STORES THE METAMASK WALLET ACCOUNT ADDRESS FOR A SPECIFIC USER. NOT REQUIRED UPON REGISTRATION
-        type: String
-    },
-
     // User's e-mail address
     email: {
         type: String,
         required: [true, "Please specify a valid e-mail address"],
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+    },
+
+    postCode: {
+        type: String,
+        required: [true, "Please provide the users post code"]
+    },
+
+    city: {
+        type: String,
+        required: [true, "Please specify the city that the user resides in"]
     },
 
     photo: { // Photo for the user
@@ -126,7 +129,7 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Please provide a valid password"]
     },
 
-    passwordConfirm: {
+    passwordConfirm: { // Confirm the user password
         type: String,
         required: [true, "Please confirm your password"]
     },
@@ -190,7 +193,6 @@ UserSchema.pre('save', async function(next: () => void) {
     }
 
    this.password = await bcrypt.hash(this.password, ROUNDS);
-   this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, ROUNDS);
 
    return next();
 })

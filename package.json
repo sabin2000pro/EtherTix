@@ -1,7 +1,17 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1"
   }
 }
+=======
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "mongoose": "^6.6.3",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  }
+}
+>>>>>>> master

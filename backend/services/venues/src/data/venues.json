@@ -1,0 +1,39 @@
+ [
+    
+    {
+        "_id": "5d7a514b5d2c12c7449be020",
+        "name": "Royal Highland Center Venue",
+        "ageRestriction": "AGE_RESTRICTION_ALL_AGES",
+        "venueCapacity": 12000,
+        "hasPublicAccess": false,
+        "smokingAllowed": false,
+        "photo": "no-photo.jpg",
+        "address": "Ingliston, Newbridge EH28 8NB",
+        "organiser": "",
+        "event": "",
+        "ticket": ""
+    },
+
+    {
+        "_id": "5d7a514b5d2c12c7449be021",
+        "name": "Usher Hall Venue",
+        "ageRestriction": "AGE_RESTRICTION_ALL_AGES",
+        "venueCapacity": 3000,
+        "hasPublicAccess": true,
+        "smokingAllowed": false,
+        "photo": "no-photo.jpg",
+        "address": "Lothian Rd, Edinburgh EH1 2EA"
+    },
+
+    {
+        "_id": "5d7a514b5d2c12c7449be022",
+        "name": "Three Sisters Cowgate Venue",
+        "ageRestriction": "AGE_RESTRICTION_MIN_EIGHTEEN",
+        "venueCapacity": 150,
+        "hasPublicAccess": true,
+        "smokingAllowed": true,
+        "photo": "no-photo.jpg",
+        "address": "139 Cowgate, Edinburgh EH1 1JS"
+    }
+
+]

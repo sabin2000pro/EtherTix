@@ -12,32 +12,31 @@ const TicketSchema = new mongoose_1.default.Schema({
     },
     ticketClass: {
         type: String,
-        required: true,
+        required: [true, "Please specify the ticket class for this ticket"],
         enum: ["premium", "standard", "basic", "vip"]
     },
     ticketToken: {
         type: String,
-        required: true,
+        required: [true, "Please specify how this ticket is going to be delivered"],
         enum: ["Barcode", "QR Code", "Image", "PDF"]
     },
     capacity: {
         type: Number,
-        required: true,
-        default: 0,
+        required: [true, "Please specify how many tickets can be placed for sale"],
+        default: 1,
+        min: [1, "At least one single ticket must be placed for sale"],
+        max: [10, "You cannot place more than 10 tickets for sale at once"]
     },
-    minimumQuantityPurchase: {
+    quantityPurchase: {
         type: Number,
-        required: true,
-        default: 1
-    },
-    maximumQuantityPurchase: {
-        type: Number,
-        required: true,
-        default: 5
+        required: [true, "Please specify how many tickets can be bought at a single time"],
+        default: 1,
+        min: 1,
+        max: 5
     },
     description: {
         type: String,
-        required: true
+        required: [true, "Please specify the description for this ticket"]
     },
     cost: {
         type: Number,
@@ -58,7 +57,7 @@ const TicketSchema = new mongoose_1.default.Schema({
     onSaleStatus: {
         type: String,
         enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
-        required: true
+        required: [true, "Please specfify whether or not the event is available, sold out or pending to start"]
     },
     saleStartsAt: {
         type: Date,
@@ -78,14 +77,18 @@ const TicketSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false
     },
-    event: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Event"
-    },
-    issuer: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User"
-    }
+    event: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "event"
+        }],
+    issuer: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "user"
+        }],
+    venue: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "venue"
+        }]
 }, {
     timestamps: true
 });

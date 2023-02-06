@@ -58,7 +58,7 @@ const fetchSingleEvent = (request, response, next) => __awaiter(void 0, void 0, 
 exports.fetchSingleEvent = fetchSingleEvent;
 const createNewEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const eventData = request.body;
+        // @TODO
     }
     catch (error) {
         if (error) {
@@ -124,30 +124,22 @@ const fetchEventsWithinRadius = (request, response, next) => __awaiter(void 0, v
 });
 exports.fetchEventsWithinRadius = fetchEventsWithinRadius;
 const likeEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let eventId = request.params.eventId;
-    const event = yield event_model_1.Event.findById(eventId);
-    let eventLikes = event.likes;
-    if (!event) {
-        return response.status(404).json({ msg: 'Event not found with that ID' });
+    try {
     }
-    // Increment the number of likes for the event
-    eventLikes += 1;
-    yield event.save();
-    return response.status(http_status_codes_1.StatusCodes.OK).json({ success: true, likes: eventLikes });
+    catch (error) {
+        if (error) {
+            return next(error);
+        }
+    }
 });
 exports.likeEvent = likeEvent;
 const dislikeEvent = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let eventId = request.params.eventId;
-        const event = yield event_model_1.Event.findById(eventId);
-        let currentLikes = event.likes;
-        if (currentLikes < event.likes) {
-        }
-        if (!event) {
-            return response.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ msg: 'Event not found with that ID' });
-        }
     }
     catch (error) {
+        if (error) {
+            return next(error);
+        }
     }
 });
 exports.dislikeEvent = dislikeEvent;

@@ -71,6 +71,7 @@ describe("Login Test Suite", () => {
     })
 
     it("Login with missing e-mail address", async () => {
+
         const missingEmailData = [{password: "123mini123"}]
 
         for(const data of missingEmailData) {
@@ -81,6 +82,7 @@ describe("Login Test Suite", () => {
     })
 
     it("Login with invalid e-mail address", async () => {
+
         const invalidEmailData = [{email: "123mini123"}]
 
         for(const data of invalidEmailData) {
@@ -118,13 +120,14 @@ describe("Verify E-mail Address Test Suite", () => {
         }
     })
 
-    it("Verify E-mail address with missing OTP value", async () => {
+    it("Verify E-mail address with missing OTP value", async () => { // Test case for verifying the user with a missing one time passcode value
+
         const missingOtpData = [{userId: "63ce8f17dbde8e822781c701", OTP: ""}]
 
         for (const bodyData of missingOtpData) {
             const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
-
             return expect(response.statusCode).not.toBe(StatusCodes.OK);
+
         }
     })
 
@@ -138,10 +141,10 @@ describe("Verify E-mail Address Test Suite", () => {
     
                 return expect(response.statusCode).not.toBe(StatusCodes.OK);
             }
-
         } 
         
         catch(error) {
+            
             if(error) {
                 return console.error(error);
             }
@@ -189,7 +192,7 @@ describe("Verify Login MFA Test Suite", () => {
     it("Verify Login MFA - Valid Correct MFA Code", async () => {
 
         try {
-
+            const validMFABody = [{userId: "", mfaCode: "909899"}]
         } 
         
         catch(error) {
@@ -205,6 +208,10 @@ describe("Verify Login MFA Test Suite", () => {
         } 
         
         catch(error) {
+
+            if(error) {
+                return console.error(error.message);
+            }
 
         }
 
@@ -310,7 +317,7 @@ describe("Fetch All Users Test Suite", () => {
 
 })
 
-describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
+describe("Fetch Single User - Organiser Dashboard Test Suite" , () => { // Test Suite for fetching a single user account details in JSON format
 
     it("Fetch Valid Single user By ID ", async () => {
         try {
@@ -318,7 +325,9 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
         } 
         
         catch(error) {
-
+            if(error){ 
+                return console.error(error);
+            }
         }
 
     })
@@ -329,7 +338,9 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
         } 
         
         catch(error) {
-
+            if(error){ 
+                return console.error(error);
+            }
         }
 
     })
@@ -341,7 +352,12 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => {
         
         catch(error) {
 
+            if(error){ 
+                return console.error(error);
+            }
+
         }
+
     })
 
 

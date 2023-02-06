@@ -17,11 +17,12 @@
     "morgan": "^1.10.0",
     "node-geocoder": "^4.2.0",
     "nodemon": "^2.0.20",
+    "pm2": "^5.2.2",
     "prom-client": "^14.1.0",
     "twilio": "^3.82.2"
   },
   "devDependencies": {
-    "@types/express": "^4.17.14",
+    "@types/express": "^4.17.16",
     "ts-jest": "^29.0.3"
   }
 }

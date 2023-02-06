@@ -9,4 +9,4 @@ RUN npm install
 COPY . .
 EXPOSE 5301
 RUN npm run build
-CMD [ "npm", "run", "start:server" ]
+CMD [ "npm", "run", "start:development" ]

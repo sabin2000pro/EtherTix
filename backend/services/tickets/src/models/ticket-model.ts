@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface ITicketAttributes {
+interface ITicketAttributes { // Interface that stores the ticket data
     name: String,
     ticketClass: String,
     ticketToken: String,
@@ -13,11 +13,12 @@ interface ITicketAttributes {
     onSaleStatus: String,
     saleStartsAt: Date,
     saleEndsAt: Date,
-    confirmationMessage: String,
-    ticketSold: Boolean,
+    confirmationMessage: string,
+    ticketSold: boolean,
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
     venue: mongoose.Schema.Types.ObjectId
+    discount: mongoose.Schema.Types.ObjectId;
 }
 
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
@@ -35,9 +36,10 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    saleEndsAt: Date,
    confirmationMessage: String,
    ticketSold: Boolean,
-   event: mongoose.Schema.Types.ObjectId,
+   event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
    venue: mongoose.Schema.Types.ObjectId
+   discount: mongoose.Schema.Types.ObjectId;
 }
 
 const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
@@ -86,9 +88,9 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: 0.010       
          },
 
-        isFree: {
+        isFree: { // Is the ticket free or not
             type: Boolean,
-            required: true,
+            required: [true, "Please specify if this ticket is free or not"],
             default: false
         },
 
@@ -96,7 +98,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             type: String,
             required: true,
             default: "SMS",
-            enum: ["Will Call", "SMS", "Electronic", "E-mail"]
+            enum: ["Phone", "SMS", "Electronic", "E-mail"]
         },
 
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
@@ -127,20 +129,29 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: false
         },
 
-        event: [{
+        event: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "event"
-        }],
+            ref: "Event",
+            required: [true, "Please specify the event that this ticket is related to"]
+        },
 
-        issuer: [{ // The issuer of the ticket
+        issuer: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "user"
-        }],
+            ref: "User",
+            required: [true, "Please specify who the issuer ID of this ticket is"]
+        },
 
-        venue: [{
+        venue: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "venue"
-        }]
+            ref: "Venue",
+            required: [true, "Please specify the venue ID that this ticket is associated to"]
+        },
+
+        discount: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Venue",
+            required: [true, "Please specify the Discount ID that this ticket has"]
+        }
     
 }, {
     timestamps: true

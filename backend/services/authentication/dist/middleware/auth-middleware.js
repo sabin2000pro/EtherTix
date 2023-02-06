@@ -52,7 +52,7 @@ exports.restrictRolesTo = restrictRolesTo;
 const isUserModerator = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = yield user_model_1.User.findById(request.user._id);
-        if (currentUser.role !== 'moderator') {
+        if (currentUser.role !== 'moderator') { // If the user does not hold the role of moderator
             return next(new error_handler_1.UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", http_status_codes_1.StatusCodes.UNAUTHORIZED));
         }
         else {

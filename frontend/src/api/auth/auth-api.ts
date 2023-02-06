@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// Default config options
-const defaultOptions = {
+const defaultOptions = { // Default config options for authentication
     
     headers: {
       'Content-Type': 'application/json',
@@ -72,7 +71,8 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 
 }
 
-export const login = async (loginPayload: Object): Promise<any> => {
+export const login = async (loginPayload: any): Promise<any> => {
+
     try {
         const response = await axios.post("/login", loginPayload);
         const data = await response.data;

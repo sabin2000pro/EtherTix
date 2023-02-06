@@ -1,6 +1,8 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+dotenv.config({path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env"});
 import mongoose from "mongoose";
-dotenv.config({path: '../../config.env'});
+
+const EVENT_DB_URI = process.env.EVENT_DB_URI;
 
 export default () => {
 
@@ -8,9 +10,11 @@ export default () => {
 
         try {
     
-            return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+            return await mongoose.connect(EVENT_DB_URI).then(conn => {
     
                 if(conn.connection) {
+                    console.log(`Read env var successfully : ${EVENT_DB_URI}`);
+
                     return console.log(`Connected to events database...`)
                 }
     
