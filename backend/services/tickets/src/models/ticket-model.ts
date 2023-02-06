@@ -36,7 +36,6 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    saleEndsAt: Date,
    confirmationMessage: String,
    ticketSold: Boolean,
-
    event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
    venue: mongoose.Schema.Types.ObjectId
