@@ -1,3 +1,4 @@
+import Home from 'pages/Home';
 import EmailVerification from 'pages/auth/EmailVerification';
 import ForgotPassword from 'pages/auth/ForgotPassword';
 import Login from 'pages/auth/Login';
@@ -11,25 +12,19 @@ import {Routes, Route} from 'react-router-dom';
 const App = () => { // Main App Component
 
   return (
-
       <>
-
-      <h1>Ether Tix Home</h1>
-
+         <Home />
           <Routes>
-              <Route path = '/register' element = {<Register />} />
-              <Route path = '/login' element = {<Login />} />
-              <Route path = '/forgot-password' element = {<ForgotPassword />} />
+            <Route path = '/register' element = {<Register />} /> 
+            <Route path = '/login' element = {<Login />} />
+            <Route path = '/forgot-password' element = {<ForgotPassword />} />
 
-              <Route path = '/reset-password/:token' element = {<ResetPassword />} />
-              <Route path = '/verify-email' element = {<EmailVerification />} />
-              <Route path = '/update-password' element = {<UpdatePassword />} />
-              <Route path = '/update-profile' element = {<UpdateProfile />} />
+            <Route path = '/reset-password/:token' element = {<ResetPassword />} />
+            <Route path = '/verify-email' element = {<EmailVerification />} />
+            <Route path = '/update-password' element = {<UpdatePassword />} />
+            <Route path = '/update-profile' element = {<UpdateProfile />} />
          </Routes>
-
       </>
-
-
   );
 }
 
