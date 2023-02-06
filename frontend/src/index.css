@@ -1,0 +1,29 @@
+.register-container {
+    justify-content: center;
+    width: 400px; /* width of the div */
+    height: 400px; /* height of the div */
+    position: absolute; /* set the position to absolute */
+    top: 50%; /* set the top position to 50% */
+    left: 50%; /* set the left position to 50% */
+    transform: translate(-50%, -50%); /* translate the div to the center */
+    border-radius: 4px;
+    background-color: aqua;
+    font-family:sans-serif;
+    font-size:22px;
+}
+
+label{
+    display: inline-block; 
+    width: 200px; 
+    text-align: left;
+    padding:right;
+}
+
+button{
+    width:100px;
+    height:25px;
+    margin:auto;
+    text-align: center
+}
+
+
