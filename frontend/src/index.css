@@ -52,8 +52,8 @@ html {
     width: 650px; /* width of the div */
     height: 450px; /* height of the div */
     position: absolute; /* set the position to absolute */
-    top: 50%; 
-    left: 50%; /* set the left position to 50% */
+    top: 40%; 
+    left: 27%; /* set the left position to 50% */
     transform: translate(-50%, -50%); /* translate the div to the center */
     border-radius: 4px;
     padding: 32px;
@@ -80,14 +80,20 @@ label {
 }
 
 .register-btn {
-    width:350px;
+    width: 350px;
     height: 40px;
     margin-top: 20px;
     text-align: center;
-    background-color: #4d5d7d;
+    background-color: #1a2f58;
     outline: none;
     border: none;
-    border-radius: 50px;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.register-btn:hover {
+    background-color: #a6aebe;
+    transition: all 0.4s;
 }
 
 .span-container {

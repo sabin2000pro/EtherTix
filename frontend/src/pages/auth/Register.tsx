@@ -48,23 +48,14 @@ const Register: React.FC = () => {
 
       <label htmlFor = "forename">Forename:</label>
 
-        <input
-          type="text"
-          name="forename"
-          id="forename"
-          value={registerData.forename}
-          onChange={handleChange}
-        />
+        <input type="text" name="forename" id="forename" value={registerData.forename} onChange={handleChange}/>
 
         <br />
 
+
         <label htmlFor = "surname">Surname:</label>
 
-        <input
-          type="text"
-          name="surname"
-          id="surname"
-          value={registerData.surname}
+        <input type="text" name="surname" id="surname" value={registerData.surname}
           onChange={handleChange}
         />
         <br />
@@ -76,7 +67,9 @@ const Register: React.FC = () => {
           value={registerData.username}
           onChange={handleChange}
         />
+
         <br />
+
         <label htmlFor="email">Email:</label>
         <input
           type="email"
@@ -85,6 +78,7 @@ const Register: React.FC = () => {
           value={registerData.email}
           onChange={handleChange}
         />
+
         <br />
 
         <label htmlFor="password">Password:</label>
