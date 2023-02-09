@@ -47,7 +47,7 @@ const Register: React.FC = () => {
       <form onSubmit={handleSubmit} method = "POST">
 
         <div className = "forename-container">
-           <label htmlFor = "forename">Forename:</label>
+           <label htmlFor = "forename">Forename</label>
            <input type = "text" name="forename" id="forename" value={registerData.forename} onChange={handleChange}/>
         </div>
 

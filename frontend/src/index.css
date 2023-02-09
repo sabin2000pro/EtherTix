@@ -69,6 +69,18 @@ html {
     margin-top: 40px;
 }
 
+.forename-container label {
+    margin-right: -90px;
+    font-weight: bold;
+    margin-left: 50px;
+}
+
+.forename-container input {
+    width: 50%;
+    height: 30px;
+    margin-left: 50px;
+}
+
 .surname-container {
     display: flex;
     align-items: center;
