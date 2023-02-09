@@ -12,6 +12,8 @@ html {
     background-color: #9cafb7;
     color: white;
     padding: 8px;
+    display: flex;
+    justify-content: self-end;
 }
 
 .nav-list-items {
@@ -44,18 +46,16 @@ html {
     font-size:22px;
 }
 
-label{
+label {
     display: inline-block; 
     width: 200px; 
     text-align: left;
     padding:right;
 }
 
-button{
+button {
     width:100px;
     height:25px;
     margin:auto;
     text-align: center
 }
-
-
