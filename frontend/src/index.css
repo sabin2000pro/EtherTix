@@ -11,6 +11,7 @@ html {
 .heading-primary {
     margin-right: 250px;
     margin-bottom: 30px;
+    font-size: 34px;
 }
 
 .nav-container {
@@ -72,13 +73,13 @@ html {
 .forename-container label {
     margin-right: -90px;
     font-weight: bold;
-    margin-left: 50px;
+    margin-left: 51px;
 }
 
 .forename-container input {
     width: 50%;
     height: 30px;
-    margin-left: 50px;
+    margin-left: 25px;
 }
 
 .surname-container {
@@ -87,8 +88,9 @@ html {
 }
 
 .surname-container label {
-    margin-left: 10px;
+    margin-right: -90px;
     font-weight: bold;
+    margin-left: 50px;
 }
 
 .username-container {
@@ -96,19 +98,19 @@ html {
     align-items: center;
 }
 
-.password-container {
-    display: flex;
-    align-items: center;
-}
-
-.surname-container label {
-    margin-right: -100px;
-    font-weight: bold;
-}
-
 .username-container label {
     margin-right: -90px;
     font-weight: bold;
+    margin-left: 50px;
+}
+
+.username-container input {
+    margin-left: -10px;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
 }
 
 .confirm-container {
@@ -119,6 +121,7 @@ html {
 .surname-container input {
     width: 50%;
     height: 30px;
+    margin-left: 25px;
 }
 
 .email-container {
