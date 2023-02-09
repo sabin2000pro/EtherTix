@@ -6,7 +6,7 @@ const Home = () => {
 
     <>
        <section className = "home-section">
-         <h1>Ether Tix - home</h1>
+         <h1>Ether Tix - Home</h1>
        </section>
     </>
 

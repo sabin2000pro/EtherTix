@@ -1,6 +1,5 @@
 import Navbar from 'components/Navbar';
 import Home from 'pages/Home';
-import Footer from 'components/Footer';
 import EmailVerification from 'pages/auth/EmailVerification';
 import ForgotPassword from 'pages/auth/ForgotPassword';
 import Login from 'pages/auth/Login';
@@ -35,7 +34,7 @@ const App = () => {
             <Route path = '*' element = {<NotFound />} />
          </Routes>
 
-         <Footer />
+
 
       </>
   );

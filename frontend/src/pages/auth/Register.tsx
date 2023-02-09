@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from 'api/auth/auth-api';
 
-
-
 const Register: React.FC = () => {
   const navigate = useNavigate();
 
@@ -21,15 +19,17 @@ const Register: React.FC = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   
     setRegisterData({ ...registerData, [event.target.name]: event.target.value });
-    console.log(registerData)
+      console.log(registerData)
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
 
     try {
+
       const response = await registerUser(registerData);
-      console.log(response);
+     
       navigate('/verify-email')
     } 
     
@@ -39,11 +39,15 @@ const Register: React.FC = () => {
   };
 
   return (
+
     <div className = "register-container">
-      <h1>Register</h1>
+
+      <h1>Register Account</h1>
+
       <form onSubmit={handleSubmit}>
 
-      <label htmlFor="forename">Forename:</label>
+      <label htmlFor = "forename">Forename:</label>
+
         <input
           type="text"
           name="forename"
@@ -51,8 +55,11 @@ const Register: React.FC = () => {
           value={registerData.forename}
           onChange={handleChange}
         />
+
         <br />
-        <label htmlFor="surname">Surname:</label>
+
+        <label htmlFor = "surname">Surname:</label>
+        
         <input
           type="text"
           name="surname"
@@ -79,15 +86,19 @@ const Register: React.FC = () => {
           onChange={handleChange}
         />
         <br />
+
         <label htmlFor="password">Password:</label>
+
         <input
-          type="password"
-          name="password"
+          type = "password"
+          name = "password"
           id="password"
           value={registerData.password}
           onChange={handleChange}
         />
+
         <br />
+
         <label htmlFor="passwordConfirm">Confirm Password:</label>
         <input
           type="password"
@@ -96,8 +107,14 @@ const Register: React.FC = () => {
           value={registerData.passwordConfirm}
           onChange={handleChange}
         />
+
+        <div className = "span-container">
+           <span>Already have an account?</span>
+        </div>
+
+
         <br />
-        <button type="submit">Submit</button>
+        <button type="submit">Register</button>
       </form>
       {error && <p>{error}</p>}
     </div>

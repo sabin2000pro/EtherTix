@@ -10,15 +10,23 @@ html {
 
 .nav-container {
     background-color: #9cafb7;
+    padding: 12px;
     color: white;
-    padding: 8px;
     display: flex;
-    justify-content: self-end;
-}
-
-.nav-list-items {
+    justify-content: flex-end;
+  }
+  
+  .nav-list-items {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: space-between;
+    margin-right: 90px;
+    padding: 4px 8px;
+  }
+  
+.nav-item {
+    padding: 12px;
 }
 
 .nav-list-items li {
@@ -28,8 +36,10 @@ html {
 }
 
 .nav-list-items li a {
-    text-decoration: none;
     color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 20px;
 }
 
 .register-container {
@@ -41,9 +51,7 @@ html {
     left: 50%; /* set the left position to 50% */
     transform: translate(-50%, -50%); /* translate the div to the center */
     border-radius: 4px;
-    background-color: aqua;
-    font-family:sans-serif;
-    font-size:22px;
+    font-size : 20px;
 }
 
 label {
@@ -54,8 +62,12 @@ label {
 }
 
 button {
-    width:100px;
-    height:25px;
-    margin:auto;
+    width:350px;
+    height: 40px;
+    margin-top: 20px;
     text-align: center
+}
+
+.home-section {
+    padding: 28px;
 }
