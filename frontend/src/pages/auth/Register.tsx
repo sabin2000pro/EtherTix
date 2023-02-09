@@ -42,9 +42,9 @@ const Register: React.FC = () => {
 
     <div className = "register-container">
 
-      <h1>Register Account</h1>
+      <h1 className = "heading-primary">Register Account</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} method = "POST">
 
       <label htmlFor = "forename">Forename:</label>
 
@@ -59,7 +59,7 @@ const Register: React.FC = () => {
         <br />
 
         <label htmlFor = "surname">Surname:</label>
-        
+
         <input
           type="text"
           name="surname"
@@ -109,13 +109,14 @@ const Register: React.FC = () => {
         />
 
         <div className = "span-container">
-           <span>Already have an account?</span>
+           <span>Already have an account? - <a href = "/login">Login</a>  </span>
         </div>
-
-
         <br />
-        <button type="submit">Register</button>
+
+        <button className = "register-btn" type="submit">Register</button>
       </form>
+
+
       {error && <p>{error}</p>}
     </div>
   );
