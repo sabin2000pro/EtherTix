@@ -49,8 +49,8 @@ html {
 
 .register-container {
     justify-content: center;
-    width: 650px; /* width of the div */
-    height: 450px; /* height of the div */
+    width: 680px; /* width of the div */
+    height: 550px; /* height of the div */
     position: absolute; /* set the position to absolute */
     top: 40%; 
     left: 27%; /* set the left position to 50% */
@@ -61,6 +61,25 @@ html {
     font-size : 20px;
     background-color: #001845;
     color: white;
+}
+
+.surname-container {
+    display: flex;
+    align-items: center;
+}
+
+.surname-container label {
+    margin-right: -100px;
+    font-weight: bold;
+}
+
+.surname-container input {
+    width: 50%;
+    height: 27px;
+}
+
+.surname-container input:hover, .surname-container input:focus {
+    outline: none;
 }
 
 .register-btn {
@@ -83,6 +102,7 @@ label {
     width: 350px;
     height: 40px;
     margin-top: 20px;
+    margin-bottom: 24px;
     text-align: center;
     background-color: #1a2f58;
     outline: none;

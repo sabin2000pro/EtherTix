@@ -46,19 +46,22 @@ const Register: React.FC = () => {
 
       <form onSubmit={handleSubmit} method = "POST">
 
-      <label htmlFor = "forename">Forename:</label>
+        <div className = "forename-container">
+           <label htmlFor = "forename">Forename:</label>
+           <input type = "text" name="forename" id="forename" value={registerData.forename} onChange={handleChange}/>
+        </div>
 
-        <input type="text" name="forename" id="forename" value={registerData.forename} onChange={handleChange}/>
 
         <br />
 
 
-        <label htmlFor = "surname">Surname:</label>
-
-        <input type="text" name="surname" id="surname" value={registerData.surname}
-          onChange={handleChange}
-        />
+      <div className = "surname-container">
+          <label htmlFor = "surname">Surname</label>
+          <input type="text" name="surname" id="surname" value={registerData.surname} onChange={handleChange}/>
+      </div>
+       
         <br />
+
         <label htmlFor="username">Username:</label>
         <input
           type="text"
@@ -71,6 +74,7 @@ const Register: React.FC = () => {
         <br />
 
         <label htmlFor="email">Email:</label>
+
         <input
           type="email"
           name="email"
@@ -103,15 +107,18 @@ const Register: React.FC = () => {
         />
 
         <div className = "span-container">
+
            <span>Already have an account? - <a href = "/login">Login</a>  </span>
         </div>
+
         <br />
 
-        <button className = "register-btn" type="submit">Register</button>
+        <button className = "register-btn" type = "submit">Register</button>
       </form>
 
-
       {error && <p>{error}</p>}
+
+
     </div>
   );
 };

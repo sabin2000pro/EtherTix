@@ -1,4 +1,4 @@
-import { useAuth } from 'context/AuthContext'
+import { useAuth } from 'constants/context/AuthContext'
 import React from 'react'
 import PropTypes from 'prop-types'
 
