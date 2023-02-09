@@ -8,5 +8,11 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract TicketNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
-    constructor() ERC721("Event Tickets NFT", "TNFT") {}
+
+    string public test;
+
+    constructor(string memory _test) ERC721("Event Tickets NFT", "TNFT") {
+        test = _test;
+    }
+
 }
