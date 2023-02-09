@@ -16,6 +16,7 @@ const App = () => {
 
   return (
       <>
+      
          <Navbar />
 
           <Routes>
@@ -33,8 +34,6 @@ const App = () => {
 
             <Route path = '*' element = {<NotFound />} />
          </Routes>
-
-
 
       </>
   );

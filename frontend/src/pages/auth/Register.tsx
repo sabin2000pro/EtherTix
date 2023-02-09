@@ -61,42 +61,31 @@ const Register: React.FC = () => {
         <br />
 
         <div className = "username-container">
-            <label htmlFor="username">Username:</label>
-            <input
-              type="text"
-              name="username"
-              id="username"
-              value={registerData.username}
-              onChange={handleChange}
-            />
+            <label htmlFor="username">Username</label>
+            <input type="text" name="username" id="username" value={registerData.username} onChange = {handleChange}/>
+        </div>
+
+        <br />
+
+        <div className = "email-container">
+
+        <label htmlFor="email">E-mail</label>
+            <input type="email" name="email" id="email" value={registerData.email} onChange = {handleChange} />
+        </div>
+
+        <br />
+
+        <div className = "password-container">
+          <label htmlFor="password">Password</label>
+
+          <input type = "password" name = "password" id="password"
+            value={registerData.password}
+            onChange={handleChange}
+          />
+
         </div>
 
        
-
-        <br />
-
-        <label htmlFor="email">Email:</label>
-
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={registerData.email}
-          onChange={handleChange}
-        />
-
-        <br />
-
-        <label htmlFor="password">Password:</label>
-
-        <input
-          type = "password"
-          name = "password"
-          id="password"
-          value={registerData.password}
-          onChange={handleChange}
-        />
-
         <br />
 
         <label htmlFor="passwordConfirm">Confirm Password:</label>

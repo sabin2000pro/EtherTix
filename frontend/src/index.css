@@ -50,7 +50,7 @@ html {
 .register-container {
     justify-content: center;
     width: 680px; /* width of the div */
-    height: 550px; /* height of the div */
+    height: 600px; /* height of the div */
     position: absolute; /* set the position to absolute */
     top: 40%; 
     left: 27%; /* set the left position to 50% */
@@ -66,10 +66,25 @@ html {
 .forename-container {
     display: flex;
     align-items: center;
-    margin-top: 24px;
+    margin-top: 40px;
 }
 
 .surname-container {
+    display: flex;
+    align-items: center;
+}
+
+.surname-container label {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.username-container {
+    display: flex;
+    align-items: center;
+}
+
+.password-container {
     display: flex;
     align-items: center;
 }
@@ -79,13 +94,52 @@ html {
     font-weight: bold;
 }
 
+.username-container label {
+    margin-right: -90px;
+    font-weight: bold;
+}
+
 .surname-container input {
     width: 50%;
-    height: 27px;
+    height: 30px;
+}
+
+.email-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.email-container label {
+    margin-right: -90px;
+}
+
+.email-container input {
+    width: 50%;
+    height: 30px;
+}
+
+.username-container input {
+    width: 50%;
+    height: 30px;
 }
 
 .surname-container input:hover, .surname-container input:focus {
     outline: none;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 50%;
+    height: 30px;
+}
+
+.password-container label {
+    margin-right: -90px;
 }
 
 .register-btn {
