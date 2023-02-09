@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from 'api/auth/auth-api';
 
+
+
 const Register: React.FC = () => {
   const navigate = useNavigate();
 
@@ -37,7 +39,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className = "register-container">
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
 
