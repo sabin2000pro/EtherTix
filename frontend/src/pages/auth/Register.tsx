@@ -43,6 +43,10 @@ const Register: React.FC = () => {
 
     <div className = "register-container">
 
+      <div className = "image-container">
+         
+      </div>
+
       <h1 className = "heading-primary">Register Account</h1>
 
       <form onSubmit={handleSubmit} method = "POST">
@@ -77,6 +81,7 @@ const Register: React.FC = () => {
         <br />
 
         <div className = "password-container">
+          
           <label htmlFor="password">Password</label>
 
           <input type = "password" name = "password" id="password"

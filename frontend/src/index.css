@@ -50,14 +50,15 @@ html {
 
 .register-container {
     justify-content: center;
-    width: 680px; /* width of the div */
+    width: 900px; /* width of the div */
     height: 600px; /* height of the div */
     position: absolute; /* set the position to absolute */
-    top: 40%; 
-    left: 27%; /* set the left position to 50% */
+    top: 50%; 
+    left: 50%; /* set the left position to 50% */
     transform: translate(-50%, -50%); /* translate the div to the center */
     border-radius: 4px;
     padding: 32px;
+    float: left;
     text-align: center;
     font-size : 20px;
     background-color: #001845;
@@ -75,6 +76,15 @@ html {
     margin-right: -90px;
     font-weight: bold;
     margin-left: 51px;
+}
+
+.image-container {
+    background-image: url('../../../../Desktop/imgevent.jpg');
+  background-size: cover;
+  width: 52%;
+  height: 100%;
+  float: right;
+  margin-left: 50px;
 }
 
 .forename-container input {
@@ -152,18 +162,16 @@ html {
     outline: none;
 }
 
-.password-container {
-    display: flex;
-    align-items: center;
-}
-
 .password-container input {
     width: 50%;
     height: 30px;
+    margin-top: 20px;
 }
 
 .password-container label {
     margin-right: -90px;
+    margin-left: 75px;
+    margin-top: 20px;
 }
 
 .register-btn {
@@ -185,8 +193,8 @@ label {
 .register-btn {
     width: 350px;
     height: 40px;
-    margin-top: 20px;
-    margin-bottom: 24px;
+    margin-top: -10px;
+   
     text-align: center;
     background-color: #1a2f58;
     outline: none;
