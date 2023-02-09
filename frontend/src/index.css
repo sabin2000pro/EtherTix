@@ -111,6 +111,11 @@ html {
     font-weight: bold;
 }
 
+.confirm-container {
+    display: flex;
+    align-items: center;
+}
+
 .surname-container input {
     width: 50%;
     height: 30px;

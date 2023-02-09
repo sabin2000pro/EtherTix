@@ -85,18 +85,8 @@ const Register: React.FC = () => {
 
         </div>
 
-       
         <br />
-
-        <label htmlFor="passwordConfirm">Confirm Password:</label>
-        <input
-          type="password"
-          name="passwordConfirm"
-          id="passwordConfirm"
-          value={registerData.passwordConfirm}
-          onChange={handleChange}
-        />
-
+       
         <div className = "span-container">
 
            <span>Already have an account? - <a href = "/login">Login</a>  </span>
