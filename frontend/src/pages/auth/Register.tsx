@@ -29,6 +29,7 @@ const Register: React.FC = () => {
     try {
 
       const response = await registerUser(registerData);
+      console.log(response);
      
       navigate('/verify-email')
     } 
