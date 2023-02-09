@@ -23,7 +23,7 @@ export const registerUser = async (registerPayload: any): Promise<any> => {
 
         const response = await axios.post("/api/auth/register", registerPayload);
         const data = await response.data;
-        console.log(data)
+    
         return data;
     } 
     
@@ -40,9 +40,11 @@ export const registerUser = async (registerPayload: any): Promise<any> => {
 export const verifyEmailAddress = async (verificationPayload: any): Promise<any> => {
 
     try {
+
         const response = await axios.post("/verify-email", verificationPayload);
         const data = await response.data;
         return data;
+
     } 
     
     catch(err: any) {
@@ -50,6 +52,8 @@ export const verifyEmailAddress = async (verificationPayload: any): Promise<any>
         if(err) {
             return console.error(err);
         }
+
+
     }
 }
 
@@ -74,6 +78,7 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 export const login = async (loginPayload: any): Promise<any> => {
 
     try {
+
         const response = await axios.post("/login", loginPayload);
         const data = await response.data;
         return data;
@@ -91,9 +96,9 @@ export const login = async (loginPayload: any): Promise<any> => {
 
 export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
     try {
-    const response = await axios.post("<endpoint-url>/mfa", mfaPayload);
-    const data = await response.data;
-    return data;
+        const response = await axios.post("<endpoint-url>/mfa", mfaPayload);
+        const data = await response.data;
+        return data;
 
     }
     
@@ -109,10 +114,11 @@ export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
 
 export const forgotPassword = async (forgotPasswordPayload: Object): Promise<any> => {
     try {
-    const response = await axios.post("/forgot-password", forgotPasswordPayload);
-    const data = await response.data;
-    return data;
-
+        
+        const response = await axios.post("/forgot-password", forgotPasswordPayload);
+        const data = await response.data;
+        return data;
+    
     } 
     
     catch(err: any) {

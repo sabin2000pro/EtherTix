@@ -17,6 +17,7 @@ interface EventAttributes { // Interface for the event attributes
     format: string;
     capacity: number;
     slotsAvailable: boolean;
+    hasSeating: boolean;
     slug: string;
     hasAvailableTickets: boolean;
     isSoldOut: boolean;
@@ -54,6 +55,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     publishedAt: Date;
     changedAt: Date;
     eventStatus: string;
+    hasSeating: boolean;
     currency: string;
     event_logo: string;
     slug: string;
@@ -195,6 +197,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify the maximum number of people that can attend the event"],
         min: [3, "There must be at least 3 minimum people at the event"],
         max: [150, "There cannot be more than 150 people at the current event"]
+    },
+
+    hasSeating: {
+        type: Boolean,
+        required: [true, "Please specify if the event has seating or not"]
     },
 
     slotsAvailable: {
