@@ -1,3 +1,35 @@
+* {
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+html {
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-container {
+    background-color: #9cafb7;
+    color: white;
+    padding: 8px;
+}
+
+.nav-list-items {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-list-items li {
+    list-style: none;
+    padding: 8px;
+    text-decoration: none;
+}
+
+.nav-list-items li a {
+    text-decoration: none;
+    color: white;
+}
+
 .register-container {
     justify-content: center;
     width: 400px; /* width of the div */
