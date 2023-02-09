@@ -51,25 +51,27 @@ const Register: React.FC = () => {
            <input type = "text" name="forename" id="forename" value={registerData.forename} onChange={handleChange}/>
         </div>
 
-
         <br />
-
 
       <div className = "surname-container">
           <label htmlFor = "surname">Surname</label>
-          <input type="text" name="surname" id="surname" value={registerData.surname} onChange={handleChange}/>
+          <input type="text" name="surname" id="surname" value={registerData.surname} onChange = {handleChange}/>
       </div>
        
         <br />
 
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          value={registerData.username}
-          onChange={handleChange}
-        />
+        <div className = "username-container">
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              value={registerData.username}
+              onChange={handleChange}
+            />
+        </div>
+
+       
 
         <br />
 

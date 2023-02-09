@@ -63,6 +63,12 @@ html {
     color: white;
 }
 
+.forename-container {
+    display: flex;
+    align-items: center;
+    margin-top: 24px;
+}
+
 .surname-container {
     display: flex;
     align-items: center;
