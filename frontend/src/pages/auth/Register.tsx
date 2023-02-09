@@ -88,8 +88,7 @@ const Register: React.FC = () => {
         <br />
        
         <div className = "span-container">
-
-           <span>Already have an account? - <a href = "/login">Login</a>  </span>
+           <span>Already have an account? - <a href = "/login">Login Here</a>  </span>
         </div>
 
         <br />

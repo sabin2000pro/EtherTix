@@ -198,3 +198,8 @@ label {
     gap: 24px;
     display: block;
 }
+
+.span-container a {
+    color: white;
+    text-decoration: none;
+}
