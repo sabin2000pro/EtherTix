@@ -29,13 +29,18 @@ html {
     justify-content: flex-end;
 }
   
-  .nav-list-items {
+.nav-list-items {
     list-style-type: none;
     margin: 0;
     padding: 0;
     display: flex;
     margin-right: 90px;
     padding: 4px 8px;
+  }
+
+  .nav-list-items input{
+    padding: 4px 8px;
+    font-size:15px;
   }
   
 .nav-item {
@@ -53,6 +58,20 @@ html {
     text-decoration: none;
     font-weight: 700;
     font-size: 20px;
+}
+
+.search-results{
+    width: 150px; /* width of the div */
+    height: 100x; /* height of the div */
+    float:right;
+    padding-right: 160px;
+    text-align: left;
+    font-size : 25px;
+    background-color: #001845;
+    color: white;
+    text-decoration: none;
+    list-style-type: none;
+    font-family: 'Inter', sans-serif;
 }
 
 .register-container {
@@ -86,12 +105,12 @@ html {
 }
 
 .image-container {
-    background-image: url('../../../../Desktop/imgevent.jpg');
-  background-size: cover;
-  width: 52%;
-  height: 100%;
-  float: right;
-  margin-left: 50px;
+    background-image: url('C:\Users\roban\Desktop\imgevent.jpg');
+    background-size: cover;
+    width: 52%;
+    height: 100%;
+    float: right;
+    margin-left: 50px;
 }
 
 .forename-container input {
