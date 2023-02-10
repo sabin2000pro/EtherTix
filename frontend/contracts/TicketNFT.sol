@@ -6,7 +6,7 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-contract TicketNFT { // NFT Contract for Event Tickets
+contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tickets
     using Counters for Counters.Counter;
 
     struct NftToken {
@@ -23,24 +23,28 @@ contract TicketNFT { // NFT Contract for Event Tickets
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint256) public tokensPrice;
     
-    constructor() {}
+    constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public {
         address owner = msg.sender; // Store the address of the current owner of the token
         totalTokenSupply++;
 
-        uint256 tokenId = totalTokenSupply; // Set the Token ID to the incremented total supply value
+        uint256 tokenId = totalTokenSupply;
         tokens[tokenId] = NftToken(tokenId, owner, _tokenName, _tokenPrice);
     }
 
     function transferTokenOwnership(uint256 tokenId, address _toAddress) public payable {
         NftToken storage nftToken = tokens[tokenId];
-       require(nftToken.tokenOwner == msg.sender, "You do not own this ticket token.");
+        require(nftToken.tokenOwner == msg.sender, "You do not own this ticket token.");
         nftToken.tokenOwner = _toAddress;
     }
 
-    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
+    function getOwnerOfToken(uint256 _tokenId) public view returns (address) {
+        return tokenOwners[_tokenId];
+    }
 
+    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
+        require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
     }
 
     function buyNftToken(uint256 tokenId) public payable { //
