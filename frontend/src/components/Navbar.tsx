@@ -9,7 +9,6 @@ const pages = [
   { name: 'Update Profile', path: '/update-profile' },
 ];
 
-<<<<<<< HEAD
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<{ name: string, path: string }[]>([]);
@@ -24,9 +23,6 @@ const Navbar = () => {
     );
   }
 };
-=======
-const Navbar = () => { // Navigation Bar Component
->>>>>>> 01faa316f8c22572c75e17107ff1bf45f7787290
 
   return (
 
