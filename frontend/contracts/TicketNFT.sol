@@ -21,15 +21,18 @@ contract TicketNFT is ERC721URIStorage, Ownable {
     // Post-Condition: 
 
     function mintToken(uint256 _tokenId) public {
-
+       
     }
-
 
     // @description: Transfers ownership of the NFT token from one wallet address to another
     // @type: Payable (ETH is paid for the invocation of this function)
+    // Pre-Condition:
+    // Post-Condition: After the function is invoked, the new owner wallet address stores the NFT data
     
     function transferTokenOwnership(address fromAddress, address toAddress) public payable {
 
     }
+
+
 
 }
