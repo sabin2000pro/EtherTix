@@ -8,14 +8,17 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract TicketNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
+
+    struct NftToken {
+        uint256 id;
+        bool tokenExists;
+        address tokenOwner;
+    }
    
     mapping(uint256 => address) tokenOwners; // Store the owners of the NFT
     uint256 public totalSupply; // Total supply for the tokens
     
-
-    constructor() ERC721("Event Tickets NFT", "TNFT") {
-       
-    }
+    constructor() ERC721("Event Tickets NFT", "TNFT") {}
 
     // Function to mint an NFT token given the token ID
     // Pre-Condition:
@@ -39,7 +42,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
     }
 
     function buyNftToken() public payable {
-        
+
     }
 
 }
