@@ -6,44 +6,44 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-contract TicketNFT is ERC721URIStorage, Ownable {
+contract TicketNFT { // NFT Contract for Event Tickets
     using Counters for Counters.Counter;
 
     struct NftToken {
         uint256 id;
-        bool tokenExists;
         address tokenOwner;
+        string tokenName;
         uint256 tokenPrice;
-        bool isTokenForSale;
     }
-   
-    mapping(uint256 => address) tokenOwners; // Store the owners of the NFT
-    uint256 public totalSupply; // Total supply for the tokens
+
+    uint256 public totalTokenSupply; // Total supply for the tokens
+
+    mapping (uint256 => NftToken) public tokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
+    mapping (uint256 => address) tokenOwners; // Store the owners of the NFT
+    mapping (uint256 => bool) public isTokenForSale;
+    mapping (uint256 => uint256) public tokensPrice;
     
-    constructor() ERC721("Event Tickets NFT", "TNFT") {}
+    constructor() {}
 
-    // Function to mint an NFT token given the token ID
-    // Pre-Condition:
-    // Post-Condition: 
+    function mintToken(string memory _tokenName, uint256 _tokenPrice) public {
+        address owner = msg.sender; // Store the address of the current owner of the token
+        totalTokenSupply++;
 
-    function mintToken(uint256 _tokenId, string memory tokenDetails) public {
-       // Code here that mints a new token on the blockchain
+        uint256 tokenId = totalTokenSupply; // Set the Token ID to the incremented total supply value
+        tokens[tokenId] = NftToken(tokenId, owner, _tokenName, _tokenPrice);
     }
 
-    // @description: Transfers ownership of the NFT token from one wallet address to another
-    // @type: Payable (ETH is paid for the invocation of this function)
-    // Pre-Condition:
-    // Post-Condition: After the function is invoked, the new owner wallet address stores the NFT data
-    
-    function transferTokenOwnership(address fromAddress, address toAddress) public payable {
-
+    function transferTokenOwnership(uint256 tokenId, address _toAddress) public payable {
+        NftToken storage nftToken = tokens[tokenId];
+       require(nftToken.tokenOwner == msg.sender, "You do not own this ticket token.");
+        nftToken.tokenOwner = _toAddress;
     }
 
-    function listNftForSale() public {
+    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
 
     }
 
-    function buyNftToken() public payable {
+    function buyNftToken(uint256 tokenId) public payable { //
 
     }
 
