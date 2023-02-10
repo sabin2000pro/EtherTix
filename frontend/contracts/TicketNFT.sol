@@ -13,6 +13,8 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         uint256 id;
         bool tokenExists;
         address tokenOwner;
+        uint256 tokenPrice;
+        bool isTokenForSale;
     }
    
     mapping(uint256 => address) tokenOwners; // Store the owners of the NFT
