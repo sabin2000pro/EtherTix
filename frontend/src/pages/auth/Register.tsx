@@ -81,13 +81,10 @@ const Register: React.FC = () => {
         <br />
 
         <div className = "password-container">
-          
+
           <label htmlFor="password">Password</label>
 
-          <input type = "password" name = "password" id="password"
-            value={registerData.password}
-            onChange={handleChange}
-          />
+          <input type = "password" name = "password" id="password" value={registerData.password} onChange={handleChange}/>
 
         </div>
 
@@ -100,12 +97,15 @@ const Register: React.FC = () => {
         <br />
 
         <button className = "register-btn" type = "submit">Register</button>
+        
       </form>
 
       {error && <p>{error}</p>}
 
 
     </div>
+
+
   );
 };
 
