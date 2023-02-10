@@ -31,14 +31,18 @@ const Navbar = () => {
         <nav className = "nav-container">
 
           <div className = "nav-left">
-              Ether Tix
+            <div className ="nav-header">Ether Tix</div>
+          </div>
+
+          <div className = "nav-centre">
+            <input className = "search-bar" type="text" placeholder="Search" value={searchTerm} onChange={handleSearch}/>
           </div>
 
           <ul className = "nav-list-items">
             <li><a className = "nav-item" href="/cart">Cart</a></li>
             <li><a className = "nav-item" href ="/register">Register</a></li>
-            <li><input type="text" placeholder="Search" value={searchTerm} onChange={handleSearch}/></li>
           </ul>
+
         </nav>
 
         {searchTerm.length > 0 && (
