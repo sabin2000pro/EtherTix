@@ -10,10 +10,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     using Counters for Counters.Counter;
 
     struct NftToken {
-        uint256 id;
+        uint256 tokenId;
         address tokenOwner;
         string tokenName;
         uint256 tokenPrice;
+        bool isListed;
     }
 
     uint256 public totalTokenSupply; // Total supply for the tokens
@@ -24,15 +25,32 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint256) public tokensPrice;
     mapping(string => bool) tokenNames;
+
+    event NftItemCreated ( // Event that is emitted when an Nft is minted
+        uint tokenId,
+        string tokenName,
+        uint price,
+        address creator,
+        bool isListed
+    );
+
+    event NftPurchased ( // NFT Purchased
+        uint tokenId,
+        address newTokenOwner,
+        string name,
+        uint price
+    );
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
-    function mintToken(string memory _tokenName, uint256 _tokenPrice) public {
+    function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
         address owner = msg.sender; // Store the address of the current owner of the token
         totalTokenSupply++;
 
-        uint256 tokenId = totalTokenSupply;
-        tokens[tokenId] = NftToken(tokenId, owner, _tokenName, _tokenPrice);
+        uint256 newTokenId = totalTokenSupply;
+        tokens[newTokenId] = NftToken(newTokenId, owner, _tokenName, _tokenPrice, false);
+
+        return newTokenId; // Return the newly created ID
     }
 
     function transferTokenOwnership(uint256 tokenId, address _toAddress) public payable {
@@ -55,11 +73,14 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
+
+        totalTokenSupply--;
     }
 
     function buyNftToken(uint256 tokenId) public payable {
         address tokenBuyer = msg.sender; // Store the token buyer in msg.sender
         require(tokenOwner[tokenId] != address(0), "The NFT has already been sold");
+
         require(msg.value == tokensPrice[tokenId], "The value of the msg must be equal to the price of the token");
         require(tokenBuyer.balance >= msg.value, "The token buyer does not have enough funds to buy the token");
 
