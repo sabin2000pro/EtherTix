@@ -20,6 +20,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     mapping (uint256 => NftToken) public tokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
+
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint256) public tokensPrice;
     mapping(string => bool) tokenNames;
@@ -44,6 +45,10 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return tokenOwner[_tokenId];
     }
 
+    function tokenIsOnSale(uint256 _tokenId) public view returns (bool) {
+        return tokens[_tokenId].tokenPrice > 0;
+  }
+
     function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
         return tokens[_tokenIndex];
     }
@@ -52,8 +57,19 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
     }
 
-    function buyNftToken(uint256 tokenId) public payable { //
+    function buyNftToken(uint256 tokenId) public payable {
+        address tokenBuyer = msg.sender; // Store the token buyer in msg.sender
+        require(tokenOwner[tokenId] != address(0), "The NFT has already been sold");
+        require(msg.value == tokensPrice[tokenId], "The value of the msg must be equal to the price of the token");
+        require(tokenBuyer.balance >= msg.value, "The token buyer does not have enough funds to buy the token");
 
-    }
+        NftToken memory currToken = tokens[tokenId];
+        address currentTokenOwner = currToken.tokenOwner;
+        address payable currentTokenOwnerPayable = payable(currentTokenOwner);
+
+        currentTokenOwnerPayable.transfer(tokensPrice[tokenId]);
+        currToken.tokenOwner = tokenBuyer;
+        isTokenForSale[tokenId] = false;
+}
 
 }
