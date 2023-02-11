@@ -34,32 +34,34 @@ html {
     background-color: #001845;
     padding: 12px;
     color: white;
+    display: flex;
     justify-content:flex-end;
     align-items: center;
+    
 }
   
 .nav-list-items {
     list-style-type: none;
     margin: 0;
     display: flex;
-    padding: 4px 8px;
-    justify-content: flex-end;
   }
 
 .nav-centre {
-   text-align: center;
-   margin: 0 auto;
-   width: 50%; /* set a fixed width */
-   text-decoration: none;
-   font-weight: 700;
-   font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    width: 15%; /* set a fixed width */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
   }
 
 .search-bar{
     padding: 10px;
-    margin: 0 auto;
-    display: block;
     text-align: center;
+    font-weight: 700;
+    font-size: 20px;
 }
   
 .nav-item {

@@ -5,7 +5,6 @@ const pages = [
   { name: 'Cart', path: '/cart' },
   { name: 'Register', path: '/register' },
   { name: 'Log In', path: '/login' },
-  { name: 'Forgot Password', path: '/forgot-password' },
   { name: 'Update Profile', path: '/update-profile' },
 ];
 
