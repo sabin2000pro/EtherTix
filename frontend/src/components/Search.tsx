@@ -32,9 +32,7 @@ const Search: React.FC<ISearchProps> = ({searchTerm, handleSearch, searchResults
 
 
 )}
-
-    </>
-
+</>
   )
 }
 
