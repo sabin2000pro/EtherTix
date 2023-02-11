@@ -20,7 +20,7 @@ const Navbar = () => {
     setSearchTerm(event.target.value);
 
   if (!searchTerm) {
-    setSearchResults([]);
+     setSearchResults([]);
   } 
   
   else {
