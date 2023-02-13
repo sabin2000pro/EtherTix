@@ -31,7 +31,7 @@ const Register: React.FC = () => {
       const response = await registerUser(registerData);
       console.log(response);
      
-      navigate('/verify-email')
+      navigate('/verify-email', {state: {email:registerData.email}})
     } 
     
     catch (err: any) {
