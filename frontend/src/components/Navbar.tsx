@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-
-const pages = [
-  { name: 'Home', path: '/' },
-  { name: 'Cart', path: '/cart' },
-  { name: 'Register', path: '/register' },
-  { name: 'Log In', path: '/login' },
-  { name: 'Forgot Password', path: '/forgot-password' },
-  { name: 'Update Profile', path: '/update-profile' },
-];
+import Search from './Search';
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,13 +7,11 @@ const Navbar = () => {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+
   if (!searchTerm) {
-    setSearchResults([]);
-  } else {
-    setSearchResults(
-      pages.filter(page => page.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  }
+     setSearchResults([]);
+  } 
+  
 };
 
   return (
@@ -34,23 +24,14 @@ const Navbar = () => {
             <div className ="nav-header">Ether Tix</div>
           </div>
 
-          <div className = "nav-centre">
-            <input className = "search-bar" type="text" placeholder="Search" value={searchTerm} onChange={handleSearch}/>
-          </div>
+           <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />
 
           <ul className = "nav-list-items">
-            <li><a className = "nav-item" href="/cart">Cart</a></li>
-            <li><a className = "nav-item" href ="/register">Register</a></li>
+             <li><a className = "nav-item" href="/cart">Cart</a></li>
+             <li><a className = "nav-item" href ="/register">Register</a></li>
           </ul>
 
         </nav>
-
-        {searchTerm.length > 0 && (
-          <ul className = "search-results">
-            {searchResults.map(result => (
-              <li key={result.path}><a className="search-results" href={result.path}>{result.name}</a></li> ))}
-          </ul>
-        )}
 
     </header>
     )

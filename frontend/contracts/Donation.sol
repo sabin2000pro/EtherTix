@@ -8,8 +8,6 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract Donation is ERC721URIStorage, Ownable {
    
-    constructor() ERC721("Donation Contract", "DNCT") {
-
-    }
+    constructor() ERC721("Donation Contract", "DNCT") {}
     
 }
