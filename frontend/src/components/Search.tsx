@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface ISearchProps {
+export interface ISearchProps {
    searchTerm: any;
    handleSearch: () => void;
    searchResults: any
