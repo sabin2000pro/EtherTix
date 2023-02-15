@@ -9,7 +9,7 @@ const EmailVerification: React.FC = () => {
 
   const [OTP, setOTP] = useState({
     userID: location.state.email,
-    otp: "",
+    otp: ""
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,7 @@ const EmailVerification: React.FC = () => {
     try {
       const response = await verifyEmailAddress(OTP);
 
-      if (response.message === "E-mail Address verified") {
+      if (response.data.message === "E-mail Address verified") {
         navigate("/login", { state: { email: OTP.userID } });
       } else {
         alert("Wrong OTP, try again");
@@ -39,7 +39,7 @@ const EmailVerification: React.FC = () => {
     try {
       const response = await resendEmailVerification(OTP);
 
-      if (response.message === "E-mail Verification Re-sent") {
+      if (response.data.message === "E-mail Verification Re-sent") {
         alert("E-mail Verification Re-sent");
       }
     } catch (err: any) {
