@@ -16,7 +16,7 @@ const Login = () => {
     password: "",
   });
 
-  const handleChenge = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCreds({ ...Creds, [event.target.name]: event.target.value });
   };
 
