@@ -5,6 +5,7 @@
             "name": "Highland Basic Event Ticket",
             "event": "5d713995b721c3bb38c1f5d0",
             "issuer": "5d7a514b5d2c12c7449be042",
+            "venue": "",
             "ticketClass": "basic", 
             "capacity": 10,
             "minimumQuantityPurchase": 1,
@@ -16,14 +17,16 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false,
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
     
     {
             "_id": "5d7a514b5d2c12c7449be121",
             "name": "Highland Standard Event Ticket",
+            "event": "",
+            "issuer": "",
+            "discount": "",
+            "venue": "",
             "ticketClass": "standard",
             "capacity": 10,
             "minimumQuantityPurchase": 1,
@@ -35,11 +38,7 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
     {
@@ -47,6 +46,7 @@
             "name": "Highland Premium Event Ticket",
             "event": "",
             "issuer": "",
+            "venue": "",
             "ticketClass": "premium",
             "capacity": 5,
             "minimumQuantityPurchase": 1,
@@ -58,11 +58,7 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
     {
