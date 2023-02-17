@@ -2,10 +2,10 @@
 
     {
             "_id": "5d7a514b5d2c12c7449be120",
-            "name": "Highland Basic Event Ticket",
             "event": "5d713995b721c3bb38c1f5d0",
             "issuer": "5d7a514b5d2c12c7449be042",
-            "venue": "",
+            "venue": "5d7a514b5d2c12c7449be020",
+            "name": "Highland Basic Event Ticket",
             "ticketClass": "basic", 
             "capacity": 10,
             "minimumQuantityPurchase": 1,
@@ -26,7 +26,7 @@
             "event": "",
             "issuer": "",
             "discount": "",
-            "venue": "",
+            "venue": "5d7a514b5d2c12c7449be020",
             "ticketClass": "standard",
             "capacity": 10,
             "minimumQuantityPurchase": 1,
@@ -43,10 +43,10 @@
 
     {
             "_id": "5d7a514b5d2c12c7449be122",
-            "name": "Highland Premium Event Ticket",
-            "event": "",
+            "event": "5d713995b721c3bb38c1f5d0",
             "issuer": "",
-            "venue": "",
+            "venue": "5d7a514b5d2c12c7449be020",
+            "name": "Highland Premium Event Ticket",
             "ticketClass": "premium",
             "capacity": 5,
             "minimumQuantityPurchase": 1,
@@ -63,6 +63,9 @@
 
     {
             "_id": "5d7a514b5d2c12c7449be123",
+            "event": "5d713995b721c3bb38c1f5d0",
+            "issuer": "",
+            "venue": "5d7a514b5d2c12c7449be020",
             "name": "Highland VIP Event Ticket",
             "ticketClass": "vip",
             "capacity": 3,
@@ -75,15 +78,14 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
     {
             "_id": "5d7a514b5d2c12c7449be124",
+            "event": "5d713995b721c3bb38c1f5d0",
+            "issuer": "",
+            "venue": "5d7a514b5d2c12c7449be020",
             "name": "Three Sisters Drink n Socialise Basic Ticket",
             "ticketClass": "basic",
             "capacity": 10,
@@ -96,15 +98,14 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
     {
-           "_id": "5d7a514b5d2c12c7449be125",
+            "_id": "5d7a514b5d2c12c7449be125",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "name": "Three Sisters Drink n Socialise Standard Ticket",
             "ticketClass": "standard",
             "capacity": 10,
@@ -117,16 +118,15 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
            {       
             "_id": "5d7a514b5d2c12c7449be126",
             "name": "Three Sisters Drink n Socialise Premium Ticket",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "ticketClass": "premium",
             "capacity": 5,
             "minimumQuantityPurchase": 1,
@@ -138,15 +138,14 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
     {
             "_id": "5d7a514b5d2c12c7449be127",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "name": "Three Sisters Drink n Socialise VIP Ticket",
             "ticketClass": "vip",
             "capacity": 3,
@@ -159,15 +158,14 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
         {  
             "_id": "5d7a514b5d2c12c7449be128",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "name": "Agile Project Management Basic Ticket",
             "ticketClass": "basic",
             "capacity": 3,
@@ -180,15 +178,14 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
         {   
             "_id": "5d7a514b5d2c12c7449be129",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "name": "Agile Project Management Standard Ticket",
             "ticketClass": "standard",
             "capacity": 3,
@@ -201,15 +198,15 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
         {
+            "_id": "5d7a514b5d2c12c7449be130",
             "name": "Agile Project Management Premium Ticket",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "ticketClass": "premium",
             "capacity": 3,
             "minimumQuantityPurchase": 1,
@@ -221,14 +218,14 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         },
 
         {
+            "_id": "5d7a514b5d2c12c7449be131",
+            "event": "",
+            "issuer": "",
+            "venue": "",
             "name": "Agile Project Management VIP Ticket",
             "ticketClass": "vip",
             "capacity": 3,
@@ -241,11 +238,7 @@
             "deliveryMethods": "SMS",
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes",
-            "ticketSold": false,
-            "event": "",
-            "issuer": "",
-            "discount": "",
-            "venue": ""
+            "ticketSold": false
         }
 
 ]
