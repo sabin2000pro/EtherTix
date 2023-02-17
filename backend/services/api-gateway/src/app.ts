@@ -8,7 +8,6 @@ import cors from "cors";
 
 const app: any = express();
 
-
 if(process.env.API_GATEWAY_NODE_ENV === 'development') {
     app.use(morgan('dev') as any);
 }

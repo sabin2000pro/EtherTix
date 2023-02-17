@@ -28,6 +28,24 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
 
 })
 
+export const fetchCustomerTickets = asyncHandler(async (request: any, response: Response, next: NextFunction): Promise<any> => {
+   try {
+      
+      const customerId = request.query.customerId
+      const tickets = await Ticket.findById({customerId});
+
+      if(!tickets) {
+
+      }
+
+
+   } 
+   
+   catch(error) {
+
+   }
+})
+
 // @desc      Get Event Ticket By ID
 // @route     GET /api/v1/tickets/:id
 // @access    Private (Authorization Token Required)
