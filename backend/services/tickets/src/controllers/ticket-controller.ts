@@ -12,7 +12,13 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
 
    try {
         
-        const tickets = await Ticket.find()
+        const tickets = await Ticket.find();
+
+        if(!tickets) {
+
+        }
+
+
         return response.status(StatusCodes.OK).json({success: true, data: tickets, sentAt: new Date(Date.now()  )});
 
    } 
@@ -28,9 +34,9 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
 
 })
 
-export const fetchCustomerTickets = asyncHandler(async (request: any, response: Response, next: NextFunction): Promise<any> => {
+export const fetchCustomerTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
    try {
-      
+
       const customerId = request.query.customerId
       const tickets = await Ticket.findById({customerId});
 
@@ -38,12 +44,15 @@ export const fetchCustomerTickets = asyncHandler(async (request: any, response: 
 
       }
 
+      return response.status(StatusCodes.OK).json({success: true, tickets});
 
    } 
    
    catch(error) {
-
+      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
    }
+
+
 })
 
 // @desc      Get Event Ticket By ID
@@ -61,7 +70,7 @@ export const getEventTicketById = async (request: any, response: any, next: Next
          return next(new NotFoundError("Ticket with that ID not found", 404))
       }
 
-      return response.status(StatusCodes.OK).json({success: true, ticket, sentAt: new Date(Date.now( ))})
+      return response.status(StatusCodes.OK).json({success: true, ticket})
   } 
   
   catch(error: any) {
@@ -81,23 +90,21 @@ export const getEventTicketById = async (request: any, response: any, next: Next
 export const createNewTicket = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
-        const event = request.body.event;
 
-        if(!event) {
-           return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND));
-        }
-
-        const ticketData = request.body;
-        const ticket = new Ticket(ticketData, event);
+        const ticketBody = request.body;
+        const ticket = await Ticket.create(ticketBody);
 
         await ticket.save();
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
    } 
    
    catch(error: any) {
+
       if(error) {
         return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
       }
+
+      
    }
 
 
