@@ -44,7 +44,7 @@
     {
             "_id": "5d7a514b5d2c12c7449be122",
             "event": "5d713995b721c3bb38c1f5d0",
-            "issuer": "",
+            "issuer": "5d7a514b5d2c12c7449be042",
             "venue": "5d7a514b5d2c12c7449be020",
             "name": "Highland Premium Event Ticket",
             "ticketClass": "premium",
@@ -64,7 +64,7 @@
     {
             "_id": "5d7a514b5d2c12c7449be123",
             "event": "5d713995b721c3bb38c1f5d0",
-            "issuer": "",
+            "issuer": "5d7a514b5d2c12c7449be042",
             "venue": "5d7a514b5d2c12c7449be020",
             "name": "Highland VIP Event Ticket",
             "ticketClass": "vip",
