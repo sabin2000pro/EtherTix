@@ -1,17 +1,33 @@
 [
     {
-     
+       "id": "63ef748a0e98bc969c768380",
+       "name": "Business",
+       "description": "Events related to business, such as conferences, meetings, and trade shows.",
+       "slug": "business",
+       "status": "active"
     },
 
     {
-        
+        "id": "63ef748a0e98bc969c768381",
+        "name": "Education",
+        "description": "Events related to education, such as seminars, workshops, and training sessions.",
+        "slug": "education",
+        "status": "active"
     },
 
     {
-       
+        "id": "63ef748a0e98bc969c768382",
+        "name": "Business",
+        "description": "Events related to business, such as conferences, meetings, and trade shows.",
+        "slug": "business",
+        "status": "active"
     },
 
     {
-        
+        "id": "63ef748a0e98bc969c768383",
+        "name": "Business",
+        "description": "Events related to business, such as conferences, meetings, and trade shows.",
+        "slug": "business",
+        "status": "active"
     }
 ]
