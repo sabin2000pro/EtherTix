@@ -42,11 +42,11 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    discount: mongoose.Schema.Types.ObjectId;
 }
 
-const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
+export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
 
         name: { // Name of the ticket
             type: String,
-            required: true
+            required: [true, "Please specify the name of this ticket"]
         },
 
         ticketClass: { // The ticket class. VIP ones are the most expensive and basic are the cheapest.
@@ -129,13 +129,13 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
             default: false
         },
 
-        event: {
+        event: { // Relationship between the Ticket and Event
             type: mongoose.Schema.Types.ObjectId,
             ref: "Event",
             required: [true, "Please specify the event that this ticket is related to"]
         },
 
-        issuer: {
+        issuer: { // Relationship between the Event Ticket and the Event ID
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: [true, "Please specify who the issuer ID of this ticket is"]
@@ -149,7 +149,7 @@ const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schem
 
         discount: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Venue",
+            ref: "Discount",
             required: [true, "Please specify the Discount ID that this ticket has"]
         }
     
