@@ -23,9 +23,8 @@
     {
             "_id": "5d7a514b5d2c12c7449be121",
             "name": "Highland Standard Event Ticket",
-            "event": "",
-            "issuer": "",
-            "discount": "",
+            "event": "5d713995b721c3bb38c1f5d0",
+            "issuer": "5d7a514b5d2c12c7449be042",
             "venue": "5d7a514b5d2c12c7449be020",
             "ticketClass": "standard",
             "capacity": 10,
