@@ -22,6 +22,10 @@ const EventSchema = new mongoose_1.default.Schema({
     event_url: {
         type: String
     },
+    eventLocation: {
+        type: String,
+        required: [true, "Please specify the location of the event"]
+    },
     slug: String,
     startAt: {
         type: Date,
@@ -46,6 +50,21 @@ const EventSchema = new mongoose_1.default.Schema({
         default: "pending",
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
+    },
+    eventSchedule: {
+        hostName: {
+            type: String,
+            required: [true, "Please specify the host name of the event"]
+        },
+        performanceTime: {
+            type: Date,
+            default: Date.now
+        },
+        isVIP: {
+            type: Boolean,
+            default: false,
+            required: [true, "Please specify if the host of the event is a VIP or not"]
+        }
     },
     currency: {
         type: String,
@@ -72,6 +91,10 @@ const EventSchema = new mongoose_1.default.Schema({
         required: [true, "Please specify the maximum number of people that can attend the event"],
         min: [3, "There must be at least 3 minimum people at the event"],
         max: [150, "There cannot be more than 150 people at the current event"]
+    },
+    hasSeating: {
+        type: Boolean,
+        required: [true, "Please specify if the event has seating or not"]
     },
     slotsAvailable: {
         type: Boolean,
@@ -165,6 +188,11 @@ const EventSchema = new mongoose_1.default.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "Category",
         required: [true, "Please specify a valid Category ID for this event"]
+    },
+    review: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Review",
+        required: [true, "Please specifgy a valid Review ID for this event"]
     }
 }, {
     timestamps: true,
