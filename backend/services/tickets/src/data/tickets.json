@@ -3,6 +3,8 @@
     {
             "_id": "5d7a514b5d2c12c7449be120",
             "name": "Highland Basic Event Ticket",
+            "event": "5d713995b721c3bb38c1f5d0",
+            "issuer": "5d7a514b5d2c12c7449be042",
             "ticketClass": "basic", 
             "capacity": 10,
             "minimumQuantityPurchase": 1,
@@ -15,8 +17,6 @@
             "onSaleStatus": "PENDING",
             "confirmationMessage": "Thank you for the ETH payment. You will receive your e-ticket soon.",
             "ticketSold": false,
-            "event": "",
-            "issuer": "",
             "discount": "",
             "venue": ""
         },
@@ -45,6 +45,8 @@
     {
             "_id": "5d7a514b5d2c12c7449be122",
             "name": "Highland Premium Event Ticket",
+            "event": "",
+            "issuer": "",
             "ticketClass": "premium",
             "capacity": 5,
             "minimumQuantityPurchase": 1,
