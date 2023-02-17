@@ -4,7 +4,7 @@ import morgan from "morgan"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import {categoriesRouter} from './routes/categories-routes';
-import { connectCategoriesDatabase } from "./database/categories-db";
+import { connectCategoriesDatabase } from "./database/categories-schema";
 
 connectCategoriesDatabase();
 

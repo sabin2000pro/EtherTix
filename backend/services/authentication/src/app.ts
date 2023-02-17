@@ -7,7 +7,7 @@ import hpp from "hpp"
 import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
-import {connectAuthDatabase} from './database/auth-db';
+import {connectAuthDatabase} from './database/auth-schema';
 import {authRouter} from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 
