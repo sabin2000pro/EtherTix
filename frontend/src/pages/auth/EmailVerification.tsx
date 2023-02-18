@@ -7,10 +7,7 @@ const EmailVerification: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [OTP, setOTP] = useState({
-    userID: location.state.email,
-    otp: ""
-  });
+  const [OTP, setOTP] = useState({ OTP: "" });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOTP({ ...OTP, [event.target.name]: event.target.value });
@@ -21,9 +18,10 @@ const EmailVerification: React.FC = () => {
 
     try {
       const response = await verifyEmailAddress(OTP);
+      console.table(response);
 
       if (response.data.message === "E-mail Address verified") {
-        navigate("/login", { state: { email: OTP.userID } });
+        navigate("/login", { state: { email: location.state.email } });
       } else {
         alert("Wrong OTP, try again");
       }
@@ -41,6 +39,8 @@ const EmailVerification: React.FC = () => {
 
       if (response.data.message === "E-mail Verification Re-sent") {
         alert("E-mail Verification Re-sent");
+
+        // Create an alert component with a green success background
       }
     } catch (err: any) {
       if (err) {
@@ -59,7 +59,7 @@ const EmailVerification: React.FC = () => {
             type="text"
             name="otp"
             id="otp-verify"
-            value={OTP.otp}
+            value={OTP.OTP}
             onChange={handleChange}
           />
         </div>

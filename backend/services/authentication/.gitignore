@@ -1,2 +1,2 @@
 ./services/node_modules
-config.env
+.env
