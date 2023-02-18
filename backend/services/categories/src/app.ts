@@ -4,7 +4,8 @@ import morgan from "morgan"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import {categoriesRouter} from './routes/categories-routes';
-import { connectCategoriesDatabase } from "./database/categories-db";
+import { connectCategoriesDatabase } from "./database/categories-schema";
+import { StatusCodes } from "http-status-codes";
 
 connectCategoriesDatabase();
 
@@ -22,13 +23,13 @@ if(process.env.NODE_ENV === 'development') {
 
 app.use(cors({
     origin: "*",
-    methods: ["POST", "PUT", "GET"]
+    methods: ["POST", "PUT", "GET", "DELETE", "PATCH"]
 }) as any)
 
 app.get('/', (request: any, response: any, next) => {
-   return response.status(200).json({success: true, message: "Categories Root Route"}) 
+   return response.status(StatusCodes.OK).json({success: true, message: "Categories ServiceRoot Route"}) 
 })
 
-app.use('/api/v1/categories', categoriesRouter);
+app.use('/api/categories', categoriesRouter);
 
 export {app}
