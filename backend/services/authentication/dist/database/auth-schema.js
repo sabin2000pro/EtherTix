@@ -12,19 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectAuthDatabase = void 0;
+exports.connectAuthSchema = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const AUTH_DB_URI = process.env.AUTH_DB_URI;
-const connectAuthDatabase = (...args) => __awaiter(void 0, void 0, void 0, function* () {
+require('dotenv').config();
+const AUTH_SERVICE_DB_URI = process.env.AUTH_SERVICE_DB_URI;
+const connectAuthSchema = (...args) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(`Debug Auth DB URI : `, AUTH_DB_URI);
-        return yield mongoose_1.default.connect(AUTH_DB_URI).then(conn => {
+        return yield mongoose_1.default.connect(AUTH_SERVICE_DB_URI).then(conn => {
             if (conn.connection) {
-                console.log(`Aftter connection to DB : `, AUTH_DB_URI);
                 return console.log(`Connected to authentication service database...`);
             }
             else {
-                return console.log(`Could not connect to DB`);
+                return console.log(`Could not connect to the authentication service database schema`);
             }
         });
     }
@@ -34,4 +33,4 @@ const connectAuthDatabase = (...args) => __awaiter(void 0, void 0, void 0, funct
         }
     }
 });
-exports.connectAuthDatabase = connectAuthDatabase;
+exports.connectAuthSchema = connectAuthSchema;
