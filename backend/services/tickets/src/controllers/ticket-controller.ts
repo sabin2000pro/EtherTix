@@ -12,7 +12,12 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
 
    try {
         
-        const tickets = await Ticket.find()
+        const tickets = await Ticket.find();
+
+        if(!tickets) {
+           return next(new NotFoundError("Ticket with that ID not found", StatusCodes.NOT_FOUND))
+        }
+
         return response.status(StatusCodes.OK).json({success: true, data: tickets, sentAt: new Date(Date.now()  )});
 
    } 
@@ -23,6 +28,28 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
           return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
       }
 
+   }
+
+
+})
+
+export const fetchCustomerTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
+   try {
+      
+      const {customerId} = request.query;
+      const tickets = await Ticket.findById({customerId});
+
+      if(!tickets) {
+         return next(new NotFoundError("Ticket with that ID not found", 404))
+      }
+
+      return response.status(StatusCodes.OK).json({success: true, tickets});
+
+   } 
+   
+   catch(error) {
+      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
    }
 
 
@@ -43,7 +70,7 @@ export const getEventTicketById = async (request: any, response: any, next: Next
          return next(new NotFoundError("Ticket with that ID not found", 404))
       }
 
-      return response.status(StatusCodes.OK).json({success: true, ticket, sentAt: new Date(Date.now( ))})
+      return response.status(StatusCodes.OK).json({success: true, ticket})
   } 
   
   catch(error: any) {
@@ -63,23 +90,21 @@ export const getEventTicketById = async (request: any, response: any, next: Next
 export const createNewTicket = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
-        const event = request.body.event;
 
-        if(!event) {
-           return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND));
-        }
-
-        const ticketData = request.body;
-        const ticket = new Ticket(ticketData, event);
+        const ticketBody = request.body;
+        const ticket = await Ticket.create(ticketBody);
 
         await ticket.save();
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
    } 
    
    catch(error: any) {
+
       if(error) {
         return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
       }
+
+
    }
 
 
@@ -90,15 +115,15 @@ export const createNewTicket = async (request: any, response: any, next: NextFun
 // @access    Private (JWT Authorization Token Required)
 
 export const editTicketByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
+
    try {
+
       const id = request.params.id;
       let ticket = await Ticket.findById(id);
 
       if(!ticket) {
 
       }
-
-      
    } 
    
    catch(error) {
@@ -115,7 +140,7 @@ export const editTicketByID = async (request: any, response: any, next: NextFunc
 export const deleteAllTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
   try {
       await Ticket.deleteMany();
-     return response.status(204).json({success: true, data: {}, message: "Tickets Deleted"});
+      return response.status(204).json({success: true, data: {}, message: "Tickets Deleted"});
   }    
   
   catch(error) {

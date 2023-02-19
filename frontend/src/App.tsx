@@ -1,3 +1,5 @@
+import Navbar from 'components/Navbar';
+import Home from 'pages/Home';
 import EmailVerification from 'pages/auth/EmailVerification';
 import ForgotPassword from 'pages/auth/ForgotPassword';
 import Login from 'pages/auth/Login';
@@ -10,32 +12,33 @@ import CreateEvent from 'pages/events/CreateEvent';
 import EditEvent from 'pages/events/EditEvent';
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
+import NotFound from 'pages/NotFound';
+import CartPage from 'pages/CartPage';
 
-const App = () => { // Main App Component
+const App = () => {
 
   return (
-
       <>
-
-      <h1>Ether Tix Home</h1>
+      
+         <Navbar />
 
           <Routes>
-              <Route path = '/register' element = {<Register />} />
-              <Route path = '/login' element = {<Login />} />
-              <Route path = '/forgot-password' element = {<ForgotPassword />} />
+            <Route path ='/' element = {<Home />} />
+            <Route path = '/register' element = {<Register />} /> 
+            <Route path = '/login' element = {<Login />} />
+            <Route path = '/forgot-password' element = {<ForgotPassword />} />
 
-              <Route path = '/reset-password/:token' element = {<ResetPassword />} />
-              <Route path = '/verify-email' element = {<EmailVerification />} />
-              <Route path = '/update-password' element = {<UpdatePassword />} />
-              <Route path = '/update-profile' element = {<UpdateProfile />} />
-              <Route path = '/EditEvent' element = {<EditEvent />} />
-              <Route path = '/CreateEvent' element = {<CreateEvent />} />
-              <Route path = '/EventsList' element = {<EventsList />} />
+            <Route path = '/reset-password/:token' element = {<ResetPassword />} />
+            <Route path = '/verify-email' element = {<EmailVerification />} />
+            <Route path = '/update-password' element = {<UpdatePassword />} />
+            <Route path = '/update-profile' element = {<UpdateProfile />} />
+            <Route path = '/cart' element = {<CartPage />} />
+
+
+            <Route path = '*' element = {<NotFound />} />
          </Routes>
 
       </>
-
-
   );
 }
 

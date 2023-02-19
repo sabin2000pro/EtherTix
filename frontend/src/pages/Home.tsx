@@ -5,7 +5,9 @@ const Home = () => {
   return (
 
     <>
-      <h1>Ether Tix - Home</h1>
+       <section className = "home-section">
+         <h1>Ether Tix - Home</h1>
+       </section>
     </>
 
   )

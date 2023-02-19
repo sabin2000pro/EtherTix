@@ -20,6 +20,8 @@ const connectServicesToDb = () => {
     connectVenuesDatabase();
 }
 
+///Users/sabin2000/Documents/ethertix/backend/services/shared/global-data-seeder.ts
+
 connectServicesToDb();
 
 export const loadAllData = async (): Promise<any> => {
