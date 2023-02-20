@@ -1,17 +1,38 @@
 import axios from 'axios'
 
-// Create the base URL
-const eventAPI = axios.create({
-    baseURL: "http://localhost:5301/api/v1/events"
+const defaultOptions = { // Default config options for authentication
+    
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+  };
+
+let axiosInstance = axios.create(defaultOptions)
+
+axiosInstance.interceptors.request.use((configData: any | undefined) => {
+    
+    const authToken = localStorage.getItem("token");
+    configData.headers.Authorization = authToken ? `Bearer ${authToken}` : "" // Store the token in the header
+    return configData;
 })
 
-eventAPI.interceptors.request.use((configuration) => {
-  const authToken = localStorage.getItem("token"); // Handle JWT Functionality
+export const createEvent = async (eventPayLoad: any): Promise<any> => {
 
-      // Add the JWT to the request if it exists
-      if (authToken) {
-         configuration.headers!.Authorization = `Bearer ${authToken}`;
-      }
+    try {
 
-      return configuration;
-})
+        const response = await axios.post("/api/event/events", eventPayLoad);
+        const data = await response.data;
+    
+        return data;
+    } 
+    
+    catch(err: any) {
+       
+        if(err) {
+            return console.error(err);
+        }
+        
+    }
+
+}

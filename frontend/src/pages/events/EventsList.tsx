@@ -1,15 +1,16 @@
 import React from 'react'
 
-const EditEvent: React.FC = (props) => {
+const EventsList: React.FC = (props) => {
   return (
     <>
 
        <div>
          <h1>List of Events</h1>
+         <button className = "register-btn" type = "button"> <a href = "/CreateEvent">Create Event</a> </button>
        </div>
     
     </>
   )
 }
 
-export default EditEvent;
+export default EventsList;

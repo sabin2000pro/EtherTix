@@ -34,6 +34,9 @@ const App = () => {
             <Route path = '/update-profile' element = {<UpdateProfile />} />
             <Route path = '/cart' element = {<CartPage />} />
 
+            <Route path = '/CreateEvent' element = {<CreateEvent />} />
+            <Route path = '/EditEvent' element = {<EditEvent />} />
+            <Route path = '/EventsList' element = {<EventsList />} />
 
             <Route path = '*' element = {<NotFound />} />
          </Routes>
