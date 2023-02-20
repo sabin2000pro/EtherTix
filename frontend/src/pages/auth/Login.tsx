@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 type LoginProps = {};
 
+
 // @description: Login Component
 const Login = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const Login = () => {
       <h1 className="heading-primary">Log In</h1>
       <form onSubmit={handleSubmit} method="POST">
         <div className="email-container">
-          <label htmlFor="email-login">Enter your email here:</label>
+          <label htmlFor="email-login">Enter Email:</label>
           <br />
           <input
             type="text"

@@ -133,6 +133,40 @@ html {
     color: white;
 }
 
+.login-container {
+    justify-content: center;
+    width: 700px; /* width of the div */
+    height: 500px; /* height of the div */
+    position: absolute; /* set the position to absolute */
+    top: 55%; 
+    left: 50%; /* set the left position to 50% */
+    transform: translate(-50%, -50%); /* translate the div to the center */
+    border-radius: 4px;
+    padding: 14px;
+    float: left;
+    text-align: center;
+    font-size : 18px;
+    background-color: #001845;
+    color: white;
+}
+
+.forgot-password-container {
+    justify-content: center;
+    width: 700px; /* width of the div */
+    height: 500px; /* height of the div */
+    position: absolute; /* set the position to absolute */
+    top: 55%; 
+    left: 50%; /* set the left position to 50% */
+    transform: translate(-50%, -50%); /* translate the div to the center */
+    border-radius: 4px;
+    padding: 14px;
+    float: left;
+    text-align: center;
+    font-size : 18px;
+    background-color: #001845;
+    color: white;
+}
+
 .forename-container {
     display: flex;
     align-items: center;
