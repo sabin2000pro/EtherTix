@@ -57,7 +57,7 @@ const EmailVerification: React.FC = () => {
           <label htmlFor="otp-verify">Enter your one-time-password here:</label>
           <input
             type="text"
-            name="otp"
+            name="OTP"
             id="otp-verify"
             value={OTP.OTP}
             onChange={handleChange}
