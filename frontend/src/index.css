@@ -98,7 +98,7 @@ html {
     width: 900px; /* width of the div */
     height: 600px; /* height of the div */
     position: absolute; /* set the position to absolute */
-    top: 50%; 
+    top: 65%; 
     left: 50%; /* set the left position to 50% */
     transform: translate(-50%, -50%); /* translate the div to the center */
     border-radius: 4px;
@@ -124,7 +124,7 @@ html {
 }
 
 .image-container {
-    background-image: url('C:\Users\roban\Desktop\imgevent.jpg');
+    background-image: url('C:\Users\jaych\OneDrive\Desktop\imgevent.jpg');
     background-size: cover;
     width: 52%;
     height: 100%;
@@ -168,11 +168,25 @@ html {
 .password-container {
     display: flex;
     align-items: center;
+    font-weight: bold;
 }
 
-.confirm-container {
+.confirm-password-container {
     display: flex;
     align-items: center;
+    font-weight: bold;
+}
+
+.confirm-password-container label {
+    margin-right: -90px;
+    margin-left: 75px;
+    margin-top: 20px;
+}
+
+.confirm-password-container input {
+    width: 50%;
+    height: 30px;
+    margin-top: 20px;
 }
 
 .surname-container input {
