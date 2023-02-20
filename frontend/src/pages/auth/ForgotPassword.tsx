@@ -1,6 +1,8 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 
 const ForgotPassword: React.FC = (props) => {
+  const {resetToken} = useParams()
 
   return (
     <>

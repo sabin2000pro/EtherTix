@@ -112,7 +112,7 @@ export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
 }
 
 
-export const forgotPassword = async (forgotPasswordPayload: Object): Promise<any> => {
+export const forgotPassword = async (forgotPasswordPayload: { email: string }): Promise<any> => {
     try {
         
         const response = await axios.post("/forgot-password", forgotPasswordPayload);
@@ -128,5 +128,16 @@ export const forgotPassword = async (forgotPasswordPayload: Object): Promise<any
         }
 
     }
-
 }
+
+export const resetPassword = async (resetPasswordPayload: Object): Promise<any> => {
+    try {
+      const response = await axios.post("/reset-password", resetPasswordPayload);
+      const data = await response.data;
+      return data;
+    } catch (err) {
+      if (err) {
+        return console.error(err);
+      }
+    }
+  };
