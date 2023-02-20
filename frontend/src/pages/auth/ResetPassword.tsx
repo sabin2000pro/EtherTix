@@ -7,8 +7,9 @@ type IResetPasswordProps = {
 }
 
 const ResetPassword: React.FC = (props: IResetPasswordProps) => {
+
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -16,7 +17,7 @@ const ResetPassword: React.FC = (props: IResetPasswordProps) => {
     event.preventDefault();
 
     try {
-      const response = await resetPassword({ email, newPassword });
+      const response = await resetPassword({ currentPassword, newPassword });
       if (response.success) {
         navigate('/login');
       } else {
@@ -34,10 +35,10 @@ const ResetPassword: React.FC = (props: IResetPasswordProps) => {
         <form onSubmit={handleSubmit}>
           <div>
             <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              type="password"
+              placeholder="Current Password"
+              value={currentPassword}
+              onChange={(event) => setCurrentPassword(event.target.value)}
             />
           </div>
           <div>
