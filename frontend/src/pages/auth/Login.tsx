@@ -41,7 +41,8 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h1 className="heading">Log In Page</h1>
+      <div className="image-container"></div>
+      <h1 className="heading-primary">Log In</h1>
       <form onSubmit={handleSubmit} method="POST">
         <div className="email-container">
           <label htmlFor="email-login">Enter your email here:</label>
@@ -64,6 +65,12 @@ const Login = () => {
             value={Creds.password}
             onChange={handleChange}
           />
+        </div>
+        <br />
+        <div className="span-container">
+          <span>
+            Don't have an account? - <a href="/register">Register Here</a>{" "}
+          </span>
         </div>
         <button className="login-btn" type="submit">
           Log-in
