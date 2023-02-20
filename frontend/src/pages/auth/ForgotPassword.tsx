@@ -5,13 +5,13 @@ const ForgotPassword: React.FC = (props) => {
   const {resetToken} = useParams()
 
   return (
-    <>
-    
-    <div>
-       <h1>Forgot Password Page</h1>
-    </div>
-
-    </>
+    <form>
+      <label>
+        Email Address: 
+        <input type="text" name="email" />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
   )
 }
 
