@@ -2,17 +2,16 @@ import { useAuth } from "constants/context/AuthContext";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { login } from "api/auth/auth-api";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type LoginProps = {};
 
 // @description: Login Component
 const Login = () => {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [Creds, setCreds] = useState({
-    email: location.state.email,
+    email: "",
     password: "",
   });
 
@@ -44,8 +43,9 @@ const Login = () => {
     <div className="login-container">
       <h1 className="heading">Log In Page</h1>
       <form onSubmit={handleSubmit} method="POST">
-        <div className="login-container">
+        <div className="email-container">
           <label htmlFor="email-login">Enter your email here:</label>
+          <br />
           <input
             type="text"
             name="email"
@@ -56,6 +56,7 @@ const Login = () => {
         </div>
         <div className="password-container">
           <label htmlFor="password">Password</label>
+          <br />
           <input
             type="password"
             name="password"
@@ -64,7 +65,6 @@ const Login = () => {
             onChange={handleChange}
           />
         </div>
-        <br />
         <button className="login-btn" type="submit">
           Log-in
         </button>
