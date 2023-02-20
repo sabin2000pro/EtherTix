@@ -34,6 +34,7 @@ html {
     background-color: #001845;
     padding: 12px;
     color: white;
+    display: flex;
     justify-content:flex-end;
     align-items: center;
 }
@@ -42,24 +43,46 @@ html {
     list-style-type: none;
     margin: 0;
     display: flex;
-    padding: 4px 8px;
-    justify-content: flex-end;
   }
 
 .nav-centre {
-   text-align: center;
-   margin: 0 auto;
-   width: 50%; /* set a fixed width */
-   text-decoration: none;
-   font-weight: 700;
-   font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    width: 5%; /* set a fixed width */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
   }
 
 .search-bar{
-    padding: 10px;
-    margin: 0 auto;
-    display: block;
+    padding: 8px;
     text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+    margin-top: 10px;
+    width: 200px;
+    height: 40px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: center;
+}
+
+.search-bar:focus {
+    outline: none;
+    transition: all 0.3s;
+    border: none;
+    background-color: #e6e6e6;
+}
+
+.search-icon {
+    font-size: 20px;
+    color: #000;
+    margin-bottom: 2px;
+    z-index: 1;
 }
   
 .nav-item {
@@ -95,17 +118,17 @@ html {
 
 .register-container {
     justify-content: center;
-    width: 900px; /* width of the div */
-    height: 600px; /* height of the div */
+    width: 700px; /* width of the div */
+    height: 500px; /* height of the div */
     position: absolute; /* set the position to absolute */
-    top: 65%; 
+    top: 55%; 
     left: 50%; /* set the left position to 50% */
     transform: translate(-50%, -50%); /* translate the div to the center */
     border-radius: 4px;
-    padding: 32px;
+    padding: 14px;
     float: left;
     text-align: center;
-    font-size : 20px;
+    font-size : 18px;
     background-color: #001845;
     color: white;
 }
@@ -113,18 +136,17 @@ html {
 .forename-container {
     display: flex;
     align-items: center;
-    margin-top: 40px;
     margin-bottom: 12px;
 }
 
 .forename-container label {
     margin-right: -90px;
     font-weight: bold;
-    margin-left: 51px;
+    margin-left: 50px;
 }
 
 .image-container {
-    background-image: url('C:\Users\jaych\OneDrive\Desktop\imgevent.jpg');
+    background-image: url('../public/images/imgevent.jpg');
     background-size: cover;
     width: 52%;
     height: 100%;
@@ -153,6 +175,7 @@ html {
 .username-container {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
 }
 
 .username-container label {
@@ -162,31 +185,21 @@ html {
 }
 
 .username-container input {
+    width: 50%;
+    height: 30px;
     margin-left: 25px;
 }
 
 .password-container {
     display: flex;
     align-items: center;
-    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .confirm-password-container {
     display: flex;
     align-items: center;
-    font-weight: bold;
-}
-
-.confirm-password-container label {
-    margin-right: -90px;
-    margin-left: 75px;
-    margin-top: 20px;
-}
-
-.confirm-password-container input {
-    width: 50%;
-    height: 30px;
-    margin-top: 20px;
+    margin-bottom: 12px;
 }
 
 .surname-container input {
@@ -198,23 +211,25 @@ html {
 .email-container {
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-bottom: 12px;
 }
 
 .email-container label {
     margin-right: -90px;
     font-weight: bold;
-    margin-left: 75px;
+    margin-left: 50px;
 }
 
 .email-container input {
     width: 50%;
     height: 30px;
+    margin-left: 25px;
 }
 
 .username-container input {
     width: 50%;
     height: 30px;
+    margin-left: 25px;
 }
 
 .surname-container input:hover, .surname-container input:focus {
@@ -224,13 +239,13 @@ html {
 .password-container input {
     width: 50%;
     height: 30px;
-    margin-top: 20px;
+    margin-left: 25px;
 }
 
 .password-container label {
     margin-right: -90px;
-    margin-left: 75px;
-    margin-top: 20px;
+    font-weight: bold;
+    margin-left: 50px;
 }
 
 .register-btn {
@@ -251,9 +266,8 @@ label {
 
 .register-btn {
     width: 350px;
-    height: 40px;
-    margin-top: -10px;
-   
+    height: 60px;
+    margin-top: 15px;
     text-align: center;
     background-color: #1a2f58;
     outline: none;
@@ -268,12 +282,16 @@ label {
 }
 
 .span-container {
-    margin-top: 30px;
-    gap: 24px;
-    display: block;
+    display: flex;
+    margin-bottom: 12px;
+    margin-left: 50px;
 }
 
 .span-container a {
     color: white;
     text-decoration: none;
+}
+.span-container a:hover {
+    font-weight: bold;
+    transition: all 0.4;
 }

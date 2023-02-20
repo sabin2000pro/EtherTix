@@ -38,74 +38,14 @@ const Login: React.FC = () =>
   };
 
   return (
-
-    <div className = "login-container">
-
-      <div className = "image-container">
-         
+    <>
+      <div className = "login-container">
+        <h1>Log In Page</h1>
+        <a href = "/ForgotPassword">Forgot Password?</a>
       </div>
+      
+    </>
+  )
+}
 
-      <h1 className = "heading-primary">Log In</h1>
-
-      <form onSubmit={handleSubmit} method = "POST">
-
-        <br />   
-
-        <br />
-
-        <div className = "username-container">
-            <label htmlFor="username">Username</label>
-            <input type="text" name="username" id="username" value={loginData.username} onChange = {handleChange}/>
-        </div>
-
-        <br />
-
-        <br />
-
-        <div className = "password-container">
-
-          <label htmlFor="password">Password</label>
-
-          <input type = "password" name = "password" id="password" value={loginData.password} onChange={handleChange}/>
-
-        </div>
-
-        <br />
-
-        <div className = "confirm-password-container">
-
-          <label htmlFor="passwordConfirm">Confirm</label>
-
-          <input type = "password" name = "passwordConfirm" id="passwordConfirm" value={loginData.passwordConfirm} onChange={handleChange}
-          onBlur={() => {
-            if (loginData.password !== loginData.passwordConfirm) 
-            {
-              throw new Error('Passwords do not match')          
-            }
-          }
-        }
-        />
-      </div>
-
-        <br />
-       
-        <div className = "span-container">
-           <span>Dont have an account yet? - <a href = "/register">Register here</a>  </span>
-        </div>
-
-        <br />
-
-        <button className = "login-btn" type = "submit">Login</button>
-        
-      </form>
-
-      {error && <p>{error}</p>}
-
-
-    </div>
-
-
-  );
-};
-
-export default Login;
+export default Login

@@ -77,7 +77,6 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
       return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
   })
 
-
   
   // API 1
   // @description: Register New User Account
