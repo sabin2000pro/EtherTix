@@ -30,9 +30,10 @@ const Register: React.FC = () =>
     try {
 
       const response = await registerUser(registerData);
-      //Saving user id in local storage
-      localStorage.setItem("UserID", response.data.user._id);
       console.log(response);
+
+      //Saving user id in local storage ------ uncomment when registration works
+      //localStorage.setItem("UserID", response.data.user._id);
      
       navigate('/verify-email')
     } 

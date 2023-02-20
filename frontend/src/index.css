@@ -295,3 +295,13 @@ label {
     font-weight: bold;
     transition: all 0.4;
 }
+
+/* Email Verification - start*/
+.inputHeading {
+    text-align: center;
+}
+.otpInput {
+    text-align: center;
+    font-weight: bold;
+    }
+/* Email Verification - end*/
