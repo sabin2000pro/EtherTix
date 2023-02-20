@@ -32,7 +32,7 @@ const Register: React.FC = () =>
       const response = await registerUser(registerData);
       console.log(response);
      
-      navigate('/verify-email')
+      navigate('/verify-email', {state: {email:registerData.email}})
     } 
     
     catch (err: any) {
@@ -84,7 +84,6 @@ const Register: React.FC = () =>
         <div className = "password-container">
 
           <label htmlFor="password">Password</label>
-
           <input type = "password" name = "password" id="password" value={registerData.password} onChange={handleChange}/>
 
         </div>
@@ -94,7 +93,6 @@ const Register: React.FC = () =>
         <div className = "confirm-password-container">
 
           <label htmlFor="passwordConfirm">Confirm</label>
-
           <input type = "password" name = "passwordConfirm" id="passwordConfirm" value={registerData.passwordConfirm} onChange={handleChange}
           onBlur={() => {
             if (registerData.password !== registerData.passwordConfirm) 

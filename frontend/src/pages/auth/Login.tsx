@@ -8,6 +8,8 @@ type LoginProps = {};
 
 // @description: Login Component
 const Login = () => {
+// @description: Login Component
+const Login = () => {
   const navigate = useNavigate();
 
   const [Creds, setCreds] = useState({
@@ -45,7 +47,7 @@ const Login = () => {
       <h1 className="heading-primary">Log In</h1>
       <form onSubmit={handleSubmit} method="POST">
         <div className="email-container">
-          <label htmlFor="email-login">Enter Email:</label>
+          <label htmlFor="email-login">Enter your email here:</label>
           <br />
           <input
             type="text"
@@ -81,3 +83,5 @@ const Login = () => {
 };
 
 export default Login;
+
+export default Login
