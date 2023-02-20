@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { verifyEmailAddress } from "api/auth/auth-api";
 import { resendEmailVerification } from "api/auth/auth-api";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const EmailVerification: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const localUserID = JSON.parse(localStorage.getItem("UserID") || "")
 
-  const [OTP, setOTP] = useState({ OTP: "" });
+  const [OTP, setOTP] = useState({ OTP: "", userID: localUserID });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOTP({ ...OTP, [event.target.name]: event.target.value });
@@ -21,7 +21,7 @@ const EmailVerification: React.FC = () => {
       console.table(response);
 
       if (response.data.message === "E-mail Address verified") {
-        navigate("/login", { state: { email: location.state.email } });
+        navigate("/login");
       } else {
         alert("Wrong OTP, try again");
       }
