@@ -1,86 +1,83 @@
+import { useAuth } from "constants/context/AuthContext";
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { registerUser } from 'api/auth/auth-api';
+import PropTypes from "prop-types";
+import { login } from "api/auth/auth-api";
+import { useNavigate } from "react-router-dom";
 
-const Register: React.FC = () => 
-{
+type LoginProps = {};
+
+// @description: Login Component
+const Login = () => {
   const navigate = useNavigate();
 
-  const [loginData, setLoginData] = useState({
+  const [Creds, setCreds] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-  const [error, setError] = useState("");
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  
-    setLoginData({ ...loginData, [event.target.name]: event.target.value });
-      console.log(loginData)
+    setCreds({ ...Creds, [event.target.name]: event.target.value });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-
     event.preventDefault();
 
     try {
+      const response = await login(Creds);
 
-      const response = await registerUser(loginData);
-      console.log(response);
-     
-      navigate('/verify-email')
-    } 
-    
-    catch (err: any) {
-      setError(err.message);
+      if (response.data.success === true) {
+        navigate("/", {
+          state: { token: response.token, user: response.user },
+        });
+      } else {
+        return response.data;
+      }
+    } catch (err: any) {
+      if (err) {
+        return console.error(err);
+      }
     }
   };
 
   return (
-
-    <div className = "login-container">
-
-      <div className = "image-container">
-         
-      </div>
-
-      <h1 className = "heading-primary">Log In</h1>
-
-      <form onSubmit={handleSubmit} method = "POST">
-        <br />
-
-        <br />
-        <div className = "email-container">
-
-        <label htmlFor="email">E-mail</label>
-            <input type="email" name="email" id="email" value={loginData.email} onChange = {handleChange} />
+    <div className="login-container">
+      <div className="image-container"></div>
+      <h1 className="heading-primary">Log In</h1>
+      <form onSubmit={handleSubmit} method="POST">
+        <div className="email-container">
+          <label htmlFor="email-login">Enter Email:</label>
+          <br />
+          <input
+            type="text"
+            name="email"
+            id="email-login"
+            value={Creds.email}
+            onChange={handleChange}
+          />
         </div>
-        <br />
-
-        <br />
-        <div className = "password-container">
+        <div className="password-container">
           <label htmlFor="password">Password</label>
-          <input type = "password" name = "password" id="password" value={loginData.password} onChange={handleChange}/>
-          </div>
-        <br />
-       
-        <div className = "span-container">
-           <span>Don't have an account? - <a href = "/register">Register Here</a>  </span>
+          <br />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value={Creds.password}
+            onChange={handleChange}
+          />
         </div>
-
         <br />
-
-        <button className = "login-btn" type = "submit">Log In</button>
-        
+        <div className="span-container">
+          <span>
+            Don't have an account? - <a href="/register">Register Here</a>{" "}
+          </span>
+        </div>
+        <button className="login-btn" type="submit">
+          Log-in
+        </button>
       </form>
-
-      {error && <p>{error}</p>}
-
-
     </div>
-
-
   );
 };
 
-export default Register;
+export default Login;
