@@ -314,6 +314,18 @@ label {
 .otpInput {
     text-align: center;
     font-weight: bold;
+    display: block;
+    width: 13%;
+}
+
+.otp-verify-container {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.buttons {
+    transform: translate(-0%, +150%);
 }
 
 .verify-container {

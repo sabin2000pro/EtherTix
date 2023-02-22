@@ -112,12 +112,13 @@ const EmailVerification: React.FC = () => {
   return (
     <div className="verify-container">
       <br />
-      <br />
       <h1 className="inputHeading">
         Please enter the one time password to verify your account
       </h1>
       <br />
       <h4 className="inputHeading">A code has been sent to {userEmail}</h4>
+      <br />
+      <br />
       <form onSubmit={handleSubmit} method="POST">
         <div className="otp-verify-container">
           {/* <label htmlFor="otp-verify">Enter your one-time-password here:</label> */}
@@ -197,23 +198,23 @@ const EmailVerification: React.FC = () => {
           />
         </div>
         <br />
-        <br />
-        <br />
-        <button
-          className="verify-btn"
-          type="submit"
-          disabled={buttonState.verify}
-        >
-          Verify
-        </button>
-        <button
-          id="resend-btn"
-          className="resend-btn"
-          onClick={handleResend}
-          disabled={buttonState.resend}
-        >
-          Re-send OTP
-        </button>
+        <div className="buttons">
+          <button
+            className="verify-btn"
+            type="submit"
+            disabled={buttonState.verify}
+          >
+            Verify
+          </button>
+          <button
+            id="resend-btn"
+            className="resend-btn"
+            onClick={handleResend}
+            disabled={buttonState.resend}
+          >
+            Re-send OTP
+          </button>
+        </div>
       </form>
       {error && <p>{error}</p>}
     </div>
