@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  //const localUserID = JSON.parse(localStorage.getItem("UserID") || "");
+  //const localUserID = JSON.parse(localStorage.getItem("UserID") || ""); ----------uncomment when backend works
   const userEmail = location.state.email;
 
   const [error, setError] = useState("");
@@ -18,7 +18,7 @@ const EmailVerification: React.FC = () => {
     otp4: "",
     otp5: "",
     otp6: "",
-    //userID: localUserID
+    //userID: localUserID ----------uncomment when backend works
   });
 
   const [buttonState, setButtonState] = useState({
@@ -52,10 +52,6 @@ const EmailVerification: React.FC = () => {
   };
 
   const resendButton = (ms: any) => {
-    // if (buttonState.disabled === false) {
-    //   setButtonState({ ...buttonState, disabled: true });
-    // }
-
     setTimeout(() => {
       setButtonState({ ...buttonState, resend: false });
     }, ms);
@@ -121,15 +117,7 @@ const EmailVerification: React.FC = () => {
       <br />
       <form onSubmit={handleSubmit} method="POST">
         <div className="otp-verify-container">
-          {/* <label htmlFor="otp-verify">Enter your one-time-password here:</label> */}
           <br />
-          {/* <input
-            type="text"
-            name="OTP"
-            id="otp-verify"
-            value={OTP.OTP}
-            onChange={handleChange}
-          /> */}
           <input
             name="otp1"
             type="text"
