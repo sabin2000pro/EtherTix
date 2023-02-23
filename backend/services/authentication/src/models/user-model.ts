@@ -68,10 +68,6 @@ enum UserRoles {
     Admin = "Admin", User = "User", Moderator = "Moderator", Organiser = "Organiser"
 }
 
-enum AccountType {
-    Basic = "Basic", Standard = "Standard", Premium = "Premium", Platinum = "Platinum"
-}
-
 const UserSchema = new mongoose.Schema({
 
     forename: { // User's forename
