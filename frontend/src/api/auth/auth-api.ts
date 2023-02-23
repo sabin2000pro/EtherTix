@@ -21,7 +21,7 @@ export const registerUser = async (registerPayload: any): Promise<any> => {
 
     try {
 
-        const response = await axios.post("/api/auth/register", registerPayload);
+        const response = await axios.post("http://localhost:5299/api/auth/register", registerPayload);
         const data = await response.data;
     
         return data;
@@ -41,7 +41,7 @@ export const verifyEmailAddress = async (verificationPayload: any): Promise<any>
 
     try {
 
-        const response = await axios.post("/verify-email", verificationPayload);
+        const response = await axios.post("http://localhost:52199/api/auth/verify-email", verificationPayload);
         const data = await response.data;
         return data;
 
@@ -132,12 +132,18 @@ export const forgotPassword = async (forgotPasswordPayload: { email: string }): 
 
 export const resetPassword = async (resetPasswordPayload: Object): Promise<any> => {
     try {
+        
       const response = await axios.post("/reset-password", resetPasswordPayload);
       const data = await response.data;
       return data;
-    } catch (err) {
+    } 
+    
+    catch (err) {
+
       if (err) {
         return console.error(err);
       }
+
+
     }
   };
