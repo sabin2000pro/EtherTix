@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 require('dotenv').config();
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+
 interface IUserAttributes {
     forename: string;
     surname: string;
@@ -107,16 +108,6 @@ const UserSchema = new mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
-    postCode: {
-        type: String,
-        required: [true, "Please provide the users post code"]
-    },
-
-    city: {
-        type: String,
-        required: [true, "Please specify the city that the user resides in"]
-    },
-
     photo: { // Photo for the user
         type: String, // Type is string
         default: 'no-photo.jpg'
@@ -137,7 +128,6 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: [UserRoles.Admin, UserRoles.Moderator, UserRoles.Organiser, UserRoles.User],
-        required: [true, "Please specify the role of the user"],
         default: UserRoles.User
     },
 

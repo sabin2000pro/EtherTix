@@ -3,7 +3,7 @@ import {registerUser, updateUserPassword, fetchAllUsers, editUserByID, rootRoute
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
-export const authRouter: Router = express.Router({mergeParams: true});
+export const authRouter: Router = express.Router();
 
 const RATE_LIMIT_MINUTES = 10 * 60 * 1000
 

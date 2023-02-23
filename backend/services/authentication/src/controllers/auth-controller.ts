@@ -88,7 +88,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
 
     try {
 
-        const {forename, surname, username, email, password, postCode, city, passwordConfirm, role} = request.body;
+        const {forename, surname, username, email, password, passwordConfirm} = request.body;
 
         if(!forename) {
             return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.BAD_REQUEST));
@@ -112,7 +112,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
             return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
         }
 
-        const user = await User.create({forename, surname, username, email, role, password, passwordConfirm});
+        const user = await User.create({forename, surname, username, email, password, passwordConfirm});
         const token = user.getAuthenticationToken(); // Get the users JWT token
 
         if(!token) {

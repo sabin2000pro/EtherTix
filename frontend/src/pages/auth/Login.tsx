@@ -43,7 +43,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="image-container"></div>
-      <h1 className="heading-primary">Log In</h1>
+      <h1 className="heading-primary">Welcome to EtherTix</h1>
       <form onSubmit={handleSubmit} method="POST">
         <div className="email-container">
           <label htmlFor="email-login">Enter Email:</label>
