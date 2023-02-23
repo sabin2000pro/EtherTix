@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-//import { createEvent } from 'api/events/event-api';
+import { createEvent } from 'api/events/event-api';
+
+//http://localhost:5299/
 
 const CreateEvent: React.FC = () => {
   
@@ -138,7 +140,7 @@ const CreateEvent: React.FC = () => {
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     
-
+    setCreatedDate();
     event.preventDefault();
     
     try {
