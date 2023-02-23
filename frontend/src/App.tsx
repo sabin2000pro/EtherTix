@@ -12,14 +12,17 @@ import {Routes, Route} from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 import CartPage from 'pages/CartPage';
 
-const App = () => {
+const App = () => { // Push to github recent changes
 
   return (
       <>
+
+
       
          <Navbar />
 
           <Routes>
+             <Route path = '/reset-password/:resetToken' element = {<ResetPassword />} />
             <Route path ='/' element = {<Home />} />
             <Route path = '/register' element = {<Register />} /> 
             <Route path = '/login' element = {<Login />} />
