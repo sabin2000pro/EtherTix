@@ -51,10 +51,17 @@ export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: n
     })
 }
 
-  export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-      return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
-  })
+  // @description: Send The JWT Token Response
+  // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
+  // @returns: Server Response Promise Including the User Object and Token
+  // @access: Public (NO Bearer Token Required)
 
+  export const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
+    const token = user.getAuthenticationToken();
+    request.session = {token}; // Store the token in the session
+ 
+    return response.status(statusCode).json({user, token});
+}
   
   // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
@@ -112,18 +119,6 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     } 
     
 )
-
-  // @description: Send The JWT Token Response
-  // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
-  // @returns: Server Response Promise Including the User Object and Token
-  // @access: Public (NO Bearer Token Required)
-
-const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
-    const token = user.getAuthenticationToken();
-    request.session = {token}; // Store the token in the session
- 
-    return response.status(statusCode).json({user, token});
-}
 
   // @description: Verify User E-mail Address
   // @parameters: request: Request Object, response: Response Object, next: Next Function
