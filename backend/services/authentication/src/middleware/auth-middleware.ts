@@ -2,6 +2,7 @@ require('dotenv').config();
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
+import asyncHandler from 'express-async-handler';
 import { ErrorResponse } from '../utils/error-response';
 import jwt from "jsonwebtoken";
   export interface IUserData {
@@ -23,13 +24,17 @@ export interface IGetUserAuthInfoRequest extends Request {
     user: any // or any other type
 }
 
-export const protectAuth = async (request: IAuthRequest & IRequestUser, response: Response, next: NextFunction): Promise<any> => {
+export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestUser | any, response: Response, next: NextFunction): Promise<any> => {
     let token;
+
+    const cookies = request.cookies;
     
     // Check to see if the authorization header starts with Bearer
     if(request.headers.authorization && request.headers.authorization.includes("Bearer")) {
          token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
+
+    // Also verify to see if the token is in the cookies
 
     if(!token) {
         return next(new ErrorResponse("You are not authorized to perform this action", StatusCodes.BAD_REQUEST));
@@ -49,8 +54,7 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
         }
 
     }
-
-}
+});
 
 // Middleware Function to restrict certain actions to specific user roles
 export const restrictRolesTo = (...roles) => {
