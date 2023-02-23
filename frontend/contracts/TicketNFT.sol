@@ -9,7 +9,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tickets
     using Counters for Counters.Counter;
 
-    struct NftToken {
+    struct NftToken { // Create the struct for the nft token
         uint256 tokenId;
         address tokenOwner;
         string tokenName;

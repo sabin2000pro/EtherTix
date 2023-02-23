@@ -2,20 +2,16 @@ import mongoose from "mongoose";
 
 interface IReviewAttributes {
     title: string;
+    rating: number;
     text: string;
-    rating: Number;
     createdAt: Date;
-    event: mongoose.Schema.Types.ObjectId;
-    user: mongoose.Schema.Types.ObjectId;
 }
 
 interface IReviewDocument extends mongoose.Model<IReviewAttributes> {
     title: string;
+    rating: number;
     text: string;
-    rating: Number;
     createdAt: Date;
-    event: mongoose.Schema.Types.ObjectId;
-    user: mongoose.Schema.Types.ObjectId;
 }
 
 // @description: Review Schema for an event
@@ -43,18 +39,6 @@ const ReviewSchema = new mongoose.Schema<IReviewDocument>({
       createdAt: {
         type: Date,
         default: Date.now
-      },
-
-      event: { //  Rev -> Event // ID Of the event for which the review was left on
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Event',
-        required: true
-      },
-
-      user: { // Rev -> User. Which user left this specific review
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true
       }
 
 })

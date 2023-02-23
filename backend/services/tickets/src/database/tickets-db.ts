@@ -1,16 +1,16 @@
+require('dotenv').config();
 import mongoose from "mongoose";
 
-const TICKETS_DB_URI = process.env.TICKETS_DB_URI;
+const TICKETS_SERVICE_DB_URI = process.env.TICKETS_SERVICE_DB_URI;
 
-export default () => {
 
-const connectTicketsSchema = async (...args: unknown[]) => {
+export const connectTicketsSchema = async (...args: unknown[]) => {
 
     try {
 
-        return await mongoose.connect(TICKETS_DB_URI).then(conn => {
+        return await mongoose.connect(TICKETS_SERVICE_DB_URI).then(conn => {
 
-            if(TICKETS_DB_URI === undefined) {
+            if(TICKETS_SERVICE_DB_URI === undefined) {
                 return console.log(`The tickets DB URI is undefined`)
             }
 
@@ -38,4 +38,3 @@ const connectTicketsSchema = async (...args: unknown[]) => {
 
 connectTicketsSchema();
 
-}
