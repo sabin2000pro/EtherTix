@@ -19,7 +19,23 @@ import { ErrorResponse } from '../utils/error-response';
   // @returns: void
   // @public: True (No Authorization Required)
 
-const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+  export const sendLoginMfa = (transporter: any, user: any, userMfa: any) => {
+
+    return transporter.sendMail({
+        
+        from: 'mfa@ethertix.com',
+        to: user.email,
+        subject: 'Login MFA Verification',
+        html: `
+        
+        <p>Your MFA code</p>
+        <h1> ${userMfa}</h1>
+        `
+    })
+
+}
+
+export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 
     return transporter.sendMail({
 
@@ -239,20 +255,6 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 
 })
 
-const sendLoginMfa = (transporter: any, user: any, userMfa: any) => {
-
-    return transporter.sendMail({
-        from: 'mfa@ethertix.com',
-        to: user.email,
-        subject: 'Login MFA Verification',
-        html: `
-        
-        <p>Your MFA code</p>
-        <h1> ${userMfa}</h1>
-        `
-    })
-
-}
 
   // @description: Login User
   // @parameters: request: Request Object, response: Response Object, next: Next Function
