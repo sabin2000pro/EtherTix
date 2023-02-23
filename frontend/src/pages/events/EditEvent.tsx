@@ -142,9 +142,19 @@ const EditEvent: React.FC = () => {
       setError(err.message);
     }
     
-    
-    
+    const setUpdateDate = () => {
+
+      const currentDate = new Date();
+      //console.log(currentDate);
+      
+  
+      eventData.updatedAt = currentDate.toDateString();
+      console.log(currentDate);
+    }
+  
+    setUpdateDate();
   };
+
   
   return (
     <>

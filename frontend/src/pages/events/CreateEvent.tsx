@@ -127,11 +127,14 @@ const CreateEvent: React.FC = () => {
   const setCreatedDate = () => {
 
     const currentDate = new Date();
-    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    //console.log(currentDate);
+    
 
-    // var currentDateTime = getMonth();
-    // eventData.createdAt = getDateTime();
+    eventData.createdAt = currentDate.toDateString();
+    console.log(currentDate);
   }
+
+  setCreatedDate();
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     
