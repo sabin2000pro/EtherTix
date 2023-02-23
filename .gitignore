@@ -1,1 +1,12 @@
+#node dependencies
 node_modules
+
+#frontend build files
+build
+
+#backend build files
+dist
+
+
+.DS_Store
+.env

@@ -22,7 +22,7 @@ html {
     justify-content: flex-start;
 }
 
-.nav-header{
+.nav-header {
     list-style: none;
     text-decoration: none;
     color: white;
@@ -35,43 +35,57 @@ html {
     padding: 12px;
     color: white;
     display: flex;
-    justify-content:flex-end;
+    justify-content: flex-end;
     align-items: center;
-    
 }
-  
+
 .nav-list-items {
     list-style-type: none;
     margin: 0;
     display: flex;
-  }
+}
 
 .nav-centre {
     text-align: center;
     margin: 0 auto;
-    width: 5%; /* set a fixed width */
+    width: 5%;
+    /* set a fixed width */
     text-decoration: none;
     font-weight: 700;
     font-size: 20px;
     display: flex;
     align-items: center;
-  }
+}
 
-.search-bar{
+.search-bar {
     padding: 8px;
     text-align: center;
-    font-weight: 700;
-    font-size: 20px;
+    font-weight: 600;
+    font-size: 14px;
     margin-bottom: 12px;
     margin-top: 10px;
-    width: 290px;
+    width: 200px;
     height: 40px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
     text-align: center;
 }
-  
+
+.search-bar:focus {
+    outline: none;
+    transition: all 0.3s;
+    border: none;
+    background-color: #e6e6e6;
+}
+
+.search-icon {
+    font-size: 20px;
+    color: #000;
+    margin-bottom: 2px;
+    z-index: 1;
+}
+
 .nav-item {
     padding: 12px;
 }
@@ -89,13 +103,15 @@ html {
     font-size: 20px;
 }
 
-.search-results{
-    width: 150px; /* width of the div */
-    height: 100x; /* height of the div */
-    float:right;
+.search-results {
+    width: 150px;
+    /* width of the div */
+    height: 100x;
+    /* height of the div */
+    float: right;
     padding-right: 160px;
     text-align: left;
-    font-size : 25px;
+    font-size: 25px;
     background-color: #001845;
     color: white;
     text-decoration: none;
@@ -105,17 +121,56 @@ html {
 
 .register-container {
     justify-content: center;
-    width: 900px; /* width of the div */
-    height: 600px; /* height of the div */
+    width: 700px;
+    /* width of the div */
+    height: 500px;
+    /* height of the div */
+    position: absolute;
+    /* set the position to absolute */
+    top: 55%;
+    left: 50%;
+    /* set the left position to 50% */
+    transform: translate(-50%, -50%);
+    /* translate the div to the center */
+    border-radius: 4px;
+    padding: 14px;
+    float: left;
+    text-align: center;
+    font-size: 18px;
+    background-color: #001845;
+    color: white;
+}
+
+.login-container {
+    justify-content: center;
+    width: 700px; /* width of the div */
+    height: 500px; /* height of the div */
     position: absolute; /* set the position to absolute */
-    top: 50%; 
+    top: 55%; 
     left: 50%; /* set the left position to 50% */
     transform: translate(-50%, -50%); /* translate the div to the center */
     border-radius: 4px;
-    padding: 32px;
+    padding: 14px;
     float: left;
     text-align: center;
-    font-size : 20px;
+    font-size : 18px;
+    background-color: #001845;
+    color: white;
+}
+
+.forgot-password-container {
+    justify-content: center;
+    width: 700px; /* width of the div */
+    height: 500px; /* height of the div */
+    position: absolute; /* set the position to absolute */
+    top: 55%; 
+    left: 50%; /* set the left position to 50% */
+    transform: translate(-50%, -50%); /* translate the div to the center */
+    border-radius: 4px;
+    padding: 14px;
+    float: left;
+    text-align: center;
+    font-size : 18px;
     background-color: #001845;
     color: white;
 }
@@ -143,14 +198,13 @@ html {
 .forename-container {
     display: flex;
     align-items: center;
-    margin-top: 40px;
     margin-bottom: 12px;
 }
 
 .forename-container label {
     margin-right: -90px;
     font-weight: bold;
-    margin-left: 51px;
+    margin-left: 50px;
 }
 
 .event-text-container {
@@ -220,6 +274,7 @@ html {
 .username-container {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
 }
 
 .username-container label {
@@ -229,17 +284,21 @@ html {
 }
 
 .username-container input {
+    width: 50%;
+    height: 30px;
     margin-left: 25px;
 }
 
 .password-container {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
 }
 
-.confirm-container {
+.confirm-password-container {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
 }
 
 .surname-container input {
@@ -251,44 +310,47 @@ html {
 .email-container {
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-bottom: 12px;
 }
 
 .email-container label {
     margin-right: -90px;
     font-weight: bold;
-    margin-left: 75px;
+    margin-left: 50px;
 }
 
 .email-container input {
     width: 50%;
     height: 30px;
+    margin-left: 25px;
 }
 
 .username-container input {
     width: 50%;
     height: 30px;
+    margin-left: 25px;
 }
 
-.surname-container input:hover, .surname-container input:focus {
+.surname-container input:hover,
+.surname-container input:focus {
     outline: none;
 }
 
 .password-container input {
     width: 50%;
     height: 30px;
-    margin-top: 20px;
+    margin-left: 25px;
 }
 
 .password-container label {
     margin-right: -90px;
-    margin-left: 75px;
-    margin-top: 20px;
+    font-weight: bold;
+    margin-left: 50px;
 }
 
 .register-btn {
-   font-size: 22px;
-   color: white;
+    font-size: 22px;
+    color: white;
 }
 
 .home-section {
@@ -296,17 +358,16 @@ html {
 }
 
 label {
-    display: inline-block; 
-    width: 200px; 
+    display: inline-block;
+    width: 200px;
     text-align: left;
-    padding:right;
+    padding: right;
 }
 
 .register-btn {
     width: 350px;
-    height: 40px;
-    margin-top: -10px;
-   
+    height: 60px;
+    margin-top: 15px;
     text-align: center;
     background-color: #1a2f58;
     outline: none;
@@ -321,12 +382,153 @@ label {
 }
 
 .span-container {
-    margin-top: 30px;
-    gap: 24px;
-    display: block;
+    display: flex;
+    margin-bottom: 12px;
+    margin-left: 50px;
 }
 
 .span-container a {
     color: white;
     text-decoration: none;
 }
+
+.span-container a:hover {
+    font-weight: bold;
+    transition: all 0.4;
+}
+
+/*start-Email Verification*/
+.inputHeading {
+    text-align: center;
+}
+
+.otpInput {
+    text-align: center;
+    font-weight: bold;
+    display: block;
+    width: 13%;
+}
+
+.otp-verify-container {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.buttons {
+    transform: translate(-0%, +150%);
+}
+
+.verify-container {
+    font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
+    line-height: 1.15385;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    justify-content: center;
+    width: 50%;
+    /* width of the div */
+    height: 50%;
+    /* height of the div */
+    position: absolute;
+    /*set the position to absolute*/
+    top: 45%;
+    /* set the left position to 50% */
+    left: 50%;
+    /* translate the div to the center */
+    transform: translate(-50%, -50%);
+    /* border-radius: 4px; */
+    float: left;
+    text-align: center;
+    font-size: 18px;
+    background-color: #001845;
+    color: white;
+}
+
+.verify-btn {
+    background-color: #0095ff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.15385;
+    margin: 0;
+    outline: none;
+    padding: 8px .8em;
+    position: relative;
+    transform: translate(-50%);
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+
+.verify-btn:hover,
+.verify-btn:focus {
+    background-color: #07c;
+}
+
+.verify-btn:focus {
+    box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.verify-btn:active {
+    background-color: #0064bd;
+    box-shadow: none;
+}
+.verify-btn:disabled {
+    background-color: gray;
+}
+
+.resend-btn {
+    background-color: #0095ff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.15385;
+    margin: 0;
+    outline: none;
+    padding: 8px .8em;
+    position: relative;
+    transform: translate(+50%);
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+.resend-btn:hover,
+.resend-btn:focus {
+    background-color: #07c;
+}
+
+.resend-btn:focus {
+    box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.resend-btn:active {
+    background-color: #0064bd;
+    box-shadow: none;
+}
+.resend-btn:disabled {
+    background-color: gray;
+}
+
+/*end-Email Verification*/

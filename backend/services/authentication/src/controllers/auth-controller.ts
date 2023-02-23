@@ -17,6 +17,8 @@ import asyncHandler from 'express-async-handler';
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 import path from 'path'
 
+require('dotenv').config();
+
 declare namespace Express {
     export interface Request {
         user: any;
@@ -540,10 +542,10 @@ export const forgotPassword = async (request: any, response: any, next: NextFunc
         const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
         await resetPasswordToken.save();
     
-        const resetPasswordURL = `http://localhost:3000/auth/api/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
+        const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
         sendPasswordResetEmail(user, resetPasswordURL);
     
-        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", });
+        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
     } 
     
     catch(error: any) {

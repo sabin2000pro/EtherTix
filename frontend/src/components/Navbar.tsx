@@ -23,7 +23,7 @@ const Navbar = () => {
           <div className = "nav-left">
             <div className ="nav-header">Ether Tix</div>
           </div>
-
+          
            <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />
 
           <ul className = "nav-list-items">

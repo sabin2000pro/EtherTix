@@ -8,6 +8,7 @@
     "outDir": "./build", // When we build our app, the app is stored in a build folder
     "rootDir": "src", // Root directory where all of the backend code resides inside.
     "strict": true,
+    "removeComments": false,
 
     "paths": {
       "@global/*": ["./shared/global/*"],

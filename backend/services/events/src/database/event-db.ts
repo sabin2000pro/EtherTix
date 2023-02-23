@@ -1,8 +1,7 @@
-import dotenv from 'dotenv';
-dotenv.config({path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env"});
+require('dotenv').config();
 import mongoose from "mongoose";
 
-const EVENT_DB_URI = process.env.EVENT_DB_URI;
+const EVENTS_SERVICE_DB_URI = process.env.EVENTS_SERVICE_DB_URI;
 
 export default () => {
 
@@ -10,10 +9,10 @@ export default () => {
 
         try {
     
-            return await mongoose.connect(EVENT_DB_URI).then(conn => {
+            return await mongoose.connect(EVENTS_SERVICE_DB_URI).then(conn => {
     
                 if(conn.connection) {
-                    console.log(`Read env var successfully : ${EVENT_DB_URI}`);
+                    console.log(`Read env var successfully : ${EVENTS_SERVICE_DB_URI}`);
 
                     return console.log(`Connected to events database...`)
                 }

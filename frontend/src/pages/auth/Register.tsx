@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from 'api/auth/auth-api';
 
-const Register: React.FC = () => {
+const Register: React.FC = () => 
+{
   const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState({
@@ -30,8 +31,13 @@ const Register: React.FC = () => {
 
       const response = await registerUser(registerData);
       console.log(response);
+
+      /////////////////////////////////
+      //Saving user id in local storage ------ uncomment when registration works
+      //localStorage.setItem("UserID", response.data.user._id);
+      /////////////////////////////////
      
-      navigate('/verify-email')
+      navigate('/verify-email', {state:{email: registerData.email}})
     } 
     
     catch (err: any) {
@@ -83,10 +89,25 @@ const Register: React.FC = () => {
         <div className = "password-container">
 
           <label htmlFor="password">Password</label>
-
           <input type = "password" name = "password" id="password" value={registerData.password} onChange={handleChange}/>
 
         </div>
+
+        <br />
+
+        <div className = "confirm-password-container">
+
+          <label htmlFor="passwordConfirm">Confirm</label>
+          <input type = "password" name = "passwordConfirm" id="passwordConfirm" value={registerData.passwordConfirm} onChange={handleChange}
+          onBlur={() => {
+            if (registerData.password !== registerData.passwordConfirm) 
+            {
+              throw new Error('Passwords do not match')          
+            }
+          }
+        }
+        />
+      </div>
 
         <br />
        
