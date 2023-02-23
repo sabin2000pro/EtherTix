@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config({path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env"});
 import mongoose from "mongoose";
 
-const EVENT_DB_URI = process.env.EVENT_DB_URI;
+const EVENTS_SERVICE_DB_URI = process.env.EVENTS_SERVICE_DB_URI;
 
 export default () => {
 
