@@ -1,6 +1,3 @@
-// Service: Authentication Service
-// Copyright (c) 2023 - EtherTix (All Rights Reserved)
-
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -16,40 +13,6 @@ import { generateRandomResetPasswordToken } from '../utils/generateResetPassword
 import path from 'path'
 import { ErrorResponse } from '../utils/error-response';
 
-declare namespace Express {
-    export interface Request {
-        user: any;
-        id: any;
-        body: any;
-        session: any;
-        params: any;
-        method: any;
-        query: any;
-        files?: Record<any,any>
-    }
-
-  }
-
-  export interface IGetUserAuthInfoRequest extends Request {
-      user: any // or any other type
-  }
-
-export interface FileRequest extends Request {
-    file: any;
-}
-
-  export interface IUserData {
-    id: string;
-    email: string;
-    username: string
-    password: string;
-    virtualCredits: number;
-}
-
-export interface IRequestUser extends Request {
-    user: IUserData;
-
-}
 
   // @description: Sends the verify confirmation e-mail to the user after registering an account
   // @parameters: Transporter Object, User Object, Randomly Generated User OTP
@@ -77,7 +40,6 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   })
 
   
-  // API 1
   // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
@@ -157,7 +119,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
         const {userId, OTP} = request.body;
         const user = await User.findById(userId);
 
-        // // Check for invalid User ID
+        // Check for invalid User ID
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse("User ID not found. Please check your entry again.", StatusCodes.NOT_FOUND))
         }
@@ -228,7 +190,6 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-  // API - 3
 export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
@@ -278,7 +239,7 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 
 })
 
-const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
+const sendLoginMfa = (transporter: any, user: any, userMfa: any) => {
 
     return transporter.sendMail({
         from: 'mfa@ethertix.com',
@@ -291,7 +252,6 @@ const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
         `
     })
 
-
 }
 
   // @description: Login User
@@ -299,8 +259,6 @@ const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-
-  // API - 4
 export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
