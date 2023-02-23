@@ -112,11 +112,12 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const token = user.getAuthenticationToken(); // Get the users JWT token
 
         if(!token) {
-            return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
+            return next(new ErrorResponse("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
         }
 
         const currentUser = user._id; // Get the current user's ID
-        user.isNewUser = true; // User is new after registered
+
+        user.isNewUser = (!user.isNewUser);
 
         await user.save();
 
@@ -151,8 +152,6 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
-
-  // API 2 - E-mail Address Verification
   
 export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
