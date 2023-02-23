@@ -1,3 +1,4 @@
+require('dotenv').config();
 import cookieSession from 'cookie-session';
 import express, {NextFunction, Request, Response } from "express";
 import morgan from "morgan"
@@ -10,7 +11,6 @@ import {authRouter} from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 
-require('dotenv').config({path: "backend/services/authentication/config.env"});
 
 const app: any = express();
 
