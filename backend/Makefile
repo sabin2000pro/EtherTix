@@ -18,7 +18,7 @@ build-services:
 	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
 	- docker login
-	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build -d
+	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 
 stop-services:
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml down --remove-orphans

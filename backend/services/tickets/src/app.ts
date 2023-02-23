@@ -1,7 +1,7 @@
 import { errorHandler, CustomError } from './middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import express, { Application, NextFunction, Request, Response } from "express";
-import connectTicketsSchema from './database/tickets-db';
+import {connectTicketsSchema} from './database/tickets-db';
 import morgan from "morgan"
 import hpp from "hpp"
 import helmet from "helmet"
