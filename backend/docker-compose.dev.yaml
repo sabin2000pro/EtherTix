@@ -20,7 +20,7 @@ services:
 
 
   auth-service:
-    container_name: auth-service
+    container_name: ethertix-auth-service
     image: sabin2000/ethertix-auth-service
     build:
       context: ../backend/services/authentication
@@ -36,7 +36,7 @@ services:
        - ../backend/services/authentication:/app
 
   events-service:
-      container_name: events-api
+      container_name: ethertix-events-service
       image: sabin2000/ethertix-events-service
       build:
         context: ../backend/services/events
@@ -52,7 +52,7 @@ services:
         - ../backend/services/events:/app
   
   categories-service:
-      container_name: categories-api
+      container_name: ethertix-categories-service
       image: sabin2000/ethertix-categories-service
       build:
         context: ../backend/services/categories
@@ -68,7 +68,7 @@ services:
         - ../backend/services/categories:/app
 
   venues-service:
-    container_name: venues-api
+    container_name: ethertix-venues-service
     image: sabin2000/ethertix-venues-service
     build:
       context: ../backend/services/venues
@@ -84,7 +84,7 @@ services:
         - ../backend/services/venues:/app
   
   tickets-service: ## Tickets Service Configuration
-    container_name: tickets-api
+    container_name: ethertix-tickets-service
     image: sabin2000/ethertix-tickets-service
 
     build:
