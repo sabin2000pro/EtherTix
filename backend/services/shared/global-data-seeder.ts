@@ -1,27 +1,25 @@
-import { connectVenuesSchema } from './../venues/src/database/venues-db';
-import { User } from '../authentication/src/models/user-model';
-import {Event} from '../events/src/models/event-model';
+require('dotenv').config();
+import { User } from '../authentication/src/models/user-model'
+import {Event} from  '../events/src/models/event-model'
 import {Ticket} from '../tickets/src/models/ticket-model';
-import {Review} from '../reviews/src/models/review-model';
-import {Venue} from '../venues/src/models/venue-model';
-import {EmailVerification} from '../authentication/src/models/email-verification-model';
+import {Venue} from '../venues/src/models/venue-model'
 
-import {connectAuthSchema} from '../authentication/src/database/auth-schema';
-import connectEventsDatabase from '../events/src/database/event-db';
-import {connectTicketsSchema} from '../tickets/src/database/tickets-db';
+import {connectAuthSchema} from  '../authentication/src/database/auth-schema'
+import connectEventsDatabase from '../events/src/database/event-db'
+import {connectTicketsSchema} from '../tickets/src/database/tickets-db'
+import { connectVenuesSchema } from '../venues/src/database/venues-db';
 
-import users from '../authentication/src/data/users.json';
-import events from '../events/src/data/events.json';
-import tickets from '../tickets/src/data/tickets.json';
-import venues from '../venues/src/data/venues.json';
-import reviews from '../reviews/src/data/reviews.json';
+const users = require( '../authentication/src/data/users.json')
+const events = require('../events/src/data/events.json');
+const tickets = require('../tickets/src/data/tickets.json');
+const venues = require('../venues/src/data/venues.json');
 
-const connectServicesToDb = () => {
-    connectAuthSchema();
-    connectEventsDatabase();
-}
+connectAuthSchema();
+connectEventsDatabase();
+connectTicketsSchema();
+connectVenuesSchema();
 
-connectServicesToDb()
+
 
 export const loadAllData = async (): Promise<any> => {
     
@@ -37,7 +35,6 @@ export const loadAllData = async (): Promise<any> => {
 
             await Ticket.create(tickets);
             await Venue.create(venues);
-            await Review.create(reviews);
 
             console.log(`All service Data imported successfully.`);
             return process.exit(1);
@@ -64,7 +61,6 @@ export const removeAllData = async (): Promise<any> => {
         await Event.remove();
         await Ticket.remove();
         await Venue.remove();
-        await EmailVerification.remove();
 
         dataRemoved = (!dataRemoved) as boolean;
 

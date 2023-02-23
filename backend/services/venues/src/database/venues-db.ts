@@ -7,7 +7,7 @@ export const connectVenuesSchema = async (...args: unknown[]) => {
 
         try {
     
-            return await mongoose.connect(VENUES_SERVICE_DB_URI).then(conn => {
+            return await mongoose.connect(VENUES_SERVICE_DB_URI as any).then(conn => {
 
                 if(VENUES_SERVICE_DB_URI === undefined) {
                     throw new Error(`The venues service environment variable for connecting to the database is undefined`)

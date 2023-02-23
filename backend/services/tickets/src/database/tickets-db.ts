@@ -8,7 +8,7 @@ export const connectTicketsSchema = async (...args: unknown[]) => {
 
     try {
 
-        return await mongoose.connect(TICKETS_SERVICE_DB_URI).then(conn => {
+        return await mongoose.connect(TICKETS_SERVICE_DB_URI as any).then(conn => {
 
             if(TICKETS_SERVICE_DB_URI === undefined) {
                 return console.log(`The tickets DB URI is undefined`)

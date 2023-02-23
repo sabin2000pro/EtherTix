@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
 require('dotenv').config();
+import mongoose from "mongoose";
 
 const AUTH_SERVICE_DB_URI = process.env.AUTH_SERVICE_DB_URI;
 
-export const connectAuthSchema = async (...args: unknown[]): Promise<any> => {
+export const connectAuthSchema = async (): Promise<any> => {
 
     try {
 
-        return await mongoose.connect(AUTH_SERVICE_DB_URI).then(conn => {
+        return await mongoose.connect(AUTH_SERVICE_DB_URI as any).then(conn => {
 
             if(conn.connection) {
                 return console.log(`Connected to authentication service database...`)

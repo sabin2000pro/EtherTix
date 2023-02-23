@@ -42,7 +42,6 @@ interface EventAttributes { // Interface for the event attributes
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
     ticket: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
     category: mongoose.Schema.Types.ObjectId; // Category ID of the Specifid Event
-    review: mongoose.Schema.Types.ObjectId;
 }
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
@@ -87,7 +86,6 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
     ticket: mongoose.Schema.Types.ObjectId; // Ticket corresponding to an event
     category: mongoose.Schema.Types.ObjectId;
-    review: mongoose.Schema.Types.ObjectId;
 }
 
 const EventSchema = new mongoose.Schema<EventDocument>({
@@ -112,10 +110,10 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: String
     },
     
-    eventLocation: {
-        type: String,
-        required: [true, "Please specify the location of the event"]
-    },
+    // eventLocation: {
+    //     type: String,
+    //     required: [true, "Please specify the location of the event"]
+    // },
 
     slug: String,
 
@@ -148,25 +146,25 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify the status that the event is in"]
     },
 
-    eventSchedule: { // Schedule 
+    // eventSchedule: { // Schedule 
 
-        hostName: { // Host name of the event (Mike Andrews)
-            type: String,
-            required: [true, "Please specify the host name of the event"]
-        },
+    //     hostName: { // Host name of the event (Mike Andrews)
+    //         type: String,
+    //         required: [true, "Please specify the host name of the event"]
+    //     },
         
-        performanceTime: { // Time at which the host of the event is performing
-            type: Date,
-            default: Date.now
-        },
+    //     performanceTime: { // Time at which the host of the event is performing
+    //         type: Date,
+    //         default: Date.now
+    //     },
 
-        isVIP: { // Is the performer a VIP or not
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if the host of the event is a VIP or not"]
-        }
+    //     isVIP: { // Is the performer a VIP or not
+    //         type: Boolean,
+    //         default: false,
+    //         required: [true, "Please specify if the host of the event is a VIP or not"]
+    //     }
 
-    },
+    // },
 
     currency: { // The type of currency that the event takes payment in
         type: String,
@@ -196,13 +194,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
         min: [3, "There must be at least 3 minimum people at the event"],
-        max: [150, "There cannot be more than 150 people at the current event"]
+        max: [250, "There cannot be more than 250 people at the current event"]
     },
 
-    hasSeating: {
-        type: Boolean,
-        required: [true, "Please specify if the event has seating or not"]
-    },
+    // hasSeating: {
+    //     type: Boolean,
+    //     required: [true, "Please specify if the event has seating or not"]
+    // },
 
     slotsAvailable: {
         type: Boolean,
@@ -276,7 +274,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
         salesStatus: {
             type: String,
-            enum: ["on_sale", "not_on_sale", "sale_ended", "sold_out", "unavailable"],
+            enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
             required: [true, "Please specify the sales status of the event."]
         },
 
@@ -295,33 +293,33 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
         required: [true, "Please specify the Organiser ID of this event"]
     },
 
     venue: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Venue",
+        ref: "venue",
         required: [true, "Please specify a valid venue ID for this event"]
     },
 
     ticket: { // Event -> Ticket Relationship
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Ticket",
+        ref: "ticket",
         required: [true, "Please specify a valid Ticket ID for this event"]
     },
 
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
+        ref: "category",
         required: [true, "Please specify a valid Category ID for this event"]
-    },
-
-    review: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Review",
-        required: [true, "Please specifgy a valid Review ID for this event"]
     }
+
+    // review: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Review",
+    //     required: [true, "Please specifgy a valid Review ID for this event"]
+    // }
 
 }, {
     timestamps: true,

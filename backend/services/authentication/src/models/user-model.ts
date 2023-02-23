@@ -24,7 +24,6 @@ interface IUserAttributes {
     isVerified: boolean;
     isLoggedIn: boolean;
     isValid: boolean;
-    postCode: string;
     virtualCredits: number;
     reputationPoints: number;
     premiumAccount: boolean;
@@ -106,12 +105,7 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-
-    postCode: {
-        type: String,
-        required: [true, "Please provide the users post code"]
-    },
-
+    
     city: {
         type: String,
         required: [true, "Please specify the city that the user resides in"]
