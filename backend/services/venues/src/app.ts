@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express, { Application, Request, Response } from "express";
 import morgan from "morgan"
 import hpp from "hpp"
