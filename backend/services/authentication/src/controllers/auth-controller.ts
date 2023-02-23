@@ -84,9 +84,6 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @public: True (No Authorization Token Required)
 
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
         const {forename, surname, username, email, password, passwordConfirm} = request.body;
 
         if(!forename) {
@@ -114,9 +111,9 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const user = await User.create({forename, surname, username, email, password, passwordConfirm});
         const token = user.getAuthenticationToken(); // Get the users JWT token
 
-        // if(!token) {
-        //     return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
-        // }
+        if(!token) {
+            return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
+        }
 
         const currentUser = user._id; // Get the current user's ID
         user.isNewUser = true; // User is new after registered
@@ -136,15 +133,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         return sendTokenResponse(request, user, StatusCodes.CREATED, response);
     } 
     
-    catch(error: any) {
-
-        if(error) {
-            return next(error);
-        }
-
-    }
-
-} )
+)
 
   // @description: Send The JWT Token Response
   // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
@@ -201,39 +190,39 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
             return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
         }
 
-        // const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
+        const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
 
-        // if(!otpTokensMatch) {
-        //     return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
-        // }
+        if(!otpTokensMatch) {
+            return next(new ErrorResponse(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
+        }
 
-        // if(otpTokensMatch) { // If the OTP Tokens Match
+        if(otpTokensMatch) { // If the OTP Tokens Match
 
-        //     user.isVerified = true // Set theu ser is Verified field to true
-        //     user.accountActive = true;
+            user.isVerified = true // Set theu ser is Verified field to true
+            user.accountActive = true;
     
-        //     await user.save();
-        //     // await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
+            await user.save();
+            // await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
     
-        //     const transporter = emailTransporter();
+            const transporter = emailTransporter();
     
-        //         // Send welcome e-mail
-        //         transporter.sendMail({
+                // Send welcome e-mail
+                transporter.sendMail({
 
-        //             from: 'welcome@ethertix.com',
-        //             to: user.email,
-        //             subject: 'E-mail Confirmation Success',
-        //             html: `
+                    from: 'welcome@ethertix.com',
+                    to: user.email,
+                    subject: 'E-mail Confirmation Success',
+                    html: `
                     
-        //             <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-        //             `
-        //         })
+                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                    `
+                })
     
-        //     const jwtToken = user.getAuthenticationToken();
-        //     request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+            const jwtToken = user.getAuthenticationToken();
+            request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
     
-        //     return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
-        // }
+            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+        }
        
     } 
     
@@ -260,30 +249,30 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
         const {userId, OTP} = request.body;
         const currentUser = await User.findById(userId);
 
-        // if(!currentUser) { // If we have no current user
-        //     return next(new BadRequestError("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
-        // }
+        if(!currentUser) { // If we have no current user
+            return next(new ErrorResponse("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
+        }
 
-        // if(!isValidObjectId(userId)) {
-        //     return next(new BadRequestError("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
-        // }
+        if(!isValidObjectId(userId)) {
+            return next(new ErrorResponse("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
+        }
 
-        // if(!OTP) {
-        //     return next(new NotFoundError("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
-        // }
+        if(!OTP) {
+            return next(new ErrorResponse("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
+        }
 
-        // const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
+        const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
 
-        // if(!token) {
-        //     return next(new BadRequestError("User verification token not found", StatusCodes.BAD_REQUEST));
-        // }
+        if(!token) {
+            return next(new ErrorResponse("User verification token not found", StatusCodes.BAD_REQUEST));
+        }
 
         // Fetch the generated token
         const otpToken = generateOTPVerificationToken(); 
 
-        // if(!otpToken) {
-        //     return next(new BadRequestError("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
-        // }
+        if(!otpToken) {
+            return next(new ErrorResponse("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
+        }
 
         const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
@@ -294,9 +283,9 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
     catch(error: any) {
 
 
-        // if(error) {
-        //     return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(new ErrorResponse(error, StatusCodes.BAD_REQUEST));
+        }
 
     }
 
@@ -331,44 +320,44 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
 
         const {email, password} = request.body;
 
-        // if(!email || !password) {
-        //     return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
-        // }
+        if(!email || !password) {
+            return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
+        }
     
-        // const user = await User.findOne({email});
+        const user = await User.findOne({email});
     
-        // if(!user) {
-        //     return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
-        // }
+        if(!user) {
+            return next(new ErrorResponse(`Could not find that user`, StatusCodes.BAD_REQUEST));
+        }
 
-        // if(user.isLocked) {
-        //     return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
-        // }
+        if(user.isLocked) {
+            return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
+        }
     
-        // // Compare user passwords before logging in
-        // const matchPasswords = await user.comparePasswords(password);
+        // Compare user passwords before logging in
+        const matchPasswords = await user.comparePasswords(password);
     
-        // if(!matchPasswords) {
-        //     return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
-        // }
+        if(!matchPasswords) {
+            return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
+        }
     
         // Generate new JWT and store in in the session
-        // const token = user.getAuthenticationToken();
+        const token = user.getAuthenticationToken();
         const userMfa = generateMfaToken();
         const transporter = emailTransporter();
 
-        // sendLoginMfa(transporter as any, user as any, userMfa as any);
-        // const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
+        sendLoginMfa(transporter as any, user as any, userMfa as any);
+        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
 
-        // await loginMfa.save();
+        await loginMfa.save();
 
-        // // Check for a valid MFA
-        // if(!userMfa) {
-        //    return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
-        // }
+        // Check for a valid MFA
+        if(!userMfa) {
+           return next(new ErrorResponse("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
+        }
 
-        //  request.session = {jwt: token}; // Store the token in the session as a cookie
-        //  return response.status(StatusCodes.OK).json({success: true, token, user});
+         request.session = {jwt: token}; // Store the token in the session as a cookie
+         return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
     catch(error) {
@@ -390,29 +379,29 @@ export const verifyLoginToken = async (request: any, response: any, next: NextFu
         const {userId, multiFactorToken} = request.body;
         const user = await User.findById(userId);
     
-        // if(!isValidObjectId(userId)) {
-        //     return next(new BadRequestError(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
-        // }
+        if(!isValidObjectId(userId)) {
+            return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
+        }
     
-        // if(!multiFactorToken) {
-        //     user.isActive = false; // User is not active yet
-        //     return next(new BadRequestError("Please provide your MFA token", StatusCodes.BAD_REQUEST));
-        // }
+        if(!multiFactorToken) {
+            user.isActive = false; // User is not active yet
+            return next(new ErrorResponse("Please provide your MFA token", StatusCodes.BAD_REQUEST));
+        }
     
-        // const factorToken = await TwoFactorVerification.findOne({owner: userId});
+        const factorToken = await TwoFactorVerification.findOne({owner: userId});
     
-        // if(!factorToken) {
-        //     return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
-        // }
+        if(!factorToken) {
+            return next(new ErrorResponse(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
+        }
     
         // Check to see if the tokens match
-        // const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
     
-        // if(!mfaTokensMatch) { // If tokens don't match
-        //     user.isActive = (!user.isActive) as boolean; // User is not active
-        //     user.isVerified = (!user.isVerified) as boolean; // User is not verified
-        //     // return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
-        // }
+        if(!mfaTokensMatch) { // If tokens don't match
+            user.isActive = (!user.isActive) as boolean; // User is not active
+            user.isVerified = (!user.isVerified) as boolean; // User is not verified
+            return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
+        }
 
         const newToken = new TwoFactorVerification({owner: user, mfaToken: multiFactorToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
@@ -443,29 +432,30 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         const currentUser = await User.findById(userId); // 2. Find the current user
 
         // 3. Check if the User ID is valid
-        // if(!isValidObjectId(userId)) {
-        //     return next(new NotFoundError("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
-        // }
 
-        // if(!mfaCode) {
-        //     return next(new NotFoundError("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
-        // }
+        if(!isValidObjectId(userId)) {
+            return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
+        }
 
-        // // 5. Fetch Generated Two Factor code
-        // const mfaToken = generateMfaToken();
-        // const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
+        if(!mfaCode) {
+            return next(new ErrorResponse("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
+        }
 
-        // if(!resentToken) {
-        //    return next(new NotFoundError("MFA Token could not be found", StatusCodes.NOT_FOUND))
-        // }
+        // 5. Fetch Generated Two Factor code
+        const mfaToken = generateMfaToken();
+        const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
-        // const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
+        if(!resentToken) {
+           return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
+        }
+
+        const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
 
         // Check if the resent token matches the one in the database or not
 
-        // if(!resentTokensMatch) {
-        //    return next(new BadRequestError("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
-        // }
+        if(!resentTokensMatch) {
+           return next(new ErrorResponse("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
+        }
 
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
@@ -508,7 +498,7 @@ export const logoutUser = async (request: any, response: any, next: NextFunction
 
 }
 
-export const forgotPassword = async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
@@ -516,31 +506,31 @@ export const forgotPassword = async (request: any, response: any, next: NextFunc
         const user = await User.findOne({email});
 
         // // Check if we have an e-mail in the body of the request
-        // if(!email) {
-        //     return next(new BadRequestError(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
-        // }
+        if(!email) {
+            return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
+        }
     
-        // if(!user) {
-        //     return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
-        // }
+        if(!user) {
+            return next(new ErrorResponse("No user found with that e-mail address", StatusCodes.NOT_FOUND));
+        }
     
-        // const userHasResetToken = await PasswordReset.findOne({owner: user._id});
+        const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
-        // if(userHasResetToken) {
-        //     return next(new BadRequestError("User already has the password reset token", StatusCodes.BAD_REQUEST));
-        // }
+        if(userHasResetToken) {
+            return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
+        }
     
-        // const token = generateRandomResetPasswordToken();
+        const token = generateRandomResetPasswordToken();
     
-        // if(token === undefined) { // If no token exists
-        //     return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
-        // }
+        if(token === undefined) { // If no token exists
+            return next(new ErrorResponse("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
+        }
     
-        // const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
-        // await resetPasswordToken.save();
+        const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
+        await resetPasswordToken.save();
     
-        // const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
-        // sendPasswordResetEmail(user, resetPasswordURL);
+        const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
+        sendPasswordResetEmail(user, resetPasswordURL);
     
         return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
     } 
@@ -553,7 +543,7 @@ export const forgotPassword = async (request: any, response: any, next: NextFunc
 
     }
 
-}
+})
 
 const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
      
