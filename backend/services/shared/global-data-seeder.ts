@@ -36,13 +36,11 @@ export const loadAllData = async (): Promise<any> => {
 
             await Ticket.create(tickets);
             await Venue.create(venues);
+            await Review.create(reviews);
 
-            // Handle Reviews & Discount data
-        
-            console.log(`Data imported to the database.`);
+            console.log(`All service Data imported successfully.`);
             return process.exit(1);
- 
-    
+
     } 
     
     catch(err: any) {
