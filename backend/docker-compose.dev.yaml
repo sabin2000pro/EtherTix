@@ -17,9 +17,6 @@ services:
        - /app/node_modules
        - ../backend/services/authentication:/app
 
-
-    command: ["npm", "run", "auth:test"]
-
   events-service:
       container_name: events-api
       image: sabin2000/ethertix-events-service
