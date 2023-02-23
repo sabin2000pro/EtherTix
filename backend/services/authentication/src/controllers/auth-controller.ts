@@ -116,7 +116,6 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         }
 
         const currentUser = user._id; // Get the current user's ID
-
         user.isNewUser = (!user.isNewUser);
 
         await user.save();
@@ -154,8 +153,6 @@ const sendTokenResponse = (request: Express.Request, user: any, statusCode: numb
   // @public: True (No Authorization Token Required)
   
 export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
 
         const {userId, OTP} = request.body;
         const user = await User.findById(userId);
@@ -201,7 +198,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
             user.accountActive = true;
     
             await user.save();
-            // await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
+            await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
     
             const transporter = emailTransporter();
     
@@ -222,18 +219,9 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     
             return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
         }
-       
+
     } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return next(error);
-        }
-
-    }
-
-})
+)
 
   // @description: Resend the E-mail Verification code to the user if not received
   // @parameters: request: Request Object, response: Response Object, next: Next Function
