@@ -102,7 +102,7 @@ services:
 
   discount-service:
 
-    container_name: discount-service
+    container_name: ethertix-discounts-service
     image: sabin2000/ethertix-discount-service
 
     build:
