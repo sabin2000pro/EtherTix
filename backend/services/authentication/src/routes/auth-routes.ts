@@ -1,11 +1,10 @@
 import express, { Router } from "express";
-import {registerUser, updateUserPassword, fetchAllUsers, editUserByID, rootRoute, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount} from "../controllers/auth-controller";
+import { RATE_LIMIT_MINUTES } from "../constants/auth-constants";
+import {registerUser, updateUserPassword, fetchAllUsers, editUserByID, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount, deleteUserByID} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
 export const authRouter: Router = express.Router();
-
-const RATE_LIMIT_MINUTES = 10 * 60 * 1000
 
 const rateLimiter = rateLimit({
 	windowMs: RATE_LIMIT_MINUTES,
@@ -36,4 +35,4 @@ authRouter.route('/deactivate-account').put(rateLimiter as any, protectAuth as a
 
 // Backend Protected Routes for User Management (GET Users, Update Users, Delete Users) -> Assigned to users that holds the role organiser
 authRouter.route('/users/fetch-users').get(rateLimiter as any, protectAuth as any, fetchAllUsers as any);
-authRouter.route('/users/edit-user/:userId').put(rateLimiter as any, protectAuth as any, editUserByID as any);
+authRouter.route('/users/:userId').put(rateLimiter as any, protectAuth as any, editUserByID as any).delete(rateLimiter as any, protectAuth as any, deleteUserByID);

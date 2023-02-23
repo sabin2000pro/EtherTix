@@ -1,0 +1,1 @@
+export const RATE_LIMIT_MINUTES = 10 * 60 * 1000

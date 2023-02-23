@@ -26,6 +26,7 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
 
     }
 
+    // Handle production errors
     if(process.env.AUTH_SERVICE_DEV_MODE === 'production') {
         
     }

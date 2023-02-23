@@ -203,8 +203,6 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 
 export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-    try {
-
         const {userId, OTP} = request.body;
         const currentUser = await User.findById(userId);
 
@@ -238,17 +236,7 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
     
         return response.status(StatusCodes.OK).json({success: true, message: "E-mail Verification Re-sent"});
     } 
-    
-    catch(error: any) {
-
-
-        if(error) {
-            return next(new ErrorResponse(error, StatusCodes.BAD_REQUEST));
-        }
-
-    }
-
-})
+)
 
 
   // @description: Login User
