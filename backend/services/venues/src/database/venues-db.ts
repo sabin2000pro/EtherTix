@@ -1,7 +1,7 @@
 require('dotenv').config();
 import mongoose from "mongoose";
 
-const VENUES_SERVICE_DB_URI = process.env.VENUES_SERVICE_DB_URI || ""
+const VENUES_SERVICE_DB_URI = process.env.VENUES_SERVICE_DB_URI;
 
 export const connectVenuesSchema = async (...args: unknown[]) => {
 

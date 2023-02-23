@@ -193,6 +193,7 @@ UserSchema.pre('save', async function(next: () => void) {
     }
 
    this.password = await bcrypt.hash(this.password, ROUNDS);
+   this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, ROUNDS);
 
    return next();
 })
