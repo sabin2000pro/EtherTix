@@ -1,10 +1,13 @@
 version: '3.2'
 
 services:
-
   api-gateway-service:
     container_name: ethertix-api-gateway-service
     image: sabin2000/ethertix-api-gateway-service
+
+    build:
+      context: ../backend/services/api-gateway
+      dockerfile: Dockerfile
   auth-service:
     container_name: auth-service
     image: sabin2000/ethertix-auth-service
