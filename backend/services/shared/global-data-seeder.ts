@@ -1,3 +1,4 @@
+import { connectVenuesSchema } from './../venues/src/database/venues-db';
 import { User } from '../authentication/src/models/user-model';
 import {Event} from '../events/src/models/event-model';
 import {Ticket} from '../tickets/src/models/ticket-model';

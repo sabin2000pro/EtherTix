@@ -4,17 +4,16 @@ import hpp from "hpp"
 import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
-import connectVenueSchema from './database/venues-db';
+import {connectVenuesSchema} from './database/venues-db';
 
 const app: any = express();
+connectVenuesSchema();
 
-connectVenueSchema();
-
-if(process.env.NODE_ENV === 'development') {
+if(process.env.VENUES_SERVICE_DEV_MODE === 'development') {
     app.use(morgan('dev'));
 }
 
-if(process.env.NODE_ENV === 'production') {
+if(process.env.VENUES_SERVICE_DEV_MODE === 'production') {
     app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
 }
  
@@ -27,7 +26,7 @@ app.use(helmet());
 // Include error handling middleware here for the venues
 
 app.get("/", (request: any, response: any) => {
-    return response.json({message: "Venues Root Route"})
+    return response.json({message: "Venues Service Root Route"})
 })
 
-export {app}
+export {app} // Export the main app

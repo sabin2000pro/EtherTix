@@ -1,36 +1,40 @@
-import dotenv from "dotenv";
+require('dotenv').config();
 import mongoose from "mongoose";
-dotenv.config({path: '../../config.env'});
 
-export default () => {
+const VENUES_SERVICE_DB_URI = process.env.VENUES_SERVICE_DB_URI || ""
 
-    const connectVenuesDatabase = async (...args: unknown[]) => {
+export const connectVenuesSchema = async (...args: unknown[]) => {
 
         try {
     
-            return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix.ahxythi.mongodb.net/auth-db?retryWrites=true&w=majority").then(conn => {
+            return await mongoose.connect(VENUES_SERVICE_DB_URI).then(conn => {
+
+                if(VENUES_SERVICE_DB_URI === undefined) {
+                    throw new Error(`The venues service environment variable for connecting to the database is undefined`)
+                }
     
                 if(conn.connection) {
-                    return console.log(`Connected to venues database...`)
+                    console.log(`Venues service connected to the database successfully`)
                 }
     
                 else {
                     return console.log(`Could not connect to venues DB`)
                 }
+
             })
         } 
         
         catch(error: any) {
             
             if(error) {
-                return console.error(error);
+                console.error(error);
+                throw new Error(error);
             }
     
         }
     }
 
-    connectVenuesDatabase();
+
+  connectVenuesSchema();
     
-    
-}
 
