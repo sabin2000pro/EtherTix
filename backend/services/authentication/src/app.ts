@@ -11,6 +11,7 @@ import {authRouter} from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 
+
 const app: any = express();
 
 connectAuthSchema();

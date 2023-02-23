@@ -1,5 +1,9 @@
 require('dotenv').config();
+<<<<<<< HEAD
 import { app } from "./app"
+=======
+import {app} from './app';
+>>>>>>> master
 
 const port = process.env.PORT || 5299;
 

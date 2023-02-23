@@ -17,6 +17,8 @@ import asyncHandler from 'express-async-handler';
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 import path from 'path'
 
+require('dotenv').config();
+
 declare namespace Express {
     export interface Request {
         user: any;

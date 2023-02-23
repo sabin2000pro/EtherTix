@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config({path: "/Users/sabin2000/Documents/ethertix/backend/services/events/config.env"});
+require('dotenv').config(); // DO NOT MODIFY THIS LINE
 import { app } from "./app"
 
 const port = process.env.PORT || 5301;
@@ -15,7 +14,6 @@ export const startEventsServer = async () => {
          else {
             return console.error(error);
          }
-
 
       });
 
