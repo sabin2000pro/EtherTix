@@ -8,6 +8,17 @@ services:
     build:
       context: ../backend/services/api-gateway
       dockerfile: Dockerfile
+
+    restart: always
+
+    ports:
+      - "6000:6000"
+
+    volumes:
+      - /app/node_modules
+      - ../backend/services/api-gateway:/app
+
+
   auth-service:
     container_name: auth-service
     image: sabin2000/ethertix-auth-service
