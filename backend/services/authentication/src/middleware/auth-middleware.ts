@@ -26,8 +26,6 @@ export interface IGetUserAuthInfoRequest extends Request {
 
 export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestUser | any, response: Response, next: NextFunction): Promise<any> => {
     let token;
-
-    const cookies = request.cookies;
     
     // Check to see if the authorization header starts with Bearer
     if(request.headers.authorization && request.headers.authorization.includes("Bearer")) {
@@ -42,7 +40,7 @@ export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestU
 
     try {
         
-        const decoded: any = jwt.verify(token, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify");
+        const decoded: any = jwt.verify(token, process.env.AUTH_SERVICE_JWT_TOKEN!);
         request.user = await User.findById(decoded.id);
         return next();
     } 
@@ -50,6 +48,7 @@ export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestU
     catch(error: any) {
 
         if(error) {
+            console.log(`Error : `, error);
             return next(new ErrorResponse("You are unauthorized to perform this action", StatusCodes.BAD_REQUEST));
         }
 
