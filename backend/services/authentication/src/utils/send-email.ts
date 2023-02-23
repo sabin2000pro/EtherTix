@@ -1,6 +1,5 @@
-
-import nodemailer from "nodemailer"
 require('dotenv').config()
+import nodemailer from "nodemailer"
 
 export const emailTransporter = (): any => { // Create the e-mail transporter
 

@@ -3,7 +3,7 @@ import {registerUser, updateUserPassword, fetchAllUsers, editUserByID, rootRoute
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
-export const authRouter: Router = express.Router({mergeParams: true});
+export const authRouter: Router = express.Router();
 
 const RATE_LIMIT_MINUTES = 10 * 60 * 1000
 
@@ -14,8 +14,7 @@ const rateLimiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
-authRouter.route('/root').get(rootRoute as any);
-authRouter.route('/register').post(rateLimiter as any, registerUser as any);
+authRouter.route('/register').post(registerUser as any);
 authRouter.route('/verify-email').post(rateLimiter as any, verifyEmailAddress as any);
 authRouter.route('/resend-email-verification').post(rateLimiter as any, resendEmailVerificationCode as any);
 

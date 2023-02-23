@@ -11,7 +11,6 @@ import {authRouter} from './routes/auth-routes';
 import { errorHandler } from './middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 
-
 const app: any = express();
 
 connectAuthSchema();
@@ -41,6 +40,6 @@ app.get('/', async (request: any, response: any, next: any): Promise<any> => {
 
 // Error Handler middleware
 app.use('/api/auth', authRouter);
-app.use(errorHandler);
+// app.use(errorHandler);
 
 export {app}

@@ -16,6 +16,7 @@ services:
     volumes:
        - /app/node_modules
        - ../backend/services/authentication:/app
+       
   auth-tests: # Tests Service
     build:
       context: ../backend/services/authentication

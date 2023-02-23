@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 require('dotenv').config();
+import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 interface IUserAttributes {
@@ -105,11 +105,7 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    
-    city: {
-        type: String,
-        required: [true, "Please specify the city that the user resides in"]
-    },
+
 
     photo: { // Photo for the user
         type: String, // Type is string
@@ -131,7 +127,6 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: [UserRoles.Admin, UserRoles.Moderator, UserRoles.Organiser, UserRoles.User],
-        required: [true, "Please specify the role of the user"],
         default: UserRoles.User
     },
 
@@ -198,7 +193,7 @@ UserSchema.methods.comparePasswords = async function(password: string): Promise<
 }
 
 UserSchema.methods.getAuthenticationToken = function() {
-   return jwt.sign({id: this._id}, process.env.JWT_TOKEN!, {expiresIn: process.env.JWT_EXPIRES_IN!});
+   return jwt.sign({id: this._id}, process.env.AUTH_SERVICE_JWT_TOKEN!, {expiresIn: process.env.AUTH_SERVICE_JWT_EXPIRES_IN});
 }
 
 const User = mongoose.model<UserDocument>("User", UserSchema);

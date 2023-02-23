@@ -17,8 +17,6 @@ import asyncHandler from 'express-async-handler';
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 import path from 'path'
 
-require('dotenv').config();
-
 declare namespace Express {
     export interface Request {
         user: any;
@@ -86,11 +84,11 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
-        const {forename, surname, username, email, password, postCode, city, passwordConfirm, role} = request.body;
+        const {forename, surname, username, email, password, passwordConfirm} = request.body;
 
         if(!forename) {
             return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.BAD_REQUEST));
@@ -114,7 +112,8 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
             return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
         }
 
-        const user = await User.create({forename, surname, username, email, role, password, passwordConfirm});
+        const user = await User.create({forename, surname, username, email, password, passwordConfirm});
+        console.log(`User : `, user);
         const token = user.getAuthenticationToken(); // Get the users JWT token
 
         if(!token) {
@@ -136,7 +135,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
-        return sendTokenResponse(request as any, user, StatusCodes.CREATED, response);
+        return response.status(StatusCodes.CREATED).json({success: true, user});
     } 
     
     catch(error: any) {
