@@ -37,10 +37,10 @@ export const createEvent = async (eventPayLoad: any): Promise<any> => {
 
 }
 
-export const getAllEventData = async (eventPayLoad: any): Promise<any> => {
+export const getAllEventData = async (): Promise<any> => {
 
     try{
-    const response = await axios.delete("/api/event/events", eventPayLoad);
+    const response = await axios.get("/api/event/events");
         const data = await response.data;
     
         return data;
@@ -54,10 +54,10 @@ export const getAllEventData = async (eventPayLoad: any): Promise<any> => {
 }
 }
 
-export const getSingleEventData = async (eventPayLoad: any): Promise<any> => {
+export const getSingleEventData = async (): Promise<any> => {
 
     try{
-    const response = await axios.delete("/api/event/events", eventPayLoad);
+    const response = await axios.get("/api/event/events");
         const data = await response.data;
     
         return data;

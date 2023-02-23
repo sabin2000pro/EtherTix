@@ -1,10 +1,15 @@
+import { func } from "prop-types";
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router";
 //import { createEvent } from 'api/events/event-api';
 
 const EditEvent: React.FC = () => {
   
   const navigate = useNavigate();
+
+  const handleNavChange = () => {
+    return navigate('/');
+  }
   
   const [eventData, setEventData] = useState({
     _id:"",
@@ -76,8 +81,6 @@ const EditEvent: React.FC = () => {
   {
     setCheckedAvailableTix(!checkedAvailableTix);
   }
-
-
 
   const handleFreeChange = (event: React.ChangeEvent<HTMLInputElement>) =>
   {
@@ -152,7 +155,7 @@ const EditEvent: React.FC = () => {
       console.log(currentDate);
     }
   
-    setUpdateDate();
+    setUpdateDate()
   };
 
   
@@ -332,6 +335,9 @@ const EditEvent: React.FC = () => {
     </div>
     
     </form>
+
+    <button onClick={handleNavChange} className = "register-btn" type = "submit"></button>
+
     
     {error && <p>{error}</p>}
     
