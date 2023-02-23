@@ -12,8 +12,9 @@ if(process.env.API_GATEWAY_NODE_ENV === 'development') {
     app.use(morgan('dev') as any);
 }
 
-app.use(mongoSanitize());
 app.use(express.json());
+app.use(mongoSanitize());
+
 app.set('trust proxy', true);
 app.use(hpp());
 

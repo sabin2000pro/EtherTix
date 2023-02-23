@@ -1,6 +1,5 @@
+require('dotenv').config();
 import { app } from "./app"
-import dotenv from 'dotenv';
-dotenv.config({path: "backend/services/authentication/config.env"});
 
 const API_GATEWAY_PORT = process.env.API_GATEWAY_PORT || 6000;
 
