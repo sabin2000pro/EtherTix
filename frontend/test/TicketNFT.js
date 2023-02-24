@@ -11,6 +11,13 @@ contract("TicketNFT", (accounts) => {
         ticketNFT = await TicketNFT.new();
     });
 
+    const convertPriceToEther = () => {
+        const price = web3.utils.toWei("0.01", "ether").toString()
+        const priceInEther = web3.utils.fromWei(price, "ether");
+
+        return priceInEther;
+    }
+
     const returnTokenMintedReceipt = (receipt) => {
         const mintedReceipt = receipt.logs.find(log => log.event === "NewTokenMinted");
         return mintedReceipt;
@@ -49,9 +56,7 @@ contract("TicketNFT", (accounts) => {
 
     it("Unit Test 3 - Should be able to list the currently minted NFT for sale", async () => {
         const name = "Test Mint Token";
-        const price = web3.utils.toWei("0.01", "ether").toString()
-        const priceInEther = web3.utils.fromWei(price, "ether");
-        console.log(`The price : `, priceInEther);
+        const priceInEther = convertPriceToEther();
 
         const receipt = await ticketNFT.mintToken(name, parseInt(priceInEther), { from: accounts[0] });
         const event = returnTokenMintedReceipt(receipt);
