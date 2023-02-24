@@ -98,7 +98,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currentToken.tokenOwner = tokenBuyer;
         isTokenForSale[tokenId] = false;
 
-        // Return the new holder of the NFT
+        // Return the new blockchain address holder of the ticket token
         return tokenBuyer;
 }
 

@@ -3,6 +3,8 @@ const TicketNFT = artifacts.require("TicketNFT");
 const Web3 = require('web3');
 const web3 = new Web3();
 
+let DEFAULT_PRICE = 100;
+
 contract("TicketNFT", (accounts) => {
     let ticketNFT;
 
@@ -10,20 +12,17 @@ contract("TicketNFT", (accounts) => {
         ticketNFT = await TicketNFT.new();
     });
 
-    const findMintedTokenReceipt = (receipt) => {
+    const returnTokenMintedReceipt = (receipt) => {
         const mintedReceipt = receipt.logs.find(log => log.event === "NewTokenMinted");
-
-        console.log(`Minted Token Receipt! : `, mintedReceipt);
-
         return mintedReceipt;
     }
 
     it("Unit Test 1 : Test that mints a new token", async () => {
         const name = "Test Mint Token";
-        const price = 100;
+        const price = DEFAULT_PRICE;
 
         const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
-        const event = findMintedTokenReceipt(receipt);
+        const event = returnTokenMintedReceipt(receipt);
 
         const newTokenId = event.args._tokenId;
         const token = await ticketNFT.fetchTokenByIndex(newTokenId);
