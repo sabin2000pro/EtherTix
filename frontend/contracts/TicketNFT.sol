@@ -26,7 +26,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     mapping (uint256 => uint256) public tokensPrice;
     mapping(string => bool) tokenNames;
 
-    event NewTokenMinted(uint256 _tokenId);
+    event NewTokenMinted(uint256 _tokenId, bool isListed);
     event NftPurchased (uint tokenId, address newTokenOwner, string tokenName, uint256 tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     
@@ -44,7 +44,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         NftToken memory currMintedToken = circulatingTokens[newTokenId];
         currMintedToken.isListed = true;
 
-        emit NewTokenMinted(newTokenId);
+        bool isTokenListed = currMintedToken.isListed;
+        emit NewTokenMinted(newTokenId, isTokenListed);
         return newTokenId; // Return the newly created ID
     }
 

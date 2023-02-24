@@ -23,7 +23,6 @@ contract("TicketNFT", (accounts) => {
         const price = 100;
 
         const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
-
         const event = findMintedTokenReceipt(receipt);
 
         const newTokenId = event.args._tokenId;
