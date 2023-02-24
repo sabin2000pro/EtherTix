@@ -26,12 +26,12 @@ const Login = () => {
     try {
       const response = await login(Creds);
 
-      if (response.data.success === true) {
+      if (response.success === true) {
         navigate("/", {
           state: { token: response.token, user: response.user },
         });
       } else {
-        return response.data;
+        return response;
       }
     } catch (err: any) {
       if (err) {
