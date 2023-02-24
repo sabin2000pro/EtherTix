@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 require('dotenv').config();
+import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
@@ -25,7 +25,6 @@ interface IUserAttributes {
     isVerified: boolean;
     isLoggedIn: boolean;
     isValid: boolean;
-    postCode: string;
     virtualCredits: number;
     reputationPoints: number;
     premiumAccount: boolean;
@@ -70,10 +69,6 @@ enum UserRoles {
     Admin = "Admin", User = "User", Moderator = "Moderator", Organiser = "Organiser"
 }
 
-enum AccountType {
-    Basic = "Basic", Standard = "Standard", Premium = "Premium", Platinum = "Platinum"
-}
-
 const UserSchema = new mongoose.Schema({
 
     forename: { // User's forename
@@ -108,6 +103,10 @@ const UserSchema = new mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     photo: { // Photo for the user
         type: String, // Type is string
         default: 'no-photo.jpg'
@@ -194,7 +193,7 @@ UserSchema.methods.comparePasswords = async function(password: string): Promise<
 }
 
 UserSchema.methods.getAuthenticationToken = function() {
-   return jwt.sign({id: this._id}, process.env.JWT_TOKEN!, {expiresIn: process.env.JWT_EXPIRES_IN!});
+   return jwt.sign({id: this._id}, process.env.AUTH_SERVICE_JWT_TOKEN!, {expiresIn: process.env.AUTH_SERVICE_JWT_EXPIRES_IN});
 }
 
 const User = mongoose.model<UserDocument>("User", UserSchema);

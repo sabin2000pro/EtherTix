@@ -1,7 +1,3 @@
-// Service: Authentication Service
-// Copyright (c) 2023 - EtherTix (All Rights Reserved)
-
-import { FileTooLargeError, NotFoundError, AccountVerifiedError } from './../middleware/error-handler';
 import { emailTransporter } from './../utils/send-email';
 import { NextFunction, Request, Response } from 'express';
 import {User} from '../models/user-model';
@@ -9,57 +5,37 @@ import {EmailVerification} from '../models/email-verification-model';
 import {PasswordReset} from '../models/password-reset-model';
 import {StatusCodes} from "http-status-codes";
 import { generateOTPVerificationToken } from '../utils/generate-otp';
-import {BadRequestError, JwtTokenError} from "../middleware/error-handler"
 import { generateMfaToken } from '../utils/generate-mfa';
 import { isValidObjectId } from 'mongoose';
 import { TwoFactorVerification } from '../models/two-factor-model';
 import asyncHandler from 'express-async-handler';                        
 import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
 import path from 'path'
+import { ErrorResponse } from '../utils/error-response';
 
-require('dotenv').config();
-
-declare namespace Express {
-    export interface Request {
-        user: any;
-        id: any;
-        body: any;
-        session: any;
-        params: any;
-        method: any;
-        query: any;
-        files?: Record<any,any>
-    }
-
-  }
-
-  export interface IGetUserAuthInfoRequest extends Request {
-      user: any // or any other type
-  }
-
-export interface FileRequest extends Request {
-    file: any;
-}
-
-  export interface IUserData {
-    id: string;
-    email: string;
-    username: string
-    password: string;
-    virtualCredits: number;
-}
-
-export interface IRequestUser extends Request {
-    user: IUserData;
-
-}
 
   // @description: Sends the verify confirmation e-mail to the user after registering an account
   // @parameters: Transporter Object, User Object, Randomly Generated User OTP
   // @returns: void
   // @public: True (No Authorization Required)
 
-const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+  export const sendLoginMfa = (transporter: any, user: any, userMfa: any) => {
+
+    return transporter.sendMail({
+        
+        from: 'mfa@ethertix.com',
+        to: user.email,
+        subject: 'Login MFA Verification',
+        html: `
+        
+        <p>Your MFA code</p>
+        <h1> ${userMfa}</h1>
+        `
+    })
+
+}
+
+export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
 
     return transporter.sendMail({
 
@@ -75,54 +51,64 @@ const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) 
     })
 }
 
-  export const rootRoute = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-      return response.status(StatusCodes.OK).json({success: true, message: "Root Route Auth!"});
-  })
+  // @description: Send The JWT Token Response
+  // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
+  // @returns: Server Response Promise Including the User Object and Token
+  // @access: Public (NO Bearer Token Required)
 
+  export const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
+    const token = user.getAuthenticationToken();
+    request.session = {token}; // Store the token in the session
+ 
+    return response.status(statusCode).json({user, token});
+}
   
-  // API 1
   // @description: Register New User Account
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
+<<<<<<< HEAD
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
 
+=======
+export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+>>>>>>> master
         const {forename, surname, username, email, password, passwordConfirm} = request.body;
 
         if(!forename) {
-            return next(new NotFoundError("Forename is missing. Please try enter again", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`Forename missing, please try again`, StatusCodes.BAD_REQUEST))
         }
 
         if(!surname) {
-            return next(new NotFoundError("Surname is missing. Please try enter again", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Surname is missing. Please try enter again", StatusCodes.BAD_REQUEST));
         }
 
         if(!email) {
-          return next(new BadRequestError("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
+          return next(new ErrorResponse("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
         }
 
         if(password !== passwordConfirm ) {
-            return next(new BadRequestError(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
         }
 
         const existingUser = await User.findOne({email}) // Find an existing user
 
         if(existingUser) {
-            return next(new BadRequestError("User already exists", StatusCodes.BAD_REQUEST));
+            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: `User already exists`});
         }
 
         const user = await User.create({forename, surname, username, email, password, passwordConfirm});
         const token = user.getAuthenticationToken(); // Get the users JWT token
 
         if(!token) {
-            return next(new JwtTokenError("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
+            return next(new ErrorResponse("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
         }
 
         const currentUser = user._id; // Get the current user's ID
-        user.isNewUser = true; // User is new after registered
+        user.isNewUser = (!user.isNewUser);
 
         await user.save();
 
@@ -130,84 +116,60 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
-        const transporter = emailTransporter();
+        const transporter = emailTransporter(); 
         sendConfirmationEmail(transporter, user, userOTP as unknown as any);
 
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
-        return sendTokenResponse(request as any, user, StatusCodes.CREATED, response);
+        return sendTokenResponse(request, user, StatusCodes.CREATED, response);
     } 
     
-    catch(error: any) {
-
-        if(error) {
-            return next(error);
-        }
-
-    }
-
-} )
-
-  // @description: Send The JWT Token Response
-  // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
-  // @returns: Server Response Promise Including the User Object and Token
-  // @access: Public (NO Bearer Token Required)
-
-const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
-    const token = user.getAuthenticationToken();
-    request.session = {token}; // Store the token in the session
- 
-    return response.status(statusCode).json({user, token});
-}
+)
 
   // @description: Verify User E-mail Address
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
-
-  // API 2 - E-mail Address Verification
   
 export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
 
         const {userId, OTP} = request.body;
         const user = await User.findById(userId);
 
         // Check for invalid User ID
         if(!isValidObjectId(userId)) {
-            return next(new NotFoundError("User ID not found. Please check your entry again.", StatusCodes.NOT_FOUND))
+            return next(new ErrorResponse("User ID not found. Please check your entry again.", StatusCodes.NOT_FOUND))
         }
 
         // Check for missing OTP
         if(!OTP) {
-            return next(new NotFoundError("OTP Entered not found. Please check your entry", StatusCodes.NOT_FOUND))
+            return next(new ErrorResponse("OTP Entered not found. Please check your entry", StatusCodes.NOT_FOUND))
         }
 
         if(!user) {
-            return next(new BadRequestError(`No user found with that ID`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`No user found with that ID`, StatusCodes.BAD_REQUEST));
         }
 
         // If the user is already verified
         if(user.isVerified) {
-            return next(new BadRequestError(`User account is already verified`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`User account is already verified`, StatusCodes.BAD_REQUEST));
         }
 
         if(user.isActive) { // If the user account is already active before verifying their e-mail address, send back error
-            return next(new AccountVerifiedError(`User account is already active`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`User account is already active`, StatusCodes.BAD_REQUEST));
         }
 
         const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
 
         if(!token) {
-            return next(new BadRequestError(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
         }
 
         const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
 
         if(!otpTokensMatch) {
-            return next(new BadRequestError(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
         }
 
         if(otpTokensMatch) { // If the OTP Tokens Match
@@ -237,55 +199,43 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     
             return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
         }
-       
+
     } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return next(error);
-        }
-
-    }
-
-})
+)
 
   // @description: Resend the E-mail Verification code to the user if not received
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-  // API - 3
 export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
 
         const {userId, OTP} = request.body;
         const currentUser = await User.findById(userId);
 
         if(!currentUser) { // If we have no current user
-            return next(new BadRequestError("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
         }
 
         if(!isValidObjectId(userId)) {
-            return next(new BadRequestError("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
         }
 
         if(!OTP) {
-            return next(new NotFoundError("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
+            return next(new ErrorResponse("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
         }
 
         const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
 
         if(!token) {
-            return next(new BadRequestError("User verification token not found", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("User verification token not found", StatusCodes.BAD_REQUEST));
         }
 
         // Fetch the generated token
         const otpToken = generateOTPVerificationToken(); 
 
         if(!otpToken) {
-            return next(new BadRequestError("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
         }
 
         const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
@@ -293,41 +243,14 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
     
         return response.status(StatusCodes.OK).json({success: true, message: "E-mail Verification Re-sent"});
     } 
-    
-    catch(error: any) {
+)
 
-
-        if(error) {
-            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-        }
-
-    }
-
-})
-
-const sendLoginMfa = (transporter: any, user: IUserData, userMfa: any) => {
-
-    return transporter.sendMail({
-        from: 'mfa@ethertix.com',
-        to: user.email,
-        subject: 'Login MFA Verification',
-        html: `
-        
-        <p>Your MFA code</p>
-        <h1> ${userMfa}</h1>
-        `
-    })
-
-
-}
 
   // @description: Login User
   // @parameters: request: Request Object, response: Response Object, next: Next Function
   // @returns: Server Response Promise w/ Status Code 200
   // @public: True (No Authorization Token Required)
 
-
-  // API - 4
 export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
@@ -335,24 +258,24 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         const {email, password} = request.body;
 
         if(!email || !password) {
-            return next(new BadRequestError(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
         }
     
         const user = await User.findOne({email});
     
         if(!user) {
-            return next(new BadRequestError(`Could not find that user`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`Could not find that user`, StatusCodes.BAD_REQUEST));
         }
 
         if(user.isLocked) {
-            return next(new BadRequestError("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
         }
     
         // Compare user passwords before logging in
         const matchPasswords = await user.comparePasswords(password);
     
         if(!matchPasswords) {
-            return next(new BadRequestError(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
         }
     
         // Generate new JWT and store in in the session
@@ -367,7 +290,7 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
 
         // Check for a valid MFA
         if(!userMfa) {
-           return next(new BadRequestError("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
+           return next(new ErrorResponse("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
         }
 
          request.session = {jwt: token}; // Store the token in the session as a cookie
@@ -394,18 +317,18 @@ export const verifyLoginToken = async (request: any, response: any, next: NextFu
         const user = await User.findById(userId);
     
         if(!isValidObjectId(userId)) {
-            return next(new BadRequestError(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
+            return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
         }
     
         if(!multiFactorToken) {
             user.isActive = false; // User is not active yet
-            return next(new BadRequestError("Please provide your MFA token", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Please provide your MFA token", StatusCodes.BAD_REQUEST));
         }
     
         const factorToken = await TwoFactorVerification.findOne({owner: userId});
     
         if(!factorToken) {
-            return next(new BadRequestError(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
+            return next(new ErrorResponse(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
         }
     
         // Check to see if the tokens match
@@ -414,7 +337,7 @@ export const verifyLoginToken = async (request: any, response: any, next: NextFu
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive) as boolean; // User is not active
             user.isVerified = (!user.isVerified) as boolean; // User is not verified
-            return next(new BadRequestError("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
 
         const newToken = new TwoFactorVerification({owner: user, mfaToken: multiFactorToken}); // Create a new instance of the token
@@ -446,12 +369,13 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         const currentUser = await User.findById(userId); // 2. Find the current user
 
         // 3. Check if the User ID is valid
+
         if(!isValidObjectId(userId)) {
-            return next(new NotFoundError("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
+            return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
 
         if(!mfaCode) {
-            return next(new NotFoundError("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
+            return next(new ErrorResponse("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
         }
 
         // 5. Fetch Generated Two Factor code
@@ -459,7 +383,7 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
-           return next(new NotFoundError("MFA Token could not be found", StatusCodes.NOT_FOUND))
+           return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
 
         const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
@@ -467,13 +391,13 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         // Check if the resent token matches the one in the database or not
 
         if(!resentTokensMatch) {
-           return next(new BadRequestError("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
+           return next(new ErrorResponse("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
         }
 
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
         
-        resentToken.mfaToken = undefined; // Clear the generated token from the database
+        // resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
         return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
@@ -511,32 +435,32 @@ export const logoutUser = async (request: any, response: any, next: NextFunction
 
 }
 
-export const forgotPassword = async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
 
         const {email} = request.body;
         const user = await User.findOne({email});
 
-        // Check if we have an e-mail in the body of the request
+        // // Check if we have an e-mail in the body of the request
         if(!email) {
-            return next(new BadRequestError(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
+            return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
         }
     
         if(!user) {
-            return next(new NotFoundError("No user found with that e-mail address", StatusCodes.NOT_FOUND));
+            return next(new ErrorResponse("No user found with that e-mail address", StatusCodes.NOT_FOUND));
         }
     
         const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
         if(userHasResetToken) {
-            return next(new BadRequestError("User already has the password reset token", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
         }
     
         const token = generateRandomResetPasswordToken();
     
         if(token === undefined) { // If no token exists
-            return next(new BadRequestError("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
         }
     
         const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
@@ -556,7 +480,7 @@ export const forgotPassword = async (request: any, response: any, next: NextFunc
 
     }
 
-}
+})
 
 const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
      
@@ -583,39 +507,39 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
         const resetToken = request.params.resetToken;
 
         // Validate Fields
-        if(!currentPassword) {
-            return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        }
+        // if(!currentPassword) {
+        //     return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        // }
     
-        if(!newPassword) {
-            return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
-        }
+        // if(!newPassword) {
+        //     return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
+        // }
     
-        const user = await User.findOne({owner: request.user._id, token: resetToken});
+        // const user = await User.findOne({owner: request.user._id, token: resetToken});
     
-        if(!user) {
-            return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-        }
+        // if(!user) {
+        //     return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+        // }
     
-        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+        // const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
-        if(!userPasswordsMatch) {
-           return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
-        }
+        // if(!userPasswordsMatch) {
+        //    return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        // }
     
-        user.password = newPassword;
-        user.passwordConfirm = undefined;
+        // user.password = newPassword;
+        // user.passwordConfirm = undefined;
     
-        await user.save(); // Save new user after reset the password
+        // await user.save(); // Save new user after reset the password
     
         return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
    } 
    
    catch(error: any) {
 
-      if(error) {
-         return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
-      }
+    //   if(error) {
+    //      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+    //   }
 
    }
 
@@ -631,9 +555,9 @@ export const getCurrentUser = asyncHandler(async (request: any, response: any, n
     
     catch(error: any) {
 
-        if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        }
+        // if(error) {
+        //     return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        // }
 
     }
 
@@ -650,33 +574,33 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
     
-        if(!newPassword) {
-            return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
-        }
+        // if(!newPassword) {
+        //     return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
+        // }
     
-        const user = await User.findById(<any>request.user._id);
+        // const user = await User.findById(<any>request.user._id);
     
-        if(!user) {
-            return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-        }
+        // if(!user) {
+        //     return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
+        // }
     
-        const currentPasswordMatch = user.comparePasswords(currentPassword);
+        // const currentPasswordMatch = user.comparePasswords(currentPassword);
     
-        if(!currentPasswordMatch) { // If passwords do not match
-            return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
-        }
+        // if(!currentPasswordMatch) { // If passwords do not match
+        //     return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
+        // }
     
-        user.password = request.body.newPassword
-        await user.save(); // Save new user
+        // user.password = request.body.newPassword
+        // await user.save(); // Save new user
     
         return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
    } 
    
    catch(error) {
 
-        if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        }
+        // if(error) {
+        //     return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        // }
         
    }
 
@@ -712,13 +636,13 @@ export const deactivateUserAccount = async (request: any, response: any, next: N
     const user = await User.findById(userId);
 
     // If no user exists
-    if(!user) {
-        return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
-    }
+    // if(!user) {
+    //     return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
+    // }
 
-    if((!user.isValid) || (!user.isActive) ) {
-        return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
-    }
+    // if((!user.isValid) || (!user.isActive) ) {
+    //     return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
+    // }
 
     if(user.isActive && user.isValid) { // If the current user account is active and the user account is valid
         // Change the is active and is valid fields to false
@@ -744,33 +668,33 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
             const currentUser = await User.findById(userId); // Find the current user
         
-            if(!currentUser) {
-                return next(new NotFoundError("User Not found with that ID", StatusCodes.NOT_FOUND));
-            }
+            // if(!currentUser) {
+            //     return next(new NotFoundError("User Not found with that ID", StatusCodes.NOT_FOUND));
+            // }
         
-            if(!request.files) {
-                return next(new BadRequestError(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
-            }
+            // if(!request.files) {
+            //     return next(new BadRequestError(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
+            // }
         
             // 1. Ensure that the file is an actual image
         
-            if(!file.mimetype.startsWith("image")) {
-                return next(new BadRequestError("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
-            }
+            // if(!file.mimetype.startsWith("image")) {
+            //     return next(new BadRequestError("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
+            // }
         
             // Validate File size. Check if file size exceeds the maximum size
-            if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-                return next(new FileTooLargeError("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
-            }
+            // if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
+            //     return next(new FileTooLargeError("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
+            // }
         
              // Create custom filename
           file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
         
           file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
         
-                if(error) {
-                   return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
-                }
+                // if(error) {
+                //    return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
+                // }
         
                 await User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
                 return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
@@ -782,9 +706,9 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
     
     catch(error: any) {
 
-        if(error) {
-            return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-        }
+        // if(error) {
+        //     return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
+        // }
     }
 
 
@@ -798,9 +722,9 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: any, respo
 
             const premiumUsers = await User.find({premium: true});
 
-            if(!premiumUsers) {
-                return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
-            }
+            // if(!premiumUsers) {
+            //     return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
+            // }
     
     
             return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
@@ -823,9 +747,9 @@ export const fetchLockedUserAccounts = asyncHandler(async (request: any, respons
 
        const lockedUserAccounts = await User.find({accountLocked: !false});
 
-       if(!lockedUserAccounts) {
-            return next(new BadRequestError("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
-       }
+    //    if(!lockedUserAccounts) {
+    //         return next(new BadRequestError("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
+    //    }
 
        return response.status(StatusCodes.OK).json({success: true, data: lockedUserAccounts});
     } 
@@ -849,9 +773,9 @@ export const fetchAllUsers = asyncHandler(async (request: any, response: any, ne
 
         const users = await User.find();
 
-        if(!users) {
-            return next(new BadRequestError("No users found in the database", StatusCodes.NOT_FOUND));
-        }
+        // if(!users) {
+        //     return next(new BadRequestError("No users found in the database", StatusCodes.NOT_FOUND));
+        // }
 
         return response.status(StatusCodes.OK).json({success: true, users});
     
@@ -875,9 +799,9 @@ export const fetchUserByID = asyncHandler(async (request: any, response: any, ne
         const userId = request.params.userId;
         const user = await User.findById(userId);
 
-         if(!userId) {
-            return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        }
+        //  if(!userId) {
+        //     return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        // }
 
         return response.status(StatusCodes.OK).json({success: true, user})
     
@@ -923,20 +847,20 @@ export const editUserByID = async (request: any, response: any, next: NextFuncti
      if(request.method === 'PUT') {
         const userId = request.params.userId; // Extract User ID
 
-        if(!userId) {
-           return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        }
+        // if(!userId) {
+        //    return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        // }
   
-        let user = await User.findById(userId);
+        // let user = await User.findById(userId);
   
-        if(!user) {
-           return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
-        }
+        // if(!user) {
+        //    return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
+        // }
   
-        user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
-        await user.save();
+        // user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
+        // await user.save();
   
-        return response.status(StatusCodes.OK).json({success: true, data: user});
+        // return response.status(StatusCodes.OK).json({success: true, data: user});
       }
  
     
@@ -960,9 +884,9 @@ export const deleteUserByID = async (request: any, response: any, next: NextFunc
 
             const userId = request.params.userId;
 
-            if(!userId) {
-                return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
-            }
+            // if(!userId) {
+            //     return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            // }
     
             await User.findByIdAndDelete(userId);
             return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
@@ -1010,9 +934,9 @@ export const lockUserAccount = async (request: any, response: any, next: NextFun
         const userId = request.user.id;
         const user = await User.findById(userId);
     
-        if(!user) {
-            return next(new BadRequestError("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
-        }
+        // if(!user) {
+        //     return next(new BadRequestError("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
+        // }
     
         return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
    } 

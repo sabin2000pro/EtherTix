@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 import geocoder from "node-geocoder";
-
 interface IVenueAttributes {
     name: string;
     slug: string;
-    email: string; // E-mail Address of the venue
     venueCapacity: number;
     phone: string;
     ageRestriction: string;
@@ -28,7 +26,6 @@ interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
     slug: string;
     venue: Object;
     phone: string;
-    email: string;
     website: string;
     openTime: Date;
     closeTime: Date;
@@ -67,12 +64,6 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
           type: String,
           max: [20, 'Phone number can not be longer than 20 characters'],
           min: [6, "Phone number must have at least 6 characters"]
-        },
-
-        email: { // Contact e-mail address for the venue
-          type: String,
-          match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please add a valid e-mail address for the venue for contact purposes'],
-          required: [true, "Please specify the e-mail address for the Venue"]
         },
 
         ageRestriction: { // Venue entry age restriction
@@ -175,6 +166,8 @@ VenueSchema.virtual('events', {
   foreignField: 'event',
   localField: '_id'
 });
+
+// Middleware to geocode the address for the venue that the event is being held at.
 
 const Venue = mongoose.model<IVenueDocument>("Venue", VenueSchema);
 export {Venue}

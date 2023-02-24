@@ -6,7 +6,6 @@ import { Event } from "../models/event-model";
 export const fetchAllEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
-
         const events = await Event.find()
         return response.status(StatusCodes.OK).json(events);
     } 
@@ -25,6 +24,7 @@ export const fetchAllEvents = async (request: any, response: any, next: NextFunc
 export const getEventCount = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
+
         const events = await Event.countDocuments({});
         return response.status(StatusCodes.OK).json({success: true, count: events});
     } 
@@ -73,7 +73,12 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
     try {    
-        // @TODO
+        request.body.user = request.user.id;
+        const event = await Event.create(request.body);
+        await event.save();
+
+        return response.status(StatusCodes.CREATED).json({success: true, event});
+
     }    
     
     catch(error) {
@@ -114,6 +119,10 @@ export const deleteEvents = async (request: any, response: any, next: NextFuncti
     }
     
     catch(error) {
+
+      if(error) {
+        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+      }
 
     }
 

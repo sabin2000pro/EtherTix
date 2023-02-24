@@ -13,23 +13,22 @@ const app: any = express();
 
 app.use(express.json() as any);
 
-if(process.env.NODE_ENV === 'production') {
+if(process.env.CATEGORIES_SERVICE_NODE_ENV === 'production') {
     app.use(mongoSanitize())
 }
 
-if(process.env.NODE_ENV === 'development') {
+if(process.env.CATEGORIES_SERVICE_NODE_ENV === 'development') {
     app.use(morgan('dev') as any)
 }    
 
-app.use(cors({
-    origin: "*",
-    methods: ["POST", "PUT", "GET", "DELETE", "PATCH"]
-}) as any)
+app.use(cors({ origin: "*", methods: ["POST", "PUT", "GET", "DELETE", "PATCH"]}) as any)
 
 app.get('/', (request: any, response: any, next) => {
-   return response.status(StatusCodes.OK).json({success: true, message: "Categories ServiceRoot Route"}) 
+   return response.status(StatusCodes.OK).json({success: true, message: "Categories Service Root Route"}) 
 })
 
 app.use('/api/categories', categoriesRouter);
+
+// Mount the error handler here
 
 export {app}

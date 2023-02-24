@@ -1,8 +1,9 @@
 require('dotenv').config();
 import { StatusCodes } from 'http-status-codes';
-import {UnauthorizedError, ForbiddenError } from './error-handler';
 import { NextFunction, Request, Response } from "express";
 import { User } from '../models/user-model';
+import asyncHandler from 'express-async-handler';
+import { ErrorResponse } from '../utils/error-response';
 import jwt from "jsonwebtoken";
   export interface IUserData {
     user: any
@@ -23,7 +24,7 @@ export interface IGetUserAuthInfoRequest extends Request {
     user: any // or any other type
 }
 
-export const protectAuth = async (request: IAuthRequest & IRequestUser, response: Response, next: NextFunction): Promise<any> => {
+export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestUser | any, response: Response, next: NextFunction): Promise<any> => {
     let token;
     
     // Check to see if the authorization header starts with Bearer
@@ -31,13 +32,15 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
          token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
 
+    // Also verify to see if the token is in the cookies
+
     if(!token) {
-        return next(new UnauthorizedError("You are not authorized to perform this action", StatusCodes.BAD_REQUEST));
+        return next(new ErrorResponse("You are not authorized to perform this action", StatusCodes.BAD_REQUEST));
     }
 
     try {
         
-        const decoded: any = jwt.verify(token, "ewfiojweoifjewofijewofiewjoifmytokendonotmodify");
+        const decoded: any = jwt.verify(token, process.env.AUTH_SERVICE_JWT_TOKEN!);
         request.user = await User.findById(decoded.id);
         return next();
     } 
@@ -45,12 +48,12 @@ export const protectAuth = async (request: IAuthRequest & IRequestUser, response
     catch(error: any) {
 
         if(error) {
-            return next(new UnauthorizedError("You are unauthorized to perform this action", StatusCodes.BAD_REQUEST));
+            console.log(`Error : `, error);
+            return next(new ErrorResponse("You are unauthorized to perform this action", StatusCodes.BAD_REQUEST));
         }
 
     }
-
-}
+});
 
 // Middleware Function to restrict certain actions to specific user roles
 export const restrictRolesTo = (...roles) => {
@@ -58,7 +61,7 @@ export const restrictRolesTo = (...roles) => {
     return (request: Request & IRequestUser, response: Response, next: NextFunction) => {
 
         if(!request.user.role.includes(roles as any)) {  // Check to see if the specified user object role in the body of the request matches
-            return next(new ForbiddenError("Your role is unauthorized to perform this action", StatusCodes.FORBIDDEN));
+            return next(new ErrorResponse("Your role is unauthorized to perform this action", StatusCodes.FORBIDDEN));
         }
 
         return next();
@@ -73,7 +76,7 @@ export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest
         const currentUser = await User.findById(request.user._id);
         
         if(currentUser.role !== 'moderator') { // If the user does not hold the role of moderator
-            return next(new UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
+            return next(new ErrorResponse("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
         }
 
         else {
@@ -86,7 +89,7 @@ export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest
     catch(error: any) {
 
         if(error) {
-            return next(new UnauthorizedError(error, StatusCodes.UNAUTHORIZED))
+            return next(new ErrorResponse(error, StatusCodes.UNAUTHORIZED))
         }
 
     }
@@ -101,7 +104,7 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _r
         const currentUser = await User.findById(request.user._id);
         
         if(currentUser.role !== 'admin') { // If the user is not an admin - send back an unauthorized error
-            return next(new UnauthorizedError("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
+            return next(new ErrorResponse("You are unauthorized to perform this action - only moderators are allowed", StatusCodes.UNAUTHORIZED))
         }
 
         else {
@@ -114,7 +117,7 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _r
     catch(error: any) {
 
         if(error) {
-            return next(new UnauthorizedError(error, StatusCodes.UNAUTHORIZED))
+            return next(new ErrorResponse(error, StatusCodes.UNAUTHORIZED))
         }
 
     }
@@ -129,7 +132,7 @@ export const isUserEventOrganiser = async (request: Request, response: Response,
     catch(error: any) {
         
         if(error) {
-            return next(new UnauthorizedError(error, StatusCodes.UNAUTHORIZED))
+            return next(new ErrorResponse(error, StatusCodes.UNAUTHORIZED))
         }
 
     }
