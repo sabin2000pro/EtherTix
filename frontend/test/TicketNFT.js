@@ -20,9 +20,8 @@ contract("TicketNFT", (accounts) => {
         const newTokenId = event.args._tokenId;
         const token = await ticketNFT.fetchTokenByIndex(newTokenId);
 
+        console.log(`Current Account : `, accounts[0]);
         console.log(`Previous Owner : `, token.tokenOwner);
-        console.log(`The event : `, event);
-        console.log(`The receipt `, receipt);
 
         assert.equal(token.tokenOwner, accounts[0]);
         assert.equal(token.tokenName, name);
@@ -30,7 +29,7 @@ contract("TicketNFT", (accounts) => {
     });
 
     it("Should transfer the ownership of the token", async () => {
-        
+
         const name = "Test Token";
         const price = web3.utils.toWei("0.01", "ether")
        
