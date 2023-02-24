@@ -26,29 +26,27 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
 
-    event NewTokenMinted(uint _tokenId, bool isListed);
-    event NftPurchased (uint tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
+    event NewTokenMinted(uint256 tokenId, bool isListed);
+    event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
-        require(totalTokenSupply == 0, "There must be a 0 total token supply before minting a token");  // Verify to see if the current token is not already on sale
+        uint256 newTokenID = ++totalTokenSupply;
 
         address owner = msg.sender; // Store the address of the current owner of the token
-        totalTokenSupply++;
-        uint256 newTokenId = totalTokenSupply;
+        circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, false);
 
-        circulatingTokens[newTokenId] = NftToken(newTokenId, owner, _tokenName, _tokenPrice, false);
-        NftToken memory currMintedToken = circulatingTokens[newTokenId];
+        NftToken storage currMintedToken = circulatingTokens[newTokenID];
         currMintedToken.isListedForSale = false;
-
+   
         bool isTokenListed = currMintedToken.isListedForSale;
-        tokenOwner[newTokenId] = owner; // Set the new token owner to the owner (Updating the owner)
+        tokenOwner[totalTokenSupply] = owner; // Set the new token owner to the owner (Updating the owner)
 
-        emit NewTokenMinted(newTokenId, isTokenListed);
-        return newTokenId; // Return the newly created ID
+        emit NewTokenMinted(newTokenID, isTokenListed);
+        return newTokenID; // Return the newly created ID
     }
 
     function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
