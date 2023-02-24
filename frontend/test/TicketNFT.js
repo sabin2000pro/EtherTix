@@ -10,12 +10,21 @@ contract("TicketNFT", (accounts) => {
         ticketNFT = await TicketNFT.new();
     });
 
+    const findMintedTokenReceipt = (receipt) => {
+        const mintedReceipt = receipt.logs.find(log => log.event === "NewTokenMinted");
+
+        console.log(`Minted receipt : `, mintedReceipt);
+
+        return mintedReceipt;
+    }
+
     it("Unit Test 1 : Test that mints a new token", async () => {
         const name = "Test Mint Token";
         const price = 100;
 
         const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
-        const event = receipt.logs.find(log => log.event === "NewTokenMinted");
+
+        const event = findMintedTokenReceipt(receipt);
 
         const newTokenId = event.args._tokenId;
         const token = await ticketNFT.fetchTokenByIndex(newTokenId);
@@ -45,7 +54,8 @@ contract("TicketNFT", (accounts) => {
     })
 
     it("Unit Test 3 - Should be able to list the NFT for sale", async () => {
-        const tokenName = "Test Token";
+        const newTokenId = event.args._tokenId;
+        const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex();
     })
 
 });

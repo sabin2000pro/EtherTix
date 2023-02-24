@@ -39,8 +39,12 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         uint256 newTokenId = totalTokenSupply;
         circulatingTokens[newTokenId] = NftToken(newTokenId, owner, _tokenName, _tokenPrice, false);
 
-        emit NewTokenMinted(newTokenId);
+        // TEST ONLY SETTING THE IS LISTED TO TRUE ( WILL REMOVE )
+    
+        NftToken memory currMintedToken = circulatingTokens[newTokenId];
+        currMintedToken.isListed = true;
 
+        emit NewTokenMinted(newTokenId);
         return newTokenId; // Return the newly created ID
     }
 
