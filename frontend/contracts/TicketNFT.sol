@@ -23,12 +23,13 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
 
     mapping (uint256 => bool) public isTokenForSale;
-    mapping (uint256 => uint256) public tokensPrice;
+    mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
 
-    event NewTokenMinted(uint256 _tokenId, bool isListed);
-    event NftPurchased (uint tokenId, address newTokenOwner, string tokenName, uint256 tokenPrice);
+    event NewTokenMinted(uint _tokenId, bool isListed);
+    event NftPurchased (uint tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
+    event NftListedForSale(uint tokenId, uint listingPrice);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
@@ -45,6 +46,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currMintedToken.isListedForSale = false;
 
         bool isTokenListed = currMintedToken.isListedForSale;
+        tokenOwner[newTokenId] = owner;
         emit NewTokenMinted(newTokenId, isTokenListed);
 
         return newTokenId; // Return the newly created ID
@@ -82,6 +84,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         NftToken memory currentNftToken = circulatingTokens[_tokenId];
         currentNftToken.tokenPrice = _listingPrice;
         currentNftToken.isListedForSale = !(currentNftToken.isListedForSale); // Set the property of current nft token struct is listed to the negation of false
+
+        emit NftListedForSale(_tokenId, _listingPrice);
     }
 
     function buyNftToken(uint256 tokenId) public payable returns (address) {

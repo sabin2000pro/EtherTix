@@ -3,9 +3,8 @@ const TicketNFT = artifacts.require("TicketNFT");
 const Web3 = require('web3');
 const web3 = new Web3();
 
-let DEFAULT_PRICE = 100;
-
 contract("TicketNFT", (accounts) => {
+
     let ticketNFT;
 
     beforeEach(async () => {
@@ -19,7 +18,7 @@ contract("TicketNFT", (accounts) => {
 
     it("Unit Test 1 : Test that mints a new token", async () => {
         const name = "Test Mint Token";
-        const price = DEFAULT_PRICE;
+        const price = 100;
 
         const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
         const event = returnTokenMintedReceipt(receipt);
@@ -33,6 +32,7 @@ contract("TicketNFT", (accounts) => {
     });
 
     it(" Unit Test 2 : Should transfer the ownership of the token", async () => {
+        
 
         const name = "Test Token";
         const price = web3.utils.toWei("0.01", "ether")
@@ -48,13 +48,22 @@ contract("TicketNFT", (accounts) => {
     })
 
     it("Unit Test 3 - Should be able to list the currently minted NFT for sale", async () => {
-        const currentTokenId = null;
-        const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex();
+        const name = "Test Mint Token";
+        const price = web3.utils.toWei("0.01", "ether").toString()
+        const priceInEther = web3.utils.fromWei(price, "ether");
+        console.log(`The price : `, priceInEther);
+
+        const receipt = await ticketNFT.mintToken(name, parseInt(priceInEther), { from: accounts[0] });
+        const event = returnTokenMintedReceipt(receipt);
+        const tokenID = event.args._tokenId;
+
+        const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex(tokenID);
+        const tokenOwner = currentListedTokenIndex.tokenOwner;
+        const theTokenId = currentListedTokenIndex.tokenId;
+
+        await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
+
     })
 
-    it("Unit Test 4 NFT - Buyer of the token should be able to purchase the token after it has been listed on sale", async () => {
-        // Fetch the token to purchase 
-        const name = "Test Token"
-    })
 
 });
