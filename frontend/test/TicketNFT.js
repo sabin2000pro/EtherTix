@@ -39,12 +39,8 @@ contract("TicketNFT", (accounts) => {
         const tokenOneID = mintEventLogs.args.tokenId;
         const token = await ticketNFT.fetchTokenByIndex(tokenOneID);
 
-        console.log(`Token 1 Curr : `, token);
-
         const tokenTwoID = tokenTwoReceipt.args.tokenId;
         const tokenTwoCurr = await ticketNFT.fetchTokenByIndex(tokenTwoID);
-
-        console.log(`Token Two Curr : `, tokenTwoCurr);
 
         assert.equal(token.tokenOwner, accounts[0]);
         assert.equal(token.tokenName, tokenOneName);
