@@ -104,14 +104,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return tokenBuyer;
    }
 
-   function burnNftToken(uint256 tokenId, string memory currTokenName) public payable {
+   function burnNftToken(uint256 tokenId) public payable {
         return _burn(tokenId);
    }
 
-   function fetchTotalOwnerNfts(uint256 numberOfNfts) public view returns (uint) {
-      address currentOwner = msg.sender;
-
-      return numberOfNfts;
+   function fetchTotalOwnerNfts(address currentNftOwner) public view returns (uint) {
+      return balanceOf(currentNftOwner);
    }
-
 }
