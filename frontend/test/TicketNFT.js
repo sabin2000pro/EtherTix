@@ -3,7 +3,7 @@ const TicketNFT = artifacts.require("TicketNFT");
 const Web3 = require('web3');
 const web3 = new Web3();
 
-contract("TicketNFT", (accounts) => {
+contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
     let ticketNFT;
 
