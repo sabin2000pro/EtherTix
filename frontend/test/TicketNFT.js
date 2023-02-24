@@ -27,9 +27,6 @@ contract("TicketNFT", (accounts) => {
         const newTokenId = event.args._tokenId;
         const token = await ticketNFT.fetchTokenByIndex(newTokenId);
 
-        console.log(`Current Account : `, accounts[0]);
-        console.log(`Previous Owner : `, token.tokenOwner);
-
         assert.equal(token.tokenOwner, accounts[0]);
         assert.equal(token.tokenName, name);
         assert.equal(token.tokenPrice, price);
@@ -50,9 +47,13 @@ contract("TicketNFT", (accounts) => {
        assert.equal(token.tokenOwner, accounts[1], "Token ownership transfer failed");
     })
 
-    it("Unit Test 3 - Should be able to list the NFT for sale", async () => {
-        const newTokenId = event.args._tokenId;
+    it("Unit Test 3 - Should be able to list the currently minted NFT for sale", async () => {
+        const currentTokenId = null;
         const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex();
+    })
+
+    it("Unit Test 4 NFT - Buyer of the token should be able to purchase the token after it has been listed on sale", async () => {
+        
     })
 
 });
