@@ -14,7 +14,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         address tokenOwner;
         string tokenName;
         uint256 tokenPrice;
-        bool isListed;
+        bool isListedForSale;
     }
 
     uint256 public totalTokenSupply; // Total supply for the tokens
@@ -38,14 +38,13 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
         uint256 newTokenId = totalTokenSupply;
         circulatingTokens[newTokenId] = NftToken(newTokenId, owner, _tokenName, _tokenPrice, false);
-
-        // TEST ONLY SETTING THE IS LISTED TO TRUE ( WILL REMOVE )
     
         NftToken memory currMintedToken = circulatingTokens[newTokenId];
-        currMintedToken.isListed = true;
+        currMintedToken.isListedForSale = false;
 
-        bool isTokenListed = currMintedToken.isListed;
+        bool isTokenListed = currMintedToken.isListedForSale;
         emit NewTokenMinted(newTokenId, isTokenListed);
+
         return newTokenId; // Return the newly created ID
     }
 

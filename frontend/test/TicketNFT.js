@@ -13,7 +13,7 @@ contract("TicketNFT", (accounts) => {
     const findMintedTokenReceipt = (receipt) => {
         const mintedReceipt = receipt.logs.find(log => log.event === "NewTokenMinted");
 
-        console.log(`Minted receipt : `, mintedReceipt);
+        console.log(`Minted Token Receipt! : `, mintedReceipt);
 
         return mintedReceipt;
     }
@@ -30,7 +30,6 @@ contract("TicketNFT", (accounts) => {
 
         console.log(`Current Account : `, accounts[0]);
         console.log(`Previous Owner : `, token.tokenOwner);
-        console.log(`New Token ID `, token);
 
         assert.equal(token.tokenOwner, accounts[0]);
         assert.equal(token.tokenName, name);
