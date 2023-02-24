@@ -28,29 +28,33 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     event NewTokenMinted(uint256 _tokenId);
     event NftPurchased (uint tokenId, address newTokenOwner, string tokenName, uint256 tokenPrice);
+    event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
-        address tokenOwner = msg.sender; // Store the address of the current owner of the token
+        address owner = msg.sender; // Store the address of the current owner of the token
         totalTokenSupply++;
 
         uint256 newTokenId = totalTokenSupply;
-        circulatingTokens[newTokenId] = NftToken(newTokenId, tokenOwner, _tokenName, _tokenPrice, false);
+        circulatingTokens[newTokenId] = NftToken(newTokenId, owner, _tokenName, _tokenPrice, false);
 
         emit NewTokenMinted(newTokenId);
 
         return newTokenId; // Return the newly created ID
     }
 
-    function transferTokenOwnership(uint256 tokenId, address _toAddress) public payable {
+    function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
         address currentTokenOwner = msg.sender;
-        NftToken storage nftToken = circulatingTokens[tokenId];
+        NftToken storage nftToken = circulatingTokens[_tokenId];
 
         require(nftToken.tokenOwner == currentTokenOwner, "You do not own this token representing the ticket. Transfer of ownership cannot be performed");
-        nftToken.tokenOwner = _toAddress;
+        nftToken.tokenOwner = _newTokenOwnerAddress;
+
+        emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
     }
 
+    // @description: Returns the owner of the NFT token given an ID and returns the address of the owner
     function getOwnerOfToken(uint256 _tokenId) public view returns (address) {
         return tokenOwner[_tokenId];
     }
