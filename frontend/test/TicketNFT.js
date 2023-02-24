@@ -66,6 +66,7 @@ contract("TicketNFT", (accounts) => {
     })
 
     it("Unit Test 3 - Should be able to list the currently minted NFT for sale", async () => {
+
         const name = "Test Mint Token";
         const priceInEther = convertPriceToEther();
 
@@ -78,7 +79,6 @@ contract("TicketNFT", (accounts) => {
         const theTokenId = currentListedTokenIndex.tokenId;
 
         await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
-
     })
 
 
