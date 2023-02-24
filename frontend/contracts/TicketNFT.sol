@@ -70,10 +70,12 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
         require(!(tokenIsOnSale(_tokenId)), "The token must already be on sale to list the nft for sale");
+
         totalTokenSupply--;
 
         NftToken memory currentNftToken = circulatingTokens[_tokenId];
         currentNftToken.tokenPrice = _listingPrice;
+        currentNftToken.isListed = !(currentNftToken.isListed); // Set the property of current nft token struct is listed to the negation of false
     }
 
     function buyNftToken(uint256 tokenId) public payable {

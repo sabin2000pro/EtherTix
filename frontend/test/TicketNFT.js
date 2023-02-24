@@ -10,7 +10,7 @@ contract("TicketNFT", (accounts) => {
         ticketNFT = await TicketNFT.new();
     });
 
-    it("should mint a new token", async () => {
+    it("Unit Test 1 : Test that mints a new token", async () => {
         const name = "Test Mint Token";
         const price = 100;
 
@@ -22,13 +22,14 @@ contract("TicketNFT", (accounts) => {
 
         console.log(`Current Account : `, accounts[0]);
         console.log(`Previous Owner : `, token.tokenOwner);
+        console.log(`New Token ID `, token);
 
         assert.equal(token.tokenOwner, accounts[0]);
         assert.equal(token.tokenName, name);
         assert.equal(token.tokenPrice, price);
     });
 
-    it("Should transfer the ownership of the token", async () => {
+    it(" Unit Test 2 : Should transfer the ownership of the token", async () => {
 
         const name = "Test Token";
         const price = web3.utils.toWei("0.01", "ether")
@@ -40,7 +41,11 @@ contract("TicketNFT", (accounts) => {
         await ticketNFT.transferTokenOwnership(tokenId, accounts[1], { from: accounts[0] });
         const token = await ticketNFT.fetchTokenByIndex(tokenId);
 
-      console.log(`New Owner : `, token.tokenOwner);
-      assert.equal(token.tokenOwner, accounts[1], "Token ownership transfer failed");
+       assert.equal(token.tokenOwner, accounts[1], "Token ownership transfer failed");
     })
+
+    it("Unit Test 3 - Should be able to list the NFT for sale", async () => {
+        const tokenName = "Test Token";
+    })
+
 });
