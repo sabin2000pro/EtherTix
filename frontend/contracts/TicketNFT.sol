@@ -68,6 +68,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return circulatingTokens[_tokenId].tokenPrice > 0;
   }
 
+    // @description: Returns the minted NFT by its Token INDEX
     function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
         return circulatingTokens[_tokenIndex];
     }
