@@ -24,7 +24,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     }
 
     it("Unit Test 1 : Test that mints one token", async () => {
-        const tokenOneName = "Test Mint jjj Ticket 90";
+        const tokenOneName = "Agile Project Management";
         const tokenOnePrice = 50;
 
         const tokenTwoName = "Second Token Here!"
@@ -39,8 +39,12 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         const tokenOneID = mintEventLogs.args.tokenId;
         const token = await ticketNFT.fetchTokenByIndex(tokenOneID);
 
+        console.log(token);
+
         const tokenTwoID = tokenTwoReceipt.args.tokenId;
         const tokenTwoCurr = await ticketNFT.fetchTokenByIndex(tokenTwoID);
+
+        console.log(tokenTwoCurr);
 
         assert.equal(token.tokenOwner, accounts[0]);
         assert.equal(token.tokenName, tokenOneName);
@@ -52,7 +56,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     });
 
     it(" Unit Test 2 : Should transfer the ownership of the token", async () => {
-        const name = "Test Mint Token";
+        const name = "Agile Project Management Ticket";
         const price = web3.utils.toWei("0.01", "ether")
        
         const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
@@ -76,8 +80,8 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
         const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex(tokenID);
         const tokenOwner = currentListedTokenIndex.tokenOwner;
-        const theTokenId = currentListedTokenIndex.tokenId;
 
+        const theTokenId = currentListedTokenIndex.tokenId;
         await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
     })
 

@@ -21,8 +21,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     mapping (uint256 => NftToken) public circulatingTokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
-
     mapping (uint256 => bool) public isTokenForSale;
+
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
 
@@ -50,8 +50,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     }
 
     function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
-        address currentTokenOwner = msg.sender;
-        NftToken storage nftToken = circulatingTokens[_tokenId];
+        address currentTokenOwner = msg.sender; // Get the current token owner
+        NftToken storage nftToken = circulatingTokens[_tokenId]; // Get the circulating token ID
 
         require(nftToken.tokenOwner == currentTokenOwner, "You do not own this token representing the ticket. Transfer of ownership cannot be performed");
         nftToken.tokenOwner = _newTokenOwnerAddress;
@@ -111,5 +111,5 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
    function fetchTotalOwnerNfts(address currentNftOwner) public view returns (uint) {
       return balanceOf(currentNftOwner);
    }
-   
+
 }
