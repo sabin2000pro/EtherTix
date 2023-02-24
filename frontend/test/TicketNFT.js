@@ -53,7 +53,8 @@ contract("TicketNFT", (accounts) => {
     })
 
     it("Unit Test 4 NFT - Buyer of the token should be able to purchase the token after it has been listed on sale", async () => {
-        
+        // Fetch the token to purchase 
+        const name = "Test Token"
     })
 
 });

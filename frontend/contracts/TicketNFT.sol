@@ -33,14 +33,15 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
+        require(totalTokenSupply == 0, "There must be a 0 total token supply before minting a token");
         // Verify to see if the current token is not already on sale
         address owner = msg.sender; // Store the address of the current owner of the token
         totalTokenSupply++;
-
         uint256 newTokenId = totalTokenSupply;
+
         circulatingTokens[newTokenId] = NftToken(newTokenId, owner, _tokenName, _tokenPrice, false);
-    
         NftToken memory currMintedToken = circulatingTokens[newTokenId];
+
         currMintedToken.isListedForSale = false;
 
         bool isTokenListed = currMintedToken.isListedForSale;
@@ -86,12 +87,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     function buyNftToken(uint256 tokenId) public payable returns (address) {
         address tokenBuyer = msg.sender; // Store the token buyer in msg.sender
         require(tokenOwner[tokenId] != address(0), "The NFT has already been sold");
-
         require(msg.value == tokensPrice[tokenId], "The value of the msg must be equal to the price of the token");
         require(tokenBuyer.balance >= msg.value, "The token buyer does not have enough funds to buy the token");
 
-        NftToken memory currentToken = circulatingTokens[tokenId];
-        address currentTokenOwner = currentToken.tokenOwner;
+        NftToken memory currentToken = circulatingTokens[tokenId]; // Extract the current nft token
+        address currentTokenOwner = currentToken.tokenOwner; // Get the current token owner
         address payable currentTokenOwnerPayable = payable(currentTokenOwner);
 
         currentTokenOwnerPayable.transfer(tokensPrice[tokenId]);
