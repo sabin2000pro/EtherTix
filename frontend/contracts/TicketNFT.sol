@@ -33,6 +33,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
+        // Verify to see if the current token is not already on sale
         address owner = msg.sender; // Store the address of the current owner of the token
         totalTokenSupply++;
 
