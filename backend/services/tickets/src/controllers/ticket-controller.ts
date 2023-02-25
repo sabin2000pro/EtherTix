@@ -9,29 +9,16 @@ import asyncHandler from 'express-async-handler'
 // @access    Private (Authorization Token Required)
 
 export const fetchAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
-   try {
-        
         const tickets = await Ticket.find();
 
         if(!tickets) {
            return next(new NotFoundError("Ticket with that ID not found", StatusCodes.NOT_FOUND))
         }
 
-        return response.status(StatusCodes.OK).json({success: true, data: tickets, sentAt: new Date(Date.now()  )});
-
+        return response.status(StatusCodes.OK).json({success: true, tickets, sentAt: new Date(Date.now()  )});
    } 
    
-   catch(error: any) {
-
-      if(error) {
-          return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-      }
-
-   }
-
-
-})
+)
 
 export const fetchCustomerTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
