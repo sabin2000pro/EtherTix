@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
 type Ticket = {
@@ -15,19 +16,18 @@ const tickets: Ticket[] = [
 ];
 
 const CartPage = () => {
-  const [currentTickets, setCurrentTickets] = useState<[] | undefined>([]); // All the tickets are going to be stored in this array
+  const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
   const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-
   useEffect(() => {
+
      const fetchEventTickets = async () => {
 
      }
 
      fetchEventTickets();
-
 
   }, [])
 
@@ -49,6 +49,7 @@ const addToCart = (ticket: Ticket, quantity: number) => {
 
 // Remove an item from the cart
 const removeFromCart = (ticketId: number) => {
+
   const updatedCart = { ...cart };
 
   if (updatedCart[ticketId].quantity === 1) {
@@ -68,6 +69,8 @@ const getTotalPrice = () => {
 }
 
 return (
+
+  
   <>
 
     <div className = "cart">
@@ -77,7 +80,6 @@ return (
       {Object.keys(cart).length === 0 ? (
 
           <p>Your cart is empty</p>
-
 
       ) : (
         <>
