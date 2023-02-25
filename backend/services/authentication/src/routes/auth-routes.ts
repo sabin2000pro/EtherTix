@@ -5,11 +5,6 @@ import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
 export const authRouter: Router = express.Router();
-<<<<<<< HEAD
-
-const RATE_LIMIT_MINUTES = 10 * 60 * 1000
-=======
->>>>>>> master
 
 const rateLimiter = rateLimit({
 	windowMs: RATE_LIMIT_MINUTES,

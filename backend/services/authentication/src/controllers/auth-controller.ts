@@ -68,14 +68,7 @@ export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: n
   // @returns: Server Response Promise
   // @public: True (No Authorization Token Required)
 
-<<<<<<< HEAD
-export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
-    try {
-
-=======
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
->>>>>>> master
         const {forename, surname, username, email, password, passwordConfirm} = request.body;
 
         if(!forename) {

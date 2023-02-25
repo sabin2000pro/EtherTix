@@ -103,10 +103,6 @@ const UserSchema = new mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
     photo: { // Photo for the user
         type: String, // Type is string
         default: 'no-photo.jpg'
