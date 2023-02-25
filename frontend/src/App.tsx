@@ -7,12 +7,26 @@ import Register from 'pages/auth/Register';
 import ResetPassword from 'pages/auth/ResetPassword';
 import UpdatePassword from 'pages/auth/UpdatePassword';
 import UpdateProfile from 'pages/auth/UpdateProfile';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import {Routes, Route} from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 import CartPage from 'pages/CartPage';
+import { Web3Context } from 'constants/context/Web3Context';
 
 const App = () => { // Push to github recent changes
+   const {connectMetaMaskWallet} = useContext(Web3Context);
+
+   useEffect(() => {
+
+      const fetchCurrentBalance = async () => {
+         const balance = await connectMetaMaskWallet();
+         const currentEthBalance = parseInt(balance.convertedBalance);
+
+         return currentEthBalance;
+      }
+
+      fetchCurrentBalance();
+   }, [connectMetaMaskWallet])
 
   return (
       <>
@@ -23,7 +37,7 @@ const App = () => { // Push to github recent changes
 
           <Routes>
              <Route path = '/reset-password/:resetToken' element = {<ResetPassword />} />
-            <Route path ='/' element = {<Home />} />
+            <Route path = '/' element = {<Home />} />
             <Route path = '/register' element = {<Register />} /> 
             <Route path = '/login' element = {<Login />} />
             <Route path = '/forgot-password' element = {<ForgotPassword />} />
