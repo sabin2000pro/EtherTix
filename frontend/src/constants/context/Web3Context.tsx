@@ -29,7 +29,6 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
     const [tokenMinted, setTokenMinted] = useState<boolean>(false);
     const [newTokenOwner, setNewTokenOwner] = useState<string | undefined>("");
 
-    const networks = EventNftContract.networks;
     const web3Client = new Web3(window.ethereum as any);
 
     const processLoggedInUser = async () => {
@@ -49,6 +48,7 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
                 setCurrentBalance(parseInt(convertedBalance));
 
                 const nftContract = await constructNftContract();
+                console.log(nftContract);
 
                 localStorage.setItem("account", currentAccount);
                 return {currentAccount, convertedBalance, nftContract}
@@ -68,18 +68,22 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
         }
     }
 
-    const constructNftContract = async () => {
-        const currentNetwork = EventNftContract.networks;
-        const theNetworkID = Object.keys(currentNetwork)[0] as keyof typeof currentNetwork;
-        const nftContractAbi = EventNftContract.abi;
+    const constructNftContract = async (): Promise<any> => {
+        const networks = EventNftContract.networks
+        const theNetworkID = Object.keys(networks);
 
-        const nftContract = new web3Client.eth.Contract(nftContractAbi as any, currentNetwork[theNetworkID] as unknown as any)
-        return nftContract;
+        console.log(`Networks : `, networks);
+        console.log(`The network ID : `, theNetworkID);
+    
+        // const nftContractAbi = EventNftContract.abi;
+        // // const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks[theNetworkID] as unknown as any)
+        // return nftContract;
     }
 
     const mintNewToken = async (_tokenName: string, _tokenPrice: number) => {
 
         try {
+            // const mintedNft = await EventNftContract.methods.mintToken(_tokenName, _tokenPrice).send({from: currentAccount as unknown as WindowLocalStorage})
 
         } 
         
