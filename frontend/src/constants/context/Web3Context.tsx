@@ -12,12 +12,13 @@ export const Web3Context = createContext({} as any); // Create the Context API f
 
 export const Web3Provider = ({children}: any) => { // Context for Web3
     let DEFAULT_ACCOUNT_BALANCE = 0;
+    
     const [account, setAccount] = useState<string | undefined>("");
     const [balance, setBalance] = useState<number | undefined>(DEFAULT_ACCOUNT_BALANCE);
-
     const [accountChanged, setAccountChanged] = useState<boolean>(false);
     const [accountChosen, setAccountChosen] = useState<boolean>(false);
     const [tokenMinted, setTokenMinted] = useState<boolean>(false);
+    const [newTokenOwner, setNewTokenOwner] = useState<string | undefined>("");
 
     return <Web3Context.Provider value = { {} } >
          {children}
