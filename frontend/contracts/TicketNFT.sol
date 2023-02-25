@@ -33,7 +33,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     event NftListedForSale(uint tokenId, uint listingPrice);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {
-        
+
     }
 
     // @description: Mint a new NFT token on the blockchain that uniquely represents an Event Ticket
@@ -56,9 +56,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return newTokenID; // Return the newly created ID
     }
 
+    // @description: The function is responsible for transferring the ownership of a token from the ticket issuer's address to the buyer address
+    // @parameters: Token ID and the new token owner's metamask wallet address
     function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
-        address currentTokenOwner = msg.sender; // Get the current token owner
-        NftToken storage nftToken = circulatingTokens[_tokenId]; // Get the circulating token ID
+        address currentTokenOwner = msg.sender;
+        NftToken storage nftToken = circulatingTokens[_tokenId];
 
         require(nftToken.tokenOwner == currentTokenOwner, "You do not own this token representing the ticket. Transfer of ownership cannot be performed");
         nftToken.tokenOwner = _newTokenOwnerAddress;
