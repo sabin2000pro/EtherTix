@@ -22,8 +22,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     mapping (uint256 => NftToken) public circulatingTokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
-    mapping (uint256 => bool) public isTokenForSale;
 
+    mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
 
@@ -32,9 +32,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
     
-    constructor() ERC721("Events NFT Ticket", "ENFT") {
-
-    }
+    constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
     // @description: Mint a new NFT token on the blockchain that uniquely represents an Event Ticket
     // @parameters: _tokenName: Represents the name of the ticket, _tokenPrice: The price of the event ticket
@@ -114,10 +112,14 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
    }
 
    function burnNftToken(uint256 tokenId) public payable {
+
+        NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
+        currentTokenToBurn.isListedForSale = false;
+
         return _burn(tokenId);
    }
 
-   function fetchTotalOwnerNfts(address currentNftOwner) public view returns (uint) {
+   function fetchAccountBalance(address currentNftOwner) public view returns (uint) {
       return balanceOf(currentNftOwner);
    }
 
