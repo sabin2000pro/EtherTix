@@ -48,7 +48,6 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
                 setCurrentBalance(parseInt(convertedBalance));
 
                 const nftContract = await constructNftContract();
-                console.log(nftContract);
 
                 localStorage.setItem("account", currentAccount);
                 return {currentAccount, convertedBalance, nftContract}
@@ -65,18 +64,17 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
             if(error) {
                 return console.error(error);
             }
+
+
         }
     }
 
     const constructNftContract = async (): Promise<any> => {
         const networks = EventNftContract.networks
         const theNetworkID = Object.keys(networks);
-
-        console.log(`Networks : `, networks);
-        console.log(`The network ID : `, theNetworkID);
     
-        // const nftContractAbi = EventNftContract.abi;
-        // // const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks[theNetworkID] as unknown as any)
+        const nftContractAbi = EventNftContract.abi;
+        // const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks[theNetworkID].address as unknown as any)
         // return nftContract;
     }
 
