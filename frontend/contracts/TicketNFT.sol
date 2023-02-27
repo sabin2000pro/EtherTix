@@ -96,11 +96,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return circulatingTokens[_tokenIndex];
     }
 
-        function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
+    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
         require((tokenIsOnSale(_tokenId)), "The token must NOT already be on sale to list the nft for sale");
 
-        NftToken memory currentNftToken = circulatingTokens[_tokenId];
+        NftToken memory currentNftToken = circulatingTokens[_tokenId]; // Extract the token from circulation by its ID
 
         currentNftToken.tokenPrice = _listingPrice;
         currentNftToken.isListedForSale = true;
@@ -116,6 +116,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
         require(nftToken.tokenOwner == currentTokenOwner, "You as the caller do not own this token representing the ticket. Transfer of ownership cannot be performed");
         nftToken.tokenOwner = _newTokenOwnerAddress;
+
         emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
     }
 
