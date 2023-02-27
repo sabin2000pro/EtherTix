@@ -104,21 +104,10 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         const tokenOneName = "Agile Project Management";
         const tokenOnePrice = 50;
 
-        const tokenTwoName = "Three Sisters Event Ticket";
-        const tokenTwoPrice = 20;
-
         const currentTokenOwner = accounts[0];
-
         const tokenOne = await ticketNFT.mintToken(tokenOneName, tokenOnePrice, { from: currentTokenOwner });
-        const tokenTwo = await ticketNFT.mintToken(tokenTwoName, tokenTwoPrice, { from: currentTokenOwner });
-        const mintEventLogs = fetchReceiptLogs(tokenOne);
-
-        const tokenOneID = mintEventLogs.args.tokenId;
-        const tokenTwoID = mintEventLogs.args.tokenId;
 
         const allTokens = await ticketNFT.retrieveAllTokens();
-        console.log(`All NFTs `, allTokens);
-        
         const tokenId = allTokens[0].tokenId;
 
         await ticketNFT.burnNftToken(parseInt(tokenId));

@@ -22,34 +22,32 @@ export const Web3Context = createContext({} as any); // Create the Context API f
 export const Web3Provider = ({children}: any) => { // Context for Web3
     let DEFAULT_ACCOUNT_BALANCE = 0;
 
-    const [currentAccount, setCurrentAccount] = useState<string | undefined>("");
+    const [currentAccountAddress, setCurrentAccountAddress] = useState<string | undefined>("");
+    const [newTokenOwnerAddress, setNewTokenOwnerAddress] = useState<string | undefined>("");
     const [currentBalance, setCurrentBalance] = useState<number | undefined>(DEFAULT_ACCOUNT_BALANCE);
     const [accountChanged, setAccountChanged] = useState<boolean>(false);
     const [accountChosen, setAccountChosen] = useState<boolean>(false);
     const [tokenMinted, setTokenMinted] = useState<boolean>(false);
     const [newTokenOwner, setNewTokenOwner] = useState<string | undefined>("");
 
-    const web3Client = new Web3(window.ethereum as any);
-
-    const processLoggedInUser = async () => {
-        return localStorage.getItem("user") !== null;
-    }
+    const web3Client = new Web3(window.ethereum as any); // Create new instance of a Web3 client
 
     const connectMetaMaskWallet = async () => { // Function which allows the user to connect to their meta mask wallet account
 
         try {
+
             if(window.ethereum) {
 
                 const currentAccount = await window.ethereum.request!({method: "eth_requestAccounts"});
                 const currentAccountBalance = await web3Client.eth.getBalance(currentAccount.toString());
                 const convertedBalance = web3Client.utils.fromWei(currentAccountBalance);
 
-                setCurrentAccount(currentAccount[0]);
+                setCurrentAccountAddress(currentAccount[0]);
                 setCurrentBalance(parseInt(convertedBalance));
 
                 const nftContract = await constructNftContract();
-
                 localStorage.setItem("account", currentAccount);
+
                 return {currentAccount, convertedBalance, nftContract}
             }
 
@@ -71,24 +69,29 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
 
     const constructNftContract = async (): Promise<any> => {
         const networks = EventNftContract.networks
-        const theNetworkID = Object.keys(networks);
+        const theNetworkID = Object.keys(networks)[0]
     
         const nftContractAbi = EventNftContract.abi;
-        // const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks[theNetworkID].address as unknown as any)
-        // return nftContract;
+        const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks[theNetworkID].address as any) as any;
+
+        return nftContract;
     }
 
     const mintNewToken = async (_tokenName: string, _tokenPrice: number) => {
 
         try {
+
             // const mintedNft = await EventNftContract.methods.mintToken(_tokenName, _tokenPrice).send({from: currentAccount as unknown as WindowLocalStorage})
 
         } 
         
         catch(error) {
+
             if(error) {
                 return console.error(error);
             }
+
+            
         }
 
 
