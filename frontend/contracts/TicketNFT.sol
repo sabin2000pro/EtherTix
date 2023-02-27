@@ -21,6 +21,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     uint256 public totalTokenSupply; // Total supply for the tokens
     uint256 public initialListingPrice = 0.015 ether; // Initial listing price of the ticket as an NFT to £20GBP
+    uint256 public maxTokenSupply = 50;
 
     NftToken[] public allMintedTokens;
 
@@ -44,14 +45,16 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     // @returns: Returns the new ticket ID (Used for proof of ownership in transfer of ownership)
 
     function mintToken(string memory _tokenName, string memory _tokenClass, uint256 _tokenPrice, uint256 _tokenCapacity) public payable returns (uint) {
+        require(totalTokenSupply < maxTokenSupply, "Cannot exceed the maximum token supply of 50");
         uint256 newTokenID = ++totalTokenSupply;
         address owner = msg.sender; 
+
         uint allTokensLength = allMintedTokens.length;
-
         circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, _tokenCapacity, _tokenClass, false, allTokensLength);
-        NftToken storage currMintedToken = circulatingTokens[newTokenID];
 
+        NftToken storage currMintedToken = circulatingTokens[newTokenID];
         currMintedToken.tokenPrice = _tokenPrice;
+
         currMintedToken.isListedForSale = false;
         tokenOwner[totalTokenSupply] = owner; // Update the token owner at the current token supply with the new owner
         
@@ -105,7 +108,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
-        require(!(tokenIsOnSale(_tokenId)), "The token must already be on sale to list the nft for sale");
+        require((tokenIsOnSale(_tokenId)), "The token must NOT already be on sale to list the nft for sale");
 
         NftToken memory currentNftToken = circulatingTokens[_tokenId];
 

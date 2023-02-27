@@ -38,15 +38,10 @@ app.get("/", (request: any, response: any) => {
 app.use('/api/tickets', ticketRouter);
 app.use(errorHandler)
 
-app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
 
-    if(err instanceof CustomError) {
-        return response.status(StatusCodes.NOT_FOUND).json({message: err.message, errors: err.processErrors(), stack: err.stack})
-    }
-
-    return next();
-
+// Handle 404 unhandled routes
+app.all("*", (request: any, response: any, next: NextFunction) => {
+    return response.status(StatusCodes.NOT_FOUND).json({success: false, message: `404 - The server could not find the route requested`});
 })
-
 
 export {app}
