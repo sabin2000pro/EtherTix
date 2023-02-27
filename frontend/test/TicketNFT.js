@@ -11,7 +11,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         ticketNFT = await TicketNFT.new();
     });
 
-    const convertPriceToEther = () => {
+    const convertPriceToEther = () => { // Converts the price from WEI to ETH
         const price = web3.utils.toWei("0.01", "ether").toString()
         const priceInEther = web3.utils.fromWei(price, "ether");
 
@@ -57,15 +57,14 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
     it(" Unit Test 2 : Should transfer the ownership of the token", async () => {
         const name = "Agile Project Management";
-        const price = web3.utils.toWei("0.01", "ether")
+        const priceInEther = convertPriceToEther();
        
-        const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
+        const receipt = await mintToken(name, priceInEther);
         const eventLogs = fetchReceiptLogs(receipt);
         const tokenId = eventLogs.args.tokenId;
 
         await ticketNFT.transferTokenOwnership(tokenId, accounts[1], { from: accounts[0] });
-        const token = await ticketNFT.fetchTokenByIndex(tokenId);
-
+        const token = await ticketNFT.fetchTokenByIndex(tokenId); // Fetch the index of the token by its index
 
         assert.equal(token.tokenOwner, accounts[1], "Token ownership transfer failed");
 
@@ -89,9 +88,11 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         } 
         
         catch(error) {
+
             if(error) {
                 return console.error(error);
             }
+            
         }
 
        
@@ -102,11 +103,9 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         try {
 
             const name = "Agile Project Management";
-            const price = web3.utils.toWei("0.01", "ether")
+            const currentEthPrice = convertPriceToEther();
 
-            const tokenId = ev
-
-
+            
         } 
         
         catch(error) {
