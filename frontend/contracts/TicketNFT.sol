@@ -61,7 +61,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     function tokenIsOnSale(uint256 _tokenId) public view returns (bool) { // Function that determines if the token with its ID is already on sale or not
         return circulatingTokens[_tokenId].tokenPrice > 0;
-  }
+    }
+
+   function fetchAccountBalance(address currentNftOwner) public view returns (uint) {
+      return balanceOf(currentNftOwner);
+   }
 
     // @description: Returns the minted NFT by its Token INDEX
     function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
@@ -111,14 +115,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
    }
 
    function burnNftToken(uint256 tokenId) public payable {
+        address currentOwner = msg.sender;
         NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
         currentTokenToBurn.isListedForSale = false;
 
         return _burn(tokenId);
-   }
-
-   function fetchAccountBalance(address currentNftOwner) public view returns (uint) {
-      return balanceOf(currentNftOwner);
    }
 
 }
