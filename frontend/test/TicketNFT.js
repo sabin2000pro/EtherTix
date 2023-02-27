@@ -113,7 +113,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
             const currTokenId = await ticketNFT.fetchTokenByIndex(mintTokenResult);
             
-            
+            console.log(`The current Token ID to burn : `, currTokenId);
         } 
         
         catch(error) {
