@@ -72,7 +72,6 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         await ticketNFT.transferTokenOwnership(tokenId, accounts[1], { from: accounts[0] });
         const token = await ticketNFT.fetchTokenByIndex(tokenId); // Fetch the index of the token by its inde
         const ownerAccountBalanceReceipt = await ticketNFT.fetchAccountBalance(accounts[1]);
-    
 
         assert.equal(token.tokenOwner, accounts[1], "Token ownership success");
 

@@ -35,7 +35,7 @@ app.get("/", (request: any, response: any) => {
     return response.json({message: "Tickets Root Route"})
 })
 
-app.use('/api/v1/tickets', ticketRouter);
+app.use('/api/tickets', ticketRouter);
 app.use(errorHandler)
 
 app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {

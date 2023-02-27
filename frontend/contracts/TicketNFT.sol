@@ -21,11 +21,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     uint256 public totalTokenSupply; // Total supply for the tokens
     uint256 public initialListingPrice = 0.015 ether; // Initial listing price of the ticket as an NFT to £20GBP
+
     NftToken[] public allMintedTokens;
 
     mapping (uint256 => NftToken) public circulatingTokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
-
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames; // Store the token names in a mapping between a string and boolean
