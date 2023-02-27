@@ -128,6 +128,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         isTokenForSale[tokenId] = false;
 
         // After buying an NFT token, burn it directly to increase its value over time potentially
+        burnNftToken(tokenId);
 
         emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice); // Emit the event that an NFT Has been purchased
         return tokenBuyer; // Return the new address of the token owner (current buyer)
