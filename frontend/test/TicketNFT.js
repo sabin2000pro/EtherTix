@@ -117,16 +117,11 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         const tokenTwoID = mintEventLogs.args.tokenId;
 
         const allTokens = await ticketNFT.retrieveAllTokens();
-
-        console.log(`Token One ID : `, tokenOneID);
-        console.log(`Token two ID : `, tokenTwoID);
-
+        console.log(`All NFTs `, allTokens);
+        
         const tokenId = allTokens[0].tokenId;
 
         await ticketNFT.burnNftToken(parseInt(tokenId));
-
-
-        // assert.equal(tokenOne.tokenId, tokenId);
     })
 
 

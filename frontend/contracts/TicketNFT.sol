@@ -19,6 +19,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     uint256 public totalTokenSupply; // Total supply for the tokens
     uint256 public initialListingPrice = 0.015 ether; // Initial listing price of the ticket as an NFT to £20GBP
+    NftToken[] public allMintedTokens;
 
     mapping (uint256 => NftToken) public circulatingTokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
@@ -26,8 +27,6 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
-
-    NftToken[] public allMintedTokens;
 
     event NewTokenMinted(uint256 tokenId, string tokenName, uint tokenPrice, bool isListed, NftToken[] allMintedTokens);
     event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
@@ -128,27 +127,27 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currentToken.tokenOwner = tokenBuyer;
         isTokenForSale[tokenId] = false;
 
+        // After buying an NFT token, burn it directly to increase its value over time potentially
+
         emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice); // Emit the event that an NFT Has been purchased
         return tokenBuyer; // Return the new address of the token owner (current buyer)
    }
 
-   function burnNftToken(uint tokenId) public {
+   function burnNftToken(uint tokenId) public { // Function responsible for burning
         address currentOwner = msg.sender;
         NftToken storage currentTokenToBurn = circulatingTokens[tokenId];
         require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the current owner of the NFT to burn it");
 
         uint256 currentTokenIndex = currentTokenToBurn.tokenIndex;
-        uint256 lastMintedTokensIndex = allMintedTokens.length - 1; // Fetch the last index from the array of all the minted tokens
-        uint256 currentIndexToBurn = allMintedTokens[lastMintedTokensIndex].tokenId; // Retrieve the index of the token to remove
+        uint256 lastMintedTokensIndex = allMintedTokens.length - 1;
 
-        // Overwrite the current token index to burn with the last item in the array
-        allMintedTokens[currentIndexToBurn] = allMintedTokens[currentTokenIndex];
+        allMintedTokens[currentTokenIndex] = allMintedTokens[lastMintedTokensIndex];
         allMintedTokens.pop();
 
-        circulatingTokens[lastMintedTokensIndex].tokenIndex = currentTokenIndex; 
-        uint newTotalSupply = --totalTokenSupply; // Decrement the total supply
+        circulatingTokens[tokenId].tokenId = 0;
+        circulatingTokens[lastMintedTokensIndex].tokenIndex = currentTokenIndex;
 
-
+        uint newTotalSupply = --totalTokenSupply; // Decrease the total supply after burning the token
         emit TokenBurned(tokenId, newTotalSupply);
        
    }
