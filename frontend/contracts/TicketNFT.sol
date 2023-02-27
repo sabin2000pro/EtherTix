@@ -139,10 +139,10 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         NftToken storage currentTokenToBurn = circulatingTokens[tokenId];
         require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the current owner of the NFT to burn it");
 
-        uint256 currentTokenIndex = currentTokenToBurn.tokenIndex;
-        uint256 lastMintedTokensIndex = allMintedTokens.length - 1;
+        uint256 currentTokenIndex = currentTokenToBurn.tokenIndex; // Retrieve the current index of the current token to be burned
+        uint256 lastMintedTokensIndex = allMintedTokens.length - 1; // Retrieve the last index of the last minted token
 
-        allMintedTokens[currentTokenIndex] = allMintedTokens[lastMintedTokensIndex];
+        allMintedTokens[currentTokenIndex] = allMintedTokens[lastMintedTokensIndex]; // Set the current token index in the all minted tokens array to the last index
         allMintedTokens.pop();
 
         circulatingTokens[tokenId].tokenId = 0;
