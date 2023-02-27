@@ -7,7 +7,6 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tickets
-    using Counters for Counters.Counter;
 
     struct NftToken { // Create the struct for the nft token
         uint256 tokenId;
@@ -15,6 +14,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         string tokenName;
         uint256 tokenPrice;
         bool isListedForSale;
+        uint256 tokenIndex;
     }
 
     uint256 public totalTokenSupply; // Total supply for the tokens
@@ -27,7 +27,9 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
 
-    event NewTokenMinted(uint256 tokenId, bool isListed);
+    NftToken[] public allMintedTokens;
+
+    event NewTokenMinted(uint256 tokenId, string tokenName, uint tokenPrice, bool isListed, NftToken[] allMintedTokens);
     event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
@@ -43,18 +45,32 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
         uint256 newTokenID = ++totalTokenSupply;
         address owner = msg.sender; 
+        uint allTokensLength = allMintedTokens.length;
 
-        circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, false);
+        circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, false, allTokensLength);
         NftToken storage currMintedToken = circulatingTokens[newTokenID];
 
-        currMintedToken.isListedForSale = false;
         currMintedToken.tokenPrice = _tokenPrice;
-   
+        currMintedToken.isListedForSale = false;
+        
         bool isTokenListed = currMintedToken.isListedForSale;
         tokenOwner[totalTokenSupply] = owner;
 
-        emit NewTokenMinted(newTokenID, isTokenListed);
+        allMintedTokens.push(currMintedToken);
+        retrieveAllTokens();
+
+        emit NewTokenMinted(newTokenID, _tokenName, _tokenPrice, isTokenListed, allMintedTokens);
         return newTokenID;
+    }
+
+    function retrieveAllTokens() public view returns (NftToken[] memory) {
+        NftToken[] memory currentMintedTokens = new NftToken[](totalTokenSupply); // Loop through all the tokens, get the current total supply
+
+        for(uint index = 0; index < totalTokenSupply; index++) { // Set the current minted token index to the array of all minted tokens index
+            currentMintedTokens[index] = allMintedTokens[index];
+        }   
+
+        return currentMintedTokens; // Return the currently minted tokens
     }
 
     // @description: Returns the owner of the NFT token given an ID and returns the address of the owner
@@ -90,7 +106,6 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
         require(!(tokenIsOnSale(_tokenId)), "The token must already be on sale to list the nft for sale");
 
-        totalTokenSupply--; // Decrease the total supply of tokens when listed for sale
         NftToken memory currentNftToken = circulatingTokens[_tokenId];
 
         currentNftToken.tokenPrice = _listingPrice;
@@ -117,16 +132,23 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return tokenBuyer; // Return the new address of the token owner (current buyer)
    }
 
-   function burnNftToken(uint256 tokenId) public {
+   function burnNftToken(uint tokenId) public {
         address currentOwner = msg.sender;
-        NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
-
+        NftToken storage currentTokenToBurn = circulatingTokens[tokenId];
         require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the current owner of the NFT to burn it");
-        currentTokenToBurn.isListedForSale = !currentTokenToBurn.isListedForSale;
 
-        _burn(tokenId);
+        uint256 currentTokenIndex = currentTokenToBurn.tokenIndex;
+        uint256 lastMintedTokensIndex = allMintedTokens.length - 1; // Fetch the last index from the array of all the minted tokens
+        uint256 currentIndexToBurn = allMintedTokens[lastMintedTokensIndex].tokenId; // Retrieve the index of the token to remove
 
+        // Overwrite the current token index to burn with the last item in the array
+        allMintedTokens[currentIndexToBurn] = allMintedTokens[currentTokenIndex];
+        allMintedTokens.pop();
+
+        circulatingTokens[lastMintedTokensIndex].tokenIndex = currentTokenIndex; 
         uint newTotalSupply = --totalTokenSupply; // Decrement the total supply
+
+
         emit TokenBurned(tokenId, newTotalSupply);
        
    }

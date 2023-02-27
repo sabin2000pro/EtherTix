@@ -56,7 +56,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     });
 
     it(" Unit Test 2 : Should transfer the ownership of the token", async () => {
-        const name = "Second Token Here!";
+        const name = "Agile Project Management";
         const priceInEther = convertPriceToEther();
        
         const receipt = await mintToken(name, priceInEther);
@@ -85,7 +85,6 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
             const theTokenId = currentListedTokenIndex.tokenId;
 
             await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
-
             assert.equal(currentListedTokenIndex.isListedForSale, true);
         } 
         
@@ -100,31 +99,34 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
        
     })
 
-    it("Unit Test 4 - Should be able to burn the NFT token after minting", async () => {
+    it("Unit Test 4 - Burn Token", async () => {
 
-        try {
+        const tokenOneName = "Agile Project Management";
+        const tokenOnePrice = 50;
 
-            const name = "Agile Project Management";
-            const currentEthPrice = convertPriceToEther();
+        const tokenTwoName = "Three Sisters Event Ticket";
+        const tokenTwoPrice = 20;
 
-            const receipt = await mintToken(name, currentEthPrice);
-            const mintTokenData = fetchReceiptLogs(receipt);
-            const mintTokenResult = mintTokenData.args.tokenId;
+        const currentTokenOwner = accounts[0];
 
-            const currTokenId = await ticketNFT.fetchTokenByIndex(mintTokenResult);
-            
-            console.log(`The current Token ID to burn : `, currTokenId);
-        } 
-        
-        catch(error) {
+        const tokenOne = await ticketNFT.mintToken(tokenOneName, tokenOnePrice, { from: currentTokenOwner });
+        const tokenTwo = await ticketNFT.mintToken(tokenTwoName, tokenTwoPrice, { from: currentTokenOwner });
+        const mintEventLogs = fetchReceiptLogs(tokenOne);
 
-            if(error) {
-                return console.error(error);
-            }
+        const tokenOneID = mintEventLogs.args.tokenId;
+        const tokenTwoID = mintEventLogs.args.tokenId;
 
-        }
+        const allTokens = await ticketNFT.retrieveAllTokens();
+
+        console.log(`Token One ID : `, tokenOneID);
+        console.log(`Token two ID : `, tokenTwoID);
+
+        const tokenId = allTokens[0].tokenId;
+
+        await ticketNFT.burnNftToken(parseInt(tokenId));
 
 
+        // assert.equal(tokenOne.tokenId, tokenId);
     })
 
 
