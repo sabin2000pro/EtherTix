@@ -12,18 +12,16 @@ import {Routes, Route} from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 import CartPage from 'pages/CartPage';
 import { Web3Context } from 'constants/context/Web3Context';
+import MintToken from 'pages/nfts/MintToken';
 
 const App = () => { // Push to github recent changes
    const {connectMetaMaskWallet, initialiseNftContract} = useContext(Web3Context);
 
    const handleMintNFT = async () => {
       const currentAccount = await connectMetaMaskWallet();
-     
       const currentContract = await initialiseNftContract();
+
       const mintedToken = await currentContract.methods.mintToken("test", "test", 1, 1).send({from: currentAccount.currentAccount[0] as unknown as any});
-
-      console.log(`Your Minted Token : `, mintedToken.events);
-
       return mintedToken;
    
    }
@@ -32,7 +30,7 @@ const App = () => { // Push to github recent changes
   return (
       <>
 
-      <button onClick = {handleMintNFT}>Mint NFT</button>
+      <MintToken mintNFT = {handleMintNFT} />
       
          <Navbar />
 
