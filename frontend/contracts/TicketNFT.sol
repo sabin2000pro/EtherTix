@@ -40,8 +40,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
         uint256 newTokenID = ++totalTokenSupply;
-
         address owner = msg.sender; // Store the address of the current owner of the token
+
         circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, false);
 
         NftToken storage currMintedToken = circulatingTokens[newTokenID];
@@ -61,12 +61,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         NftToken storage nftToken = circulatingTokens[_tokenId];
 
         require(nftToken.tokenOwner == currentTokenOwner, "You as the caller do not own this token representing the ticket. Transfer of ownership cannot be performed");
-        require(_tokenId > 0, "The current token that is being transferred must exist and not be 0");
-
-        // Before setting the new owner, approve the process of transfer
-        approve(_newTokenOwnerAddress, _tokenId);
         nftToken.tokenOwner = _newTokenOwnerAddress;
-
         emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
     }
 
@@ -111,8 +106,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currentToken.tokenOwner = tokenBuyer;
         isTokenForSale[tokenId] = false;
 
-        // Return the new blockchain address holder of the ticket token
-        return tokenBuyer;
+        emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice); // Emit the event that an NFT Has been purchased
+        return tokenBuyer; // Return the new address of the token owner (current buyer)
    }
 
    function burnNftToken(uint256 tokenId) public payable {
