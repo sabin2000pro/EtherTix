@@ -32,6 +32,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
     event OwnerBalanceRetrieved(address currentOwner);
+    event TokenBurned(uint tokenId);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
@@ -92,7 +93,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         NftToken memory currentNftToken = circulatingTokens[_tokenId];
 
         currentNftToken.tokenPrice = _listingPrice;
-        currentNftToken.isListedForSale = !(currentNftToken.isListedForSale); // Set the property of current nft token struct is listed to the negation of false
+        currentNftToken.isListedForSale = true;
 
         emit NftListedForSale(_tokenId, _listingPrice);
     }
@@ -119,10 +120,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         address currentOwner = msg.sender;
         NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
 
-        require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the owner of the NFT to burn it");
+        require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the current owner of the NFT to burn it");
         currentTokenToBurn.isListedForSale = !currentTokenToBurn.isListedForSale;
 
         _burn(tokenId);
+        emit TokenBurned(tokenId);
        
    }
 

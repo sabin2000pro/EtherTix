@@ -86,6 +86,8 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
             const theTokenId = currentListedTokenIndex.tokenId;
             await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
 
+            console.log(`Is token listed for sale ? `, currentListedTokenIndex.isListedForSale);
+
             assert.equal(currentListedTokenIndex.isListedForSale, true);
         } 
         
@@ -106,6 +108,8 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
             const name = "Agile Project Management";
             const currentEthPrice = convertPriceToEther();
+
+            console.log(`The current eth price of the token to burn`, currentEthPrice);
 
             const receipt = await mintToken(name, currentEthPrice);
             const mintTokenData = fetchReceiptLogs(receipt);
