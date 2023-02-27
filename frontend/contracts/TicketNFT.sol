@@ -54,17 +54,6 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return newTokenID; // Return the newly created ID
     }
 
-    // @description: The function is responsible for transferring the ownership of a token from the ticket issuer's address to the buyer address
-    // @parameters: Token ID and the new token owner's metamask wallet address
-    function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
-        address currentTokenOwner = msg.sender;
-        NftToken storage nftToken = circulatingTokens[_tokenId];
-
-        require(nftToken.tokenOwner == currentTokenOwner, "You as the caller do not own this token representing the ticket. Transfer of ownership cannot be performed");
-        nftToken.tokenOwner = _newTokenOwnerAddress;
-        emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
-    }
-
     // @description: Returns the owner of the NFT token given an ID and returns the address of the owner
     function getOwnerOfToken(uint256 _tokenId) public view returns (address) {
         return tokenOwner[_tokenId];
@@ -77,6 +66,17 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     // @description: Returns the minted NFT by its Token INDEX
     function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
         return circulatingTokens[_tokenIndex];
+    }
+
+    // @description: The function is responsible for transferring the ownership of a token from the ticket issuer's address to the buyer address
+    // @parameters: Token ID and the new token owner's metamask wallet address
+    function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
+        address currentTokenOwner = msg.sender;
+        NftToken storage nftToken = circulatingTokens[_tokenId];
+
+        require(nftToken.tokenOwner == currentTokenOwner, "You as the caller do not own this token representing the ticket. Transfer of ownership cannot be performed");
+        nftToken.tokenOwner = _newTokenOwnerAddress;
+        emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
     }
 
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
