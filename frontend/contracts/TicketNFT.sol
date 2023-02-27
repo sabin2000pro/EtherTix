@@ -53,11 +53,12 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, _tokenCapacity, _tokenClass, false, allTokensLength);
 
         NftToken storage currMintedToken = circulatingTokens[newTokenID];
+
         currMintedToken.tokenPrice = _tokenPrice;
 
         currMintedToken.isListedForSale = false;
         tokenOwner[totalTokenSupply] = owner; // Update the token owner at the current token supply with the new owner
-        
+    
         bool isTokenListed = currMintedToken.isListedForSale;
         allMintedTokens.push(currMintedToken); // Push the newly minted tokens to the array
 
@@ -95,6 +96,18 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return circulatingTokens[_tokenIndex];
     }
 
+        function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
+        require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
+        require((tokenIsOnSale(_tokenId)), "The token must NOT already be on sale to list the nft for sale");
+
+        NftToken memory currentNftToken = circulatingTokens[_tokenId];
+
+        currentNftToken.tokenPrice = _listingPrice;
+        currentNftToken.isListedForSale = true;
+
+        emit NftListedForSale(_tokenId, _listingPrice);
+    }
+
     // @description: The function is responsible for transferring the ownership of a token from the ticket issuer's address to the buyer address
     // @parameters: Token ID and the new token owner's metamask wallet address
     function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
@@ -106,17 +119,6 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
     }
 
-    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
-        require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
-        require((tokenIsOnSale(_tokenId)), "The token must NOT already be on sale to list the nft for sale");
-
-        NftToken memory currentNftToken = circulatingTokens[_tokenId];
-
-        currentNftToken.tokenPrice = _listingPrice;
-        currentNftToken.isListedForSale = true;
-
-        emit NftListedForSale(_tokenId, _listingPrice);
-    }
 
     function buyNftToken(uint256 tokenId) public payable returns (address) { // Function that allows the ticket buyer to to purchase the NFT Token given the Token ID
         address tokenBuyer = msg.sender; // Store the token buyer in msg.sender
