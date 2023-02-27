@@ -31,6 +31,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
+    event OwnerBalanceRetrieved(address currentOwner);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
@@ -63,7 +64,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return circulatingTokens[_tokenId].tokenPrice > 0;
     }
 
-   function fetchAccountBalance(address currentNftOwner) public view returns (uint) {
+   function fetchAccountBalance(address currentNftOwner) public view returns (uint) { // Returns the balance in ETH of the token owner
       return balanceOf(currentNftOwner);
    }
 
@@ -114,10 +115,12 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return tokenBuyer; // Return the new address of the token owner (current buyer)
    }
 
-   function burnNftToken(uint256 tokenId) public payable {
+   function burnNftToken(uint256 tokenId) public {
         address currentOwner = msg.sender;
         NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
         currentTokenToBurn.isListedForSale = false;
+
+        // Emit an event to notify that the token ID has been burnt
 
         return _burn(tokenId);
    }
