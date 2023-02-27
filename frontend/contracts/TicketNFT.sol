@@ -117,10 +117,12 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
    function burnNftToken(uint256 tokenId) public {
         address currentOwner = msg.sender;
-
         NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
+
+        require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the owner of the NFT to burn it");
         currentTokenToBurn.isListedForSale = !currentTokenToBurn.isListedForSale;
 
+        _burn(tokenId);
        
    }
 
