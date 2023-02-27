@@ -60,7 +60,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         address currentTokenOwner = msg.sender;
         NftToken storage nftToken = circulatingTokens[_tokenId];
 
-        require(nftToken.tokenOwner == currentTokenOwner, "You do not own this token representing the ticket. Transfer of ownership cannot be performed");
+        require(nftToken.tokenOwner == currentTokenOwner, "You as the caller do not own this token representing the ticket. Transfer of ownership cannot be performed");
+        require(_tokenId > 0, "The current token that is being transferred must exist and not be 0");
+
+        // Before setting the new owner, approve the process of transfer
+        approve(_newTokenOwnerAddress, _tokenId);
         nftToken.tokenOwner = _newTokenOwnerAddress;
 
         emit NftOwnershipTransferEvent(_tokenId, currentTokenOwner, _newTokenOwnerAddress);
