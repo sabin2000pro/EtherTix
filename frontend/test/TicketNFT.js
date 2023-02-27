@@ -28,14 +28,20 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     }
 
     it("Unit Test 1 : Test that mints one token", async () => {
+        const currentAccount = accounts[0];
+   
         const tokenOneName = "Agile Project Management";
         const tokenOnePrice = 50;
 
         const tokenTwoName = "Second Token Here!"
         const tokenTwoPrice = 50;
 
+        const tokenThreeName = "Highland Centre Basic Ticket NFT";
+        const tokenThreePrice = 25;
+
         const tokenOne = await ticketNFT.mintToken(tokenOneName, tokenOnePrice, { from: accounts[0] });
         const tokenTwo = await ticketNFT.mintToken(tokenTwoName, tokenTwoPrice, { from: accounts[0] });
+        const tokenThree = await ticketNFT.mintToken(tokenThreeName, tokenThreePrice, {from: accounts[0]});
 
         const mintEventLogs = fetchReceiptLogs(tokenOne);
         const tokenTwoReceipt = fetchReceiptLogs(tokenTwo);
@@ -46,7 +52,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         const tokenTwoID = tokenTwoReceipt.args.tokenId;
         const tokenTwoCurr = await ticketNFT.fetchTokenByIndex(tokenTwoID);
 
-        assert.equal(token.tokenOwner, accounts[0]);
+        assert.equal(token.tokenOwner, currentAccount);
         assert.equal(token.tokenName, tokenOneName);
         assert.equal(token.tokenPrice, tokenOnePrice);
 
