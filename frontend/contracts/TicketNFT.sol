@@ -84,8 +84,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         require(!(tokenIsOnSale(_tokenId)), "The token must already be on sale to list the nft for sale");
 
         totalTokenSupply--; // Decrease the total supply of tokens when listed for sale
-
         NftToken memory currentNftToken = circulatingTokens[_tokenId];
+
         currentNftToken.tokenPrice = _listingPrice;
         currentNftToken.isListedForSale = !(currentNftToken.isListedForSale); // Set the property of current nft token struct is listed to the negation of false
 
@@ -111,7 +111,6 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
    }
 
    function burnNftToken(uint256 tokenId) public payable {
-
         NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
         currentTokenToBurn.isListedForSale = false;
 

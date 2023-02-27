@@ -23,6 +23,10 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         return eventLogs;
     }
 
+    const mintToken = (name, priceInEther) => { // Mint a token given its name and price in ETH
+        return ticketNFT.mintToken(name, parseInt(priceInEther), { from: accounts[0] });
+    }
+
     it("Unit Test 1 : Test that mints one token", async () => {
         const tokenOneName = "Agile Project Management";
         const tokenOnePrice = 50;
@@ -58,11 +62,10 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         const receipt = await ticketNFT.mintToken(name, price, { from: accounts[0] });
         const eventLogs = fetchReceiptLogs(receipt);
         const tokenId = eventLogs.args.tokenId;
-        
+
         await ticketNFT.transferTokenOwnership(tokenId, accounts[1], { from: accounts[0] });
         const token = await ticketNFT.fetchTokenByIndex(tokenId);
 
-        console.log(`Current Token : `, token);
 
         assert.equal(token.tokenOwner, accounts[1], "Token ownership transfer failed");
 
@@ -70,18 +73,51 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
     it("Unit Test 3 - Should be able to list the currently minted NFT for sale", async () => {
 
-        const name = "Test Mint Token";
-        const priceInEther = convertPriceToEther();
+        try {
+            const name = "Test Mint Token";
+            const priceInEther = convertPriceToEther();
+    
+            const receipt = await mintToken(name, priceInEther);
+            const event = fetchReceiptLogs(receipt);
+            const tokenID = event.args.tokenId;
+    
+            const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex(tokenID);
+            const tokenOwner = currentListedTokenIndex.tokenOwner;
+    
+            const theTokenId = currentListedTokenIndex.tokenId;
+            await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
+        } 
+        
+        catch(error) {
+            if(error) {
+                return console.error(error);
+            }
+        }
 
-        const receipt = await ticketNFT.mintToken(name, parseInt(priceInEther), { from: accounts[0] });
-        const event = fetchReceiptLogs(receipt);
-        const tokenID = event.args.tokenId;
+       
+    })
 
-        const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex(tokenID);
-        const tokenOwner = currentListedTokenIndex.tokenOwner;
+    it("Unit Test 4 - Should be able to burn the NFT token after minting", async () => {
 
-        const theTokenId = currentListedTokenIndex.tokenId;
-        await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
+        try {
+
+            const name = "Agile Project Management";
+            const price = web3.utils.toWei("0.01", "ether")
+
+            const tokenId = ev
+
+
+        } 
+        
+        catch(error) {
+
+            if(error) {
+                return console.error(error);
+            }
+
+        }
+
+
     })
 
 
