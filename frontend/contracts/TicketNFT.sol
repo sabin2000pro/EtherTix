@@ -41,7 +41,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
         uint256 newTokenID = ++totalTokenSupply;
-        address owner = msg.sender; // Store the address of the current owner of the token
+        address owner = msg.sender; 
 
         circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, false);
 
@@ -49,10 +49,10 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currMintedToken.isListedForSale = false;
    
         bool isTokenListed = currMintedToken.isListedForSale;
-        tokenOwner[totalTokenSupply] = owner; // Set the new token owner to the owner (Updating the owner)
+        tokenOwner[totalTokenSupply] = owner;
 
         emit NewTokenMinted(newTokenID, isTokenListed);
-        return newTokenID; // Return the newly created ID
+        return newTokenID;
     }
 
     // @description: Returns the owner of the NFT token given an ID and returns the address of the owner
@@ -117,12 +117,11 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
    function burnNftToken(uint256 tokenId) public {
         address currentOwner = msg.sender;
+
         NftToken memory currentTokenToBurn = circulatingTokens[tokenId];
-        currentTokenToBurn.isListedForSale = false;
+        currentTokenToBurn.isListedForSale = !currentTokenToBurn.isListedForSale;
 
-        // Emit an event to notify that the token ID has been burnt
-
-        return _burn(tokenId);
+       
    }
 
 }

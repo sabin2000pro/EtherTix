@@ -66,7 +66,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         await ticketNFT.transferTokenOwnership(tokenId, accounts[1], { from: accounts[0] });
         const token = await ticketNFT.fetchTokenByIndex(tokenId); // Fetch the index of the token by its index
 
-        assert.equal(token.tokenOwner, accounts[1], "Token ownership transfer failed");
+        assert.equal(token.tokenOwner, accounts[1], "Token ownership success");
 
     })
 
@@ -85,6 +85,8 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     
             const theTokenId = currentListedTokenIndex.tokenId;
             await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
+
+            assert.equal(currentListedTokenIndex.isListedForSale, true);
         } 
         
         catch(error) {
@@ -92,7 +94,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
             if(error) {
                 return console.error(error);
             }
-            
+
         }
 
        
@@ -105,6 +107,12 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
             const name = "Agile Project Management";
             const currentEthPrice = convertPriceToEther();
 
+            const receipt = await mintToken(name, currentEthPrice);
+            const mintTokenData = fetchReceiptLogs(receipt);
+            const mintTokenResult = mintTokenData.args.tokenId;
+
+            const currTokenId = await ticketNFT.fetchTokenByIndex(mintTokenResult);
+            
             
         } 
         
