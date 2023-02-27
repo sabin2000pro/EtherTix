@@ -56,7 +56,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     });
 
     it(" Unit Test 2 : Should transfer the ownership of the token", async () => {
-        const name = "Agile Project Management";
+        const name = "Second Token Here!";
         const priceInEther = convertPriceToEther();
        
         const receipt = await mintToken(name, priceInEther);
@@ -73,7 +73,7 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     it("Unit Test 3 - Should be able to list the currently minted NFT for sale", async () => {
 
         try {
-            const name = "Test Mint Token";
+            const name = "Second Token Here!";
             const priceInEther = convertPriceToEther();
     
             const receipt = await mintToken(name, priceInEther);
@@ -82,11 +82,9 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
     
             const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex(tokenID);
             const tokenOwner = currentListedTokenIndex.tokenOwner;
-    
             const theTokenId = currentListedTokenIndex.tokenId;
-            await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
 
-            console.log(`Is token listed for sale ? `, currentListedTokenIndex.isListedForSale);
+            await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
 
             assert.equal(currentListedTokenIndex.isListedForSale, true);
         } 
@@ -108,8 +106,6 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
 
             const name = "Agile Project Management";
             const currentEthPrice = convertPriceToEther();
-
-            console.log(`The current eth price of the token to burn`, currentEthPrice);
 
             const receipt = await mintToken(name, currentEthPrice);
             const mintTokenData = fetchReceiptLogs(receipt);
