@@ -70,7 +70,9 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
         const tokenId = eventLogs.args.tokenId;
 
         await ticketNFT.transferTokenOwnership(tokenId, accounts[1], { from: accounts[0] });
-        const token = await ticketNFT.fetchTokenByIndex(tokenId); // Fetch the index of the token by its index
+        const token = await ticketNFT.fetchTokenByIndex(tokenId); // Fetch the index of the token by its inde
+        const ownerAccountBalanceReceipt = await ticketNFT.fetchAccountBalance(accounts[1]);
+    
 
         assert.equal(token.tokenOwner, accounts[1], "Token ownership success");
 
@@ -89,6 +91,8 @@ contract("TicketNFT", (accounts) => { // Unit Tests for TicketNFT Contract
             const currentListedTokenIndex = await ticketNFT.fetchTokenByIndex(tokenID);
             const tokenOwner = currentListedTokenIndex.tokenOwner;
             const theTokenId = currentListedTokenIndex.tokenId;
+
+            console.log(`Token ID on sale , `, theTokenId);
 
             await ticketNFT.listNftForSale(parseInt(theTokenId), parseInt(priceInEther), { from: tokenOwner });
             assert.equal(currentListedTokenIndex.isListedForSale, true);

@@ -13,6 +13,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         address tokenOwner;
         string tokenName;
         uint256 tokenPrice;
+        uint256 tokenCapacity;
+        string tokenClass;
         bool isListedForSale;
         uint256 tokenIndex;
     }
@@ -26,14 +28,14 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint) public tokensPrice;
-    mapping(string => bool) tokenNames;
+    mapping(string => bool) tokenNames; // Store the token names in a mapping between a string and boolean
 
-    event NewTokenMinted(uint256 tokenId, string tokenName, uint tokenPrice, bool isListed, NftToken[] allMintedTokens);
+    event NewTokenMinted(uint256 tokenId, string tokenName, string tokenClass, uint tokenPrice, uint256 tokenCapacity, bool isListed, NftToken[] allMintedTokens);
     event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
     event OwnerBalanceRetrieved(address currentOwner);
-    event TokenBurned(uint tokenId, uint newTotalSupply);
+    event TokenBurned(uint tokenId, uint newTotalSupply); // Emits an event when the token is burned
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
@@ -41,25 +43,24 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     // @parameters: _tokenName: Represents the name of the ticket, _tokenPrice: The price of the event ticket
     // @returns: Returns the new ticket ID (Used for proof of ownership in transfer of ownership)
 
-    function mintToken(string memory _tokenName, uint256 _tokenPrice) public payable returns (uint) {
+    function mintToken(string memory _tokenName, string memory _tokenClass, uint256 _tokenPrice, uint256 _tokenCapacity) public payable returns (uint) {
         uint256 newTokenID = ++totalTokenSupply;
         address owner = msg.sender; 
-
         uint allTokensLength = allMintedTokens.length;
 
-        circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, false, allTokensLength);
+        circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, _tokenCapacity, _tokenClass, false, allTokensLength);
         NftToken storage currMintedToken = circulatingTokens[newTokenID];
 
         currMintedToken.tokenPrice = _tokenPrice;
         currMintedToken.isListedForSale = false;
-        tokenOwner[totalTokenSupply] = owner;
+        tokenOwner[totalTokenSupply] = owner; // Update the token owner at the current token supply with the new owner
         
         bool isTokenListed = currMintedToken.isListedForSale;
+        allMintedTokens.push(currMintedToken); // Push the newly minted tokens to the array
 
-        allMintedTokens.push(currMintedToken);
         retrieveAllTokens();
 
-        emit NewTokenMinted(newTokenID, _tokenName, _tokenPrice, isTokenListed, allMintedTokens);
+        emit NewTokenMinted(newTokenID, _tokenName, _tokenClass, _tokenPrice, _tokenCapacity, isTokenListed, allMintedTokens);
         return newTokenID;
     }
 
@@ -143,7 +144,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         uint256 currentTokenIndex = currentTokenToBurn.tokenIndex; // Retrieve the current index of the current token to be burned
         uint256 lastMintedTokensIndex = allMintedTokens.length - 1; // Retrieve the last index of the last minted token
 
-        allMintedTokens[currentTokenIndex] = allMintedTokens[lastMintedTokensIndex]; // Set the current token index in the all minted tokens array to the last index
+        allMintedTokens[currentTokenIndex] = allMintedTokens[lastMintedTokensIndex]; // Overwrite the current token index in the all minted tokens array to the last index
         allMintedTokens.pop();
 
         circulatingTokens[tokenId].tokenId = 0;
