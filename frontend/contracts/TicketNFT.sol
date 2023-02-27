@@ -32,7 +32,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
     event NftListedForSale(uint tokenId, uint listingPrice);
     event OwnerBalanceRetrieved(address currentOwner);
-    event TokenBurned(uint tokenId);
+    event TokenBurned(uint tokenId, uint newTotalSupply);
     
     constructor() ERC721("Events NFT Ticket", "ENFT") {}
 
@@ -125,7 +125,9 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currentTokenToBurn.isListedForSale = !currentTokenToBurn.isListedForSale;
 
         _burn(tokenId);
-        emit TokenBurned(tokenId);
+
+        uint newTotalSupply = --totalTokenSupply; // Decrement the total supply
+        emit TokenBurned(tokenId, newTotalSupply);
        
    }
 
