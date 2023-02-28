@@ -9,12 +9,10 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
 
     let error = {...err};
     error.message = err.message;
-
-    // error.statusCode = err.statusCode;
-    // error.stack = err.stack;
+    error.statusCode = error.statusCode
 
     if(process.env.TICKETS_DEV_MODE === 'development') {
-        console.log(`Current Copy of Error :`, error)
+        console.log(`Current Copy of Error :`, error.message)
 
         if(err.code === 11000) {
             const message = `Duplicate resource found on the server ${Object.keys(err.keyValue)}`;
@@ -27,8 +25,6 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
         }
 
     }
-
-    console.log(`Status Code `, err.statusCode);
-
+    
     return response.status(err.statusCode).json({success: false, message: err.message, stack: err.stack});
 }
