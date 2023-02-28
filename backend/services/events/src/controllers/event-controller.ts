@@ -1,44 +1,23 @@
+import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
-import { NotFoundError, BadRequestError } from '../middlewares/error-handler';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
+import asyncHandler from 'express-async-handler';
 
-export const fetchAllEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
+export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const events = await Event.find()
         return response.status(StatusCodes.OK).json(events);
     } 
-    
-    catch(error) {
+)
 
-        if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        }
-
-    }
-
-
-}
-
-export const getEventCount = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
+export const fetchTotalEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const events = await Event.countDocuments({});
         return response.status(StatusCodes.OK).json({success: true, count: events});
-    } 
-    
-    catch(error) {   
-
-        if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        }
-
     }
+    
+)
 
 
-}
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     try {
@@ -46,23 +25,18 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
         const eventId = request.params.eventId;
         let event = await Event.findById(eventId)
 
-        if(!eventId) {
-            return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND));
-        }
-
         if(!event) {
-            return next(new NotFoundError("Event with that ID not found", StatusCodes.NOT_FOUND)); 
+           return next(new ErrorResponse(`No event with that ID : ${eventId} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }
 
-        return response.status(StatusCodes.OK).json({success: true, data: event});
-
+        return response.status(StatusCodes.OK).json({success: true, event});
 
     }
     
     catch(error) {
 
         if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+            return next(error);
         }
 
     }
@@ -73,6 +47,7 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
     try {    
+
         request.body.user = request.user.id;
         const event = await Event.create(request.body);
         await event.save();
@@ -84,7 +59,7 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
     catch(error) {
         
         if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
+           return next(error);
         }
 
     }
@@ -94,20 +69,24 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
 export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
-        const id = request.params.id;
-        let event = await Event.findById(id);
+
+        const eventId = request.params.eventId;
+        let event = await Event.findById(eventId);
 
         if(!event) {
-
+            return next(new ErrorResponse(`No event with that ID : ${eventId} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }
 
+        event = await Event.findByIdAndUpdate(eventId)
 
     }
     
     catch(error) {
+
         if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+           return next(error);
         }
+
     }
 
 }
@@ -121,7 +100,7 @@ export const deleteEvents = async (request: any, response: any, next: NextFuncti
     catch(error) {
 
       if(error) {
-        return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+        return next(error);
       }
 
     }
@@ -137,7 +116,7 @@ export const deleteEventByID = async (request: any, response: any, next: NextFun
     catch(error) {
 
         if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+           
         }
     }
 
@@ -163,9 +142,11 @@ export const fetchTrendingEvents = async (request: Request, response: Response, 
     }
     
     catch(error) {
+
         if(error) {
-            return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
+            
         }
+
     }
 
 }
@@ -193,6 +174,7 @@ export const likeEvent = async (request: any, response: any, next: NextFunction)
         if(error) {
             return next(error);
         }
+
     }
 
 

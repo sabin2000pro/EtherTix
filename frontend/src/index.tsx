@@ -4,6 +4,8 @@ import App from './App'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { Web3Provider } from 'constants/context/Web3Context'
+import { Provider } from 'react-redux'
+import store from './store'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 
@@ -12,10 +14,18 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
      <BrowserRouter>
 
       <Web3Provider>
+
+        <Provider store = {store}>
+
           <App />
+
+      </Provider>
+      
       </Web3Provider>
+
+      
        
      </BrowserRouter>
 
-  </React.StrictMode>,
+  </React.StrictMode>
 )

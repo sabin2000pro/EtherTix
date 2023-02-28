@@ -1,11 +1,11 @@
 class ErrorResponse extends Error {
-    statusCode: any;
+    statusCode: number
 
     constructor(message, statusCode) {
         super(message);
         this.statusCode = statusCode;
     }
-
+    
 }
 
 export {ErrorResponse}

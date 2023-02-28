@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
 type Ticket = {
@@ -15,27 +16,48 @@ const tickets: Ticket[] = [
 ];
 
 const CartPage = () => {
-  const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }>({});
+  const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
+  const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
+
+  useEffect(() => {
+
+     const fetchEventTickets = async () => {
+
+     }
+
+     fetchEventTickets();
+
+  }, [])
 
 // Add an item to the cart
-function addToCart(ticket: Ticket, quantity: number) {
+const addToCart = (ticket: Ticket, quantity: number) => {
+
   const updatedCart = { ...cart };
+
   if (updatedCart[ticket.id]) {
-    updatedCart[ticket.id].quantity += quantity;
-  } else {
+     updatedCart[ticket.id].quantity += quantity;
+  }
+  
+  else {
     updatedCart[ticket.id] = { ...ticket, quantity };
   }
+
   setCart(updatedCart);
 }
 
 // Remove an item from the cart
-function removeFromCart(ticketId: number) {
+const removeFromCart = (ticketId: number) => {
+
   const updatedCart = { ...cart };
+
   if (updatedCart[ticketId].quantity === 1) {
     delete updatedCart[ticketId];
-  } else {
+  } 
+  
+  else {
     updatedCart[ticketId].quantity -= 1;
   }
+  
   setCart(updatedCart);
 }
 
@@ -75,20 +97,33 @@ function calculateEthPrice(price: number) {
 }
 
 return (
+
+  
   <>
-    <div className="cart">
-      <h2 className="cart__heading">Your Cart</h2>
+
+    <div className = "cart">
+
+      <h2 className = "cart__heading">Your Cart</h2>
+
       {Object.keys(cart).length === 0 ? (
-        <p>Your cart is empty</p>
+
+          <p>Your cart is empty</p>
+
       ) : (
         <>
+
+
           {Object.values(cart).map((item) => (
-            <div key={item.id} className="cart__item">
+
+            <div key={item.id} className = "cart__item">
+
               <img
                 className="cart__item-image"
                 src={item.image}
                 alt={item.name}
               />
+
+
               <div className="cart__item-description">
                   <div className="cart__item-name">{item.name}</div>
                   <div className="cart__item-price">
@@ -98,12 +133,16 @@ return (
                 <button onClick={() => removeFromCart(item.id)}>Remove</button>
               </div>
             </div>
+
+
           ))}
           <div className="cart__total">
             Total Cost: ${getTotalPrice().toFixed(2)} (${(getTotalPrice() / ethPrice).toFixed(6)} ETH)</div>
             <button className="cart__remove-all" onClick={() => setCart({})}>Remove All</button>
         </>
       )}
+
+
     </div>
 
     <div className="tickets">
@@ -165,8 +204,13 @@ return (
       </div>
         )
       }
+
       </div>
+
+
       </>
+
+
       );
     }
 
