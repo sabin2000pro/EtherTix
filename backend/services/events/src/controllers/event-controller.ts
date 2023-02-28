@@ -2,7 +2,6 @@ import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
-import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const events = await Event.find()
