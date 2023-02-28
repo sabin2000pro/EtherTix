@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Search from './Search';
 
 const Navbar = () => {
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<{ name: string, path: string }[]>([]);
 

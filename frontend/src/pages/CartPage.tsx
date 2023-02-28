@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import { fetchAllTickets } from 'actions/ticket-actions';
 
 type Ticket = {
   id: number;
@@ -16,6 +17,7 @@ const tickets: Ticket[] = [
 ];
 
 const CartPage = () => {
+  const dispatch = useDispatch();
   const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
   const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -26,7 +28,7 @@ const CartPage = () => {
 
      const fetchEventTickets = async () => {
       // Will use dispatcher to fetch the event tickets
-      console.log(`In the fetch tickets function`);
+        dispatch(fetchAllTickets() as any);
      }
 
      fetchEventTickets();
@@ -72,13 +74,15 @@ const getTotalPrice = () => {
 
 // Fetch the live Ethereum price on component mount
 useEffect(() => {
+  
   const fetchEthPrice = async () => {
+
     try {
-
-      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=gbp');
-      console.log(`Real time price : `, response);
-
+      
+      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
       setEthPrice(response.data.ethereum.usd);
+
+      console.log(`ETH Price : `, ethPrice);
     } 
     
     catch (error) {
@@ -88,9 +92,10 @@ useEffect(() => {
 
 
   fetchEthPrice();
+
 }, []);
 
-function calculateEthPrice(price: number) {
+const calculateEthPrice = (price: number) => {
   return price / ethPrice;
 }
 
@@ -108,34 +113,32 @@ return (
           <p>Your cart is empty</p>
 
       ) : (
-        <>
 
+        <>
 
           {Object.values(cart).map((item) => (
 
-            <div key={item.id} className = "cart__item">
+            <div key = {item.id} className = "cart__item">
 
-              <img
-                className="cart__item-image"
-                src={item.image}
-                alt={item.name}
-              />
+              <div className = "cart__item-description">
+                  <div className = "cart__item-name">{item.name}</div>
+                  <div className = "cart__item-price">
 
-
-              <div className="cart__item-description">
-                  <div className="cart__item-name">{item.name}</div>
-                  <div className="cart__item-price">
                     {calculateEthPrice(item.price).toFixed(6)} ETH (${item.price.toFixed(2)})
                     x {item.quantity}
                   </div>
+
                 <button onClick={() => removeFromCart(item.id)}>Remove</button>
               </div>
+
             </div>
 
 
           ))}
           <div className="cart__total">
-            Total Cost: ${getTotalPrice().toFixed(2)} (${(getTotalPrice() / ethPrice).toFixed(6)} ETH)</div>
+            Total Cost : {( getTotalPrice() / ethPrice).toFixed(6)} ETH </div>
+
+
             <button className="cart__remove-all" onClick={() => setCart({})}>Remove All</button>
         </>
       )}
@@ -143,16 +146,19 @@ return (
 
     </div>
 
+
+
     <div className="tickets">
     <h2 className="tickets__heading">Tickets:</h2>
+
+
     <ul>
+
+
       {tickets.map((ticket) => (
+
         <li key={ticket.id}>
-          <img
-            className="ticket__image"
-            src={ticket.image}
-            alt={ticket.name}
-          />
+
           <div className="ticket__description">
             <div className="ticket__name">{ticket.name}</div>
             <div className="ticket__price">

@@ -66,6 +66,8 @@ html {
     margin-top: 10px;
     width: 200px;
     height: 40px;
+    width: 12%;
+    padding: 2px 4px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);

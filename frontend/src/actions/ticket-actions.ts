@@ -10,6 +10,8 @@ export const fetchAllTickets = () => async (dispatch: any) => {
         dispatch({type: FETCH_ALL_TICKETS_REQUEST});
 
         const response = await axios.get(TICKETS_URI);
+
+        console.log(`All Tickets : `, response);
         dispatch({type: FETCH_ALL_TICKETS_SUCCESS, payload: { tickets: response.data }});
 
     } 

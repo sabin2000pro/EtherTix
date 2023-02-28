@@ -1,8 +1,6 @@
 import React from 'react'
 import { CiSearch } from 'react-icons/ci';
 
-
-
 export interface ISearchProps {
    searchTerm: any;
    handleSearch: () => void;
@@ -17,11 +15,15 @@ const Search: React.FC<ISearchProps> = ({searchTerm, handleSearch, searchResults
 
     
     <div className = "nav-centre">
+
+
       <CiSearch className ="search-icon"/> 
-    <input className = "search-bar" type = "text" placeholder="Search Events" value={searchTerm} onChange={handleSearch}/>
+     <input className = "search-bar" type = "text" placeholder = "Search Events" value={searchTerm} onChange={handleSearch}/>
+
     </div>
 
     {searchTerm.length > 0 && (
+
       <ul className = "search-results">
 
         {searchResults.map((result: any) => (
@@ -33,6 +35,8 @@ const Search: React.FC<ISearchProps> = ({searchTerm, handleSearch, searchResults
             </li> 
             
             ))}
+
+
       </ul>
 )}
 </>

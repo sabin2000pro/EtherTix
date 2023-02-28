@@ -16,3 +16,26 @@ export const addToCartReducer = (state = cartInitialState as any , action: any) 
     }
 }
 
+export const removeItemFromCart = (state = cartInitialState as any, action: any) => {
+
+    switch(action.type) {
+
+        case REMOVE_ITEM_FROM_CART:
+            return {loading: false, ...state, cartItems: state.cartItems.filter((currentItemToRemove: any) => currentItemToRemove.id !== action.payload)}
+
+        default:
+            return state;
+    }
+
+
+}
+
+export const clearCart = (state = cartInitialState as any, action: any) => {
+    switch(action.type) {
+
+        case CLEAR_CART:
+            return state.cartItems
+    }
+
+    
+}

@@ -36,20 +36,21 @@ const App = () => { // Push to github recent changes
 
    }, [dispatch])
 
-   const handleMintNFT = async () => {
+   // const handleMintNFT = async () => {
 
-      const currentAccount = await connectMetaMaskWallet();
-      const currentContract = await initialiseNftContract();
+   //    const currentAccount = await connectMetaMaskWallet();
+   //    const currentContract = await initialiseNftContract();
 
-      const mintedToken = await currentContract.methods.mintToken("test", "test", 1, 1).send({from: currentAccount.currentAccount[0] as unknown as any});
-      return mintedToken;
-   }
+   //    const mintedToken = await currentContract.methods.mintToken("test", "test", 1, 1).send({from: currentAccount.currentAccount[0] as unknown as any});
+   //    return mintedToken;
+
+   // }
 
 
   return (
       <>
 
-      <MintToken mintNFT = {handleMintNFT} />
+      {/* <MintToken mintNFT = {handleMintNFT} /> */}
       
          <Navbar />
 
