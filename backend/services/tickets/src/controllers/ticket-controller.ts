@@ -38,6 +38,10 @@ export const fetchCustomerTickets = asyncHandler(async (request: any, response: 
    
    catch(error) {
       
+         if(error) {
+            return next(error);
+         }
+
    }
 
 
@@ -55,7 +59,7 @@ export const getEventTicketById = asyncHandler(async (request: any, response: an
       const ticket = await Ticket.findById(id)
 
       if(!ticket) {
-         
+         return response.status(StatusCodes.NOT_FOUND).json({success: false, })
       }
 
       return response.status(StatusCodes.OK).json({success: true, ticket})
