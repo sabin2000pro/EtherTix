@@ -7,15 +7,14 @@ let ERROR_TYPES = ['CastError']
 
 export const errorHandler = (err, request: any, response: any, next: NextFunction) => {
 
-    // let error = {...err};
-    // error.message = err.message;
+    let error = {...err};
+    error.message = err.message;
 
     // error.statusCode = err.statusCode;
     // error.stack = err.stack;
-    console.log(`Current Error :`, err)
 
     if(process.env.TICKETS_DEV_MODE === 'development') {
-        console.log(`Current Error :`, err)
+        console.log(`Current Copy of Error :`, error)
 
         if(err.code === 11000) {
             const message = `Duplicate resource found on the server ${Object.keys(err.keyValue)}`;

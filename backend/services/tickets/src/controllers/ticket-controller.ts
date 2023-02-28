@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
 import asyncHandler from 'express-async-handler'
 import axios from 'axios'
@@ -8,8 +8,6 @@ import { ErrorResponse } from '../utils/error-response';
 // @desc      Fetch All Tickets
 // @route     GET /api/v1/tickets
 // @access    Private (Authorization Token Required
-
-
 
 export const fetchAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
         const tickets = await Ticket.find();
@@ -185,7 +183,7 @@ export const fetchBasicTickets = asyncHandler(async (request: any, response: any
    const {ticketType} = request.query;
 
    if(ticketType !== 'basic') {
-      
+      return next(new ErrorResponse(`We are sorry but you provided the wrong query parameter`, StatusCodes.BAD_REQUEST));
    }
 
    const basicTickets = await Ticket.find({ticketClass: ticketType})
