@@ -74,15 +74,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, "Please provide your forename"],
-        max: [10, "Forename cannot exceed 10 characters"],
-        min: [3, "Forename cannot be less than 3 characters"]
+        min: [5, "Forename cannot exceed 10 characters"],
+        max: [3, "Forename cannot be less than 3 characters"]
     },
 
     surname: { // Users surname
         type: String,
         required: [true, "Please provide your surname"],
-        min: [6, "Your surname must be at least 6 characters"],
-        max: [16, "Your surname cannot exceed 16 characters"]
+        minlength: [5, "Your surname must be at least 5 characters"],
+        maxlength: [10, "Your surname cannot exceed 10 characters"]
     },
     
     // username of the user
@@ -90,7 +90,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: [5, "Username must be at least 5 characters long"],
-        maxlength: [20, "Username must be at least 20 characters long"],
+        maxlength: [10, "Username must be at least 10 characters long"],
         trim: true
     },
 
@@ -101,7 +101,6 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-
 
     photo: { // Photo for the user
         type: String, // Type is string

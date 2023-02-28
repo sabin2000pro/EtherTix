@@ -15,7 +15,6 @@ const singleEventState = {
 
 export const fetchAllEvents = (state = initialEventState as any, action: any) => {
 
-
     switch(action.type) {
 
         case FETCH_ALL_EVENTS_REQUEST:
@@ -63,5 +62,5 @@ export const createNewEventReducer = (state = initialEventState, action: any) =>
 }
 
 export const updateEventReducer = (state = singleEventState, action: any) => {
-    
+
 }

@@ -18,11 +18,15 @@ const tickets: Ticket[] = [
 const CartPage = () => {
   const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
   const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [ethPrice, setEthPrice] = useState<number>(0);
 
   useEffect(() => {
 
      const fetchEventTickets = async () => {
-
+      // Will use dispatcher to fetch the event tickets
+      console.log(`In the fetch tickets function`);
      }
 
      fetchEventTickets();
@@ -61,34 +65,28 @@ const removeFromCart = (ticketId: number) => {
   setCart(updatedCart);
 }
 
-function removeAllFromCart() {
-  setCart({});
-}
-
 // Calculate total price of items in the cart
-function getTotalPrice() {
-  return Object.values(cart).reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  const totalPrice = getTotalPrice();
-  const totalPriceEth = totalPrice / ethPrice;
+const getTotalPrice = () => {
+  return Object.values(cart).reduce((acc, item) => acc + item.price * item.quantity, 0);
 }
-
-const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-const [selectedQuantity, setSelectedQuantity] = useState(1);
-const [ethPrice, setEthPrice] = useState<number>(0);
 
 // Fetch the live Ethereum price on component mount
 useEffect(() => {
   const fetchEthPrice = async () => {
     try {
-      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+
+      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=gbp');
+      console.log(`Real time price : `, response);
+
       setEthPrice(response.data.ethereum.usd);
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
     }
   };
+
+
   fetchEthPrice();
 }, []);
 
