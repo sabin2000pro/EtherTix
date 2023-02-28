@@ -2,11 +2,14 @@ import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
 import asyncHandler from 'express-async-handler'
+import axios from 'axios'
 import { ErrorResponse } from '../utils/error-response';
 
 // @desc      Fetch All Tickets
 // @route     GET /api/v1/tickets
-// @access    Private (Authorization Token Required)
+// @access    Private (Authorization Token Required
+
+
 
 export const fetchAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
         const tickets = await Ticket.find();
@@ -55,7 +58,7 @@ export const getEventTicketById = asyncHandler(async (request: any, response: an
   try {
 
       const id = request.params.id;
-      const ticket = await Ticket.findById(id).populate("event");
+      const ticket = await Ticket.findById(id)
 
       if(!ticket) {
          return response.status(StatusCodes.NOT_FOUND).json({success: false, })
@@ -88,8 +91,8 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
         request.body.issuer = issuerId;
         request.body.venue = venueId;
 
-        const ticketBody = request.body;
-        const ticket = await Ticket.create(ticketBody);
+        const {name, ticketClass, ticketToken, capacity, quantityPurchase, description, cost, isFree, deliveryMethods, onSaleStatus, confirmationMessage, ticketSold} = request.body;
+        const ticket = await Ticket.create({event: eventId, issuer: issuerId, venue: venueId, name, ticketClass, ticketToken, capacity, quantityPurchase, description, cost, isFree, deliveryMethods, onSaleStatus, confirmationMessage, ticketSold});
 
         await ticket.save();
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
@@ -104,7 +107,17 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
 
    }
 
+})
 
+// http://localhost:5303/api/tickets/:id/event/details
+
+export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+   const id = request.params.id;
+   
+   const events = await axios.get(`http://sabin2000/ethertix-events-service/api/events`);
+   console.log(events);
+
+   return response.status(StatusCodes.OK).json({success: true, message: "Event details corresponding to a Ticket ID here"});
 })
 
 // @desc      Edit Ticket By ID
