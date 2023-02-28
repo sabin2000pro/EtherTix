@@ -18,6 +18,8 @@ services:
       - /app/node_modules
       - ../backend/services/api-gateway:/app
 
+    networks:
+      - my-service-network
 
   auth-service:
     container_name: ethertix-auth-service
@@ -34,6 +36,9 @@ services:
     volumes:
        - /app/node_modules
        - ../backend/services/authentication:/app
+
+    networks:
+      - my-service-network
 
   events-service:
       container_name: ethertix-events-service
