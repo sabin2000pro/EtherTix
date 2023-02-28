@@ -4,17 +4,16 @@ interface ITicketAttributes { // Interface that stores the ticket data
     name: String,
     ticketClass: String,
     ticketToken: String,
-    capacity: Number,
+    quantity: Number,
     quantityPurchase: String,
     description: String,
-    cost: Number,
-    isFree: Boolean,
+    cost: number,
     deliveryMethods: String,
     onSaleStatus: String,
+    ticketSold: boolean
     saleStartsAt: Date,
     saleEndsAt: Date,
     confirmationMessage: string,
-    ticketSold: boolean,
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
     venue: mongoose.Schema.Types.ObjectId
@@ -27,14 +26,14 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    capacity: Number,
    quantityPurchase: Number,
    description: String,
-   cost: Number,
-   isFree: Boolean,
+   cost: number,
+   quantity: number,
    deliveryMethods: String,
+   ticketSold: boolean,
    onSaleStatus: String,
    saleStartsAt: Date,
    saleEndsAt: Date,
    confirmationMessage: String,
-   ticketSold: Boolean,
    event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
    venue: mongoose.Schema.Types.ObjectId
@@ -54,12 +53,10 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             enum: ["premium", "standard", "basic", "vip"]
         },
 
-        capacity: { // Number of tickets for sale (0, 1, 2,3)
+        quantity: { // Number of tickets for sale (0, 1, 2,3)
             type: Number,
             required: [true, "Please specify how many tickets can be placed for sale"],
             default: 1,
-            min: [1, "At least one single ticket must be placed for sale"],
-            max: [5, "You cannot place more than 5 tickets for sale at once"]
         },
 
         quantityPurchase: { // The minimum and maximum amount of tickets that can be purchased
