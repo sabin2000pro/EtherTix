@@ -110,11 +110,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: String
     },
     
-    // eventLocation: {
-    //     type: String,
-    //     required: [true, "Please specify the location of the event"]
-    // },
-
     slug: String,
 
     startAt: { // Start Date of the event
@@ -145,26 +140,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
-
-    // eventSchedule: { // Schedule 
-
-    //     hostName: { // Host name of the event (Mike Andrews)
-    //         type: String,
-    //         required: [true, "Please specify the host name of the event"]
-    //     },
-        
-    //     performanceTime: { // Time at which the host of the event is performing
-    //         type: Date,
-    //         default: Date.now
-    //     },
-
-    //     isVIP: { // Is the performer a VIP or not
-    //         type: Boolean,
-    //         default: false,
-    //         required: [true, "Please specify if the host of the event is a VIP or not"]
-    //     }
-
-    // },
 
     currency: { // The type of currency that the event takes payment in
         type: String,
@@ -197,10 +172,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         max: [250, "There cannot be more than 250 people at the current event"]
     },
 
-    // hasSeating: {
-    //     type: Boolean,
-    //     required: [true, "Please specify if the event has seating or not"]
-    // },
+    hasSeating: {
+        type: Boolean,
+        required: [true, "Please specify if the event has seating or not"],
+        default: false
+    },
 
     slotsAvailable: {
         type: Boolean,
@@ -315,11 +291,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify a valid Category ID for this event"]
     }
 
-    // review: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Review",
-    //     required: [true, "Please specifgy a valid Review ID for this event"]
-    // }
 
 }, {
     timestamps: true,

@@ -15,6 +15,7 @@
     "currency": "ETH",
     "format": "Outdoor",
     "isOnline": false,
+    "hasSeating": true,
     "capacity": 100,
     "slotsAvailable": true,
     "isPremium": false,

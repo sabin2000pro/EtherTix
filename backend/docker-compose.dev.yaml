@@ -18,6 +18,8 @@ services:
       - /app/node_modules
       - ../backend/services/api-gateway:/app
 
+    networks:
+      - my-service-network
 
   auth-service:
     container_name: ethertix-auth-service
@@ -35,6 +37,9 @@ services:
        - /app/node_modules
        - ../backend/services/authentication:/app
 
+    networks:
+      - my-service-network
+
   events-service:
       container_name: ethertix-events-service
       image: sabin2000/ethertix-events-service
@@ -50,6 +55,9 @@ services:
       volumes:
         - /app/node_modules
         - ../backend/services/events:/app
+
+      networks:
+        - my-service-network
   
   categories-service:
       container_name: ethertix-categories-service
@@ -100,6 +108,9 @@ services:
         - /app/node_modules
         - ../backend/services/tickets:/app
 
+    networks:
+      - my-service-network
+
   discount-service:
 
     container_name: ethertix-discounts-service
@@ -132,3 +143,7 @@ services:
         
 volumes:
   mongodb_data_volume:
+
+networks:
+  my-service-network:
+    driver: bridge
