@@ -114,8 +114,10 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
 export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
    const id = request.params.id;
    const ticket = await Ticket.findById(id);
+
+   let REQUEST_URI = `http://events-service:5301/api/events/${ticket.event}`
    
-   const events = await axios.get(`http://events-service:5301/api/events/${ticket.event}`);
+   const events = await axios.get(REQUEST_URI);
    return response.status(StatusCodes.OK).json({success: true, data: events.data});
 })
 
