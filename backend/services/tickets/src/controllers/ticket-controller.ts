@@ -109,8 +109,6 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
 
 })
 
-// http://localhost:5303/api/tickets/:id/event/details
-
 export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
    const id = request.params.id;
    const ticket = await Ticket.findById(id);
@@ -173,12 +171,25 @@ export const deleteAllTickets = async (request: any, response: any, next: NextFu
 }
 
 export const deleteTicketByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
+    const id = request.params.id;
+    await Ticket.findByIdAndDelete(id);
+
+    return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Ticket Deleted"});
 }
 
 export const fetchPremiumTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
 }
+
+export const fetchBasicTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+   const {ticketType} = request.query;
+
+   if(ticketType === 'basic') {
+      const basicTickets = await Ticket.find({ticketClass: ticketType});
+      return response.status(StatusCodes.OK).json({success: true, basicTickets});
+   }
+
+})
 
 export const fetchStandardTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
