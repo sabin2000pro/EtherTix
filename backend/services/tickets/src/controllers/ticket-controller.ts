@@ -183,6 +183,11 @@ export const fetchPremiumTickets = async (request: any, response: any, next: Nex
 
 export const fetchBasicTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
    const {ticketType} = request.query;
+
+   if(ticketType !== 'basic') {
+      
+   }
+
    const basicTickets = await Ticket.find({ticketClass: ticketType})
 
    return response.status(StatusCodes.OK).json({success: true, basicTickets});
