@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config({path: 'config.env'});
-import { CustomError } from './middlewares/error-handler';
+require('dotenv').config();
 import connectEventDatabase from './database/event-db';
 import express, { Application, Request, Response, NextFunction } from "express";
 import morgan from "morgan"
@@ -10,6 +8,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { StatusCodes } from 'http-status-codes';
 import {eventRouter} from './routes/event-routes';
+import { eventsErrorHandler } from './middlewares/error-handler';
 
 const app: any = express();
 
@@ -32,20 +31,16 @@ app.use(cors({
 
 app.use(helmet());
 
-app.get("/root", (request: any, response: any) => {
-    return response.json({message: "Event - Root Route"})
+app.use('/api/events', eventRouter);
+app.use(eventsErrorHandler)
+
+app.get("/", (request: any, response: any) => {
+    return response.json({message: "Events Service - Root Route", success: true })
 });
 
 app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
-
-    if(err instanceof CustomError) {
-        return response.status(StatusCodes.NOT_FOUND).json({message: err.message, errors: err.processErrors(), stack: err.stack})
-    }
-
-    return next();
-
+    return response.status(StatusCodes.NOT_FOUND).json({success: false, message: `The route you are trying to access cannot be found on the server, please try again later`});
 })
 
-app.use('/api/events', eventRouter);
 
 export {app}
