@@ -33,6 +33,7 @@ export const createNewEvent = () => async (dispatch: any) => {
 }
 
 export const editEventByIDAction = (id: number) => async (dispatch: any) => {
+
     try {
    
     } 
@@ -40,6 +41,8 @@ export const editEventByIDAction = (id: number) => async (dispatch: any) => {
     catch(error: any) {
    
     }
+
+
 }
 
 export const uploadEventPhoto = () => async (dispatch: any) => {
@@ -72,5 +75,6 @@ export const deleteAllEvents = () => async (dispatch: any) => {
     catch(error: any) {
    
     }
-}
 
+
+}
