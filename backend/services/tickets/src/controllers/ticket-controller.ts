@@ -10,7 +10,6 @@ import { ErrorResponse } from '../utils/error-response';
 
 export const fetchAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
         const tickets = await Ticket.find();
-        const query = request.query;
 
         if(!tickets) {
            return next(new ErrorResponse(`No tickets found. Please try again`, StatusCodes.BAD_REQUEST));
@@ -26,7 +25,7 @@ export const fetchCustomerTickets = asyncHandler(async (request: any, response: 
    try {
       
       const {customerId} = request.query;
-      const tickets = await Ticket.findById({customerId});
+      const tickets = await Ticket.findById({customerId})
 
       if(!tickets) {
         return next(new ErrorResponse(`No tickets found`, StatusCodes.BAD_REQUEST))
@@ -56,7 +55,7 @@ export const getEventTicketById = asyncHandler(async (request: any, response: an
   try {
 
       const id = request.params.id;
-      const ticket = await Ticket.findById(id)
+      const ticket = await Ticket.findById(id).populate("event");
 
       if(!ticket) {
          return response.status(StatusCodes.NOT_FOUND).json({success: false, })
@@ -79,14 +78,14 @@ export const getEventTicketById = asyncHandler(async (request: any, response: an
 // @route     POST /api/tickets?eventId=....&issuerId=...&venueId=...
 // @access    Private (JWT Authorization Token Required)
 
-export const createNewTicket = async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const createNewTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
          
-        const {eventId, venueId} = request.params;
-        request.body.event = eventId;
-        
-        request.body.issuer = request.user.id;
+        const {eventId, issuerId, venueId} = request.query;
+        request.body.event = eventId
+
+        request.body.issuer = issuerId;
         request.body.venue = venueId;
 
         const ticketBody = request.body;
@@ -99,14 +98,14 @@ export const createNewTicket = async (request: any, response: any, next: NextFun
    catch(error: any) {
 
       if(error) {
-        return next(error);
+          return next(error);
       }
 
 
    }
 
 
-}
+})
 
 // @desc      Edit Ticket By ID
 // @route     POST /api/v1/tickets/:ticketId
@@ -147,11 +146,13 @@ export const deleteAllTickets = async (request: any, response: any, next: NextFu
 
   try {
       await Ticket.deleteMany();
-      return response.status(204).json({success: true, data: {}, message: "Tickets Deleted"});
+      return response.status(StatusCodes.NO_CONTENT).json({success: true, data: {}, message: "Tickets Deleted"});
   }    
   
   catch(error) {
-   
+      if(error) {
+         return next(error);
+      }
   }
 
 

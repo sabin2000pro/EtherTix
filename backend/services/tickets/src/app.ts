@@ -1,6 +1,7 @@
+require('dotenv').config();
 import { errorHandler} from './middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
-import express, { Application, NextFunction, Request, Response } from "express";
+import express, {NextFunction, Request, Response } from "express";
 import {connectTicketsSchema} from './database/tickets-db';
 import morgan from "morgan"
 import hpp from "hpp"
@@ -13,11 +14,11 @@ connectTicketsSchema();
 
 const app: any = express();
 
-if(process.env.NODE_ENV === 'development') {
+if(process.env.TICKETS_DEV_MODE === 'development') {
     app.use(morgan('dev'));
 }
 
-if(process.env.NODE_ENV === 'production') {
+if(process.env.TICKETS_DEV_MODE === 'production') {
     app.use(mongoSanitize()); // Prevent against NoSQL Injection attacks in production environment
 }
  
@@ -37,6 +38,7 @@ app.get("/", (request: any, response: any) => {
 })
 
 app.use('/api/tickets', ticketRouter);
+
 app.use(errorHandler)
 
 
