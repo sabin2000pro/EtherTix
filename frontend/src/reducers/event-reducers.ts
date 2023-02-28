@@ -1,3 +1,4 @@
+import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_REQUEST_SUCCESS } from './../constants/event-constants';
 
 const initialEventState = {
     events: []
@@ -11,7 +12,11 @@ export const fetchAllEvents = (state = initialEventState, action: any) => {
 
 
     switch(action.type) {
-        
+
+        case FETCH_ALL_EVENTS_REQUEST:
+            return {loading: true, ...state, events: []}
+
+        case FETCH_ALL_EVENTS_REQUEST_SUCCESS
     }
 
 }
