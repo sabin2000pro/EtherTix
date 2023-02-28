@@ -81,15 +81,9 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             default: 0.010       
          },
 
-        isFree: { // Is the ticket free or not
-            type: Boolean,
-            required: [true, "Please specify if this ticket is free or not"],
-            default: false
-        },
-
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
             type: String,
-            enum: ["AVAILABLE", "SOLD_OUT", "PENDING"],
+            enum: ["Available", "Sold Out", "Pending"],
             required: [true, "Please specfify whether or not the event is available, sold out or pending to start"]
         },
 
