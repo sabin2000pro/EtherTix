@@ -68,8 +68,14 @@ html {
 }
 
 .profile-btn {
-    background-color: #0077b6;
+    background-color: #007bff9c;
     font-weight: bold;
+    color: white;
+}
+
+.profile-btn:hover {
+    background-color: #007bff83;
+
 }
 
 .search-bar {
@@ -122,9 +128,7 @@ html {
 
 .search-results {
     width: 150px;
-    /* width of the div */
-    height: 100x;
-    /* height of the div */
+    height: 100px;
     float: right;
     padding-right: 160px;
     text-align: left;
@@ -139,11 +143,9 @@ html {
 .register-container {
     justify-content: center;
     width: 700px;
-    /* width of the div */
     height: 500px;
     /* height of the div */
     position: absolute;
-    /* set the position to absolute */
     top: 55%;
     left: 50%;
     /* set the left position to 50% */
