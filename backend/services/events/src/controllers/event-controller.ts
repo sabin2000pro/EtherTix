@@ -1,4 +1,4 @@
-import { ErrorResponse } from './../../../venues/src/utils/error-response';
+import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
