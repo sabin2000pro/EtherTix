@@ -54,26 +54,20 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             enum: ["premium", "standard", "basic", "vip"]
         },
 
-        ticketToken: { // The format of the ticket that will be sent to the buyer
-            type: String,
-            required: [true, "Please specify how this ticket is going to be delivered"],
-            enum: ["Barcode", "QR Code", "Image", "PDF"]
-        },
-
         capacity: { // Number of tickets for sale (0, 1, 2,3)
             type: Number,
             required: [true, "Please specify how many tickets can be placed for sale"],
             default: 1,
             min: [1, "At least one single ticket must be placed for sale"],
-            max: [10, "You cannot place more than 10 tickets for sale at once"]
+            max: [5, "You cannot place more than 5 tickets for sale at once"]
         },
 
         quantityPurchase: { // The minimum and maximum amount of tickets that can be purchased
             type: Number,
             required: [true, "Please specify how many tickets can be bought at a single time"],
             default: 1,
-            min: 1,
-            max: 5
+            min: [1, "You can only purchase a minimum of 1 ticket"],
+            max: [5, "You cannot purchase more than 5 tickets"]
         },
 
         description: { // Ticket Description for an event
@@ -91,13 +85,6 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             type: Boolean,
             required: [true, "Please specify if this ticket is free or not"],
             default: false
-        },
-
-        deliveryMethods: { // Methods of ticket delivery
-            type: String,
-            required: true,
-            default: "SMS",
-            enum: ["Phone", "SMS", "Electronic", "E-mail"]
         },
 
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
