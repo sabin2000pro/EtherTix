@@ -18,12 +18,12 @@ const App = () => { // Push to github recent changes
    const {connectMetaMaskWallet, initialiseNftContract} = useContext(Web3Context);
 
    const handleMintNFT = async () => {
+
       const currentAccount = await connectMetaMaskWallet();
       const currentContract = await initialiseNftContract();
 
       const mintedToken = await currentContract.methods.mintToken("test", "test", 1, 1).send({from: currentAccount.currentAccount[0] as unknown as any});
       return mintedToken;
-   
    }
 
 
