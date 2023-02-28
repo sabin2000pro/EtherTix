@@ -1,4 +1,4 @@
-import { errorHandler, CustomError } from './middleware/error-handler';
+import { errorHandler} from './middleware/error-handler';
 import { StatusCodes } from 'http-status-codes';
 import express, { Application, NextFunction, Request, Response } from "express";
 import {connectTicketsSchema} from './database/tickets-db';
@@ -23,6 +23,7 @@ if(process.env.NODE_ENV === 'production') {
  
 app.use(express.json());
 app.set('trust proxy', true);
+
 app.use(hpp());
 app.use(cors({
     origin: "*",
