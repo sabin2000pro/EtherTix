@@ -639,5 +639,19 @@ label {
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
   }
+
+  .cart__remove-all {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cart__remove-all:hover {
+    background-color: darkred;
+  }
   
   /*End Cart Page*/

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 type Ticket = {
   id: number;
@@ -8,9 +9,9 @@ type Ticket = {
 }
 
 const tickets: Ticket[] = [
-  { id: 1, name: "Cars Soundtrack", price: 10.99, image: "C:\Users\jaych\OneDrive\Desktop\McQueen.jpg" },
+  { id: 1, name: "Cars Soundtrack", price: 75.55, image: "image-url-1" },
   { id: 2, name: "Ticket 2", price: 19.99, image: "image-url-2" },
-  { id: 3, name: "Ticket 3", price: 7.99, image: "image-url-3" },
+  { id: 3, name: "Ticket 3", price: 199.99, image: "image-url-3" },
 ];
 
 const CartPage = () => {
@@ -38,16 +39,40 @@ function removeFromCart(ticketId: number) {
   setCart(updatedCart);
 }
 
+function removeAllFromCart() {
+  setCart({});
+}
+
 // Calculate total price of items in the cart
 function getTotalPrice() {
   return Object.values(cart).reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+  const totalPrice = getTotalPrice();
+  const totalPriceEth = totalPrice / ethPrice;
 }
 
 const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 const [selectedQuantity, setSelectedQuantity] = useState(1);
+const [ethPrice, setEthPrice] = useState<number>(0);
+
+// Fetch the live Ethereum price on component mount
+useEffect(() => {
+  const fetchEthPrice = async () => {
+    try {
+      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      setEthPrice(response.data.ethereum.usd);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  fetchEthPrice();
+}, []);
+
+function calculateEthPrice(price: number) {
+  return price / ethPrice;
+}
 
 return (
   <>
@@ -65,74 +90,79 @@ return (
                 alt={item.name}
               />
               <div className="cart__item-description">
-                <div className="cart__item-name">{item.name}</div>
-                <div className="cart__item-price">
-                  ${item.price.toFixed(2)} x {item.quantity}
-                </div>
+                  <div className="cart__item-name">{item.name}</div>
+                  <div className="cart__item-price">
+                    {calculateEthPrice(item.price).toFixed(6)} ETH (${item.price.toFixed(2)})
+                    x {item.quantity}
+                  </div>
                 <button onClick={() => removeFromCart(item.id)}>Remove</button>
               </div>
             </div>
           ))}
-          <div className="cart__total">Total Cost: ${getTotalPrice().toFixed(2)}</div>
+          <div className="cart__total">
+            Total Cost: ${getTotalPrice().toFixed(2)} (${(getTotalPrice() / ethPrice).toFixed(6)} ETH)</div>
+            <button className="cart__remove-all" onClick={() => setCart({})}>Remove All</button>
         </>
       )}
     </div>
 
     <div className="tickets">
-      <h2 className="tickets__heading">Tickets:</h2>
-      <ul>
-        {tickets.map((ticket) => (
-          <li key={ticket.id}>
-            <img
-              className="ticket__image"
-              src={ticket.image}
-              alt={ticket.name}
-            />
-            <div className="ticket__description">
-              <div className="ticket__name">{ticket.name}</div>
-              <div className="ticket__price">${ticket.price.toFixed(2)}</div>
-              <div className="ticket__quantity">
-
-                No of Tickets:{" "}
-                <select
-                  defaultValue={1}
-                  onChange={(e) =>
-                    setSelectedQuantity(parseInt(e.target.value))
-                  }
-                >
-                  {[...Array(10)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button onClick={() => setSelectedTicket(ticket)}>
-                No of Tickets
-              </button>
-
+    <h2 className="tickets__heading">Tickets:</h2>
+    <ul>
+      {tickets.map((ticket) => (
+        <li key={ticket.id}>
+          <img
+            className="ticket__image"
+            src={ticket.image}
+            alt={ticket.name}
+          />
+          <div className="ticket__description">
+            <div className="ticket__name">{ticket.name}</div>
+            <div className="ticket__price">
+              {calculateEthPrice(ticket.price).toFixed(6)} ETH (${ticket.price.toFixed(2)})
             </div>
-          </li>
-        ))}
-      </ul>
+            <div className="ticket__quantity">
 
-      {selectedTicket && (
-        <div>
+              No of Tickets:{" "}
+              <select
+                defaultValue={1}
+                onChange={(e) =>
+                  setSelectedQuantity(parseInt(e.target.value))
+                }
+              >
+                {[...Array(10)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <h2>{selectedTicket.name}</h2>
+            <button onClick={() => setSelectedTicket(ticket)}>
+              Add to Cart
+            </button>
 
-          <p>
-            Price: ${selectedTicket.price.toFixed(2)} x {selectedQuantity}
-          </p>
+          </div>
+        </li>
+      ))}
+    </ul>
 
-          <button onClick={() => addToCart(selectedTicket, selectedQuantity)}>
-            Add to Cart
-          </button>
+    {selectedTicket && (
+      <div>
 
-          <button onClick={() => setSelectedTicket(null)}>Cancel</button>
+        <h2>{selectedTicket.name}</h2>
 
-        </div>
+        <p>
+          Price: {calculateEthPrice(selectedTicket.price).toFixed(6)} ETH (${selectedTicket.price.toFixed(2)}) x {selectedQuantity}
+        </p>
+
+        <button onClick={() => addToCart(selectedTicket, selectedQuantity)}>
+          Add to Cart
+        </button>
+
+        <button onClick={() => setSelectedTicket(null)}>Cancel</button>
+
+      </div>
         )
       }
       </div>
