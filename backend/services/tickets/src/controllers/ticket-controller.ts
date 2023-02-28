@@ -113,11 +113,10 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
 
 export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
    const id = request.params.id;
+   const ticket = await Ticket.findById(id);
    
-   const events = await axios.get(`http://sabin2000/ethertix-events-service/api/events`);
-   console.log(events);
-
-   return response.status(StatusCodes.OK).json({success: true, message: "Event details corresponding to a Ticket ID here"});
+   const events = await axios.get(`http://events-service:5301/api/events/${ticket.event}`);
+   return response.status(StatusCodes.OK).json({success: true, data: events.data});
 })
 
 // @desc      Edit Ticket By ID
