@@ -57,6 +57,21 @@ html {
     align-items: center;
 }
 
+.nav-header:hover {
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+}
+
+.profile-dropdown {
+   margin: 4px 54px;
+}
+
+.profile-btn {
+    background-color: #0077b6;
+    font-weight: bold;
+}
+
 .search-bar {
     padding: 8px;
     text-align: center;

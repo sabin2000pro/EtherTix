@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Dropdown from './Dropdown';
 import Search from './Search';
 
 const Navbar = () => {
@@ -22,7 +24,7 @@ const Navbar = () => {
         <nav className = "nav-container">
 
           <div className = "nav-left">
-            <div className ="nav-header">Ether Tix</div>
+             <Link to = '/' className = "nav-header">Ether Tix</Link>
           </div>
           
            <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />
@@ -30,6 +32,8 @@ const Navbar = () => {
           <ul className = "nav-list-items">
              <li><a className = "nav-item" href="/cart">Cart</a></li>
              <li><a className = "nav-item" href ="/register">Register</a></li>
+
+             <Dropdown />
           </ul>
 
         </nav>

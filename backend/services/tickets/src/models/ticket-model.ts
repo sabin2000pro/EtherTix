@@ -4,7 +4,7 @@ interface ITicketAttributes { // Interface that stores the ticket data
     name: String,
     ticketClass: String,
     ticketToken: String,
-    quantity: Number,
+    stock: Number,
     quantityPurchase: String,
     description: String,
     cost: number,
@@ -27,7 +27,7 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    quantityPurchase: Number,
    description: String,
    cost: number,
-   quantity: number,
+   stock: number,
    deliveryMethods: String,
    ticketSold: boolean,
    onSaleStatus: String,
@@ -53,9 +53,9 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             enum: ["premium", "standard", "basic", "vip"]
         },
 
-        quantity: { // Number of tickets for sale (0, 1, 2,3)
+        stock: { // Number of tickets in stock for an event
             type: Number,
-            required: [true, "Please specify how many tickets can be placed for sale"],
+            required: [true, "Please specify how many tickets are currently in stock"],
             default: 1,
         },
 
