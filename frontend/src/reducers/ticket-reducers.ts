@@ -21,7 +21,7 @@ export const fetchAllTicketsReducer = (state = initialTicketsState as any, actio
         case FETCH_ALL_TICKETS_FAIL:
             return {loading: false, error: action.payload.error, message: action.payload.error.message}
 
-        default:
+        default: // By default just return the state
             return state
     }
 
