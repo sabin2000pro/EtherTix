@@ -140,6 +140,23 @@ services:
       - type: volume
         source: mongodb_data_volume
         target: /data/db
+
+  frontend-service:
+    container_name: ethertix-frontend-service
+    image: sabin2000/ethertix-frontend-service
+
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+
+    restart: always
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+     - /app/node_modules
+     - ../frontend/:/app
         
 volumes:
   mongodb_data_volume:
