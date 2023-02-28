@@ -36,7 +36,7 @@ export const fetchAllEvents = (state = initialEventState as any, action: any) =>
 export const fetchSingleEventReducer = (state = singleEventState as any, action: any) => {
 
     switch(action.type) {
-        
+
          case FETCH_SINGLE_EVENT_REQUEST:
             return {loading: true, ...state, event: {} }
 
@@ -54,5 +54,14 @@ export const fetchSingleEventReducer = (state = singleEventState as any, action:
 }
 
 export const createNewEventReducer = (state = initialEventState, action: any) => {
+    switch(action.type) {
 
+
+        default:
+            return state
+    }
+}
+
+export const updateEventReducer = (state = singleEventState, action: any) => {
+    
 }

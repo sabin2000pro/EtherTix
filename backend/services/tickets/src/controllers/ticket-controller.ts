@@ -37,7 +37,7 @@ export const fetchCustomerTickets = asyncHandler(async (request: any, response: 
    } 
    
    catch(error) {
-      
+
          if(error) {
             return next(error);
          }
@@ -76,17 +76,21 @@ export const getEventTicketById = asyncHandler(async (request: any, response: an
 })
 
 // @desc      Create New Event Ticket
-// @route     POST /api/v1/tickets/:id
+// @route     POST /api/tickets?eventId=....&issuerId=...&venueId=...
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewTicket = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
    try {
+         
+        const {eventId, venueId} = request.params;
+        request.body.event = eventId;
+        
+        request.body.issuer = request.user.id;
+        request.body.venue = venueId;
 
         const ticketBody = request.body;
         const ticket = await Ticket.create(ticketBody);
-
-        console.log(`Created Ticket : `, ticket);
 
         await ticket.save();
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
