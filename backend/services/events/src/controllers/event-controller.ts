@@ -1,5 +1,4 @@
 import { StatusCodes } from 'http-status-codes';
-import { NotFoundError, BadRequestError } from '../middlewares/error-handler';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
 
