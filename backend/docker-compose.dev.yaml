@@ -50,6 +50,9 @@ services:
       volumes:
         - /app/node_modules
         - ../backend/services/events:/app
+
+      networks:
+        - my-service-network
   
   categories-service:
       container_name: ethertix-categories-service
@@ -135,3 +138,7 @@ services:
         
 volumes:
   mongodb_data_volume:
+
+networks:
+  my-service-network:
+    driver: bridge
