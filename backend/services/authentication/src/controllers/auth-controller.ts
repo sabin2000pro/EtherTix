@@ -390,7 +390,7 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
         
-        // resentToken.mfaToken = undefined; // Clear the generated token from the database
+        resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
         return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
@@ -710,10 +710,9 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: any, respo
 
             const premiumUsers = await User.find({premium: true});
 
-            // if(!premiumUsers) {
-            //     return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
-            // }
-    
+            if(!premiumUsers) {
+                return next(new ErrorResponse("No premium users found", StatusCodes.BAD_REQUEST));
+            }
     
             return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
         }
@@ -735,9 +734,9 @@ export const fetchLockedUserAccounts = asyncHandler(async (request: any, respons
 
        const lockedUserAccounts = await User.find({accountLocked: !false});
 
-    //    if(!lockedUserAccounts) {
-    //         return next(new BadRequestError("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
-    //    }
+       if(!lockedUserAccounts) {
+            return next(new ErrorResponse("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
+       }
 
        return response.status(StatusCodes.OK).json({success: true, data: lockedUserAccounts});
     } 
@@ -761,9 +760,9 @@ export const fetchAllUsers = asyncHandler(async (request: any, response: any, ne
 
         const users = await User.find();
 
-        // if(!users) {
-        //     return next(new BadRequestError("No users found in the database", StatusCodes.NOT_FOUND));
-        // }
+        if(!users) {
+            return next(new ErrorResponse("No users found in the database", StatusCodes.NOT_FOUND));
+        }
 
         return response.status(StatusCodes.OK).json({success: true, users});
     
@@ -787,9 +786,9 @@ export const fetchUserByID = asyncHandler(async (request: any, response: any, ne
         const userId = request.params.userId;
         const user = await User.findById(userId);
 
-        //  if(!userId) {
-        //     return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        // }
+         if(!userId) {
+            return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
 
         return response.status(StatusCodes.OK).json({success: true, user})
     
@@ -835,20 +834,20 @@ export const editUserByID = async (request: any, response: any, next: NextFuncti
      if(request.method === 'PUT') {
         const userId = request.params.userId; // Extract User ID
 
-        // if(!userId) {
-        //    return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        // }
+        if(!userId) {
+           return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
   
-        // let user = await User.findById(userId);
+        let user = await User.findById(userId);
   
-        // if(!user) {
-        //    return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
-        // }
+        if(!user) {
+           return next(new ErrorResponse("User not found", StatusCodes.NOT_FOUND));
+        }
   
-        // user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
-        // await user.save();
+        user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
+        await user.save();
   
-        // return response.status(StatusCodes.OK).json({success: true, data: user});
+        return response.status(StatusCodes.OK).json({success: true, data: user});
       }
  
     
