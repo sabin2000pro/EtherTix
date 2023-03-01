@@ -627,17 +627,15 @@ export const deactivateUserAccount = async (request: any, response: any, next: N
     const {userId} = request.body;
     const user = await User.findById(userId);
 
-    // If no user exists
-    // if(!user) {
-    //     return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
-    // }
+    if(!user) {
+        return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
+    }
 
-    // if((!user.isValid) || (!user.isActive) ) {
-    //     return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
-    // }
+    if((!user.isValid) || (!user.isActive) ) {
+        return next(new ErrorResponse("User account is already inactive", StatusCodes.BAD_REQUEST));
+    }
 
     if(user.isActive && user.isValid) { // If the current user account is active and the user account is valid
-        // Change the is active and is valid fields to false
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
 
@@ -654,39 +652,37 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
         if(request.method === 'PUT') { // If the request is a PUT request
 
-            const userId = request.params.userId as any;
-            const file = request.files!.file as any;
-            const fileName = file.name as any;
+            const userId = request.params.userId;
+            const file = request.files!.file;
+            const fileName = file.name;
 
             const currentUser = await User.findById(userId); // Find the current user
         
-            // if(!currentUser) {
-            //     return next(new NotFoundError("User Not found with that ID", StatusCodes.NOT_FOUND));
-            // }
+            if(!currentUser) {
+                return next(new ErrorResponse("User Not found with that ID", StatusCodes.NOT_FOUND));
+            }
         
-            // if(!request.files) {
-            //     return next(new BadRequestError(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
-            // }
-        
-            // 1. Ensure that the file is an actual image
-        
-            // if(!file.mimetype.startsWith("image")) {
-            //     return next(new BadRequestError("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
-            // }
+            if(!request.files) {
+                return next(new ErrorResponse(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
+            }
+                
+            if(!file.mimetype.startsWith("image")) {
+                return next(new ErrorResponse("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
+            }
         
             // Validate File size. Check if file size exceeds the maximum size
-            // if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-            //     return next(new FileTooLargeError("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
-            // }
+            if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
+                return next(new ErrorResponse("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
+            }
         
              // Create custom filename
           file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
         
           file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
         
-                // if(error) {
-                //    return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
-                // }
+                if(error) {
+                   return next(new ErrorResponse("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
+                }
         
                 await User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
                 return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
@@ -698,9 +694,9 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
     
     catch(error: any) {
 
-        // if(error) {
-        //     return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(error)
+        }
     }
 
 
