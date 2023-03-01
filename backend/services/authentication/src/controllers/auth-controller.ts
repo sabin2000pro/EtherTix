@@ -871,9 +871,9 @@ export const deleteUserByID = async (request: any, response: any, next: NextFunc
 
             const userId = request.params.userId;
 
-            // if(!userId) {
-            //     return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
-            // }
+            if(!userId) {
+                return next(new ErrorResponse(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            }
     
             await User.findByIdAndDelete(userId);
             return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
@@ -921,9 +921,9 @@ export const lockUserAccount = async (request: any, response: any, next: NextFun
         const userId = request.user.id;
         const user = await User.findById(userId);
     
-        // if(!user) {
-        //     return next(new BadRequestError("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
-        // }
+        if(!user) {
+            return next(new ErrorResponse("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
     
         return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
    } 
