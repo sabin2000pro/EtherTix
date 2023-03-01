@@ -499,40 +499,39 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
         const newPassword = request.body.newPassword;
         const resetToken = request.params.resetToken;
 
-        // Validate Fields
-        // if(!currentPassword) {
-        //     return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        // }
+        if(!currentPassword) {
+            return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        }
     
-        // if(!newPassword) {
-        //     return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
-        // }
+        if(!newPassword) {
+            return next(new ErrorResponse("Please specify the new password", StatusCodes.BAD_REQUEST))
+        }
     
-        // const user = await User.findOne({owner: request.user._id, token: resetToken});
+        const user = await User.findOne({owner: request.user._id, token: resetToken});
     
-        // if(!user) {
-        //     return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-        // }
+        if(!user) {
+            return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
+        }
     
-        // const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
-        // if(!userPasswordsMatch) {
-        //    return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
-        // }
+        if(!userPasswordsMatch) {
+           return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        }
     
-        // user.password = newPassword;
-        // user.passwordConfirm = undefined;
+        user.password = newPassword;
+        user.passwordConfirm = undefined;
     
-        // await user.save(); // Save new user after reset the password
+        await user.save(); // Save new user after reset the password
     
         return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
    } 
    
    catch(error: any) {
 
-    //   if(error) {
-    //      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
-    //   }
+      if(error) {
+         return next(error)
+      }
 
    }
 
@@ -548,9 +547,9 @@ export const getCurrentUser = asyncHandler(async (request: any, response: any, n
     
     catch(error: any) {
 
-        // if(error) {
-        //     return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(error)
+        }
 
     }
 
