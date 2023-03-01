@@ -628,7 +628,7 @@ export const deactivateUserAccount = async (request: any, response: any, next: N
     const user = await User.findById(userId);
 
     if(!user) {
-        return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
+        return next(new ErrorResponse("No user found with that ID", StatusCodes.NOT_FOUND));
     }
 
     if((!user.isValid) || (!user.isActive) ) {
