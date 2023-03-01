@@ -566,33 +566,33 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
     
-        // if(!newPassword) {
-        //     return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
-        // }
+        if(!newPassword) {
+            return next(new ErrorResponse("Please provide your new password", StatusCodes.BAD_REQUEST));
+        }
     
-        // const user = await User.findById(<any>request.user._id);
+        const user = await User.findById(<any>request.user._id);
     
-        // if(!user) {
-        //     return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-        // }
+        if(!user) {
+            return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
+        }
     
-        // const currentPasswordMatch = user.comparePasswords(currentPassword);
+        const currentPasswordMatch = user.comparePasswords(currentPassword);
     
-        // if(!currentPasswordMatch) { // If passwords do not match
-        //     return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
-        // }
+        if(!currentPasswordMatch) { // If passwords do not match
+            return next(new ErrorResponse("Current password is invalid.", StatusCodes.BAD_REQUEST))
+        }
     
-        // user.password = request.body.newPassword
-        // await user.save(); // Save new user
+        user.password = request.body.newPassword
+        await user.save(); // Save new user
     
         return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
    } 
    
    catch(error) {
 
-        // if(error) {
-        //     return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(error)
+        }
         
    }
 
