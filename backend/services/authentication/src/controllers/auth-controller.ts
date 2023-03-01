@@ -302,10 +302,7 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
 
 // API - 5
 
-export const verifyLoginToken = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
+export const verifyLoginToken = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const {userId, multiFactorToken} = request.body;
         const user = await User.findById(userId);
     
@@ -328,8 +325,8 @@ export const verifyLoginToken = async (request: any, response: any, next: NextFu
         const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
     
         if(!mfaTokensMatch) { // If tokens don't match
-            user.isActive = (!user.isActive) as boolean; // User is not active
-            user.isVerified = (!user.isVerified) as boolean; // User is not verified
+            user.isActive = (!user.isActive)
+            user.isVerified = (!user.isVerified)
             return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
 
@@ -339,18 +336,10 @@ export const verifyLoginToken = async (request: any, response: any, next: NextFu
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
 
-        return response.status(StatusCodes.OK).json({user, message: "Your account is active"});
+        return response.status(StatusCodes.OK).json({user, message: "Your account is now active"});
     } 
     
-    catch(error) {
-
-        if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
-        }
-
-    }
-
-}
+)
 
 // API 6
 
@@ -492,9 +481,6 @@ const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 }
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-   try {
-
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
         const resetToken = request.params.resetToken;
@@ -526,17 +512,7 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
     
         return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
    } 
-   
-   catch(error: any) {
-
-      if(error) {
-         return next(error)
-      }
-
-   }
-
-
-})
+)
 
 export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
