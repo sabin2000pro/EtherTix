@@ -17,8 +17,9 @@ const Search: React.FC<ISearchProps> = ({searchTerm, handleSearch, searchResults
     <div className = "nav-centre">
 
 
-      <CiSearch className ="search-icon"/> 
-     <input className = "search-bar" type = "text" placeholder = "Search Events" value={searchTerm} onChange={handleSearch}/>
+       <CiSearch className ="search-icon"/> 
+       
+        <input className = "search-bar" type = "text" placeholder = "Search Events" value={searchTerm} onChange={handleSearch}/>
 
     </div>
 
