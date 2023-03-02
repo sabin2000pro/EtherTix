@@ -350,9 +350,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);
-        console.log(`Mfa tokens match : `, mfaTokensMatch);
-    
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);    
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive)
             user.isVerified = (!user.isVerified)
@@ -365,7 +363,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
 
-        return response.status(StatusCodes.OK).json({user, message: "Your account is now active", sentAt: currentDate});
+        return response.status(StatusCodes.OK).json({message: "Your account is now active", sentAt: currentDate});
     } 
     
 )
