@@ -375,7 +375,7 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         }
 
         // 5. Fetch Generated Two Factor code
-        const mfaToken = generateMfaToken();
+        const mfaCode = generateMfaToken();
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
@@ -396,7 +396,10 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
+        const date = new Date();
+        const currentDate = date.toISOString();
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: currentDate});
     }
     
 )
