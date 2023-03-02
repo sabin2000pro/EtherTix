@@ -73,16 +73,12 @@ const UserSchema = new mongoose.Schema({
     forename: { // User's forename
         type: String,
         trim: true,
-        required: [true, "Please provide your forename"],
-        min: [5, "Forename cannot exceed 10 characters"],
-        max: [3, "Forename cannot be less than 3 characters"]
+        required: [true, "Please provide your forename"]
     },
 
     surname: { // Users surname
         type: String,
-        required: [true, "Please provide your surname"],
-        minlength: [5, "Your surname must be at least 5 characters"],
-        maxlength: [10, "Your surname cannot exceed 10 characters"]
+        required: [true, "Please provide your surname"]
     },
     
     // username of the user

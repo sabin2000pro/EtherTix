@@ -35,12 +35,30 @@ import { ErrorResponse } from '../utils/error-response';
 
 }
 
-export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+     
+    const transporter = emailTransporter();
+
+       transporter.sendMail({
+           from: 'resetpassword@ethertix.com',
+           to: user.email,
+           subject: 'Reset Password',
+           html: `
+           
+           <h1> ${resetPasswordURL}</h1>
+           `
+       })
+
+}
+
+export const sendConfirmationEmail = (user: any, userOTP: number) => {
+
+    const transporter = emailTransporter();
 
     return transporter.sendMail({
 
         from: 'verification@ethertix.com',
-        to: newUser.email,
+        to: user.email,
         subject: 'E-mail Verification',
         html: `
         
@@ -109,11 +127,12 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
-        const transporter = emailTransporter(); 
-        sendConfirmationEmail(transporter, user, userOTP as unknown as any);
+        console.log(`Your OTP : `, userOTP);
 
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
+
+        sendConfirmationEmail(user, userOTP as unknown as any);
 
         return sendTokenResponse(request, user, StatusCodes.CREATED, response);
     } 
@@ -464,21 +483,6 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
 
 })
 
-export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
-     
-     const transporter = emailTransporter();
-
-        transporter.sendMail({
-            from: 'resetpassword@ethertix.com',
-            to: user.email,
-            subject: 'Reset Password',
-            html: `
-            
-            <h1> ${resetPasswordURL}</h1>
-            `
-        })
-
-}
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const currentPassword = request.body.currentPassword;
