@@ -329,14 +329,14 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
 // API - 5
 
 export const verifyLoginToken = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {userId, multiFactorToken} = request.body;
+        const {userId, mfaToken} = request.body;
         const user = await User.findById(userId);
     
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
         }
     
-        if(!multiFactorToken) {
+        if(!mfaToken) {
             user.isActive = false; // User is not active yet
             return next(new ErrorResponse("Please provide your MFA token", StatusCodes.BAD_REQUEST));
         }
@@ -350,7 +350,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);
         console.log(`Mfa tokens match : `, mfaTokensMatch);
     
         if(!mfaTokensMatch) { // If tokens don't match
@@ -359,7 +359,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
             return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
 
-        const newToken = new TwoFactorVerification({owner: user, mfaToken: multiFactorToken}); // Create a new instance of the token
+        const newToken = new TwoFactorVerification({owner: user, mfaToken: mfaToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
         user.isVerified = true; // User account is now verified
