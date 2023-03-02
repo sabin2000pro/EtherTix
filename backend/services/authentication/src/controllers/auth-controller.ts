@@ -360,6 +360,10 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
 
 // API 6
 
+const handleTokenExpiration = (resentToken: any) => {
+    const expiryDate = process.env.MFA_EXPIRY_TIME; // For example 
+}
+
 export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
@@ -380,6 +384,8 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
 
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
         const lastSentAt = new Date(resentToken.sentAt);
+
+        handleTokenExpiration(resentToken)
 
         if(lastSentAt >= fiveMinutesAgo) {
             return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
