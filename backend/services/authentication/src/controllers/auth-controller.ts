@@ -428,12 +428,10 @@ export const logoutUser = async (request: any, response: any, next: NextFunction
 
 export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
 
-    try {
-
         const {email} = request.body;
         const user = await User.findOne({email});
 
-        // // Check if we have an e-mail in the body of the request
+         // Check if we have an e-mail in the body of the request
         if(!email) {
             return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
         }
@@ -461,18 +459,8 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         sendPasswordResetEmail(user, resetPasswordURL);
     
         return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
-        }
-
-    }
-
-})
-
+    }    
+)
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const currentPassword = request.body.currentPassword;
