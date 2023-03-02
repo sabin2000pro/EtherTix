@@ -268,8 +268,6 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 
 export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
-    try {
-
         const {email, password} = request.body;
 
         if(!email || !password) {
@@ -316,15 +314,7 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
          return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
-    catch(error) {
-
-        if(error) {
-            return next(error)
-        }
-
-    }
-
-})
+)
 
 // API - 5
 
@@ -370,10 +360,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
 
 // API 6
 
-export const resendTwoFactorLoginCode = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
+export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const {userId, mfaCode} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
@@ -412,15 +399,7 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
     }
     
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
-        }
-
-    }
-    
-}
+)
 
 export const logoutUser = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
