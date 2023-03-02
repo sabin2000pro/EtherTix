@@ -371,18 +371,11 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         }
         // 5. Fetch Generated Two Factor code
         const token = generateMfaToken();
+        console.log(`New Token : `, token);
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
-        }
-
-        const resentTokensMatch = await resentToken.compareVerificationTokens(token as any);
-
-        // Check if the resent token matches the one in the database or not
-
-        if(!resentTokensMatch) {
-           return next(new ErrorResponse("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
         }
 
         currentUser.isVerified = true; // User account is now verified
