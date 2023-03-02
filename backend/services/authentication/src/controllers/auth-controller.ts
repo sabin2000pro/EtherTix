@@ -208,8 +208,11 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
+            const date = new Date();
+            const currentDate = date.toISOString();
     
-            return response.status(StatusCodes.CREATED).json({message: "E-mail Address verified", sentAt: new Date(Date.now().toString())});
+            return response.status(StatusCodes.CREATED).json({message: "E-mail Address verified", sentAt: currentDate});
         }
 
     } 

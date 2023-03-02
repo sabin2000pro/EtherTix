@@ -42,6 +42,8 @@ export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestU
         
         const decoded: any = jwt.verify(token, process.env.AUTH_SERVICE_JWT_TOKEN!);
         request.user = await User.findById(decoded.id);
+
+        console.log(`Logged In User : `, decoded);
         return next();
     } 
     
