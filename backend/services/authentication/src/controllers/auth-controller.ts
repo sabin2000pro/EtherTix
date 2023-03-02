@@ -359,7 +359,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
             return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
 
-        const newToken = new TwoFactorVerification({owner: user, mfaToken: mfaToken}); // Create a new instance of the token
+        const newToken = await TwoFactorVerification.create({owner: user, mfaToken: mfaToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
         user.isVerified = true; // User account is now verified
