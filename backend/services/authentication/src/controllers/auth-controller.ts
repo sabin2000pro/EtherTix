@@ -361,7 +361,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
 // API 6
 
 export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {userId, mfaToken} = request.body; // 1. Extract user id and the MFA code from the request body
+        const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
         // 3. Check if the User ID is valid
@@ -369,11 +369,6 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
-
-        if(!mfaToken) {
-            return next(new ErrorResponse("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
-        }
-
         // 5. Fetch Generated Two Factor code
         const token = generateMfaToken();
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
@@ -392,7 +387,7 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
 
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
-        
+
         resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
@@ -404,9 +399,7 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
     
 )
 
-export const logoutUser = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
+export const logoutUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         if(request.session !== undefined) {
             request.session = null; // Clear the session object
@@ -414,17 +407,8 @@ export const logoutUser = async (request: any, response: any, next: NextFunction
     
         return response.status(StatusCodes.OK).json({success: true, data: {}, message: "You have logged out"});
     } 
-    
-    catch(error: any) {
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
-
-    }
-
-}
+)
 
 export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
 
