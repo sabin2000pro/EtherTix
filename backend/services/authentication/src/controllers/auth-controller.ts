@@ -282,6 +282,10 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         if(user.isLocked) {
             return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
         }
+
+        if(!user.isVerified) {
+            return next(new ErrorResponse(`You cannot login. Please verify your e-mail address first`, StatusCodes.BAD_REQUEST));
+        }
     
         // Compare user passwords before logging in
         const matchPasswords = await user.comparePasswords(password);
