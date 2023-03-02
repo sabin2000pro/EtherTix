@@ -364,6 +364,9 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
+      
+        // Check if the token has already been sent in the last 5 minutes, if so, reject the request with an error response
+
         // 3. Check if the User ID is valid
 
         if(!isValidObjectId(userId)) {
@@ -377,6 +380,9 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         if(!resentToken) {
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
+
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const lastSentAt = new Date(resentToken.sentAt);
 
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
