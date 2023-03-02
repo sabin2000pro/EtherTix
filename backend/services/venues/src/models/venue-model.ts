@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import geocoder from "node-geocoder";
+
+;
 interface IVenueAttributes {
     name: string;
     slug: string;
@@ -166,6 +167,11 @@ VenueSchema.virtual('events', {
   foreignField: 'event',
   localField: '_id'
 });
+
+VenueSchema.pre('save', async function(next) { // Geocode the latitude and longitude
+  // Geocode the coordinates
+ 
+})
 
 // Middleware to geocode the address for the venue that the event is being held at.
 
