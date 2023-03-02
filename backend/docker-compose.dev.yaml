@@ -4,7 +4,7 @@ services:
   api-gateway-service:
     container_name: ethertix-api-gateway-service
     image: sabin2000/ethertix-api-gateway-service
-
+  
     build:
       context: ../backend/services/api-gateway
       dockerfile: Dockerfile
@@ -90,6 +90,9 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/venues:/app
+
+    networks:
+      - my-service-network
   
   tickets-service: ## Tickets Service Configuration
     container_name: ethertix-tickets-service
@@ -128,6 +131,9 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/discount:/app
+
+    networks:
+      - my-service-network
   database-service:
     image: mongo
 
@@ -140,7 +146,6 @@ services:
       - type: volume
         source: mongodb_data_volume
         target: /data/db
-
         
 volumes:
   mongodb_data_volume:

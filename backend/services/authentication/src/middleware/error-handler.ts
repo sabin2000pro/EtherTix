@@ -15,8 +15,6 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
 
     if(process.env.AUTH_SERVICE_NODE_ENV === 'development') {
 
-        console.log(err);
-
         if(err.code === 11000) {
             const message = `Duplicate resource found on the server ${Object.keys(err.keyValue)}`;
             error = new ErrorResponse(message, StatusCodes.BAD_REQUEST);
