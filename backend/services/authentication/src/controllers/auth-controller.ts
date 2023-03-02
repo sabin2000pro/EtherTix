@@ -209,7 +209,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
     
-            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+            return response.status(StatusCodes.CREATED).json({message: "E-mail Address verified", sentAt: new Date(Date.now().toString())});
         }
 
     } 
@@ -346,6 +346,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
     
         // Check to see if the tokens match
         const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
+        console.log(`Mfa tokens match : `, mfaTokensMatch);
     
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive)
