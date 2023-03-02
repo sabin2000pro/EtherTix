@@ -361,7 +361,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
 // API 6
 
 export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {userId, mfaCode} = request.body; // 1. Extract user id and the MFA code from the request body
+        const {userId, mfaToken} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
         // 3. Check if the User ID is valid
@@ -370,19 +370,19 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
             return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
 
-        if(!mfaCode) {
+        if(!mfaToken) {
             return next(new ErrorResponse("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
         }
 
         // 5. Fetch Generated Two Factor code
-        const mfaCode = generateMfaToken();
+        const token = generateMfaToken();
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
 
-        const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
+        const resentTokensMatch = await resentToken.compareVerificationTokens(token as any);
 
         // Check if the resent token matches the one in the database or not
 
