@@ -464,7 +464,7 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
 
 })
 
-const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
      
      const transporter = emailTransporter();
 
