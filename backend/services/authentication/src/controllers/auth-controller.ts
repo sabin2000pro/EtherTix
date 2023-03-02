@@ -300,8 +300,8 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         const transporter = emailTransporter();
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
-        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
 
+        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
         await loginMfa.save();
 
         // Check for a valid MFA
