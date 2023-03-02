@@ -388,8 +388,6 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
 
-        handleTokenExpiration(resentToken)
-
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
 
@@ -399,9 +397,11 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
         const lastSentAt = new Date(resentToken.sentAt);
 
-        if(lastSentAt >= fiveMinutesAgo) {
+        if(lastSentAt >= fiveMinutesAgo) { // If the date at which the last token was sent at (current date) 
             return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
+
+        handleTokenExpiration(resentToken)
 
         const date = new Date();
         const currentDate = date.toISOString();
