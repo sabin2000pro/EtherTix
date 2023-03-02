@@ -341,6 +341,8 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
     
         // Check to see if the tokens match
         const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);    
+
+        
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive)
             user.isVerified = (!user.isVerified)
@@ -361,7 +363,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
 // API 6
 
 const handleTokenExpiration = (resentToken: any) => {
-    const expiryDate = process.env.AUTH_MFA_EXPIRY
+    const expiryDate = process.env.AUTH_MFA_EXPIRY || 500 // Token expires after 5 minutes
     const currentDate = new Date(resentToken.createdAt).toISOString(); // Get the current date at which the token is created at
 
     console.log(`Current date of creating the token : `, currentDate);
@@ -390,11 +392,11 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
         const lastSentAt = new Date(resentToken.sentAt);
 
-         handleTokenExpiration(resentToken)
-
         if(lastSentAt >= fiveMinutesAgo) {
             return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
+
+        handleTokenExpiration(resentToken)
 
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
