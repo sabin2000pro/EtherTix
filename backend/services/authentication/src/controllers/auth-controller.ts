@@ -342,7 +342,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
         // Check to see if the tokens match
         const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);    
 
-        
+
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive)
             user.isVerified = (!user.isVerified)
@@ -382,18 +382,10 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         }
         // 5. Fetch Generated Two Factor code
         const token = generateMfaToken();
-        console.log(`New Token : `, token);
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
-        }
-
-        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-        const lastSentAt = new Date(resentToken.sentAt);
-
-        if(lastSentAt >= fiveMinutesAgo) {
-            return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
 
         handleTokenExpiration(resentToken)
@@ -403,6 +395,13 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
 
         resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
+
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const lastSentAt = new Date(resentToken.sentAt);
+
+        if(lastSentAt >= fiveMinutesAgo) {
+            return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
+        }
 
         const date = new Date();
         const currentDate = date.toISOString();
