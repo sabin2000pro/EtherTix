@@ -364,9 +364,6 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
-      
-        // Check if the token has already been sent in the last 5 minutes, if so, reject the request with an error response
-
         // 3. Check if the User ID is valid
 
         if(!isValidObjectId(userId)) {
@@ -383,6 +380,10 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
 
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
         const lastSentAt = new Date(resentToken.sentAt);
+
+        if(lastSentAt >= fiveMinutesAgo) {
+            return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
+        }
 
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
