@@ -9,6 +9,7 @@
     "rootDir": "src", // Root directory where all of the backend code resides inside.
     "strict": true,
     "removeComments": false,
+    "skipLibCheck": true,
 
     "paths": {
       "@global/*": ["./shared/global/*"],
