@@ -342,6 +342,8 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
         }
     
         const factorToken = await TwoFactorVerification.findOne({owner: userId});
+        const date = new Date();
+        const currentDate = date.toISOString();
     
         if(!factorToken) {
             return next(new ErrorResponse(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
@@ -363,7 +365,7 @@ export const verifyLoginToken = asyncHandler(async (request: any, response: any,
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
 
-        return response.status(StatusCodes.OK).json({user, message: "Your account is now active"});
+        return response.status(StatusCodes.OK).json({user, message: "Your account is now active", sentAt: currentDate});
     } 
     
 )
