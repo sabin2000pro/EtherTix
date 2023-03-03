@@ -19,7 +19,7 @@ authRouter.route('/resend-email-verification').post(rateLimiter as any, resendEm
 
 authRouter.route('/login').post(rateLimiter as any, loginUser as any);
 authRouter.route('/verify-login-mfa').post(rateLimiter as any, verifyLoginToken as any)
-authRouter.route('/resend-login-mfa').post(rateLimiter as any, resendTwoFactorLoginCode);
+authRouter.route('/resend-login-mfa').post(rateLimiter as any, resendTwoFactorLoginCode as any);
 
 authRouter.route('/logout').get(rateLimiter as any, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter as any, forgotPassword as any);

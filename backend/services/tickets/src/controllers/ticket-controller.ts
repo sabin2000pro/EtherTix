@@ -117,6 +117,13 @@ export const fetchTicketEventDetails = asyncHandler(async (request: any, respons
    return response.status(StatusCodes.OK).json({success: true, data: events.data});
 })
 
+export const fetchTicketIssuerDetails = asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
+   const id = request.params.id;
+   const ticket = await Ticket.findById(id);
+
+   let ISSUER_URI = `http://`
+}) 
+
 // @desc      Edit Ticket By ID
 // @route     POST /api/v1/tickets/:ticketId
 // @access    Private (JWT Authorization Token Required)

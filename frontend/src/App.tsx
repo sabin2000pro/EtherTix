@@ -1,5 +1,4 @@
 import Navbar from 'components/Navbar';
-import { useEffect } from 'react';
 import Home from 'pages/Home';
 import EmailVerification from 'pages/auth/EmailVerification';
 import ForgotPassword from 'pages/auth/ForgotPassword';
@@ -8,11 +7,11 @@ import Register from 'pages/auth/Register';
 import ResetPassword from 'pages/auth/ResetPassword';
 import UpdatePassword from 'pages/auth/UpdatePassword';
 import UpdateProfile from 'pages/auth/UpdateProfile';
-import React, { useContext} from 'react';
+import React, { useContext, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 import CartPage from 'pages/CartPage';
-import { Web3Context } from 'constants/context/Web3Context';
+import { Web3Context } from 'context/Web3Context';
 import MintToken from 'pages/nfts/MintToken';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchAllTickets } from './actions/ticket-actions';
@@ -26,15 +25,8 @@ const App = () => { // Push to github recent changes
    const dispatch = useDispatch();
    const {tickets} = useSelector((state: TicketState) => state.tickets);
 
-   useEffect(() => {
+   //_tokenName: string, _tokenClass: string,  _tokenPrice: number, _tokenCapacity: number
 
-      const fetchTicketData = async () => {
-          dispatch(fetchAllTickets() as any);
-      }
-
-      fetchTicketData();
-
-   }, [dispatch])
 
    const handleMintNFT = async () => {
 
@@ -45,6 +37,7 @@ const App = () => { // Push to github recent changes
 
       console.log(`The token you minted : `, mintedToken)
       return mintedToken;
+
    }
 
 

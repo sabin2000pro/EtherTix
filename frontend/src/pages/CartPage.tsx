@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import { fetchAllTickets } from 'actions/ticket-actions';
 
 type Ticket = {
   id: number;
@@ -10,21 +11,24 @@ type Ticket = {
 }
 
 const tickets: Ticket[] = [
-  { id: 1, name: "Cars Soundtrack", price: 10.99, image: "image-url-1" },
+  { id: 1, name: "Cars Soundtrack", price: 75.55, image: "image-url-1" },
   { id: 2, name: "Ticket 2", price: 19.99, image: "image-url-2" },
-  { id: 3, name: "Ticket 3", price: 7.99, image: "image-url-3" },
+  { id: 3, name: "Ticket 3", price: 199.99, image: "image-url-3" },
 ];
 
 const CartPage = () => {
+  const dispatch = useDispatch();
   const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
   const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [ethPrice, setEthPrice] = useState<number>(0);
 
   useEffect(() => {
 
      const fetchEventTickets = async () => {
-
+      // Will use dispatcher to fetch the event tickets
+        dispatch(fetchAllTickets() as any);
      }
 
      fetchEventTickets();
@@ -68,6 +72,33 @@ const getTotalPrice = () => {
   return Object.values(cart).reduce((acc, item) => acc + item.price * item.quantity, 0);
 }
 
+// Fetch the live Ethereum price on component mount
+useEffect(() => {
+  
+  const fetchEthPrice = async () => {
+
+    try {
+      
+      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      setEthPrice(response.data.ethereum.usd);
+
+      console.log(`ETH Price : `, ethPrice);
+    } 
+    
+    catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  fetchEthPrice();
+
+}, []);
+
+const calculateEthPrice = (price: number) => {
+  return price / ethPrice;
+}
+
 return (
 
   
@@ -82,107 +113,99 @@ return (
           <p>Your cart is empty</p>
 
       ) : (
-        <>
 
+        <>
 
           {Object.values(cart).map((item) => (
 
-            <div key={item.id} className = "cart__item">
+            <div key = {item.id} className = "cart__item">
 
-              <img
-                className="cart__item-image"
-                src={item.image}
-                alt={item.name}
-              />
+              <div className = "cart__item-description">
+                  <div className = "cart__item-name">{item.name}</div>
+                  <div className = "cart__item-price">
 
-
-              <div className="cart__item-description">
-                <div className="cart__item-name">{item.name}</div>
-                <div className="cart__item-price">
-
-                  ${item.price.toFixed(2)} x {item.quantity}
-                </div>
-
+                    {calculateEthPrice(item.price).toFixed(6)} ETH (${item.price.toFixed(2)})
+                    x {item.quantity}
+                  </div>
 
                 <button onClick={() => removeFromCart(item.id)}>Remove</button>
               </div>
+
             </div>
 
 
           ))}
+          <div className="cart__total">
+            Total Cost : {( getTotalPrice() / ethPrice).toFixed(6)} ETH </div>
 
 
-          <div className="cart__total">Total Cost: ${getTotalPrice().toFixed(2)}</div>
+            <button className="cart__remove-all" onClick={() => setCart({})}>Remove All</button>
         </>
       )}
 
 
     </div>
 
+
+
     <div className="tickets">
-      
-      <h2 className = "tickets__heading">Tickets </h2>
+    <h2 className="tickets__heading">Tickets:</h2>
 
-      <ul>
 
-        {tickets.map((ticket) => (
+    <ul>
 
-          <li key = {ticket.id}>
 
-            <img className="ticket__image" src={ticket.image} alt ={ticket.name} />
-            <div className="ticket__description">
+      {tickets.map((ticket) => (
 
-              <div className="ticket__name">{ticket.name}</div>
+        <li key={ticket.id}>
 
-              <div className="ticket__price">${ticket.price.toFixed(2)}</div>
-              <div className="ticket__quantity">
-
-                Select Ticket Quantity: {""}
-
-                <select defaultValue={1} onChange = {(e) => setSelectedQuantity(parseInt(e.target.value))}>
-
-                  {[...Array(10)].map((_, index) => (
-
-                    <option key = {index + 1} value={index + 1}>
-                      {index + 1}
-                    </option>
-
-                  ))}
-
-                </select>
-              </div>
-
-              <button onClick={() => setSelectedTicket(ticket)}>
-                No of Tickets
-              </button>
-
+          <div className="ticket__description">
+            <div className="ticket__name">{ticket.name}</div>
+            <div className="ticket__price">
+              {calculateEthPrice(ticket.price).toFixed(6)} ETH (${ticket.price.toFixed(2)})
             </div>
-          </li>
+            <div className="ticket__quantity">
 
+              No of Tickets:{" "}
+              <select
+                defaultValue={1}
+                onChange={(e) =>
+                  setSelectedQuantity(parseInt(e.target.value))
+                }
+              >
+                {[...Array(10)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        ))}
+            <button onClick={() => setSelectedTicket(ticket)}>
+              Add to Cart
+            </button>
 
+          </div>
+        </li>
+      ))}
+    </ul>
 
-      </ul>
+    {selectedTicket && (
+      <div>
 
-      {selectedTicket && (
+        <h2>{selectedTicket.name}</h2>
 
-        <div>
+        <p>
+          Price: {calculateEthPrice(selectedTicket.price).toFixed(6)} ETH (${selectedTicket.price.toFixed(2)}) x {selectedQuantity}
+        </p>
 
-          <h2>{selectedTicket.name}</h2>
+        <button onClick={() => addToCart(selectedTicket, selectedQuantity)}>
+          Add to Cart
+        </button>
 
-          <p>
-            Ticket Price : ${selectedTicket.price.toFixed(2)} x {selectedQuantity}
-          </p>
+        <button onClick={() => setSelectedTicket(null)}>Cancel</button>
 
-          <button onClick={() => addToCart(selectedTicket, selectedQuantity)}>
-            Add to Cart
-          </button>
-
-          <button onClick={() => setSelectedTicket(null)}>Cancel</button>
-
-        </div>
-
+      </div>
         )
       }
 

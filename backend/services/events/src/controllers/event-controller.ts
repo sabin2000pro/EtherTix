@@ -1,21 +1,17 @@
-import { ErrorResponse } from './../../../venues/src/utils/error-response';
+import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
-import asyncHandler from 'express-async-handler';
 
-export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const fetchAllEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
         const events = await Event.find()
         return response.status(StatusCodes.OK).json(events);
     } 
-)
 
-export const fetchTotalEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const fetchTotalEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
         const events = await Event.countDocuments({});
         return response.status(StatusCodes.OK).json({success: true, count: events});
     }
-    
-)
 
 
 
