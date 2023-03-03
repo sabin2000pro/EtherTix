@@ -58,8 +58,10 @@ export const verifyEmailAddress = async (verificationPayload: any): Promise<any>
 }
 
 export const resendEmailVerification = async (resendVerificationPayload: any): Promise<any> => {
+
     try {
-        const response = await axios.post("http://localhost:5299/api/auth/resend", resendVerificationPayload);
+
+        const response = await axios.post("http://localhost:5299/api/auth/resend-email-verification", resendVerificationPayload);
         const data = await response.data;
         return data;
 
@@ -96,7 +98,8 @@ export const login = async (loginPayload: any): Promise<any> => {
 
 export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
     try {
-        const response = await axios.post("http://localhost:5299/api/auth/<endpoint-url>/mfa", mfaPayload);
+
+        const response = await axios.post("http://localhost:5299/api/auth/verify-login-mfa", mfaPayload);
         const data = await response.data;
         return data;
 
@@ -132,6 +135,7 @@ export const forgotPassword = async (forgotPasswordPayload: { email: string }): 
 
 export const resetPassword = async (resetPasswordPayload: Object): Promise<any> => {
     try {
+        
       const response = await axios.post("http://localhost:5299/api/auth/reset-password", resetPasswordPayload);
       const data = await response.data;
       return data;
@@ -140,7 +144,7 @@ export const resetPassword = async (resetPasswordPayload: Object): Promise<any> 
     catch (err) {
 
       if (err) {
-        return console.error(err);
+         return console.error(err);
       }
 
 

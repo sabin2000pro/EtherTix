@@ -8,6 +8,10 @@ html {
     font-family: 'Inter', sans-serif;
 }
 
+.logo {
+    margin-left: 30px;
+}
+
 .heading-primary {
     margin-right: 250px;
     margin-bottom: 30px;
@@ -18,7 +22,7 @@ html {
     list-style-type: none;
     margin: 0;
     display: flex;
-    padding: 4px 8px;
+    padding: 2px 4px;
     justify-content: flex-start;
 }
 
@@ -31,8 +35,8 @@ html {
 }
 
 .nav-container {
-    background-color: #001845;
-    padding: 12px;
+    background-color: #04286b;
+    padding: 1px;
     color: white;
     display: flex;
     justify-content: flex-end;
@@ -49,7 +53,6 @@ html {
     text-align: center;
     margin: 0 auto;
     width: 5%;
-    /* set a fixed width */
     text-decoration: none;
     font-weight: 700;
     font-size: 20px;
@@ -57,32 +60,55 @@ html {
     align-items: center;
 }
 
+.nav-header:hover {
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+}
+
+.profile-dropdown {
+   margin: 4px 54px;
+}
+
+.profile-btn {
+    background-color: #1355a5ef;
+    font-weight: bold;
+    color: white;
+}
+
+.profile-btn:hover {
+    background-color: #1355a5bf;
+}
+
 .search-bar {
     padding: 8px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 14px;
+    font-size: 18px;
     margin-bottom: 12px;
     margin-top: 10px;
-    width: 200px;
     height: 40px;
+    width: 400px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
+    transition: all 0.2s;
     text-align: center;
 }
 
 .search-bar:focus {
     outline: none;
     transition: all 0.3s;
+    width: 300px;
     border: none;
+    border-radius: 200px;
     background-color: #e6e6e6;
+    transform: translate(-50%, 0);
 }
 
 .search-icon {
-    font-size: 20px;
+    font-size: 28px;
+    margin-left: 10px;
     color: #000;
-    margin-bottom: 2px;
+    transition: all 0.2s;
     z-index: 1;
 }
 
@@ -100,7 +126,12 @@ html {
     color: white;
     text-decoration: none;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 22px;
+    transition: all 0.3s;
+}
+
+.nav-list-items li a:hover {
+   color: #0b6dc2;
 }
 
 .search-results {
@@ -324,6 +355,28 @@ label {
     transition: all 0.4s;
 }
 
+.login-btn {
+    font-size: 22px;
+    color: white;
+}
+
+.login-btn {
+    width: 350px;
+    height: 60px;
+    margin-top: 15px;
+    text-align: center;
+    background-color: #1a2f58;
+    outline: none;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #a6aebe;
+    transition: all 0.4s;
+}
+
 .span-container {
     display: flex;
     margin-bottom: 12px;
@@ -475,3 +528,161 @@ label {
 }
 
 /*end-Email Verification*/
+
+/*Cart Page */
+.cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 2rem auto;
+  }
+  
+  .cart__heading {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .cart__item {
+    display: flex;
+    margin: 1rem 0;
+  }
+  
+  .cart__item-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  
+  .cart__item-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .cart__item-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .cart__item-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .cart__item button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+  }
+  
+  .cart__item button:hover {
+    background-color: #0069d9;
+  }
+  
+  .cart__item button:active {
+    background-color: #005cbf;
+  }
+  
+  .cart__item button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+  }
+  
+  .cart__total {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 2rem 0;
+  }
+  
+  .tickets {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 2rem 0;
+  }
+  
+  .tickets__heading {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .ticket__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+  }
+  
+  .ticket__name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .ticket__price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .ticket__quantity {
+    margin-bottom: 1rem;
+  }
+  
+  .ticket__quantity select {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-left: 1rem;
+  }
+  
+  .ticket__description {
+    width: 100%;
+  }
+  
+  .ticket__description button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  
+  .ticket__description button:hover {
+    background-color: #0069d9;
+  }
+  
+  .ticket__description button:active {
+    background-color: #005cbf;
+  }
+  
+  .ticket__description button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+  }
+
+  .cart__remove-all {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cart__remove-all:hover {
+    background-color: darkred;
+  }
+  
+  /*End Cart Page*/

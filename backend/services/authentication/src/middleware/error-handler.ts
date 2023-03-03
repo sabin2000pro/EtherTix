@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { ErrorResponse } from '../utils/error-response';
 import express, {Response, NextFunction} from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -12,7 +13,7 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
     error.statusCode = err.statusCode;
     error.stack = err.stack;
 
-    if(process.env.AUTH_SERVICE_DEV_MODE === 'development') {
+    if(process.env.AUTH_SERVICE_NODE_ENV === 'development') {
 
         if(err.code === 11000) {
             const message = `Duplicate resource found on the server ${Object.keys(err.keyValue)}`;

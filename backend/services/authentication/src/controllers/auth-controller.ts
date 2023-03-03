@@ -35,12 +35,30 @@ import { ErrorResponse } from '../utils/error-response';
 
 }
 
-export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+     
+    const transporter = emailTransporter();
+
+       transporter.sendMail({
+           from: 'resetpassword@ethertix.com',
+           to: user.email,
+           subject: 'Reset Password',
+           html: `
+           
+           <h1> ${resetPasswordURL}</h1>
+           `
+       })
+
+}
+
+export const sendConfirmationEmail = (user: any, userOTP: number) => {
+
+    const transporter = emailTransporter();
 
     return transporter.sendMail({
 
         from: 'verification@ethertix.com',
-        to: newUser.email,
+        to: user.email,
         subject: 'E-mail Verification',
         html: `
         
@@ -109,11 +127,12 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
-        const transporter = emailTransporter(); 
-        sendConfirmationEmail(transporter, user, userOTP as unknown as any);
+        console.log(`Your OTP : `, userOTP);
 
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
+
+        sendConfirmationEmail(user, userOTP as unknown as any);
 
         return sendTokenResponse(request, user, StatusCodes.CREATED, response);
     } 
@@ -189,8 +208,11 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
+            const date = new Date();
+            const currentDate = date.toISOString();
     
-            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+            return response.status(StatusCodes.CREATED).json({message: "E-mail Address verified", sentAt: currentDate});
         }
 
     } 
@@ -246,8 +268,6 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 
 export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
-    try {
-
         const {email, password} = request.body;
 
         if(!email || !password) {
@@ -263,6 +283,10 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         if(user.isLocked) {
             return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
         }
+
+        if(!user.isVerified) {
+            return next(new ErrorResponse(`You cannot login. Please verify your e-mail address first`, StatusCodes.BAD_REQUEST));
+        }
     
         // Compare user passwords before logging in
         const matchPasswords = await user.comparePasswords(password);
@@ -277,8 +301,8 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         const transporter = emailTransporter();
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
-        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
 
+        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
         await loginMfa.save();
 
         // Check for a valid MFA
@@ -290,75 +314,65 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
          return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
-    catch(error) {
-
-        if(error) {
-            return next(error)
-        }
-
-    }
-
-})
+)
 
 // API - 5
 
-export const verifyLoginToken = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
-        const {userId, multiFactorToken} = request.body;
+export const verifyLoginToken = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+        const {userId, mfaToken} = request.body;
         const user = await User.findById(userId);
     
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
         }
     
-        if(!multiFactorToken) {
+        if(!mfaToken) {
             user.isActive = false; // User is not active yet
             return next(new ErrorResponse("Please provide your MFA token", StatusCodes.BAD_REQUEST));
         }
     
         const factorToken = await TwoFactorVerification.findOne({owner: userId});
+        const date = new Date();
+        const currentDate = date.toISOString();
     
         if(!factorToken) {
             return next(new ErrorResponse(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
-    
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);    
+
+
         if(!mfaTokensMatch) { // If tokens don't match
-            user.isActive = (!user.isActive) as boolean; // User is not active
-            user.isVerified = (!user.isVerified) as boolean; // User is not verified
+            user.isActive = (!user.isActive)
+            user.isVerified = (!user.isVerified)
             return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
 
-        const newToken = new TwoFactorVerification({owner: user, mfaToken: multiFactorToken}); // Create a new instance of the token
+        const newToken = await TwoFactorVerification.create({owner: user, mfaToken: mfaToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
 
-        return response.status(StatusCodes.OK).json({user, message: "Your account is active"});
+        return response.status(StatusCodes.OK).json({message: "Your account is now active", sentAt: currentDate});
     } 
     
-    catch(error) {
-
-        if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
-        }
-
-    }
-
-}
+)
 
 // API 6
 
-export const resendTwoFactorLoginCode = async (request: any, response: any, next: NextFunction): Promise<any> => {
+const handleTokenExpiration = (resentToken: any) => {
+    const expiryDate = process.env.AUTH_MFA_EXPIRY || 500 // Token expires after 5 minutes
+    const currentDate = new Date(resentToken.createdAt).toISOString(); // Get the current date at which the token is created at
 
-    try {
+    console.log(`Current date of creating the token : `, currentDate);
 
-        const {userId, mfaCode} = request.body; // 1. Extract user id and the MFA code from the request body
+    // return currentDate > expiryDate;
+}
+
+export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+        const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
         // 3. Check if the User ID is valid
@@ -366,49 +380,38 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
-
-        if(!mfaCode) {
-            return next(new ErrorResponse("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
-        }
-
         // 5. Fetch Generated Two Factor code
-        const mfaToken = generateMfaToken();
+        const token = generateMfaToken();
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
 
-        const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
-
-        // Check if the resent token matches the one in the database or not
-
-        if(!resentTokensMatch) {
-           return next(new ErrorResponse("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
-        }
-
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
-        
-        // resentToken.mfaToken = undefined; // Clear the generated token from the database
+
+        resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
-    }
-    
-    catch(error: any) {
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const lastSentAt = new Date(resentToken.sentAt);
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
+        if(lastSentAt >= fiveMinutesAgo) { // If the date at which the last token was sent at (current date) 
+            return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
 
+        handleTokenExpiration(resentToken)
+
+        const date = new Date();
+        const currentDate = date.toISOString();
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: currentDate});
     }
     
-}
+)
 
-export const logoutUser = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
+export const logoutUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         if(request.session !== undefined) {
             request.session = null; // Clear the session object
@@ -416,26 +419,15 @@ export const logoutUser = async (request: any, response: any, next: NextFunction
     
         return response.status(StatusCodes.OK).json({success: true, data: {}, message: "You have logged out"});
     } 
-    
-    catch(error: any) {
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
-
-    }
-
-}
+)
 
 export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
 
         const {email} = request.body;
         const user = await User.findOne({email});
 
-        // // Check if we have an e-mail in the body of the request
+         // Check if we have an e-mail in the body of the request
         if(!email) {
             return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
         }
@@ -463,81 +455,42 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         sendPasswordResetEmail(user, resetPasswordURL);
     
         return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
-        }
-
-    }
-
-})
-
-const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
-     
-     const transporter = emailTransporter();
-
-        transporter.sendMail({
-            from: 'resetpassword@ethertix.com',
-            to: user.email,
-            subject: 'Reset Password',
-            html: `
-            
-            <h1> ${resetPasswordURL}</h1>
-            `
-        })
-
-}
+    }    
+)
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-   try {
-
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
         const resetToken = request.params.resetToken;
 
-        // Validate Fields
-        // if(!currentPassword) {
-        //     return next(new BadRequestError("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        // }
+        if(!currentPassword) {
+            return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        }
     
-        // if(!newPassword) {
-        //     return next(new BadRequestError("Please specify the new password", StatusCodes.BAD_REQUEST))
-        // }
+        if(!newPassword) {
+            return next(new ErrorResponse("Please specify the new password", StatusCodes.BAD_REQUEST))
+        }
     
-        // const user = await User.findOne({owner: request.user._id, token: resetToken});
+        const user = await User.findOne({owner: request.user._id, token: resetToken});
     
-        // if(!user) {
-        //     return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-        // }
+        if(!user) {
+            return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
+        }
     
-        // const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
-        // if(!userPasswordsMatch) {
-        //    return next(new BadRequestError("Current Password Invalid", StatusCodes.BAD_REQUEST))
-        // }
+        if(!userPasswordsMatch) {
+           return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        }
     
-        // user.password = newPassword;
-        // user.passwordConfirm = undefined;
+        user.password = newPassword;
+        user.passwordConfirm = undefined;
     
-        // await user.save(); // Save new user after reset the password
+        await user.save(); // Save new user after reset the password
     
         return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
    } 
-   
-   catch(error: any) {
-
-    //   if(error) {
-    //      return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST))
-    //   }
-
-   }
-
-
-})
+)
 
 export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
@@ -548,9 +501,9 @@ export const getCurrentUser = asyncHandler(async (request: any, response: any, n
     
     catch(error: any) {
 
-        // if(error) {
-        //     return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(error)
+        }
 
     }
 
@@ -567,33 +520,33 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
     
-        // if(!newPassword) {
-        //     return next(new BadRequestError("Please provide your new password", StatusCodes.BAD_REQUEST));
-        // }
+        if(!newPassword) {
+            return next(new ErrorResponse("Please provide your new password", StatusCodes.BAD_REQUEST));
+        }
     
-        // const user = await User.findById(<any>request.user._id);
+        const user = await User.findById(<any>request.user._id);
     
-        // if(!user) {
-        //     return next(new BadRequestError("No user found", StatusCodes.BAD_REQUEST))
-        // }
+        if(!user) {
+            return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
+        }
     
-        // const currentPasswordMatch = user.comparePasswords(currentPassword);
+        const currentPasswordMatch = user.comparePasswords(currentPassword);
     
-        // if(!currentPasswordMatch) { // If passwords do not match
-        //     return next(new BadRequestError("Current password is invalid.", StatusCodes.BAD_REQUEST))
-        // }
+        if(!currentPasswordMatch) { // If passwords do not match
+            return next(new ErrorResponse("Current password is invalid.", StatusCodes.BAD_REQUEST))
+        }
     
-        // user.password = request.body.newPassword
-        // await user.save(); // Save new user
+        user.password = request.body.newPassword
+        await user.save(); // Save new user
     
         return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
    } 
    
    catch(error) {
 
-        // if(error) {
-        //     return next(new BadRequestError(error.message, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(error)
+        }
         
    }
 
@@ -628,17 +581,15 @@ export const deactivateUserAccount = async (request: any, response: any, next: N
     const {userId} = request.body;
     const user = await User.findById(userId);
 
-    // If no user exists
-    // if(!user) {
-    //     return next(new NotFoundError("No user found with that ID", StatusCodes.NOT_FOUND));
-    // }
+    if(!user) {
+        return next(new ErrorResponse("No user found with that ID", StatusCodes.NOT_FOUND));
+    }
 
-    // if((!user.isValid) || (!user.isActive) ) {
-    //     return next(new BadRequestError("User account is already inactive", StatusCodes.BAD_REQUEST));
-    // }
+    if((!user.isValid) || (!user.isActive) ) {
+        return next(new ErrorResponse("User account is already inactive", StatusCodes.BAD_REQUEST));
+    }
 
     if(user.isActive && user.isValid) { // If the current user account is active and the user account is valid
-        // Change the is active and is valid fields to false
         user.isActive = (!user.isActive);
         user.isValid = (!user.isValid);
 
@@ -655,39 +606,37 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
         if(request.method === 'PUT') { // If the request is a PUT request
 
-            const userId = request.params.userId as any;
-            const file = request.files!.file as any;
-            const fileName = file.name as any;
+            const userId = request.params.userId;
+            const file = request.files!.file;
+            const fileName = file.name;
 
             const currentUser = await User.findById(userId); // Find the current user
         
-            // if(!currentUser) {
-            //     return next(new NotFoundError("User Not found with that ID", StatusCodes.NOT_FOUND));
-            // }
+            if(!currentUser) {
+                return next(new ErrorResponse("User Not found with that ID", StatusCodes.NOT_FOUND));
+            }
         
-            // if(!request.files) {
-            //     return next(new BadRequestError(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
-            // }
-        
-            // 1. Ensure that the file is an actual image
-        
-            // if(!file.mimetype.startsWith("image")) {
-            //     return next(new BadRequestError("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
-            // }
+            if(!request.files) {
+                return next(new ErrorResponse(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
+            }
+                
+            if(!file.mimetype.startsWith("image")) {
+                return next(new ErrorResponse("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
+            }
         
             // Validate File size. Check if file size exceeds the maximum size
-            // if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-            //     return next(new FileTooLargeError("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
-            // }
+            if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
+                return next(new ErrorResponse("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
+            }
         
              // Create custom filename
           file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
         
           file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
         
-                // if(error) {
-                //    return next(new BadRequestError("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
-                // }
+                if(error) {
+                   return next(new ErrorResponse("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
+                }
         
                 await User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
                 return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
@@ -699,9 +648,9 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
     
     catch(error: any) {
 
-        // if(error) {
-        //     return next(new BadRequestError(error, StatusCodes.BAD_REQUEST));
-        // }
+        if(error) {
+            return next(error)
+        }
     }
 
 
@@ -715,10 +664,9 @@ export const getAllUserPremiumAccounts = asyncHandler(async (request: any, respo
 
             const premiumUsers = await User.find({premium: true});
 
-            // if(!premiumUsers) {
-            //     return next(new BadRequestError("No premium users found", StatusCodes.BAD_REQUEST));
-            // }
-    
+            if(!premiumUsers) {
+                return next(new ErrorResponse("No premium users found", StatusCodes.BAD_REQUEST));
+            }
     
             return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
         }
@@ -740,9 +688,9 @@ export const fetchLockedUserAccounts = asyncHandler(async (request: any, respons
 
        const lockedUserAccounts = await User.find({accountLocked: !false});
 
-    //    if(!lockedUserAccounts) {
-    //         return next(new BadRequestError("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
-    //    }
+       if(!lockedUserAccounts) {
+            return next(new ErrorResponse("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
+       }
 
        return response.status(StatusCodes.OK).json({success: true, data: lockedUserAccounts});
     } 
@@ -766,9 +714,9 @@ export const fetchAllUsers = asyncHandler(async (request: any, response: any, ne
 
         const users = await User.find();
 
-        // if(!users) {
-        //     return next(new BadRequestError("No users found in the database", StatusCodes.NOT_FOUND));
-        // }
+        if(!users) {
+            return next(new ErrorResponse("No users found in the database", StatusCodes.NOT_FOUND));
+        }
 
         return response.status(StatusCodes.OK).json({success: true, users});
     
@@ -792,9 +740,9 @@ export const fetchUserByID = asyncHandler(async (request: any, response: any, ne
         const userId = request.params.userId;
         const user = await User.findById(userId);
 
-        //  if(!userId) {
-        //     return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        // }
+         if(!userId) {
+            return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
 
         return response.status(StatusCodes.OK).json({success: true, user})
     
@@ -840,20 +788,20 @@ export const editUserByID = async (request: any, response: any, next: NextFuncti
      if(request.method === 'PUT') {
         const userId = request.params.userId; // Extract User ID
 
-        // if(!userId) {
-        //    return next(new BadRequestError("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        // }
+        if(!userId) {
+           return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
   
-        // let user = await User.findById(userId);
+        let user = await User.findById(userId);
   
-        // if(!user) {
-        //    return next(new NotFoundError("User not found", StatusCodes.NOT_FOUND));
-        // }
+        if(!user) {
+           return next(new ErrorResponse("User not found", StatusCodes.NOT_FOUND));
+        }
   
-        // user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
-        // await user.save();
+        user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
+        await user.save();
   
-        // return response.status(StatusCodes.OK).json({success: true, data: user});
+        return response.status(StatusCodes.OK).json({success: true, data: user});
       }
  
     
@@ -877,9 +825,9 @@ export const deleteUserByID = async (request: any, response: any, next: NextFunc
 
             const userId = request.params.userId;
 
-            // if(!userId) {
-            //     return next(new BadRequestError(`User with that ID not found`, StatusCodes.BAD_REQUEST))
-            // }
+            if(!userId) {
+                return next(new ErrorResponse(`User with that ID not found`, StatusCodes.BAD_REQUEST))
+            }
     
             await User.findByIdAndDelete(userId);
             return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
@@ -927,9 +875,9 @@ export const lockUserAccount = async (request: any, response: any, next: NextFun
         const userId = request.user.id;
         const user = await User.findById(userId);
     
-        // if(!user) {
-        //     return next(new BadRequestError("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
-        // }
+        if(!user) {
+            return next(new ErrorResponse("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
+        }
     
         return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
    } 
