@@ -24,7 +24,7 @@ const Navbar = () => {
         <nav className = "nav-container">
 
           <div className = "nav-left">
-             <Link to = '/' className = "nav-header">Ether Tix</Link>
+            <img className = "logo" height = "89" width = "270" src = '/images/ethertix.png' alt = "Ether Tix Logo"/>
           </div>
           
            <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />

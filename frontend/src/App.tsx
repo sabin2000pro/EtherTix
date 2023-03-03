@@ -11,7 +11,7 @@ import React, { useContext, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 import CartPage from 'pages/CartPage';
-import { Web3Context } from 'constants/context/Web3Context';
+import { Web3Context } from 'context/Web3Context';
 import MintToken from 'pages/nfts/MintToken';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchAllTickets } from './actions/ticket-actions';
@@ -43,8 +43,6 @@ const App = () => { // Push to github recent changes
       <>
 
       {/* <MintToken mintNFT = {handleMintNFT} /> */}
-
-      <button onClick = {handleMintNFT}>Mint Token</button>
       
          <Navbar />
 

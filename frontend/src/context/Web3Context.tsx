@@ -1,13 +1,10 @@
 import React, {useState, createContext} from "react";
 import Web3 from "web3";
+import EventNftContract from '../contracts/TicketNFT.json';
 import axios from 'axios';
-
-import EventNftContract from '../contracts/EventMarket.json'
 
 import { ExternalProvider } from "@ethersproject/providers";
 import { initializeConnect } from "react-redux/es/components/connect";
-
-
 declare global {
   interface Window {
     ethereum?: ExternalProvider;
@@ -54,8 +51,6 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
                 const nftContract = await initialiseNftContract();
                 localStorage.setItem("account", currentAccount);
 
-                console.log("Your balance : ", convertedBalance)
-
                 return {currentAccount, convertedBalance, nftContract}
             }
 
@@ -79,8 +74,6 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
         const networks = EventNftContract.networks as any;
         const nftContractAbi = EventNftContract.abi;
         const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks["5777"].address as unknown as any);
-
-        console.log("NFT CONTRACT : ", nftContract)
         
         return nftContract
     }
