@@ -744,7 +744,7 @@
   "sourceMap": "57:483:1:-:0;;;212:50;;;;;;;;;-1:-1:-1;239:5:1;:18;;-1:-1:-1;;;;;;239:18:1;247:10;239:18;;;57:483;;;;;;",
   "deployedSourceMap": "57:483:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;373:165;;;;;;:::i;:::-;;:::i;:::-;;105:39;;;;;;;;;451:25:16;;;439:2;424:18;105:39:1;;;;;;;;81:20;;;;;-1:-1:-1;;;;;81:20:1;;;;;;-1:-1:-1;;;;;651:32:16;;;633:51;;621:2;606:18;81:20:1;487:203:16;266:103:1;;;;;;:::i;:::-;;:::i;373:165::-;195:5;;-1:-1:-1;;;;;195:5:1;181:10;:19;177:26;;508:24:::1;::::0;486:47:::1;::::0;-1:-1:-1;;;486:47:1;;468:11;;-1:-1:-1;;;;;486:21:1;::::1;::::0;::::1;::::0;:47:::1;::::0;::::1;;451:25:16::0;;;439:2;424:18;;305:177;486:47:1::1;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;::::0;::::1;;;;;;;;;429:109;177:26:::0;373:165;:::o;266:103::-;195:5;;-1:-1:-1;;;;;195:5:1;181:10;:19;177:26;;328:24:::1;:36:::0;266:103::o;14:286:16:-;73:6;126:2;114:9;105:7;101:23;97:32;94:52;;;142:1;139;132:12;94:52;168:23;;-1:-1:-1;;;;;220:31:16;;210:42;;200:70;;266:1;263;256:12;200:70;289:5;14:286;-1:-1:-1;;;14:286:16:o;695:180::-;754:6;807:2;795:9;786:7;782:23;778:32;775:52;;;823:1;820;813:12;775:52;-1:-1:-1;846:23:16;;695:180;-1:-1:-1;695:180:16:o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.7;\n\ncontract Migrations {\n  address public owner;\n  uint256 public last_completed_migration;\n\n  modifier restricted() {\n    if (msg.sender == owner) _;\n  }\n\n  constructor() public {\n    owner = msg.sender;\n  }\n\n  function setCompleted(uint completed) public restricted {\n    last_completed_migration = completed;\n  }\n\n  function upgrade(address new_address) public restricted {\n    Migrations upgraded = Migrations(new_address);\n    upgraded.setCompleted(last_completed_migration);\n  }\n}\n",
-  "sourcePath": "/Users/sabin2000/Documents/ethertix/frontend/contracts/Migrations.sol",
+  "sourcePath": "/Users/andy/Documents/EtherTix/frontend/contracts/Migrations.sol",
   "ast": {
     "absolutePath": "project:/contracts/Migrations.sol",
     "exportedSymbols": {
@@ -1403,12 +1403,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xD6403fdEE25eE4EaCe45C58A962D97D6b16cC194",
-      "transactionHash": "0xa77fe2039e3bb12d615ef243032d304282daedb283957fe76bab816d5e097985"
+      "address": "0x38Db6a2583afbFd5183E23d084Bf5830A46fbB5B",
+      "transactionHash": "0x22a341ec7f8641a23d9743ae7d1cdd18bb011f88a7a1d180cb5c4e7030799d7c"
     }
   },
-  "schemaVersion": "3.4.9",
-  "updatedAt": "2023-02-27T21:51:11.693Z",
+  "schemaVersion": "3.4.12",
+  "updatedAt": "2023-03-02T15:39:44.115Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

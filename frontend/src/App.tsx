@@ -42,6 +42,8 @@ const App = () => { // Push to github recent changes
       const currentContract = await initialiseNftContract();
 
       const mintedToken = await currentContract.methods.mintToken("test", "test", 1, 1).send({from: currentAccount.currentAccount[0] as unknown as any});
+
+      console.log(`The token you minted : `, mintedToken)
       return mintedToken;
    }
 
@@ -49,9 +51,11 @@ const App = () => { // Push to github recent changes
   return (
       <>
 
-      <MintToken mintNFT = {handleMintNFT} />
+      {/* <MintToken mintNFT = {handleMintNFT} /> */}
       
          <Navbar />
+
+         <button onClick = {handleMintNFT}>Mint Test NFT</button>
 
           <Routes>
              <Route path = '/reset-password/:resetToken' element = {<ResetPassword />} />
