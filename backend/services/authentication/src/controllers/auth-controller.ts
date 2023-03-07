@@ -495,7 +495,7 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
 export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
-        const user = request.user;
+        const user = await User.findOne(request.user.email);
         return response.status(StatusCodes.OK).json({success: true, user});
     } 
     
