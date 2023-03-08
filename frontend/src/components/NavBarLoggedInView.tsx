@@ -24,11 +24,11 @@ const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProp
         <>
         <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="#Cart">Cart</Navbar.Brand>
+        <Navbar.Brand href="/Cart">Cart</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <NavDropdown title={user.username} id="basic-nav-dropdown">
+            <NavDropdown title={user.username} id="dropdown-menu-right">
               <NavDropdown.Item href="#Settings">Settings</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.1">
                 Action
