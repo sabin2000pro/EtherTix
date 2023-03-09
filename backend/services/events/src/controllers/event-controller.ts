@@ -9,7 +9,7 @@ export const fetchAllEvents = asyncHandler(async (request: any, response: any, n
     const events = await Event.find();
 
     if(!events) {
-    
+      return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
     return response.status(StatusCodes.OK).json({success: true, events});
@@ -31,7 +31,7 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         request.body.user = request.user.id;
-
+        const {name, summary, description, startAt, endsAt, } = request.body;
         const event = await Event.create(request.body);
         await event.save();
 
@@ -41,88 +41,39 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
 
 export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-    try {
-
-        const eventId = request.params.eventId;
-        let event = await Event.findById(eventId);
+        const id = request.params.id;
+        let event = await Event.findById(id);
 
         if(!event) {
-            return next(new ErrorResponse(`No event with that ID : ${eventId} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }
 
-        event = await Event.findByIdAndUpdate(eventId)
+        event = await Event.findByIdAndUpdate(id, request.body, {new: true, runValidators: true});
+        return response.status(StatusCodes.OK).json({success: true, event});
 
     }
     
-    catch(error) {
 
-        if(error) {
-           return next(error);
-        }
+export const deleteEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-    }
 
-}
+})
 
-export const deleteEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const deleteEventByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-    try {
+   
+})
 
-    }
+export const uploadEventPhoto = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
+})
+
+export const fetchTrendingEvents = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     
-    catch(error) {
-
-      if(error) {
-        return next(error);
-      }
-
-    }
-
-}
-
-export const deleteEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
-    }
     
-    catch(error) {
-
-        if(error) {
-           
-        }
-    }
 
 
-}
-
-export const uploadEventPhoto = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-        // API Code here to upload a photo for an event using multer or express file upload
-    }
-    
-    catch(error) {
-
-    }
-
-}
-
-export const fetchTrendingEvents = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
-    try {
-    
-    }
-    
-    catch(error) {
-
-        if(error) {
-            
-        }
-
-    }
-
-}
+})
 
 
 export const fetchEventsWithinRadius = async (request: Request, response: Response, next: NextFunction): Promise<any> => {

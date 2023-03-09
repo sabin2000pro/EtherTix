@@ -140,14 +140,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
-
-    currency: { // The type of currency that the event takes payment in
-        type: String,
-        required: [true, "Please specify the currency that this event will take payment in"],
-        enum: ['GBP', 'ETH'],
-        default: 'ETH'
-    },
-
+    
     event_logo: {
         type: String,
         default: 'no-photo.jpg'
