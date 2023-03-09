@@ -6,8 +6,13 @@ import { Event } from "../models/event-model";
 import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const events = await Event.find()
-    return response.status(StatusCodes.OK).json(events);
+    const events = await Event.find();
+
+    if(!events) {
+    
+    }
+
+    return response.status(StatusCodes.OK).json({success: true, events});
 })
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -26,13 +31,13 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         request.body.user = request.user.id;
+
         const event = await Event.create(request.body);
         await event.save();
 
         return response.status(StatusCodes.CREATED).json({success: true, event});
 
     }    
-    
 
 export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 

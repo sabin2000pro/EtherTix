@@ -29,18 +29,16 @@ app.use(cors({
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
 
-app.use(helmet());
-
-app.use('/api/events', eventRouter);
-app.use(eventsErrorHandler)
 
 app.get("/", (request: any, response: any) => {
     return response.json({message: "Events Service - Root Route", success: true })
 });
 
+app.use('/api/v1/events', eventRouter);
+app.use(eventsErrorHandler)
+
 app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
     return response.status(StatusCodes.NOT_FOUND).json({success: false, message: `The route you are trying to access cannot be found on the server, please try again later`});
 })
-
 
 export {app}
