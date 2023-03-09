@@ -1,5 +1,5 @@
 require('dotenv').config();
-import {app} from './app';
+import { app } from "./app"
 
 const AUTH_SERVICE_PORT = process.env.AUTH_SERVICE_PORT || 5299;
 

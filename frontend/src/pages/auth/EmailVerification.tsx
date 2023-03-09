@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { verifyEmailAddress } from "api/auth/auth-api";
 import { resendEmailVerification } from "api/auth/auth-api";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,7 +6,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  //const localUserID = JSON.parse(localStorage.getItem("UserID") || ""); ----------uncomment when backend works
   const userEmail = location.state.email;
 
   const [error, setError] = useState("");
@@ -18,12 +17,20 @@ const EmailVerification: React.FC = () => {
     otp4: "",
     otp5: "",
     otp6: "",
-    //userID: localUserID ----------uncomment when backend works
+    userID: "",
   });
 
   const [buttonState, setButtonState] = useState({
     verify: false,
     resend: true,
+  });
+
+  useEffect(() => {
+    const fetchUserId = () => {
+      const userId = localStorage.getItem("UserID");
+      setOTP({ ...OTP, userID: userId as any });
+    };
+    fetchUserId();
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -7,6 +7,6 @@ COPY package-lock.json .
 COPY tsconfig.json .
 RUN npm install
 COPY . .
-EXPOSE 6000
+EXPOSE 5412
 RUN npm run build
 CMD [ "npm", "run", "start:api-gateway-service:dev" ]

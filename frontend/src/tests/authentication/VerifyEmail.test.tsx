@@ -1,4 +1,4 @@
-import { verifyEmailAddress } from '../../api/auth/auth-api'
+const verifyEmailAddress = require(`../../api/auth/auth-api`)
 
 describe("Email verification test suite", () => {
     it("Returns success confirmation", async () => {

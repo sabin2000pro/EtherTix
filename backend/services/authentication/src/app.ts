@@ -38,6 +38,8 @@ app.get('/', async (request: any, response: any, next: any): Promise<any> => {
     return response.status(StatusCodes.OK).json({success: true, message: "Authentication Service Root Route"});
 })
 
+console.log(`AUTH Router Object `, authRouter.route);
+
 // Error Handler middleware
 app.use('/api/auth', authRouter);
 app.use(errorHandler);

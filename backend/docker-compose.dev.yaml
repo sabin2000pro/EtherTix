@@ -1,6 +1,7 @@
-version: '3.3'
+version: '3.2'
 
 services:
+
   api-gateway-service:
     container_name: ethertix-api-gateway-service
     image: sabin2000/ethertix-api-gateway-service
@@ -12,7 +13,7 @@ services:
     restart: always
 
     ports:
-      - "6000:6000"
+      - "5412:5412"
 
     volumes:
       - /app/node_modules
@@ -24,9 +25,14 @@ services:
   auth-service:
     container_name: ethertix-auth-service
     image: sabin2000/ethertix-auth-service
+
     build:
       context: ../backend/services/authentication
       dockerfile: Dockerfile
+
+    networks:
+      - ethertix-network
+      - auth-service-network
     
     restart: always
 
@@ -36,9 +42,6 @@ services:
     volumes:
        - /app/node_modules
        - ../backend/services/authentication:/app
-
-    networks:
-      - my-service-network
 
   events-service:
       container_name: ethertix-events-service
@@ -153,3 +156,7 @@ volumes:
 networks:
   my-service-network:
     driver: bridge
+    external: true
+
+  auth-service-network:
+    external: true

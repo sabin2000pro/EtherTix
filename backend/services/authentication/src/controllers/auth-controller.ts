@@ -35,12 +35,30 @@ import { ErrorResponse } from '../utils/error-response';
 
 }
 
-export const sendConfirmationEmail = (transporter: any, newUser: any, userOTP: number) => {
+export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+     
+    const transporter = emailTransporter();
+
+       transporter.sendMail({
+           from: 'resetpassword@ethertix.com',
+           to: user.email,
+           subject: 'Reset Password',
+           html: `
+           
+           <h1> ${resetPasswordURL}</h1>
+           `
+       })
+
+}
+
+export const sendConfirmationEmail = (user: any, userOTP: number) => {
+
+    const transporter = emailTransporter();
 
     return transporter.sendMail({
 
         from: 'verification@ethertix.com',
-        to: newUser.email,
+        to: user.email,
         subject: 'E-mail Verification',
         html: `
         
@@ -109,11 +127,12 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
-        const transporter = emailTransporter(); 
-        sendConfirmationEmail(transporter, user, userOTP as unknown as any);
+        console.log(`Your OTP : `, userOTP);
 
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
+
+        sendConfirmationEmail(user, userOTP as unknown as any);
 
         return sendTokenResponse(request, user, StatusCodes.CREATED, response);
     } 
@@ -189,8 +208,11 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+
+            const date = new Date();
+            const currentDate = date.toISOString();
     
-            return response.status(StatusCodes.CREATED).json({user, message: "E-mail Address verified"});
+            return response.status(StatusCodes.CREATED).json({message: "E-mail Address verified", sentAt: currentDate});
         }
 
     } 
@@ -246,8 +268,6 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 
 export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
-    try {
-
         const {email, password} = request.body;
 
         if(!email || !password) {
@@ -263,6 +283,10 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         if(user.isLocked) {
             return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
         }
+
+        if(!user.isVerified) {
+            return next(new ErrorResponse(`You cannot login. Please verify your e-mail address first`, StatusCodes.BAD_REQUEST));
+        }
     
         // Compare user passwords before logging in
         const matchPasswords = await user.comparePasswords(password);
@@ -277,8 +301,8 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         const transporter = emailTransporter();
 
         sendLoginMfa(transporter as any, user as any, userMfa as any);
-        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
 
+        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
         await loginMfa.save();
 
         // Check for a valid MFA
@@ -290,64 +314,65 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
          return response.status(StatusCodes.OK).json({success: true, token, user});
     } 
     
-    catch(error) {
-
-        if(error) {
-            return next(error)
-        }
-
-    }
-
-})
+)
 
 // API - 5
 
 export const verifyLoginToken = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {userId, multiFactorToken} = request.body;
+        const {userId, mfaToken} = request.body;
         const user = await User.findById(userId);
     
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
         }
     
-        if(!multiFactorToken) {
+        if(!mfaToken) {
             user.isActive = false; // User is not active yet
             return next(new ErrorResponse("Please provide your MFA token", StatusCodes.BAD_REQUEST));
         }
     
         const factorToken = await TwoFactorVerification.findOne({owner: userId});
+        const date = new Date();
+        const currentDate = date.toISOString();
     
         if(!factorToken) {
             return next(new ErrorResponse(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
         }
     
         // Check to see if the tokens match
-        const mfaTokensMatch = await factorToken.compareVerificationTokens(multiFactorToken as any);
-    
+        const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);    
+
+
         if(!mfaTokensMatch) { // If tokens don't match
             user.isActive = (!user.isActive)
             user.isVerified = (!user.isVerified)
             return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
         }
 
-        const newToken = new TwoFactorVerification({owner: user, mfaToken: multiFactorToken}); // Create a new instance of the token
+        const newToken = await TwoFactorVerification.create({owner: user, mfaToken: mfaToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
         user.isVerified = true; // User account is now verified
         user.isActive = true; // And user account is active
 
-        return response.status(StatusCodes.OK).json({user, message: "Your account is now active"});
+        return response.status(StatusCodes.OK).json({message: "Your account is now active", sentAt: currentDate});
     } 
     
 )
 
 // API 6
 
-export const resendTwoFactorLoginCode = async (request: any, response: any, next: NextFunction): Promise<any> => {
+const handleTokenExpiration = (resentToken: any) => {
+    const expiryDate = process.env.AUTH_MFA_EXPIRY || 500 // Token expires after 5 minutes
+    const currentDate = new Date(resentToken.createdAt).toISOString(); // Get the current date at which the token is created at
 
-    try {
+    console.log(`Current date of creating the token : `, currentDate);
 
-        const {userId, mfaCode} = request.body; // 1. Extract user id and the MFA code from the request body
+    // return currentDate > expiryDate;
+}
+
+export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+        const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
         const currentUser = await User.findById(userId); // 2. Find the current user
 
         // 3. Check if the User ID is valid
@@ -355,49 +380,38 @@ export const resendTwoFactorLoginCode = async (request: any, response: any, next
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
         }
-
-        if(!mfaCode) {
-            return next(new ErrorResponse("No MFA found. Please try again.", StatusCodes.NOT_FOUND));
-        }
-
         // 5. Fetch Generated Two Factor code
-        const mfaToken = generateMfaToken();
+        const token = generateMfaToken();
         const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
 
         if(!resentToken) {
            return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
         }
 
-        const resentTokensMatch = await resentToken.compareVerificationTokens(mfaToken as any);
-
-        // Check if the resent token matches the one in the database or not
-
-        if(!resentTokensMatch) {
-           return next(new ErrorResponse("Tokens do not match. Please try again later.", StatusCodes.BAD_REQUEST));
-        }
-
         currentUser.isVerified = true; // User account is now verified
         currentUser.isActive = true; // And user account is active
-        
+
         resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
-        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: new Date(Date.now())});
-    }
-    
-    catch(error: any) {
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const lastSentAt = new Date(resentToken.sentAt);
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message});
+        if(lastSentAt >= fiveMinutesAgo) { // If the date at which the last token was sent at (current date) 
+            return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
 
+        handleTokenExpiration(resentToken)
+
+        const date = new Date();
+        const currentDate = date.toISOString();
+
+        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: currentDate});
     }
     
-}
+)
 
-export const logoutUser = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
+export const logoutUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         if(request.session !== undefined) {
             request.session = null; // Clear the session object
@@ -405,26 +419,15 @@ export const logoutUser = async (request: any, response: any, next: NextFunction
     
         return response.status(StatusCodes.OK).json({success: true, data: {}, message: "You have logged out"});
     } 
-    
-    catch(error: any) {
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
-
-    }
-
-}
+)
 
 export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
 
         const {email} = request.body;
         const user = await User.findOne({email});
 
-        // // Check if we have an e-mail in the body of the request
+         // Check if we have an e-mail in the body of the request
         if(!email) {
             return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
         }
@@ -452,33 +455,8 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         sendPasswordResetEmail(user, resetPasswordURL);
     
         return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: error.message, stack: error.stack});
-        }
-
-    }
-
-})
-
-const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
-     
-     const transporter = emailTransporter();
-
-        transporter.sendMail({
-            from: 'resetpassword@ethertix.com',
-            to: user.email,
-            subject: 'Reset Password',
-            html: `
-            
-            <h1> ${resetPasswordURL}</h1>
-            `
-        })
-
-}
+    }    
+)
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const currentPassword = request.body.currentPassword;
