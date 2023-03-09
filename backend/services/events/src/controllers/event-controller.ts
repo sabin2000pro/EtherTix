@@ -47,6 +47,16 @@ export const editEventByID = async (request: any, response: any, next: NextFunct
         const id = request.params.id;
         let event = await Event.findById(id);
 
+        // Check if the event status is not started already or canceled
+        if(event.eventStatus === 'started') {
+            return next(new ErrorResponse(`You cannot modify the event ${id} - as it has already started`, StatusCodes.BAD_REQUEST));
+        }
+
+        // Check to see if the event has canceled
+        if(event.eventStatus === 'canceled') {
+            return next(new ErrorResponse(`You cannot modify the event ${id} - as it has already been canceled`, StatusCodes.BAD_REQUEST));
+        }
+
         if(!event) {
             return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }

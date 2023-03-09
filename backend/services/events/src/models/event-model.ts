@@ -99,7 +99,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     eventStatus: { // Status of the event
         type: String,
         default: "pending",
-        enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
+        enum: ["draft", "live", "started", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
 
