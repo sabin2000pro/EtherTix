@@ -62,8 +62,16 @@ export const deleteEvents = asyncHandler(async (request: any, response: any, nex
 })
 
 export const deleteEventByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+     const id = request.params.id;
+     let event = await Event.findById(id);
 
-   
+     if(!event) {
+        return next(new ErrorResponse(`Could not find that event ID`, StatusCodes.BAD_REQUEST));
+     }
+
+     event = await Event.findByIdAndUpdate(id, request.body, {new: true, runValidators: true});
+     await event.save();
+     return response.status(StatusCodes.OK).json({success: true, message: `Event with ID : ${id} - updated successfully`});
 })
 
 export const uploadEventPhoto = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -73,7 +81,6 @@ export const uploadEventPhoto = asyncHandler(async (request: any, response: any,
 export const fetchTrendingEvents = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     
 })
-
 
 export const fetchEventsWithinRadius = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
