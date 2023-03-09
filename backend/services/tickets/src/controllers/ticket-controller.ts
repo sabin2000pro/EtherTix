@@ -21,61 +21,32 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
    
 )
 
-export const fetchUserTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-
-      const {userId} = request.query;
-      const userTickets = await Ticket.findById({userId})
-
-      if(!userTickets) {
-        return next(new ErrorResponse(`No user tickets found`, StatusCodes.BAD_REQUEST))
-      }
-
-      return response.status(StatusCodes.OK).json({success: true, userTickets});
-
-   } 
-   
-)
 
 // @desc      Get Event Ticket By ID
 // @route     GET /api/v1/tickets/:id
 // @access    Private (Authorization Token Required)
 
-export const getEventTicketById = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-  try {
-
+export const fetchTicketByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
       const id = request.params.id;
       const ticket = await Ticket.findById(id)
 
       if(!ticket) {
-         return response.status(StatusCodes.NOT_FOUND).json({success: false, })
+         return next(new ErrorResponse(`Could not find that ticket with ID : ${id} `, StatusCodes.BAD_REQUEST))
       }
 
       return response.status(StatusCodes.OK).json({success: true, ticket})
   } 
   
-  catch(error: any) {
-
-     if(error) {
-         return next(error);
-     }
-
-  }
-
-})
+)
 
 // @desc      Create New Event Ticket
 // @route     POST /api/tickets?eventId=....&issuerId=...&venueId=...
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-   try {
-         
         const {eventId, issuerId, venueId} = request.query;
-        request.body.event = eventId
 
+        request.body.event = eventId
         request.body.issuer = issuerId;
         request.body.venue = venueId;
 
@@ -85,25 +56,14 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
         await ticket.save();
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
    } 
-   
-   catch(error: any) {
 
-      if(error) {
-          return next(error);
-      }
-
-
-   }
-
-})
+)
 
 // @desc      Edit Ticket By ID
 // @route     POST /api/v1/tickets/:ticketId
 // @access    Private (JWT Authorization Token Required)
 
-export const editTicketByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-   try {
+export const editTicketByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
       const id = request.params.id;
       let ticket = await Ticket.findById(id);
@@ -117,36 +77,21 @@ export const editTicketByID = async (request: any, response: any, next: NextFunc
 
    } 
    
-   catch(error) {
 
-      if(error) {
-         return next(error);
-      }
-
-   }
-
-
-}
+)
 
 // @desc      Delete All Tickets For A specific event
 // @route     POST /api/v1/events/:eventId/tickets
 // @access    Private (JWT Authorization Token Required)
 
-export const deleteAllTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const deleteAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-  try {
       await Ticket.deleteMany();
       return response.status(StatusCodes.NO_CONTENT).json({success: true, data: {}, message: "Tickets Deleted"});
   }    
   
-  catch(error) {
-      if(error) {
-         return next(error);
-      }
-  }
+)
 
-
-}
 
 export const deleteTicketByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const id = request.params.id;

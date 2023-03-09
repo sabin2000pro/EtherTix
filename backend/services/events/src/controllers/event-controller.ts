@@ -88,10 +88,10 @@ export const uploadEventPhoto = asyncHandler(async (request: any, response: any,
 
 })
 
-export const fetchTrendingEvents = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
-    
+export const editEventStartTime = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+
 })
 
-export const fetchEventsWithinRadius = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const editEventEndTime = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
 })
