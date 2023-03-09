@@ -1,6 +1,6 @@
 import React, {useState, createContext} from "react";
 import Web3 from "web3";
-import EventNftContract from '../../contracts/TicketNFT.json'
+import EventNftContract from '../contracts/TicketNFT.json'
 import axios from 'axios';
 
 import { ExternalProvider } from "@ethersproject/providers";
