@@ -30,14 +30,15 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-        request.body.user = request.user.id;
-        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, } = request.body;
-        const event = await Event.create(request.body);
+        request.body.organiser = request.user.id;
+        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, ticket, category } = request.body;
+
+        const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, ticket, category});
         await event.save();
 
         return response.status(StatusCodes.CREATED).json({success: true, event});
 
-    }    
+}    
 
 export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
@@ -70,61 +71,9 @@ export const uploadEventPhoto = asyncHandler(async (request: any, response: any,
 
 export const fetchTrendingEvents = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     
-    
-
-
 })
 
 
-export const fetchEventsWithinRadius = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const fetchEventsWithinRadius = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
 
-    try {
-
-    }
-    
-    catch(error) {
-
-    }
-
-}
-
-export const likeEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    try {
-
-    } 
-    
-    catch(error) {
-
-        if(error) {
-            return next(error);
-        }
-
-    }
-
-
-}
-
-export const dislikeEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
-   try {
-       
-   } 
-   
-   catch(error) {
-    
-    if(error) {
-        return next(error);
-    }
-
-   }
- 
-
-}
-
-export const followEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-}
-
-export const unfollowEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-}
+})

@@ -4,7 +4,7 @@
 
   "version": "1.0.0",
 
-  "description": "",
+  "description": "API Gateway entry point for the application. Forwards requests to other services",
 
   "main": "dist/index.js",
 
@@ -28,7 +28,7 @@
 
   "keywords": [],
 
-  "author": "",
+  "author": "Sabin Constantin Lungu",
 
   "license": "ISC",
 

@@ -6,3 +6,5 @@ export const apiGatewayRouter = express.Router();
 apiGatewayRouter.route('/my-booked-events/:id').get(fetchUserBookedEvents as any);
 apiGatewayRouter.route('/edit-event/:id').put(editEventDetails as any);
 apiGatewayRouter.route('/create-event').post(createNewEvent as any);
+
+apiGatewayRouter.route('/fetch-users').get()

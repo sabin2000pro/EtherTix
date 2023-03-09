@@ -19,6 +19,7 @@ services:
       - ../backend/services/api-gateway:/app
 
     networks:
+    
       - my-service-network
 
   auth-service:

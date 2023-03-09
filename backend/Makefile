@@ -17,6 +17,8 @@ build-services:
 	- cd services/venues* && npm run build
 	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
+	- cd services/api-gateway* && npm run build
+
 	- docker login
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 
