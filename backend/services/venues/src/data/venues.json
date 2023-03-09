@@ -2,8 +2,11 @@
     
     {
         "_id": "5d7a514b5d2c12c7449be020",
+        "organiser": "5d7a514b5d2c12c7449be042",
+        "event": "5d713995b721c3bb38c1f5d0",
         "name": "Royal Highland Center Venue",
         "ageRestriction": "AGE_RESTRICTION_ALL_AGES",
+        "email": "royalhighland@venues.com",
         "venueCapacity": 12000,
         "hasPublicAccess": false,
         "smokingAllowed": false,
@@ -12,8 +15,11 @@
 
     {
         "_id": "5d7a514b5d2c12c7449be021",
+        "organiser": "5d7a514b5d2c12c7449be044",
+        "event": "5d713995b721c3bb38c1f5d2",
         "name": "Usher Hall Venue",
         "ageRestriction": "AGE_RESTRICTION_ALL_AGES",
+        "email": "usherhall@venues.com",
         "venueCapacity": 3000,
         "hasPublicAccess": true,
         "smokingAllowed": false,
@@ -22,7 +28,10 @@
 
     {
         "_id": "5d7a514b5d2c12c7449be022",
+        "organiser": "5d7a514b5d2c12c7449be042",
+        "event": "5d713995b721c3bb38c1f5d1",
         "name": "Three Sisters Cowgate Venue",
+        "email": "threesisters@venues.com",
         "ageRestriction": "AGE_RESTRICTION_MIN_EIGHTEEN",
         "venueCapacity": 150,
         "hasPublicAccess": true,

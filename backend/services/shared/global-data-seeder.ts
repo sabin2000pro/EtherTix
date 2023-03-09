@@ -19,8 +19,6 @@ connectEventsDatabase();
 connectTicketsSchema();
 connectVenuesSchema();
 
-
-
 export const loadAllData = async (): Promise<any> => {
     
         try {
