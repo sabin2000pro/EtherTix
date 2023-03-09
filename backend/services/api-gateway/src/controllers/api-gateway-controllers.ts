@@ -19,10 +19,10 @@ export const createNewEvent = asyncHandler(async (request, response, next): Prom
 })
 
 export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const ticketEventDetails = await axios.get(`http://ethertix-tickets-service:5303/api/tickets/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
+    const ticketEventDetails = await axios.get(`http://tickets-service:5303/api/tickets/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
     const ticketData = ticketEventDetails.data;
 
-    const eventDetails = await axios.get(`http://ethertix-events-service:5301/api/v1/events/${ticketData.event}`, {headers: {Authorization: request.headers.authorization}});
+    const eventDetails = await axios.get(`http://events-service:5301/api/v1/events/${ticketData.ticket.event}`, {headers: {Authorization: request.headers.authorization}});
     const eventData = eventDetails.data;
 
     console.log(`Ticket Data : `, ticketData);

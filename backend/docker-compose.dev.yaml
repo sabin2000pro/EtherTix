@@ -22,7 +22,6 @@ services:
       - my-service-network
       - auth-service
       - events-service
-      - categories-service
       - venues-service
       - tickets-service
 
@@ -62,7 +61,8 @@ services:
         - ../backend/services/events:/app
 
       networks:
-        - my-service-network
+       - my-service-network
+       - api-gateway-service
   
   categories-service:
       container_name: ethertix-categories-service
