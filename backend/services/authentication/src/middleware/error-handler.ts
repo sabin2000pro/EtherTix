@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { ErrorResponse } from '../utils/error-response';
-import express, {Response, NextFunction} from 'express';
+import {Response, NextFunction} from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 let ERROR_TYPES = ['CastError']
@@ -25,11 +25,6 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
             error = new ErrorResponse(message, StatusCodes.BAD_REQUEST);
         }
 
-    }
-
-    // Handle production errors
-    if(process.env.AUTH_SERVICE_DEV_MODE === 'production') {
-        
     }
 
     return response.status(error.statusCode).json({success: false, message: error.message, stack: error.stack});

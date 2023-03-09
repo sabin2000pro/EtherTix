@@ -30,10 +30,9 @@ const Navbar = () => {
            <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />
 
           <ul className = "nav-list-items">
-             <li><a className = "nav-item" href="/Cart">Cart</a></li>
-             <li><a className = "nav-item" href ="/register">Register</a></li>
-
-             <Dropdown />
+               <li><a className = "nav-item" href="/Cart">Cart</a></li>
+               <li><a className = "nav-item" href ="/register">Register</a></li>
+               <Dropdown />
           </ul>
 
         </nav>
