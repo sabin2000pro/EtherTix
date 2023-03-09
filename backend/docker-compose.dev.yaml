@@ -12,7 +12,7 @@ services:
     restart: always
 
     ports:
-      - "6000:6000"
+      - "5670:5670"
 
     volumes:
       - /app/node_modules
