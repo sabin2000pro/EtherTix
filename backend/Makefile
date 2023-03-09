@@ -1,6 +1,9 @@
 make-production:
 	- docker-compose -f docker-compose.prod.yaml -f docker-compose.prod.yaml up --build
 
+compile-smart-contract:
+	- cd ../frontend && truffle compile && truffle migrate --reset
+
 clean:
 	- docker volume rm
 	- docker stop

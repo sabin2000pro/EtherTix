@@ -20,20 +20,20 @@ interface ITicketAttributes { // Interface that stores the ticket data
 }
 
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
-   name: String,
-   ticketClass: String,
-   ticketToken: String,
-   capacity: Number,
-   quantityPurchase: Number,
-   description: String,
+   name: string,
+   ticketClass: string,
+   ticketToken: string,
+   capacity: number,
+   quantityPurchase: number,
+   description: string,
    cost: number,
    stock: number,
-   deliveryMethods: String,
+   deliveryMethods: string,
    ticketSold: boolean,
-   onSaleStatus: String,
+   onSaleStatus: string,
    saleStartsAt: Date,
    saleEndsAt: Date,
-   confirmationMessage: String,
+   confirmationMessage: string,
    event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
    venue: mongoose.Schema.Types.ObjectId

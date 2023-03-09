@@ -21,31 +21,21 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
    
 )
 
-export const fetchCustomerTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const fetchUserTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-   try {
-      
-      const {customerId} = request.query;
-      const tickets = await Ticket.findById({customerId})
 
-      if(!tickets) {
-        return next(new ErrorResponse(`No tickets found`, StatusCodes.BAD_REQUEST))
+      const {userId} = request.query;
+      const userTickets = await Ticket.findById({userId})
+
+      if(!userTickets) {
+        return next(new ErrorResponse(`No user tickets found`, StatusCodes.BAD_REQUEST))
       }
 
-      return response.status(StatusCodes.OK).json({success: true, tickets});
+      return response.status(StatusCodes.OK).json({success: true, userTickets});
 
    } 
    
-   catch(error) {
-
-         if(error) {
-            return next(error);
-         }
-
-   }
-
-
-})
+)
 
 // @desc      Get Event Ticket By ID
 // @route     GET /api/v1/tickets/:id
@@ -106,23 +96,6 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
    }
 
 })
-
-export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-   const id = request.params.id;
-   const ticket = await Ticket.findById(id);
-
-   let REQUEST_URI = `http://events-service:5301/api/events/${ticket.event}`
-   
-   const events = await axios.get(REQUEST_URI);
-   return response.status(StatusCodes.OK).json({success: true, data: events.data});
-})
-
-export const fetchTicketIssuerDetails = asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
-   const id = request.params.id;
-   const ticket = await Ticket.findById(id);
-
-   let ISSUER_URI = `http://`
-}) 
 
 // @desc      Edit Ticket By ID
 // @route     POST /api/v1/tickets/:ticketId

@@ -20,10 +20,12 @@ services:
 
     networks:
       - my-service-network
+      - ethertix-api-gateway-service-network
       - ethertix-auth-service-network
       - ethertix-events-service-network
       - ethertix-discounts-service-network
       - ethertix-venues-service-network
+      - ethertix-tickets-service-network
 
   auth-service:
     container_name: ethertix-auth-service
@@ -102,6 +104,14 @@ services:
     container_name: ethertix-tickets-service
     image: sabin2000/ethertix-tickets-service
 
+    networks:
+      - my-service-network
+      - ethertix-api-gateway-service-network
+      - ethertix-auth-service-network
+      - ethertix-events-service-network
+      - ethertix-discounts-service-network
+      - ethertix-venues-service-network
+
     build:
       context: ../backend/services/tickets
       dockerfile: Dockerfile
@@ -114,9 +124,6 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/tickets:/app
-
-    networks:
-      - my-service-network
 
   discount-service:
 
@@ -172,5 +179,13 @@ networks:
     external: true
 
   ethertix-venues-service-network:
+    driver: bridge
+    external: true
+
+  ethertix-tickets-service-network:
+    driver: bridge
+    external: true
+
+  ethertix-api-gateway-service-network:
     driver: bridge
     external: true
