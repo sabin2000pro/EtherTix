@@ -25,12 +25,12 @@ const Login = () => {
     try {
       const response = await login(Creds);
 
-      if (response.data.success === true) {
+      if (response.success === true) {
         navigate("/", {
           state: { token: response.token, user: response.user },
         });
       } else {
-        return response.data;
+        return response;
       }
     } catch (err: any) {
       if (err) {
@@ -42,7 +42,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="image-container"></div>
-      <h1 className="heading-primary">Log In</h1>
+      <h1 className="heading-primary">Welcome to EtherTix</h1>
       <form onSubmit={handleSubmit} method="POST">
         <div className="email-container">
           <label htmlFor="email-login">Enter Email:</label>
