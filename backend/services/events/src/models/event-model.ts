@@ -14,6 +14,7 @@ interface EventAttributes { // Interface for the event attributes
     hasSeating: boolean;
     event_logo: string;
     capacity: number;
+    salesStatus: string;
     isSoldOut: boolean;
     reservedSeating: boolean;
     eventStatus: string;
@@ -40,6 +41,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     reservedSeating: boolean;
     isSoldOut: boolean;
     hasSeating: boolean;
+    salesStatus: string;
     eventStatus: string;
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
@@ -147,17 +149,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
         required: [true, "Please specify the sales status of the event."]
     },
-
-        salesStart: { // Start date of event ticket sales
-            type: Date,
-            default: Date.now
-        },
-
-        salesEnd: { // The date at which the event ticket sales end
-            type: Date,
-            default: Date.now
-        },
-
+    
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
