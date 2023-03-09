@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
-type Ticket = {
+type Ticket = 
+{
   id: number;
   name: string;
   price: number;
@@ -71,8 +72,6 @@ function getTotalPrice() {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const totalPrice = getTotalPrice();
-  const totalPriceEth = totalPrice / ethPrice;
 }
 
 const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -97,10 +96,11 @@ function calculateEthPrice(price: number) {
 }
 
 return (
-
-  
   <>
-
+  
+   <div className="eth-price">
+        <span>Current ETH Price:</span> ${ethPrice.toFixed(2)}
+    </div>
     <div className = "cart">
 
       <h2 className = "cart__heading">Your Cart</h2>
@@ -137,7 +137,8 @@ return (
 
           ))}
           <div className="cart__total">
-            Total Cost: ${getTotalPrice().toFixed(2)} (${(getTotalPrice() / ethPrice).toFixed(6)} ETH)</div>
+            Total Cost: ${getTotalPrice().toFixed(2)} (${(getTotalPrice() / ethPrice).toFixed(6)} ETH)
+            </div>
             <button className="cart__remove-all" onClick={() => setCart({})}>Remove All</button>
         </>
       )}
