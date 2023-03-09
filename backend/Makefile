@@ -33,3 +33,10 @@ build-frontend:
 
 show-docker-images:
 	- docker image ls
+
+create-networks:
+	- docker create ethertix-auth-service-network
+	- docker create ethertix-discounts-service-network
+	- docker create ethertix-events-service-network
+	- docker create ethertix-venues-service-network
+	

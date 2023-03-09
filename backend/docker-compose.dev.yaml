@@ -22,6 +22,8 @@ services:
       - my-service-network
       - ethertix-auth-service-network
       - ethertix-events-service-network
+      - ethertix-discounts-service-network
+      - ethertix-venues-service-network
 
   auth-service:
     container_name: ethertix-auth-service
@@ -162,5 +164,13 @@ networks:
     external: true
 
   ethertix-events-service-network:
+    driver: bridge
+    external: true
+
+  ethertix-discounts-service-network:
+    driver: bridge
+    external: true
+
+  ethertix-venues-service-network:
     driver: bridge
     external: true
