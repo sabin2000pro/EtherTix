@@ -1,9 +1,8 @@
 require('dotenv').config();
 import connectEventDatabase from './database/event-db';
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, {Response, NextFunction } from "express";
 import morgan from "morgan"
 import hpp from "hpp"
-import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { StatusCodes } from 'http-status-codes';
