@@ -1,13 +1,13 @@
 require('dotenv').config();
 import connectEventDatabase from './database/event-db';
-import express, {Response, NextFunction } from "express";
+import express, {NextFunction } from "express";
 import morgan from "morgan"
 import hpp from "hpp"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { StatusCodes } from 'http-status-codes';
 import {eventRouter} from './routes/event-routes';
-import { eventsErrorHandler } from './middlewares/error-handler';
+import {errorHandler} from './middlewares/error-handler';
 
 const app: any = express();
 
@@ -28,13 +28,8 @@ app.use(cors({
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
 
-
-app.get("/", (request: any, response: any) => {
-    return response.json({message: "Events Service - Root Route", success: true })
-});
-
 app.use('/api/v1/events', eventRouter);
-app.use(eventsErrorHandler)
+app.use(errorHandler)
 
 app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
     return response.status(StatusCodes.NOT_FOUND).json({success: false, message: `The route you are trying to access cannot be found on the server, please try again later`});

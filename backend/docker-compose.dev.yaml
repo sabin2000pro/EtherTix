@@ -19,7 +19,7 @@ services:
       - ../backend/services/api-gateway:/app
 
     networks:
-    
+
       - my-service-network
 
   auth-service:
@@ -154,3 +154,12 @@ volumes:
 networks:
   my-service-network:
     driver: bridge
+    external: true
+
+  ethertix-auth-service-network:
+    driver: bridge
+    external: true
+
+  ethertix-events-service-network:
+    driver: bridge
+    external: true

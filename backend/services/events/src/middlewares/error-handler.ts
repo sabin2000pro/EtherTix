@@ -1,4 +1,5 @@
+import { NextFunction, Response } from 'express';
 
-export const eventsErrorHandler = (err, request, response, next) => {
-    
+export const errorHandler = (err, request: any, response: Response, next: NextFunction) => {
+
 }
