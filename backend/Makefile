@@ -38,8 +38,12 @@ show-docker-images:
 	- docker image ls
 
 create-networks:
-	- docker create ethertix-auth-service-network
-	- docker create ethertix-discounts-service-network
-	- docker create ethertix-events-service-network
-	- docker create ethertix-venues-service-network
+	- docker network create api-gateway-service
+	- docker network create discounts-service
+	- docker network create my-service-network
+	- docker network create auth-service
+	- docker network create events-service
+	- docker network create venues-service
+	- docker network create tickets-service
+	- docker network create categories-service
 	
