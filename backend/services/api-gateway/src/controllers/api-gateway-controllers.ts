@@ -5,10 +5,11 @@ import {Response, NextFunction} from 'express';
 
 export const fetchUserBookedEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const user  = await axios.get(`http://ethertix-auth-service:5299/api/v1/auth/me`, {headers: {Authorization: request.headers.authorization}}) // First get the currently logged in user, create a user object to be used in the GET events service request
-        const data = user.data;
-    
-        console.log(data);
+        const userData = user.data;
 
+        console.log(`User Data : `, userData);
+
+        // Create new request to send a GET request to the events
         return response.status(StatusCodes.OK).json({success: true, message: "User booked events here"});
 
     } 
@@ -25,9 +26,7 @@ export const fetchTicketEventDetails = asyncHandler(async (request: any, respons
     const eventDetails = await axios.get(`http://events-service:5301/api/v1/events/${ticketData.ticket.event}`, {headers: {Authorization: request.headers.authorization}});
     const eventData = eventDetails.data;
 
-    console.log(`Ticket Data : `, ticketData);
-
-    return response.status(StatusCodes.OK).json({success: true, data: ticketData});
+    return response.status(StatusCodes.OK).json({success: true, data: eventData});
 
 })
 
