@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 interface ITicketAttributes { // Interface that stores the ticket data
     name: string,
-    ticketClass: String,
-    ticketToken: String,
+    ticketClass: string,
+    ticketToken: string,
     stock: number,
     quantityPurchase: string,
     description: string,
     cost: number,
-    deliveryMethods: String,
+    deliveryMethods: string,
     onSaleStatus: string,
     ticketSold: boolean
     saleStartsAt: Date,
