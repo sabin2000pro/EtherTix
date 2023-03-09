@@ -29,11 +29,13 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
     }
 
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
+        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category } = request.body;
 
-        request.body.organiser = request.user.id;
-        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, ticket, category } = request.body;
+        if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !slotsAvailable || !reservedSeating || !salesStatus || !venue || !organiser || !ticket || !category) {
+            return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
+        }
 
-        const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, ticket, category});
+        const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
         await event.save();
 
         return response.status(StatusCodes.CREATED).json({success: true, event});
@@ -51,13 +53,12 @@ export const editEventByID = async (request: any, response: any, next: NextFunct
 
         event = await Event.findByIdAndUpdate(id, request.body, {new: true, runValidators: true});
         return response.status(StatusCodes.OK).json({success: true, event});
-
     }
     
 
 export const deleteEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-
+    await Event.deleteMany();
+    return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Events Deleted"})
 })
 
 export const deleteEventByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
