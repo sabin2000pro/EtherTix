@@ -1,38 +1,18 @@
 import mongoose from "mongoose";
 interface EventAttributes { // Interface for the event attributes
-    name: string
+    name: string;
     summary: string;
     description: string;
-    event_url: string;
     startAt: Date;
-    endsAt: Date;
+    slug: string;
     createdAt: Date;
     changedAt: Date;
-    publishedAt: Date;
-    eventStatus: string;
-    currency: string;
-    isOnline: boolean; // True or false if the event is online
-    event_logo: string;
-    eventLocation: string;
+    endsAt: Date;    
+    event_url: string;
     format: string;
-    capacity: number;
-    slotsAvailable: boolean;
-    hasSeating: boolean;
-    slug: string;
-    isSoldOut: boolean;
-    searchable: boolean;
-    averageRating: number;
-    averageCost: number
-    hideStartDate: boolean;
-    hideEndDate: boolean;
-    isLocked: boolean;
-    isFree: boolean;
-    isPremium: boolean;
-    salesStatus: string,
-    eventSchedule: any,
-    isTrending: boolean;
-    salesStart: Date,
-    salesEnd: Date
+    event_logo: string;
+    eventStatus: string;
+
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
@@ -43,40 +23,15 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
     description: string;
-    event_url: string;
     startAt: Date;
+    slug: string;
     endsAt: Date;
     createdAt: Date;
-    publishedAt: Date;
-    changedAt: Date;
-    eventStatus: string;
-    hasSeating: boolean;
-    currency: string;
     event_logo: string;
-    slug: string;
-    averageRating: number;
-    averageCost: number
-    isOnline: boolean;
-    format: string;
-    capacity: number;
-    eventLocation: string;
-    eventSchedule: any;
-    minCapacity: number;
-    slotsAvailable: boolean;
-    hasAvailableTickets: boolean;
-    isSoldOut: boolean;
-    searchable: boolean;
-    hideStartDate: boolean;
-    hideEndDate: boolean;
-    isLocked: boolean;
-    reservedSeating: boolean;
-    isFree: boolean;
-    salesStatus: string;
-    salesStart: Date;
-    salesEnd: Date;
-    isPremium: boolean;
-    likes: [];
-    followers: [];
+    changedAt: Date;
+    format: string
+    event_url: string;
+    eventStatus: string;
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
     venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
