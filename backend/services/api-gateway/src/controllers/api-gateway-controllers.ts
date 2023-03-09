@@ -22,11 +22,12 @@ export const fetchTicketEventDetails = asyncHandler(async (request: any, respons
     const ticketEventDetails = await axios.get(`http://ethertix-tickets-service:5303/api/tickets/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
     const ticketData = ticketEventDetails.data;
 
+    const eventDetails = await axios.get(`http://ethertix-events-service:5301/api/v1/events/${ticketData.event}`, {headers: {Authorization: request.headers.authorization}});
+    const eventData = eventDetails.data;
+
     console.log(`Ticket Data : `, ticketData);
-    // let REQUEST_URI = `http://events-service:5301/api/v1/events/${ticket.event}`
-    
-    // const events = await axios.get(REQUEST_URI);
-    return response.status(StatusCodes.OK).json({success: true, data: ticketEventDetails});
+
+    return response.status(StatusCodes.OK).json({success: true, data: ticketData});
 
 })
 

@@ -20,12 +20,11 @@ services:
 
     networks:
       - my-service-network
-      - ethertix-api-gateway-service-network
-      - ethertix-auth-service-network
-      - ethertix-events-service-network
-      - ethertix-discounts-service-network
-      - ethertix-venues-service-network
-      - ethertix-tickets-service-network
+      - auth-service
+      - events-service
+      - categories-service
+      - venues-service
+      - tickets-service
 
   auth-service:
     container_name: ethertix-auth-service
@@ -106,11 +105,11 @@ services:
 
     networks:
       - my-service-network
-      - ethertix-api-gateway-service-network
-      - ethertix-auth-service-network
-      - ethertix-events-service-network
-      - ethertix-discounts-service-network
-      - ethertix-venues-service-network
+      - api-gateway-service
+      - auth-service
+      - events-service
+      - discounts-service
+      - venues-service
 
     build:
       context: ../backend/services/tickets
@@ -166,26 +165,26 @@ networks:
     driver: bridge
     external: true
 
-  ethertix-auth-service-network:
+  auth-service:
     driver: bridge
     external: true
 
-  ethertix-events-service-network:
+  events-service:
     driver: bridge
     external: true
 
-  ethertix-discounts-service-network:
+  discounts-service:
     driver: bridge
     external: true
 
-  ethertix-venues-service-network:
+  venues-service:
     driver: bridge
     external: true
 
-  ethertix-tickets-service-network:
+  tickets-service:
     driver: bridge
     external: true
 
-  ethertix-api-gateway-service-network:
+  api-gateway-service:
     driver: bridge
     external: true
