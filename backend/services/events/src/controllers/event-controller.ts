@@ -1,48 +1,29 @@
+import { isValidObjectId } from 'mongoose';
 import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
+import asyncHandler from 'express-async-handler';
 
-export const fetchAllEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const events = await Event.find()
-        return response.status(StatusCodes.OK).json(events);
-    } 
-
-export const fetchTotalEvents = async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const events = await Event.countDocuments({});
-        return response.status(StatusCodes.OK).json({success: true, count: events});
-    }
-
-
+export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const events = await Event.find()
+    return response.status(StatusCodes.OK).json(events);
+})
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    try {
 
-        const eventId = request.params.eventId;
-        let event = await Event.findById(eventId)
+        const id = request.params.id;
+        const event = await Event.findById(id)
 
         if(!event) {
-           return next(new ErrorResponse(`No event with that ID : ${eventId} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
+           return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }
 
         return response.status(StatusCodes.OK).json({success: true, event});
 
     }
-    
-    catch(error) {
-
-        if(error) {
-            return next(error);
-        }
-
-    }
-
-
-}
 
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
-    try {    
 
         request.body.user = request.user.id;
         const event = await Event.create(request.body);
@@ -52,15 +33,6 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
 
     }    
     
-    catch(error) {
-        
-        if(error) {
-           return next(error);
-        }
-
-    }
-
-}
 
 export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 

@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
 interface ITicketAttributes { // Interface that stores the ticket data
-    name: String,
+    name: string,
     ticketClass: String,
     ticketToken: String,
-    stock: Number,
-    quantityPurchase: String,
-    description: String,
+    stock: number,
+    quantityPurchase: string,
+    description: string,
     cost: number,
     deliveryMethods: String,
-    onSaleStatus: String,
+    onSaleStatus: string,
     ticketSold: boolean
     saleStartsAt: Date,
     saleEndsAt: Date,
