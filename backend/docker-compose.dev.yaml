@@ -19,8 +19,9 @@ services:
       - ../backend/services/api-gateway:/app
 
     networks:
-
       - my-service-network
+      - ethertix-auth-service-network
+      - ethertix-events-service-network
 
   auth-service:
     container_name: ethertix-auth-service
