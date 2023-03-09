@@ -1,7 +1,7 @@
 import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCESS, FETCH_SINGLE_TICKET_FAIL } from './../constants/ticket-constants';
 
 const initialTicketsState = {
-    tickets: []
+    tickets: [] // Initial state for the tickets
 }
 
 const singleTicketState = {

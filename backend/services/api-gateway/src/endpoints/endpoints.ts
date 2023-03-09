@@ -1,0 +1,1 @@
+export const EVENTS_SERVICE_ENDPOINT = `http://events-service`
