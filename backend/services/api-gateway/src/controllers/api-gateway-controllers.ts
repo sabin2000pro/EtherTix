@@ -4,8 +4,9 @@ import asyncHandler from 'express-async-handler';
 import {Response, NextFunction} from 'express';
 
 export const fetchUserBookedEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const user  = await axios.get(`http://auth-service:5299/api/v1/auth/me`, {headers: {Authorization: request.headers.authorization}}) // First get the currently logged in user, create a user object to be used in the GET events service request
+        const user  = await axios.get(`http://auth-service:5299/api/auth/me`, {headers: {Authorization: request.headers.authorization}}) // First get the currently logged in user, create a user object to be used in the GET events service request
         const userData = user.data;
+        request.user = {_id: userData.user._id, email: userData.user.email}
 
         console.log(`User Data : `, userData);
 

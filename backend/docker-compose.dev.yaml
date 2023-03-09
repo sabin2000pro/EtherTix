@@ -43,6 +43,7 @@ services:
 
     networks:
       - my-service-network
+      - api-gateway-service
 
   events-service:
       container_name: ethertix-events-service

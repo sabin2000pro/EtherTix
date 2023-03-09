@@ -6,6 +6,7 @@ import helmet from "helmet"
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { apiGatewayRouter } from "./routes/api-gateway-routes";
+import { errorHandler } from "./middleware/error-handler";
 
 const app: any = express();
 
@@ -26,6 +27,7 @@ app.use(cors({
 
 // Mount the API gateway routes
 app.use('/api/v1/api-gateway', apiGatewayRouter);
+app.use(errorHandler);
 
 app.use(helmet());
 
