@@ -19,7 +19,6 @@ interface EventAttributes { // Interface for the event attributes
     slotsAvailable: boolean;
     hasSeating: boolean;
     slug: string;
-    hasAvailableTickets: boolean;
     isSoldOut: boolean;
     searchable: boolean;
     averageRating: number;
@@ -34,9 +33,6 @@ interface EventAttributes { // Interface for the event attributes
     isTrending: boolean;
     salesStart: Date,
     salesEnd: Date
-    likes: [],
-    followers: [],
-    bookmarks: [],
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
@@ -140,7 +136,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
-    
+
     event_logo: {
         type: String,
         default: 'no-photo.jpg'
@@ -177,75 +173,22 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify if there are any available slots left for this event"]
     },
 
-    isPremium: {
-        type: Boolean,
-        required: [true, "Please specify if the event is premium or not"],
-        default: false
-    },
-
-    hasAvailableTickets: {
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if this event has available tickets"]
-    },
-
-    isLocked: { // True or false if the event is locked or not. If the event is locked, then disable the button to view available times
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event is locked or not"]
-    },
-
     isSoldOut: { // Field that determines if the event is sold out or not
         type: Boolean,
         default: false,
-        required: [true, "Please specify if the event is sold out or not"]
     },
 
-    searchable: {
+    reservedSeating: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify if this event is searchable or not"]
+        required: [true, "Please specify if this event has reserved seating or not"]
+     },
+
+    salesStatus: {
+        type: String,
+        enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
+        required: [true, "Please specify the sales status of the event."]
     },
-
-    hideStartDate: { // Field that shows when an event starts or not
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event should show when it starts or not"]
-    },
-
-    averageRating: {
-        type: Number,
-        default: 0
-    },
-
-    averageCost: {
-        type: Number,
-        default: 0
-    },
-
-    hideEndDate: { // Field that shows when an event starts or not
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event should show when it ends or not"]
-    },
-
-        isFree: { // If the event is free or not
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if the event is free or not"]
-        },
-
-        reservedSeating: {
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if this event has reserved seating or not"]
-        },
-
-        salesStatus: {
-            type: String,
-            enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
-            required: [true, "Please specify the sales status of the event."]
-        },
 
         salesStart: { // Start date of event ticket sales
             type: Date,
@@ -256,9 +199,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
             type: Date,
             default: Date.now
         },
-
-        likes: [],
-        followers: [],
 
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,

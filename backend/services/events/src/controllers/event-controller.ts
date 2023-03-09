@@ -31,7 +31,7 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         request.body.user = request.user.id;
-        const {name, summary, description, startAt, endsAt, } = request.body;
+        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, } = request.body;
         const event = await Event.create(request.body);
         await event.save();
 
