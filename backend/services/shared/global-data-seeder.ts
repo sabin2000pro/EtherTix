@@ -51,8 +51,6 @@ export const loadAllData = async (): Promise<any> => {
 
 export const removeAllData = async (): Promise<any> => {
 
-    let dataRemoved = false;
-
     try {
 
         await User.remove();
@@ -60,9 +58,7 @@ export const removeAllData = async (): Promise<any> => {
         await Ticket.remove();
         await Venue.remove();
 
-        dataRemoved = (!dataRemoved) as boolean;
-
-        console.log(`Data removed from the database.`);
+        console.log(`All the services data removed from the schemas.`);
 
         return process.exit(1);
     } 
