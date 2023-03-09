@@ -9,10 +9,14 @@ interface EventAttributes { // Interface for the event attributes
     changedAt: Date;
     endsAt: Date;    
     event_url: string;
+    isOnline: boolean
     format: string;
+    hasSeating: boolean;
     event_logo: string;
+    capacity: number;
+    isSoldOut: boolean;
+    reservedSeating: boolean;
     eventStatus: string;
-
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
@@ -30,7 +34,12 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     event_logo: string;
     changedAt: Date;
     format: string
+    isOnline: boolean;
+    capacity: number;
     event_url: string;
+    reservedSeating: boolean;
+    isSoldOut: boolean;
+    hasSeating: boolean;
     eventStatus: string;
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
@@ -120,12 +129,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: Boolean,
         required: [true, "Please specify if the event has seating or not"],
         default: false
-    },
-
-    slotsAvailable: {
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if there are any available slots left for this event"]
     },
 
     isSoldOut: { // Field that determines if the event is sold out or not
