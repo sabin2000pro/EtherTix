@@ -2,7 +2,6 @@ import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
 import asyncHandler from 'express-async-handler'
-import axios from 'axios'
 import { ErrorResponse } from '../utils/error-response';
 
 // @desc      Fetch All Tickets
@@ -101,7 +100,8 @@ export const deleteTicketByID = async (request: any, response: any, next: NextFu
 }
 
 export const fetchPremiumTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
+   const premiumTickets = await Ticket.find({ticketClass: "premium"})
+   return response.status(StatusCodes.OK).json({success: true, premiumTickets})
 }
 
 export const fetchBasicTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -117,7 +117,8 @@ export const fetchBasicTickets = asyncHandler(async (request: any, response: any
 })
 
 export const fetchStandardTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
+    const standardTickets = await Ticket.find({ticketClass: "standard"})
+    return response.status(StatusCodes.OK).json({success: true, standardTickets})
 }
 
 export const fetchVipTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
