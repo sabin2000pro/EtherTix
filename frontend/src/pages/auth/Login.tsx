@@ -16,11 +16,8 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginCredentials>();
+  const {register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginCredentials>();
+
 
   const onSubmit = async (credentials: LoginCredentials) => {
     try {
@@ -31,7 +28,9 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
       //} else {
       //return response;
       //}
-    } catch (err: any) {
+    } 
+    
+    catch (err: any) {
       if (err) {
         setErrorText(err);
         alert(err);
@@ -46,15 +45,19 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
   return (
     <Modal show onHide={onDismiss} centered>
+
       <Modal.Header closeButton>
         <Container className="text-center">
           <Modal.Title>Welcome Back</Modal.Title>
         </Container>
+
       </Modal.Header>
 
       <Modal.Body>
+
         {errorText && <Alert variant="danger">{errorText}</Alert>}
         <Form onSubmit={handleSubmit(onSubmit)}>
+
           <Container className="text-left">
             <TextInputField
               name="email"
@@ -66,6 +69,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
               error={errors.username}
               autoFocus
             />
+
             <TextInputField
               name="password"
               label="Password"
