@@ -711,6 +711,8 @@ export const fetchLockedUserAccounts = asyncHandler(async (request: any, respons
 
 export const fetchAllUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
+    try {
+
         const users = await User.find();
 
         if(!users) {
@@ -721,7 +723,16 @@ export const fetchAllUsers = asyncHandler(async (request: any, response: any, ne
     
     }
     
-)
+    catch(error: any) {
+
+        if(error) {
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
+        }
+
+
+    }
+
+})
 
 export const fetchUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
