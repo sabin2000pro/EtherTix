@@ -16,7 +16,18 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
   return configData;
 });
 
-export const registerUser = async (registerPayload: any): Promise<any> => {
+export interface registerCredentials {
+  forename: string;
+  surname: string;
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export const registerUser = async (
+  registerPayload: registerCredentials
+): Promise<any> => {
   try {
     const response = await axios.post(
       "http://localhost:5299/api/auth/register",
@@ -27,7 +38,7 @@ export const registerUser = async (registerPayload: any): Promise<any> => {
     return data;
   } catch (err: any) {
     if (err) {
-      return console.error(err);
+      throw err;
     }
   }
 };
@@ -81,7 +92,7 @@ export const login = async (loginPayload: LoginCredentials): Promise<any> => {
     return data;
   } catch (err: any) {
     if (err) {
-      return console.error(err);
+      throw err;
     }
   }
 };
@@ -105,10 +116,10 @@ export const getUser = async (): Promise<any> => {
     return data;
   } catch (err: any) {
     if (err) {
-      return console.error(err);
+      throw err;
     }
   }
-}
+};
 
 export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
   try {

@@ -48,7 +48,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
     <Modal show onHide={onDismiss} centered>
       <Modal.Header closeButton>
         <Container className="text-center">
-          <Modal.Title>Welcome to EtherTix</Modal.Title>
+          <Modal.Title>Welcome Back</Modal.Title>
         </Container>
       </Modal.Header>
 
@@ -67,7 +67,6 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
               autoFocus
             />
             <TextInputField
-              id="psswd"
               name="password"
               label="Password"
               type={showPassword ? "text" : "password"}

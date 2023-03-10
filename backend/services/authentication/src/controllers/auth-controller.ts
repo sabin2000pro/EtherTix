@@ -127,7 +127,8 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
-        console.log(`Your OTP : `, userOTP);
+        console.log(`Your User ID: `, user.id);
+        console.log(`Your OTP: `, userOTP);
 
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP

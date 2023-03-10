@@ -44,7 +44,7 @@ const App = () => {
         console.error(error);
       }
     }
-    fetchLoggedInUser();
+    //fetchLoggedInUser();
   }, []);
 
   //_tokenName: string, _tokenClass: string,  _tokenPrice: number, _tokenCapacity: number
@@ -81,7 +81,7 @@ const App = () => {
             element={<ResetPassword />}
           />
           <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
+          {/* <Route path="/register" element={<Register />} /> */}
           {/* <Route path = '/login' element = {<Login />} /> */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -94,15 +94,15 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>
-      {/* {showSignUpModal && (
-        <SignUpModal
+      {showSignUpModal && (
+        <Register
           onDismiss={() => setShowSignUpModal(false)}
           onSignUpSuccessful={(user) => {
             setLoggedInUser(user);
             setShowSignUpModal(false);
           }}
         />
-      )} */}
+      )}
       {showLoginModal && (
         <Login
           onDismiss={() => setShowLoginModal(false)}
