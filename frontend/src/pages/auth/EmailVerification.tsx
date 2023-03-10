@@ -30,7 +30,7 @@ const EmailVerification: React.FC = () => {
       const userId = localStorage.getItem("UserID");
       setOTP({ ...OTP, userID: userId as any });
     };
-    fetchUserId();
+    //fetchUserId();
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +102,7 @@ const EmailVerification: React.FC = () => {
 
       if (response.data.message === "E-mail Verification Re-sent") {
         resendButton(30000);
-        alert("E-mail Verification Re-sent");
+        alert("A new one-time password has been sent to your email");
 
         // Create an alert component with a green success background
       }
@@ -116,10 +116,10 @@ const EmailVerification: React.FC = () => {
     <div className="verify-container">
       <br />
       <h1 className="inputHeading">
-        Please enter the one time password to verify your account
+        Please verify your account
       </h1>
       <br />
-      <h4 className="inputHeading">A code has been sent to {userEmail}</h4>
+      <h4 className="inputHeading">A one-time password has been sent to {userEmail}</h4>
       <br />
       <br />
       <form onSubmit={handleSubmit} method="POST">

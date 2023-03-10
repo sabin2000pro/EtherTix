@@ -1,82 +1,140 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { login } from "api/auth/auth-api";
-import { useNavigate } from "react-router-dom";
+import { login, LoginCredentials } from "api/auth/auth-api";
+import { User } from "../../models/user";
+import { useForm } from "react-hook-form";
+import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
+import TextInputField from "../../components/form/TextInputField";
 
-type LoginProps = {};
-
+interface LoginModalProps {
+  onDismiss: () => void;
+  onLoginSuccessful: (user: User) => void;
+}
 
 // @description: Login Component
-const Login = () => {
-  const navigate = useNavigate();
+const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
+  const [errorText, setErrorText] = useState<string | null>(null);
 
-  const [Creds, setCreds] = useState({
-    email: "",
-    password: "",
-  });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCreds({ ...Creds, [event.target.name]: event.target.value });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginCredentials>();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const onSubmit = async (credentials: LoginCredentials) => {
     try {
-      const response = await login(Creds);
+      const response = await login(credentials);
 
-      if (response.success === true) {
-        navigate("/", {
-          state: { token: response.token, user: response.user },
-        });
-      } else {
-        return response;
-      }
+      //if (response.success === true) {
+      onLoginSuccessful(response);
+      //} else {
+      //return response;
+      //}
     } catch (err: any) {
       if (err) {
-        return console.error(err);
+        setErrorText(err);
+        alert(err);
       }
+      console.error(err);
     }
   };
 
+  const togglePassVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className="login-container">
-      <div className="image-container"></div>
-      <h1 className="heading-primary">Welcome to EtherTix</h1>
-      <form onSubmit={handleSubmit} method="POST">
-        <div className="email-container">
-          <label htmlFor="email-login">Enter Email:</label>
-          <br />
-          <input
-            type="text"
-            name="email"
-            id="email-login"
-            value={Creds.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="password-container">
-          <label htmlFor="password">Password</label>
-          <br />
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={Creds.password}
-            onChange={handleChange}
-          />
-        </div>
-        <br />
-        <div className="span-container">
-          <span>
-            Don't have an account? - <a href="/register">Register Here</a>{" "}
-          </span>
-        </div>
-        <button className="login-btn" type="submit">
-          Log-in
-        </button>
-      </form>
-    </div>
+    <Modal show onHide={onDismiss} centered>
+      <Modal.Header closeButton>
+        <Container className="text-center">
+          <Modal.Title>Welcome Back</Modal.Title>
+        </Container>
+      </Modal.Header>
+
+      <Modal.Body>
+        {errorText && <Alert variant="danger">{errorText}</Alert>}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Container className="text-left">
+            <TextInputField
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="Email"
+              register={register}
+              registerOptions={{ required: "Required" }}
+              error={errors.username}
+              autoFocus
+            />
+            <TextInputField
+              name="password"
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              register={register}
+              registerOptions={{ required: "Required" }}
+              error={errors.password}
+            />
+            <Form.Check
+              style={{ marginBottom: "15px" }}
+              type="checkbox"
+              label={showPassword ? "Hide Password" : "Show password"}
+              checked={showPassword}
+              onChange={togglePassVisibility}
+            />
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-100"
+              variant="primary"
+            >
+              Log In
+            </Button>
+            <Button variant="link" href="/forgot-password" className="w-100">
+              Forgot your password?
+            </Button>
+          </Container>
+        </Form>
+      </Modal.Body>
+    </Modal>
+
+    // <div className="login-container">
+    //   <div className="image-container"></div>
+    //   <h1 className="heading-primary">Welcome to EtherTix</h1>
+    //   <form onSubmit={handleSubmit(onSubmit)} >
+    //     <div className="email-container">
+    //       <label htmlFor="email-login">Enter Email:</label>
+    //       <br />
+    //       <input
+    //         type="text"
+    //         name="email"
+    //         id="email-login"
+    //         value={Creds.email}
+    //         onChange={handleChange}
+    //       />
+    //     </div>
+    //     <div className="password-container">
+    //       <label htmlFor="password">Password</label>
+    //       <br />
+    //       <input
+    //         type="password"
+    //         name="password"
+    //         id="password"
+    //         value={Creds.password}
+    //         onChange={handleChange}
+    //       />
+    //     </div>
+    //     <br />
+    //     <div className="span-container">
+    //       <span>
+    //         Don't have an account? - <a href="/register">Register Here</a>{" "}
+    //       </span>
+    //     </div>
+    //     <button className="login-btn" type="submit">
+    //       Log-in
+    //     </button>
+    //   </form>
+    // </div>
   );
 };
 

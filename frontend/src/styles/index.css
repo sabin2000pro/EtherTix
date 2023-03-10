@@ -214,7 +214,7 @@ html {
 }
 
 .image-container {
-    background-image: url('../public/images/imgevent.jpg');
+    background-image: url('../../public/images/imgevent.jpg');
     background-size: cover;
     width: 52%;
     height: 100%;

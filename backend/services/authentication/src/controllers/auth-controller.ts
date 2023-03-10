@@ -127,7 +127,8 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
         await verificationToken.save();
 
-        console.log(`Your OTP : `, userOTP);
+        console.log(`Your User ID: `, user.id);
+        console.log(`Your OTP: `, userOTP);
 
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
@@ -495,7 +496,7 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
 export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
-        const user = request.user;
+        const user = await User.findOne(request.user.email);
         return response.status(StatusCodes.OK).json({success: true, user});
     } 
     
