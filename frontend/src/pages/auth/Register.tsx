@@ -28,9 +28,9 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
   async function onSubmit(credentials: registerCredentials) {
     try {
       const newUser = await registerUser(credentials);
-      onSignUpSuccessful(newUser);
+      onSignUpSuccessful(newUser.user);
       navigate("/verify-email", {
-        state: { email: credentials.email },
+        state: { email: credentials.email, _id: newUser.user._id},
       });
     } catch (error: any) {
       if (error) {

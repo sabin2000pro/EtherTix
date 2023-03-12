@@ -1,4 +1,4 @@
-import NavBar from "components/NavBar";
+import NavBar from "components/Navbar";
 import Home from "pages/Home";
 import EmailVerification from "pages/auth/EmailVerification";
 import ForgotPassword from "pages/auth/ForgotPassword";
@@ -38,13 +38,13 @@ const App = () => {
   useEffect(() => {
     async function fetchLoggedInUser() {
       try {
-        const user = await getUser();
-        setLoggedInUser(user);
+        const response = await getUser();
+        setLoggedInUser(response.user);
       } catch (error) {
         console.error(error);
       }
     }
-    //fetchLoggedInUser();
+    fetchLoggedInUser();
   }, []);
 
   //_tokenName: string, _tokenClass: string,  _tokenPrice: number, _tokenCapacity: number
