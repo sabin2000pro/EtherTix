@@ -22,9 +22,10 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
   const onSubmit = async (credentials: LoginCredentials) => {
     try {
       const response = await login(credentials);
+      console.log(response);
 
       //if (response.success === true) {
-      onLoginSuccessful(response);
+      onLoginSuccessful(response.user);
       //} else {
       //return response;
       //}

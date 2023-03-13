@@ -17,7 +17,7 @@ const EmailVerification: React.FC = () => {
     otp4: "",
     otp5: "",
     otp6: "",
-    userID: "",
+    userId: "",
   });
 
   const [buttonState, setButtonState] = useState({
@@ -27,10 +27,10 @@ const EmailVerification: React.FC = () => {
 
   useEffect(() => {
     const fetchUserId = () => {
-      const userId = localStorage.getItem("UserID");
-      setOTP({ ...OTP, userID: userId as any });
+      const userId = location.state._id;
+      setOTP({ ...OTP, userId: userId});
     };
-    //fetchUserId();
+    fetchUserId();
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,8 +78,8 @@ const EmailVerification: React.FC = () => {
       const response = await verifyEmailAddress(OTP);
       console.table(response);
 
-      if (response.data.message === "E-mail Address verified") {
-        navigate("/login");
+      if (response.message === "E-mail Address verified") {
+        navigate("/");
       } else {
         alert("Wrong OTP, try again");
         setTimeout(() => {
