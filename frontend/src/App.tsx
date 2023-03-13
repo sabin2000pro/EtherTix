@@ -7,28 +7,16 @@ import Register from "pages/auth/Register";
 import ResetPassword from "pages/auth/ResetPassword";
 import UpdatePassword from "pages/auth/UpdatePassword";
 import UpdateProfile from "pages/auth/UpdateProfile";
-import React, { useContext, useEffect, useState } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import NotFound from "pages/NotFound";
 import CartPage from "pages/CartPage";
-import { Web3Context } from "context/Web3Context";
-import MintToken from "pages/nfts/MintToken";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAllTickets } from "./actions/ticket-actions";
 import { User } from "./models/user";
 import { getUser } from "./api/auth/auth-api";
 import { Container } from "react-bootstrap";
 
-interface TicketState {
-  tickets: any;
-}
 
 const App = () => {
-  // Push to github recent changes
-  const { connectMetaMaskWallet, initialiseNftContract } =
-    useContext(Web3Context);
-  const dispatch = useDispatch();
-  const { tickets } = useSelector((state: TicketState) => state.tickets);
 
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
@@ -47,25 +35,8 @@ const App = () => {
     fetchLoggedInUser();
   }, []);
 
-  //_tokenName: string, _tokenClass: string,  _tokenPrice: number, _tokenCapacity: number
-
-  const handleMintNFT = async () => {
-    const currentAccount = await connectMetaMaskWallet();
-    const currentContract = await initialiseNftContract();
-
-    const mintedToken = await currentContract.methods
-      .mintToken("test", "test", 1, 1)
-      .send({ from: currentAccount.currentAccount[0] as unknown as any });
-
-    console.log(`The token you minted : `, mintedToken);
-    return mintedToken;
-  };
-
   return (
     <>
-      {/* <MintToken mintNFT = {handleMintNFT} /> */}
-
-      <button onClick={handleMintNFT}>Mint Test NFT</button>
 
       <NavBar
         loggedInUser={loggedInUser}
