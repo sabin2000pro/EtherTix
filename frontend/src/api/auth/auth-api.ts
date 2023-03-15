@@ -154,7 +154,7 @@ export const forgotPassword = async (forgotPasswordPayload: {
 };
 
 export const resetPassword = async (
-  resetPasswordPayload: Object
+  resetPasswordPayload: {resetToken: string; newPassword: string}
 ): Promise<any> => {
   try {
     const response = await axios.post(
