@@ -226,7 +226,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 
 export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-        const {userId, OTP} = request.body;
+        const {userId} = request.body;
         const currentUser = await User.findById(userId);
 
         if(!currentUser) { // If we have no current user
@@ -235,10 +235,6 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 
         if(!isValidObjectId(userId)) {
             return next(new ErrorResponse("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
-        }
-
-        if(!OTP) {
-            return next(new ErrorResponse("OTP Not found. Please check again", StatusCodes.NOT_FOUND));
         }
 
         const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
@@ -253,6 +249,9 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
         if(!otpToken) {
             return next(new ErrorResponse("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
         }
+
+        console.log(`Your User ID: `, userId);
+        console.log(`Your OTP: `, otpToken);
 
         const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
