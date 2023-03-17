@@ -25,16 +25,16 @@ const App = () => {
           <Route path="/reset-password/:resetToken" element={<ResetPassword />}
           />
 
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element = {<Register />} />
-          {/* <Route path = '/login' element = {<Login />} /> */}
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path = "/" element={<Home />} />
+          <Route path = "/register" element = {<Register />} />
+          <Route path = '/login' element = {<Login />} />
+          <Route path = "/forgot-password" element={<ForgotPassword />} />
 
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/verify-email" element={<EmailVerification />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
-          <Route path="/update-profile" element={<UpdateProfile />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route path = "/reset-password" element={<ResetPassword />} />
+          <Route path = "/verify-email" element={<EmailVerification />} />
+          <Route path = "/update-password" element={<UpdatePassword />} />
+          <Route path = "/update-profile" element={<UpdateProfile />} />
+          <Route path = "/cart" element={<CartPage />} />
 
           <Route path="*" element={<NotFound />} />
 
