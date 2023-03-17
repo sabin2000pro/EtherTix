@@ -22,8 +22,8 @@ const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProp
 
     return (
         <>
-        <Navbar bg="light" expand="lg">
-      <Container>
+        {/* <Navbar bg="light" expand="lg">
+      <Container> */}
         {/* <Navbar.Brand href="/Cart">Cart</Navbar.Brand> */}
         <Button variant="link" href="/Cart">Cart</Button>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -42,8 +42,8 @@ const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProp
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      {/* </Container>
+    </Navbar> */}
 
 
             {/* <Navbar.Text className="me-2">
