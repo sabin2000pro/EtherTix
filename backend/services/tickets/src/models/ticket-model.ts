@@ -16,7 +16,6 @@ interface ITicketAttributes { // Interface that stores the ticket data
     confirmationMessage: string,
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
-    venue: mongoose.Schema.Types.ObjectId
 }
 
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
@@ -36,7 +35,6 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    confirmationMessage: string,
    event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
-   venue: mongoose.Schema.Types.ObjectId
    discount: mongoose.Schema.Types.ObjectId;
 }
 
@@ -116,14 +114,8 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
             required: [true, "Please specify who the issuer ID of this ticket is"]
-        },
-
-        venue: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "venue",
-            required: [true, "Please specify the venue ID that this ticket is associated to"]
         }
-    
+
 }, {
     timestamps: true
 });
