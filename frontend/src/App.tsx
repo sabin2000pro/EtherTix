@@ -16,6 +16,9 @@ import { Web3Context } from 'constants/context/Web3Context';
 import MintToken from 'pages/nfts/MintToken';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchAllTickets } from './actions/ticket-actions';
+import Service1 from 'pages/sections/services/Service1';
+import Service2 from 'pages/sections/services/Service2';
+import Service3 from 'pages/sections/services/Service3';
 
 interface TicketState {
    tickets: any
@@ -65,6 +68,11 @@ const App = () => { // Push to github recent changes
             <Route path = '/update-password' element = {<UpdatePassword />} />
             <Route path = '/update-profile' element = {<UpdateProfile />} />
             <Route path = '/cart' element = {<CartPage />} />
+
+            <Route path='/' element={<Home />} />
+            <Route path="/service1" element={<Service1 />} />
+            <Route path="/service2" element={<Service2 />} />
+            <Route path="/service3" element={<Service3 />} />
 
 
             <Route path = '*' element = {<NotFound />} />
