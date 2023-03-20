@@ -22,37 +22,37 @@ const App = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
-    async function fetchLoggedInUser() {
+
+    const fetchLoggedInUser = async () => {
+
       try {
         const response = await getUser();
         setLoggedInUser(response.user);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
     }
+    
     fetchLoggedInUser();
   }, []);
 
   return (
     <>
     
-      <NavBar
-        loggedInUser={loggedInUser}
-        onLoginClicked={() => setShowLoginModal(true)}
-        onSignUpClicked={() => setShowSignUpModal(true)}
-        onLogoutSuccessful={() => setLoggedInUser(null)}
-      />
+      <NavBar loggedInUser={loggedInUser} onLoginClicked={() => setShowLoginModal(true)}  onSignUpClicked={() => setShowSignUpModal(true)} onLogoutSuccessful={() => setLoggedInUser(null)}/>
 
-      <Container>
+       <Container>
 
         <Routes>
+
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
+
           <Route path="/" element={<Home />} />
-          {/* <Route path="/register" element={<Register />} /> */}
-          {/* <Route path = '/login' element = {<Login />} /> */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
           <Route
@@ -65,16 +65,14 @@ const App = () => {
           <Route path="/update-profile" element={<UpdateProfile />} />
           <Route path="/cart" element={<CartPage />} />
 
-          <Route path="*" element={<NotFound />} />\
+          <Route path = "*" element={<NotFound />} />\
 
         </Routes>
       </Container>
       
       {showSignUpModal && (
-        <Register
-          onDismiss={() => setShowSignUpModal(false)}
-          onSignUpSuccessful={(user) => {
-            setLoggedInUser(user);
+
+        <Register onDismiss={() => setShowSignUpModal(false)} onSignUpSuccessful = {(user) => {setLoggedInUser(user);
             setShowSignUpModal(false);
           }}
         />

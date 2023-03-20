@@ -14,11 +14,14 @@ interface NavBarProps {
 }
 
 const NavBar = ({
+  
   loggedInUser,
   onSignUpClicked,
   onLoginClicked,
   onLogoutSuccessful,
+
 }: NavBarProps) => {
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<
     { name: string; path: string }[]
@@ -33,27 +36,27 @@ const NavBar = ({
   };
 
   return (
-    <Navbar bg="primary" variant="dark" expand="sm" sticky="top">
-      <Navbar.Brand as={Link} to="/">
-        <img
-          className="logo"
-          height="89"
-          width="270"
-          src="/images/ethertix.png"
-          alt="Ether Tix Logo"
-        />
+
+    <Navbar className = "navbar" expand="sm" sticky="top">
+
+      <Navbar.Brand as = {Link} to="/">
+
+        <img className="logo" height="89" width="270" src="/images/ethertix.png" alt="Ether Tix Logo"/>
+
       </Navbar.Brand>
+
       <Container>
 
           <Nav className="justify-content-center">
-            <Search
-              searchTerm={searchTerm as any}
-              handleSearch={handleSearch as any}
-              searchResults={searchResults as any}
-            />
+
+            <Search searchTerm={searchTerm as any} handleSearch={handleSearch as any} searchResults = {searchResults as any}/>
+            
           </Nav>
+
           <Nav className="justify-content-right">
+
             {loggedInUser ? (
+              
               <NavBarLoggedInView
                 user={loggedInUser}
                 onLogoutSuccessful={onLogoutSuccessful}
