@@ -6,21 +6,35 @@ import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userEmail = "mail";//location.state.email; 
+  const userEmail = location.state.email; 
   //"mail";
   const timeLeft = 15;
 
+  const fetchUserId = () => {
+    const userId = location.state._id; 
+    //"hello";
+    setCreds({ ...creds, userId: userId });
+  };
+  setTimeout(() => {
+    fetchUserId();
+  }, 2000);
+
   const [error, setError] = useState("");
   const [OTP, setOTP] = useState({
-    OTP: "",
+    // OTP: "",
     otp1: "",
     otp2: "",
     otp3: "",
     otp4: "",
     otp5: "",
     otp6: "",
-    userId: "",
+    // userId: "",
   });
+
+  const [creds, setCreds] = useState({
+    OTP: "",
+    userId: "",
+  })
 
   const [buttonState, setButtonState] = useState({
     verify: false,
@@ -41,15 +55,6 @@ const EmailVerification: React.FC = () => {
       clearInterval(interval);
     };
   }, [buttonState, timer]);
-
-  const fetchUserId = () => {
-    const userId = "hello";//location.state._id; 
-    //"hello";
-    setOTP({ ...OTP, userId: userId });
-  };
-  setTimeout(() => {
-    fetchUserId();
-  }, 2000);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOTP({ ...OTP, [event.target.name]: event.target.value });
@@ -83,7 +88,7 @@ const EmailVerification: React.FC = () => {
   };
 
   const bundleTogether = () => {
-    OTP.OTP = OTP.otp1.concat(OTP.otp2, OTP.otp3, OTP.otp4, OTP.otp5, OTP.otp6);
+    creds.OTP = OTP.otp1.concat(OTP.otp2, OTP.otp3, OTP.otp4, OTP.otp5, OTP.otp6);
     //console.log(OTP.OTP);
   };
 
@@ -92,7 +97,7 @@ const EmailVerification: React.FC = () => {
     event.preventDefault();
     try {
       bundleTogether();
-      const response = await verifyEmailAddress(OTP);
+      const response = await verifyEmailAddress(creds);
 
       if (response.message === "E-mail Address verified") {
         navigate("/");
@@ -122,7 +127,7 @@ const EmailVerification: React.FC = () => {
     setButtonState({ ...buttonState, resend: true });
     event.preventDefault();
     try {
-      const response = await resendEmailVerification(OTP);
+      const response = await resendEmailVerification(creds);
 
       if (response.message === "E-mail Verification Re-sent") {
         alert("A new one-time password has been sent to your email");
@@ -181,6 +186,7 @@ const EmailVerification: React.FC = () => {
                   tabIndex={1}
                   maxLength={1}
                   onKeyDown={(e) => inputfocus(e)}
+                  autoFocus
                 />
               </Col>
               <Col className="text-center">

@@ -44,26 +44,28 @@ const NavBar = ({
         />
       </Navbar.Brand>
       <Container>
-        <Nav className="justify-content-center">
-          <Search
-            searchTerm={searchTerm as any}
-            handleSearch={handleSearch as any}
-            searchResults={searchResults as any}
-          />
-        </Nav>
-        <Nav className="justify-content-right">
-          {loggedInUser ? (
-            <NavBarLoggedInView
-              user={loggedInUser}
-              onLogoutSuccessful={onLogoutSuccessful}
+        <Navbar.Collapse>
+          <Nav className="justify-content-center">
+            <Search
+              searchTerm={searchTerm as any}
+              handleSearch={handleSearch as any}
+              searchResults={searchResults as any}
             />
-          ) : (
-            <NavBarLoggedOutView
-              onLoginClicked={onLoginClicked}
-              onSignUpClicked={onSignUpClicked}
-            />
-          )}
-        </Nav>
+          </Nav>
+          <Nav className="justify-content-right">
+            {loggedInUser ? (
+              <NavBarLoggedInView
+                user={loggedInUser}
+                onLogoutSuccessful={onLogoutSuccessful}
+              />
+            ) : (
+              <NavBarLoggedOutView
+                onLoginClicked={onLoginClicked}
+                onSignUpClicked={onSignUpClicked}
+              />
+            )}
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
 
