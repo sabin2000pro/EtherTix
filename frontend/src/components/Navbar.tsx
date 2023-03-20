@@ -44,7 +44,7 @@ const NavBar = ({
         />
       </Navbar.Brand>
       <Container>
-        <Navbar.Collapse>
+
           <Nav className="justify-content-center">
             <Search
               searchTerm={searchTerm as any}
@@ -65,7 +65,7 @@ const NavBar = ({
               />
             )}
           </Nav>
-        </Navbar.Collapse>
+
       </Container>
     </Navbar>
 

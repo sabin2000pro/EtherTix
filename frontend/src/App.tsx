@@ -15,9 +15,7 @@ import { User } from "./models/user";
 import { getUser } from "./api/auth/auth-api";
 import { Container } from "react-bootstrap";
 
-
 const App = () => {
-
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const navigate = useNavigate();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -37,7 +35,7 @@ const App = () => {
 
   return (
     <>
-
+    
       <NavBar
         loggedInUser={loggedInUser}
         onLoginClicked={() => setShowLoginModal(true)}
@@ -46,39 +44,32 @@ const App = () => {
       />
 
       <Container>
+
         <Routes>
           <Route
             path="/reset-password/:resetToken"
-            element={<ResetPassword onDismiss={() => navigate('/')} />}
+            element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
-<<<<<<< HEAD
-
-          <Route path = "/" element={<Home />} />
-          <Route path = "/register" element = {<Register />} />
-          <Route path = '/login' element = {<Login />} />
-          <Route path = "/forgot-password" element={<ForgotPassword />} />
-
-          <Route path = "/reset-password" element={<ResetPassword />} />
-          <Route path = "/verify-email" element={<EmailVerification />} />
-          <Route path = "/update-password" element={<UpdatePassword />} />
-          <Route path = "/update-profile" element={<UpdateProfile />} />
-          <Route path = "/cart" element={<CartPage />} />
-=======
           <Route path="/" element={<Home />} />
           {/* <Route path="/register" element={<Register />} /> */}
           {/* <Route path = '/login' element = {<Login />} /> */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          <Route path="/reset-password" element={<ResetPassword onDismiss={() => navigate('/')} />} />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword onDismiss={() => navigate("/")} />}
+          />
+
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
           <Route path="/cart" element={<CartPage />} />
->>>>>>> c0fa99aaa36637526f9fe38a41f6d0e6f23d5015
 
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />\
+
         </Routes>
       </Container>
+      
       {showSignUpModal && (
         <Register
           onDismiss={() => setShowSignUpModal(false)}
@@ -88,10 +79,11 @@ const App = () => {
           }}
         />
       )}
+
       {showLoginModal && (
         <Login
           onDismiss={() => setShowLoginModal(false)}
-          onLoginSuccessful={(user) => {
+          onLoginSuccessful={(user: User) => {
             setLoggedInUser(user);
             setShowLoginModal(false);
           }}
