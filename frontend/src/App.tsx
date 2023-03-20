@@ -79,16 +79,18 @@ const App = () => {
       )}
 
       {showLoginModal && (
-        <Login
-          onDismiss={() => setShowLoginModal(false)}
-          onLoginSuccessful={(user: User) => {
-            setLoggedInUser(user);
-            setShowLoginModal(false);
+
+        <Login onDismiss={() => setShowLoginModal(false)} onLoginSuccessful={(user: User) => { setLoggedInUser(user); setShowLoginModal(false);
           }}
+
         />
+
       )}
+
     </>
+    
   );
+
 };
 
 export default App;
