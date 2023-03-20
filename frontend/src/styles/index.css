@@ -389,137 +389,35 @@ label {
 }
 
 /*start-Email Verification*/
-.inputHeading {
-    text-align: center;
-}
-
 .otpInput {
     text-align: center;
     font-weight: bold;
-    display: block;
-    width: 13%;
-}
-
-.otp-verify-container {
-    justify-content: center;
-    display: flex;
-    flex-direction: row;
-}
-
-.buttons {
-    transform: translate(-0%, +150%);
+    width: 3em;
+    height: 3em;
 }
 
 .verify-container {
-    font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
-    line-height: 1.15385;
-    border: 1px solid transparent;
+    /* font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
+    line-height: 1.15385; */
+    border: 1px solid gray;
     border-radius: 15px;
-    justify-content: center;
-    width: 50%;
-    /* width of the div */
-    height: 50%;
-    /* height of the div */
+    width: 550px;
+    height: 400px;
     position: absolute;
-    /*set the position to absolute*/
     top: 45%;
-    /* set the left position to 50% */
     left: 50%;
-    /* translate the div to the center */
     transform: translate(-50%, -50%);
-    /* border-radius: 4px; */
-    float: left;
-    text-align: center;
-    font-size: 18px;
-    background-color: #001845;
-    color: white;
+    color: black;
 }
 
-.verify-btn {
-    background-color: #0095ff;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.15385;
-    margin: 0;
-    outline: none;
-    padding: 8px .8em;
-    position: relative;
-    transform: translate(-50%);
-    text-align: center;
-    text-decoration: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: baseline;
-    white-space: nowrap;
-}
-
-.verify-btn:hover,
-.verify-btn:focus {
-    background-color: #07c;
-}
-
-.verify-btn:focus {
-    box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
-}
-
-.verify-btn:active {
-    background-color: #0064bd;
-    box-shadow: none;
-}
 .verify-btn:disabled {
     background-color: gray;
+    border: solid gray;
 }
 
-.resend-btn {
-    background-color: #0095ff;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.15385;
-    margin: 0;
-    outline: none;
-    padding: 8px .8em;
-    position: relative;
-    transform: translate(+50%);
-    text-align: center;
-    text-decoration: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: baseline;
-    white-space: nowrap;
-}
-.resend-btn:hover,
-.resend-btn:focus {
-    background-color: #07c;
-}
-
-.resend-btn:focus {
-    box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
-}
-
-.resend-btn:active {
-    background-color: #0064bd;
-    box-shadow: none;
-}
 .resend-btn:disabled {
-    background-color: gray;
+    color: gray;
+    border: 1px solid gray;
 }
 
 /*end-Email Verification*/
