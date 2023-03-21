@@ -151,27 +151,20 @@ volumes:
   mongodb_data_volume:
 
 networks:
-
   auth-service:
-    driver: bridge
     external: true
 
   events-service:
-    driver: bridge
     external: true
 
   discounts-service:
-    driver: bridge
     external: true
 
   venues-service:
-    driver: bridge
     external: true
 
   tickets-service:
-    driver: bridge
     external: true
 
   api-gateway-service:
-    driver: bridge
     external: true
