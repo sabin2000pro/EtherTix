@@ -14,29 +14,29 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
   const { resetToken = ' ' } = useParams();
   const [errorMessage, setErrorMessage] = useState('');
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-  } = useForm<{ newPassword: string; confirmPassword: string }>();
-
+  const { register, handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<{ newPassword: string; confirmPassword: string }>();
   const newPassword = watch('newPassword', '');
 
   const onSubmit = async (data: { newPassword: string; confirmPassword: string }) => {
+
     if (data.newPassword !== data.confirmPassword) {
       setErrorMessage("Passwords don't match.");
       return;
     }
 
     try {
+      
       const response = await resetPassword({ resetToken, newPassword: data.newPassword });
       if (response.success) {
         navigate('/login');
-      } else {
+      }
+      
+      else {
         setErrorMessage(response.message);
       }
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       setErrorMessage('Something went wrong. Please try again later.');
     }
