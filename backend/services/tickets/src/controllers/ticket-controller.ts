@@ -73,6 +73,10 @@ export const editTicketByID = asyncHandler(async (request: any, response: any, n
       const id = request.params.id;
       let ticket = await Ticket.findById(id);
 
+      if(!isValidObjectId(id)) {
+         
+      }
+
       if(!ticket) {
          return next(new ErrorResponse(`No ticket found with that ID`, StatusCodes.BAD_REQUEST));
       }

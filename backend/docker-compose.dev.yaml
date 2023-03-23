@@ -34,6 +34,23 @@ services:
        - /app/node_modules
        - ../backend/services/authentication:/app
 
+  frontend-service:
+    container_name: ethertix-frontend-service
+    image: ethertix-frontend-service
+
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+
+    restart: always
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - /app/node_modules
+      - ../frontend:/app
+
   events-service:
       container_name: ethertix-events-service
       image: sabin2000/ethertix-events-service
