@@ -14,6 +14,8 @@ import CartPage from "pages/CartPage";
 import { User } from "./models/user";
 import { getUser } from "./api/auth/auth-api";
 import { Container } from "react-bootstrap";
+import EventsList from "pages/events/EventsList";
+import SingleEvent from "pages/events/SingleEvent";
 
 const App = () => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
@@ -41,20 +43,23 @@ const App = () => {
   return (
     <>
     
-      <NavBar loggedInUser={loggedInUser} onLoginClicked={() => setShowLoginModal(true)} onSignUpClicked={() => setShowSignUpModal(true)} onLogoutSuccessful={() => setLoggedInUser(null)}/>
+      <NavBar loggedInUser = {loggedInUser} onLoginClicked={() => setShowLoginModal(true)} onSignUpClicked={() => setShowSignUpModal(true)} onLogoutSuccessful={() => setLoggedInUser(null)}/>
 
        <Container>
 
         <Routes>
 
           <Route path="/reset-password/:resetToken" element={<ResetPassword onDismiss = {() => navigate("/")} />} />
-          <Route path="/" element={<Home />} />
+          <Route path = "/" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element = {<ResetPassword onDismiss = {() => navigate("/")} />} />
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route path="/my-cart" element={<CartPage />} />
+
+          <Route path = "/events" element = {<EventsList />} />
+          <Route path = '/events/:id' element = {<SingleEvent />} />
 
           <Route path = "*" element = {<NotFound />} />
 
