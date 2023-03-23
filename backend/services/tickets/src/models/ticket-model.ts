@@ -29,7 +29,6 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    confirmationMessage: string,
    event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
-   discount: mongoose.Schema.Types.ObjectId;
 }
 
 export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
