@@ -42,7 +42,7 @@ services:
       container_name: ethertix-events-service
       image: sabin2000/ethertix-events-service
       build:
-        context: ../backend/services/events-service
+        context: ../backend/services/events
         dockerfile: Dockerfile
 
       restart: always
@@ -52,7 +52,7 @@ services:
 
       volumes:
         - /app/node_modules
-        - ../backend/services/events-service:/app
+        - ../backend/services/events:/app
   
   categories-service:
       container_name: ethertix-categories-service

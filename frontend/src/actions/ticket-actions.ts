@@ -1,4 +1,4 @@
-import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCESS, FETCH_SINGLE_TICKET_FAIL } from './../constants/ticket-constants';
+import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST } from './../constants/ticket-constants';
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
@@ -37,7 +37,7 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
            dispatch({type: FETCH_SINGLE_TICKET_REQUEST});
            const {data} = await axios.get(`http://localhost:5303/api/tickets/${id}`)
 
-           dispatch({type: FETCH_SINGLE_TICKET_SUCESS, payload: {ticket: response.data}});
+           dispatch({type: FETCH_SINGLE_TICKET_SUCESS, payload: data.ticket});
     } 
     
     catch(error: any) {
@@ -52,7 +52,7 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
 
 export const createTicket = (name: string, ticketClass: string) => async (dispatch: Dispatch): Promise<void> => {
     try {
-
+      dispatch({type: CREATE_TICKET_REQUEST});
     } 
     
     catch(error) {
@@ -65,15 +65,22 @@ export const editTicketDetails = (id: string) => async (dispatch: Dispatch): Pro
 
     }
     
-     catch(error) {
+    catch(error) {
 
     }
+
+
 }
 
 export const deleteTicketByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
     try {
 
     }
+
+     catch(error) {
+
+     }
+
 }
 
 export const deleteTickets = () => async (dispatch: Dispatch) => Promise<void> => {
@@ -82,6 +89,11 @@ export const deleteTickets = () => async (dispatch: Dispatch) => Promise<void> =
     }
     
     catch(error) {
+      if(error) {
+
+      }
 
     }
+
+
 }
