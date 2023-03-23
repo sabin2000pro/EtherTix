@@ -32,7 +32,7 @@ export const fetchTicketByID = asyncHandler(async (request: any, response: any, 
       const ticket = await Ticket.findById(id)
 
       if(!isValidObjectId(id)) {
-
+          return next(new ErrorResponse(`Ticket ID is in the wrong format.`, StatusCodes.BAD_REQUEST));
       }
  
       if(!ticket) {

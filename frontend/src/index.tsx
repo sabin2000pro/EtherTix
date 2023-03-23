@@ -23,8 +23,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       
       </Web3Provider>
 
-      
-       
      </BrowserRouter>
 
   </React.StrictMode>
