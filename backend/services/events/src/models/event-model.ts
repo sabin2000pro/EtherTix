@@ -1,86 +1,50 @@
 import mongoose from "mongoose";
+
 interface EventAttributes { // Interface for the event attributes
-    name: string
+    name: string;
     summary: string;
     description: string;
-    event_url: string;
     startAt: Date;
-    endsAt: Date;
+    slug: string;
     createdAt: Date;
     changedAt: Date;
-    publishedAt: Date;
-    eventStatus: string;
-    currency: string;
-    isOnline: boolean; // True or false if the event is online
-    event_logo: string;
-    eventLocation: string;
+    endsAt: Date;    
+    event_url: string;
+    isOnline: boolean
     format: string;
-    capacity: number;
-    slotsAvailable: boolean;
     hasSeating: boolean;
-    slug: string;
-    hasAvailableTickets: boolean;
+    image: string;
+    capacity: number;
+    salesStatus: string;
     isSoldOut: boolean;
-    searchable: boolean;
-    averageRating: number;
-    averageCost: number
-    hideStartDate: boolean;
-    hideEndDate: boolean;
-    isLocked: boolean;
-    isFree: boolean;
-    isPremium: boolean;
-    salesStatus: string,
-    eventSchedule: any,
-    isTrending: boolean;
-    salesStart: Date,
-    salesEnd: Date
-    likes: [],
-    followers: [],
-    bookmarks: [],
+    reservedSeating: boolean;
+    eventStatus: string;
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
     ticket: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
     category: mongoose.Schema.Types.ObjectId; // Category ID of the Specifid Event
 }
+
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
     description: string;
-    event_url: string;
     startAt: Date;
+    slug: string;
     endsAt: Date;
     createdAt: Date;
-    publishedAt: Date;
+    image: string;
     changedAt: Date;
-    eventStatus: string;
-    hasSeating: boolean;
-    currency: string;
-    event_logo: string;
-    slug: string;
-    averageRating: number;
-    averageCost: number
+    format: string
     isOnline: boolean;
-    format: string;
     capacity: number;
-    eventLocation: string;
-    eventSchedule: any;
-    minCapacity: number;
-    slotsAvailable: boolean;
-    hasAvailableTickets: boolean;
-    isSoldOut: boolean;
-    searchable: boolean;
-    hideStartDate: boolean;
-    hideEndDate: boolean;
-    isLocked: boolean;
+    event_url: string;
     reservedSeating: boolean;
-    isFree: boolean;
+    isSoldOut: boolean;
+    hasSeating: boolean;
     salesStatus: string;
-    salesStart: Date;
-    salesEnd: Date;
-    isPremium: boolean;
-    likes: [];
-    followers: [];
+    eventStatus: string;
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
     venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
@@ -137,18 +101,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     eventStatus: { // Status of the event
         type: String,
         default: "pending",
-        enum: ["draft", "live", "started", "ended", "completed", "canceled", "pending"],
+        enum: ["draft", "live", "started", "completed", "canceled", "pending"],
         required: [true, "Please specify the status that the event is in"]
     },
 
-    currency: { // The type of currency that the event takes payment in
-        type: String,
-        required: [true, "Please specify the currency that this event will take payment in"],
-        enum: ['GBP', 'ETH'],
-        default: 'ETH'
-    },
-
-    event_logo: {
+    image: {
         type: String,
         default: 'no-photo.jpg'
     },
@@ -178,95 +135,23 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    slotsAvailable: {
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if there are any available slots left for this event"]
-    },
-
-    isPremium: {
-        type: Boolean,
-        required: [true, "Please specify if the event is premium or not"],
-        default: false
-    },
-
-    hasAvailableTickets: {
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if this event has available tickets"]
-    },
-
-    isLocked: { // True or false if the event is locked or not. If the event is locked, then disable the button to view available times
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event is locked or not"]
-    },
-
     isSoldOut: { // Field that determines if the event is sold out or not
         type: Boolean,
         default: false,
-        required: [true, "Please specify if the event is sold out or not"]
     },
 
-    searchable: {
+    reservedSeating: {
         type: Boolean,
         default: false,
-        required: [true, "Please specify if this event is searchable or not"]
+        required: [true, "Please specify if this event has reserved seating or not"]
+     },
+
+    salesStatus: {
+        type: String,
+        enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
+        required: [true, "Please specify the sales status of the event."]
     },
-
-    hideStartDate: { // Field that shows when an event starts or not
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event should show when it starts or not"]
-    },
-
-    averageRating: {
-        type: Number,
-        default: 0
-    },
-
-    averageCost: {
-        type: Number,
-        default: 0
-    },
-
-    hideEndDate: { // Field that shows when an event starts or not
-        type: Boolean,
-        default: false,
-        required: [true, "Please specify if the event should show when it ends or not"]
-    },
-
-        isFree: { // If the event is free or not
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if the event is free or not"]
-        },
-
-        reservedSeating: {
-            type: Boolean,
-            default: false,
-            required: [true, "Please specify if this event has reserved seating or not"]
-        },
-
-        salesStatus: {
-            type: String,
-            enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
-            required: [true, "Please specify the sales status of the event."]
-        },
-
-        salesStart: { // Start date of event ticket sales
-            type: Date,
-            default: Date.now
-        },
-
-        salesEnd: { // The date at which the event ticket sales end
-            type: Date,
-            default: Date.now
-        },
-
-        likes: [],
-        followers: [],
-
+    
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",

@@ -1,42 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import {useNavigate} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-type SingleEventProps = {
-   listEvent: () => Promise<any>
-   isListed: Boolean
-}
-
-const SingleEvent: React.FC<SingleEventProps> = ({isListed}) => {
-  const navigate = useNavigate();
-  const [singleEvent, setSingleEvent] = useState([]);
-
-  useEffect(() => {
-
-    const listEvent = async (...args: unknown[]): Promise<any> => {
-
-      try {        
-         // Code here to call the API to list a single event
-      }
-      
-      catch(error: any) {
+const SingleEvent: React.FC = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const {} = useSelector((state: any) => state.event);
   
-        if(error) {
-  
-          return console.error(error);
-        }
-      }
-  
-    }
-
-    listEvent();
-
-  }, [])
-  
-
   return (
     <>
 
-    <div className = "">
+    <div className = "events-container">
 
     </div>
 

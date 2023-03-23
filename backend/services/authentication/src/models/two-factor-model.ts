@@ -5,6 +5,7 @@ interface ITwoFactorVerification {
     mfaToken: string;
     createdAt: Date;
     expiresAt: Date;
+    sentAt: Date;
 
     compareVerificationTokens: (enteredToken: string) => Promise<boolean>
 }
@@ -14,6 +15,7 @@ interface TwoFactorVerificationDocument extends mongoose.Model<ITwoFactorVerific
     mfaToken: string; // Verification Token
     createdAt: Date;
     expiresAt: Date;
+    sentAt: Date;
 
     compareVerificationTokens: (enteredToken: string) => Promise<boolean>
 }
@@ -32,6 +34,11 @@ const TwoFactorVerificationSchema = new mongoose.Schema<TwoFactorVerificationDoc
     },
 
     createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+
+    sentAt: {
         type: Date,
         default: Date.now()
     },

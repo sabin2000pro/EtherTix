@@ -1,4 +1,4 @@
-export const EVENTS_URI = `http://localhost:5301/api/v1/events`
+
 
 export const FETCH_ALL_EVENTS_REQUEST = 'FETCH_EVENTS_REQUEST'
 export const FETCH_ALL_EVENTS_REQUEST_SUCCESS = 'FETCH_EVENTS_REQUEST_SUCCESS'
