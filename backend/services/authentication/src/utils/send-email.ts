@@ -5,12 +5,12 @@ export const emailTransporter = (): any => { // Create the e-mail transporter
 
 return nodemailer.createTransport({
 
-  host: "smtp.mailtrap.io",
+  host: process.env.AUTH_SERVICE_SMTP_HOST,
   port: 2525,
 
   auth: {
-    user: "31c4555f29ccbb",
-    pass: "66af38be36d489"
+    user: process.env.AUTH_SERVICE_SMTP_USER,
+    pass: process.env.AUTH_SERVICE_SMTP_PASS
   }
 });
 

@@ -1,20 +1,21 @@
-import { resendEmailVerification } from '../../api/auth/auth-api'
+require('react')
+const resendEmailVerification = require('../../api/auth/auth-api')
 
 describe("Email re-verification test suite", () => {
     it("Returns success confirmation", async () => {
-        const var1 = await resendEmailVerification({userID: "hello@mail.com", otp: "123456"});
+        const var1 = await resendEmailVerification({userID: "63f89e9c635c9c67d481f756", otp: "123456"});
 
-        expect(var1.data.message).toBe("E-mail Verification Re-sent");
+        expect(var1.message).toBe("E-mail Verification Re-sent");
     })
     it("Returns error when wrong Id", async () => {
-        const var1 = await resendEmailVerification({userID: "hell@mail.com", otp: "123456"});
+        const var1 = await resendEmailVerification({userID: "63f89e9c635c9c67d481f75", otp: "123456"});
 
-        expect(var1.data.message).toBe("Owner ID invalid. Check again");
+        expect(var1.message).toBe("Owner ID invalid. Check again");
     })
     it("Returns error when no otp", async () => {
-        const var1 = await resendEmailVerification({userID: "hello@mail.com", otp: ""});
+        const var1 = await resendEmailVerification({userID: "63f89e9c635c9c67d481f756", otp: ""});
 
-        expect(var1.data.message).toBe("OTP Not found. Please check again");
+        expect(var1.message).toBe("OTP Not found. Please check again");
     })
 }
 

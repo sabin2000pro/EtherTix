@@ -1,59 +1,88 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from 'api/auth/auth-api';
+import { useForm } from 'react-hook-form';
+import TextInputField from '../../components/form/TextInputField';
+import { Alert, Button, Form, Modal, Container } from 'react-bootstrap';
 
-type IResetPasswordProps = {
-
+interface ResetPasswordModalProps {
+  onDismiss: () => void;
 }
 
-const ResetPassword: React.FC = (props: IResetPasswordProps) => {
-
+const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
   const navigate = useNavigate();
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const { resetToken = ' ' } = useParams();
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const { register, handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<{ newPassword: string; confirmPassword: string }>();
+  const newPassword = watch('newPassword', '');
+
+  const onSubmit = async (data: { newPassword: string; confirmPassword: string }) => {
+
+    if (data.newPassword !== data.confirmPassword) {
+      setErrorMessage("Passwords don't match.");
+      return;
+    }
 
     try {
-      const response = await resetPassword({ currentPassword, newPassword });
+      
+      const response = await resetPassword({ resetToken, newPassword: data.newPassword });
       if (response.success) {
         navigate('/login');
-      } else {
+      }
+      
+      else {
         setErrorMessage(response.message);
       }
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       setErrorMessage('Something went wrong. Please try again later.');
     }
   };
 
   return (
-    <>
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <input
-              type="password"
-              placeholder="Current Password"
-              value={currentPassword}
-              onChange={(event) => setCurrentPassword(event.target.value)}
-            />
-          </div>
-          <div>
-            <input
+    <Modal show onHide={onDismiss} backdrop="static" centered>
+      <Modal.Header closeButton>
+        <Container className="text-center">
+          <Modal.Title>Reset Password</Modal.Title>
+        </Container>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Please enter your new password below:</p>
+        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Container className="text-left">
+            <TextInputField
+              name="newPassword"
+              label="New Password"
               type="password"
               placeholder="New Password"
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
+              register={register}
+              registerOptions={{ required: 'Required' }}
+              error={errors.newPassword}
+              autoFocus
             />
-          </div>
-          {errorMessage && <div>{errorMessage}</div>}
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    </>
+            <TextInputField
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              placeholder="Confirm Password"
+              register={register}
+              registerOptions={{
+                required: 'Required',
+                validate: (value) => value === newPassword || "Passwords don't match.",
+              }}
+              error={errors.confirmPassword}
+            />
+            <Button type="submit" disabled={isSubmitting} className="w-100">
+              Submit
+            </Button>
+          </Container>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 };
 

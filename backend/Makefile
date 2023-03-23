@@ -1,6 +1,9 @@
 make-production:
 	- docker-compose -f docker-compose.prod.yaml -f docker-compose.prod.yaml up --build
 
+compile-smart-contract:
+	- cd ../frontend && truffle compile && truffle migrate --reset
+
 clean:
 	- docker volume rm
 	- docker stop
@@ -17,6 +20,8 @@ build-services:
 	- cd services/venues* && npm run build
 	- cd services/categories* && npm run build
 	- cd services/discount* && npm run build
+	- cd services/api-gateway* && npm run build
+
 	- docker login
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 
@@ -31,3 +36,14 @@ build-frontend:
 
 show-docker-images:
 	- docker image ls
+
+create-networks:
+	- docker network create api-gateway-service
+	- docker network create discounts-service
+	- docker network create my-service-network
+	- docker network create auth-service
+	- docker network create events-service
+	- docker network create venues-service
+	- docker network create tickets-service
+	- docker network create categories-service
+	

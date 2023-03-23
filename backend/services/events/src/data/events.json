@@ -12,21 +12,15 @@
     "startAt": "2023-08-12 14:00:00",
     "endsAt": "2023-08-12 16:00:00",
     "eventStatus": "pending",
-    "currency": "ETH",
     "format": "Outdoor",
     "isOnline": false,
     "hasSeating": true,
     "capacity": 100,
     "slotsAvailable": true,
-    "isPremium": false,
-    "hasAvailableTickets": true,
     "isSoldOut": false,
-    "searchable": true,
-    "hideStartDate": false,
-    "hideEndDate": false,
-    "isFree": false,
     "reservedSeating": false,
-    "salesStatus": "on_sale"
+    "salesStatus": "on_sale",
+    "reviews": []
   },
 
   {
@@ -42,20 +36,14 @@
     "endsAt": "2023-08-12 21:00:00",
     "eventStatus": "pending",
     "hasSeating": false,
-    "currency": "GBP",
     "format": "Outdoor",
     "isOnline": false,
     "capacity": 200,
     "slotsAvailable": true,
-    "isPremium": true,
-    "hasAvailableTickets": true,
     "isSoldOut": false,
-    "searchable": true,
-    "hideStartDate": false,
-    "hideEndDate": false,
-    "isFree": false,
     "reservedSeating": false,
-    "salesStatus": "pending"
+    "salesStatus": "pending",
+    "reviews": []
   },
 
   {
@@ -70,21 +58,15 @@
     "startAt": "2023-03-07 12:00:00",
     "endsAt": "2023-03-07 15:00:00",
     "eventStatus": "pending",
-    "currency": "ETH",
     "format": "Conference",
     "isOnline": false,
     "capacity": 200,
     "slotsAvailable": true,
-    "isPremium": true,
     "hasSeating": true,
-    "hasAvailableTickets": true,
     "isSoldOut": false,
-    "searchable": true,
-    "hideStartDate": false,
-    "hideEndDate": false,
-    "isFree": false,
     "reservedSeating": false,
-    "salesStatus": "pending"
+    "salesStatus": "pending",
+    "reviews": []
   }
 
 ]

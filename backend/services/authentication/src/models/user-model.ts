@@ -2,6 +2,7 @@ require('dotenv').config();
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+
 interface IUserAttributes {
     forename: string;
     surname: string;
@@ -73,24 +74,18 @@ const UserSchema = new mongoose.Schema({
     forename: { // User's forename
         type: String,
         trim: true,
-        required: [true, "Please provide your forename"],
-        max: [10, "Forename cannot exceed 10 characters"],
-        min: [3, "Forename cannot be less than 3 characters"]
+        required: [true, "Please provide your forename"]
     },
 
     surname: { // Users surname
         type: String,
-        required: [true, "Please provide your surname"],
-        min: [6, "Your surname must be at least 6 characters"],
-        max: [16, "Your surname cannot exceed 16 characters"]
+        required: [true, "Please provide your surname"]
     },
     
     // username of the user
     username: {
         type: String,
         required: true,
-        minlength: [5, "Username must be at least 5 characters long"],
-        maxlength: [20, "Username must be at least 20 characters long"],
         trim: true
     },
 
@@ -101,7 +96,6 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-
 
     photo: { // Photo for the user
         type: String, // Type is string
