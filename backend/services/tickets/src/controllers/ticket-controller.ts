@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Response } from 'express';
 import { Ticket } from '../models/ticket-model';
@@ -9,6 +10,7 @@ import { ErrorResponse } from '../utils/error-response';
 // @access    Private (Authorization Token Required
 
 export const fetchAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+        const keyword = request.query.keyword;
         const tickets = await Ticket.find();
 
         if(!tickets) {
@@ -29,6 +31,10 @@ export const fetchTicketByID = asyncHandler(async (request: any, response: any, 
       const id = request.params.id;
       const ticket = await Ticket.findById(id)
 
+      if(!isValidObjectId(id)) {
+
+      }
+ 
       if(!ticket) {
          return next(new ErrorResponse(`Could not find that ticket with ID : ${id} `, StatusCodes.BAD_REQUEST))
       }
@@ -43,16 +49,16 @@ export const fetchTicketByID = asyncHandler(async (request: any, response: any, 
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {eventId, issuerId, venueId} = request.query;
+        const {event, issuer} = request.body;
+        const {name, ticketClass, ticketToken, stock, description, cost} = request.body;
 
-        request.body.event = eventId
-        request.body.issuer = issuerId;
-        request.body.venue = venueId;
+        if(!name || !ticketClass || !ticketToken || !stock || !description || !cost) {
 
-        const {name, ticketClass, ticketToken, capacity, quantityPurchase, description, cost, isFree, deliveryMethods, onSaleStatus, confirmationMessage, ticketSold} = request.body;
-        const ticket = await Ticket.create({event: eventId, issuer: issuerId, venue: venueId, name, ticketClass, ticketToken, capacity, quantityPurchase, description, cost, isFree, deliveryMethods, onSaleStatus, confirmationMessage, ticketSold});
+        }
 
+        const ticket = await Ticket.create({event, issuer, name, ticketClass, ticketToken, stock, description, cost});
         await ticket.save();
+
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
    } 
 
@@ -119,10 +125,6 @@ export const fetchBasicTickets = asyncHandler(async (request: any, response: any
 export const fetchStandardTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const standardTickets = await Ticket.find({ticketClass: "standard"})
     return response.status(StatusCodes.OK).json({success: true, standardTickets})
-}
-
-export const fetchVipTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
 }
 
 export const fetchTicketsSoldLastThirtyDays = async (request: any, response: any, next: NextFunction): Promise<any> => {

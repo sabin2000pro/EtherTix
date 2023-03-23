@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 interface ITicketAttributes { // Interface that stores the ticket data
     name: string,
     ticketClass: string,
-    ticketToken: string,
     stock: number,
-    quantityPurchase: string,
     description: string,
     cost: number,
-    deliveryMethods: string,
     onSaleStatus: string,
     ticketSold: boolean
     saleStartsAt: Date,
@@ -21,13 +18,10 @@ interface ITicketAttributes { // Interface that stores the ticket data
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    name: string,
    ticketClass: string,
-   ticketToken: string,
    capacity: number,
-   quantityPurchase: number,
    description: string,
    cost: number,
    stock: number,
-   deliveryMethods: string,
    ticketSold: boolean,
    onSaleStatus: string,
    saleStartsAt: Date,
@@ -35,7 +29,6 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    confirmationMessage: string,
    event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
    issuer: mongoose.Schema.Types.ObjectId,
-   discount: mongoose.Schema.Types.ObjectId;
 }
 
 export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
@@ -57,14 +50,6 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             default: 1,
         },
 
-        quantityPurchase: { // The minimum and maximum amount of tickets that can be purchased
-            type: Number,
-            required: [true, "Please specify how many tickets can be bought at a single time"],
-            default: 1,
-            min: [1, "You can only purchase a minimum of 1 ticket"],
-            max: [5, "You cannot purchase more than 5 tickets"]
-        },
-
         description: { // Ticket Description for an event
             type: String,
             required: [true, "Please specify the description for this ticket"]
@@ -72,14 +57,14 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
 
         cost: { // The ticket cost in ETHER
             type: Number,
-            required: true,
+            required: [true, "Please specify how much a ticket costs in ether"],
             default: 0.010       
          },
 
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
             type: String,
             enum: ["Available", "Sold Out", "Pending"],
-            required: [true, "Please specfify whether or not the event is available, sold out or pending to start"]
+            default: 'Pending'
         },
 
         saleStartsAt: {
@@ -90,13 +75,6 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
         saleEndsAt: { // The timestamp at which the ticket sale ends
             type: Date,
             default: Date.now
-        },
-
-        confirmationMessage: {
-            type: String,
-            required: true,
-            minlength: [10, "Minimum of 10 characters for the confirmation message"],
-            maxlength: [200, "Confirmation message cannot exceed 200 characters"]
         },
 
         ticketSold: { // Determines if the ticket ahs been sold or not

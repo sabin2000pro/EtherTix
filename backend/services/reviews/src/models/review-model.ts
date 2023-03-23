@@ -1,32 +1,33 @@
 import mongoose from "mongoose";
 
 interface IReviewAttributes {
+    event: mongoose.Schema.Types.ObjectId;
     title: string;
     rating: number;
-    text: string;
+    comment: string;
     createdAt: Date;
 }
 
 interface IReviewDocument extends mongoose.Model<IReviewAttributes> {
+  event: mongoose.Schema.Types.ObjectId;
     title: string;
     rating: number;
-    text: string;
+    comment: string;
     createdAt: Date;
 }
 
 // @description: Review Schema for an event
 const ReviewSchema = new mongoose.Schema<IReviewDocument>({
 
-    title: { // Title of the Review
-        type: String,
-        trim: true,
-        required: [true, 'Please add a title for the review'],
-        maxlength: 100
-      },
+     event: {
+      type: String,
+      ref: 'Event',
+      required: [true, "Please specify the event ID that you want to create a review for"]
+     },
 
-      text: { // Text Review
+      comment: { // Text Review
         type: String,
-        required: [true, 'Please add some text']
+        required: [true, 'Please provide a comment for this review']
       },
 
       rating: { // Rating for the review

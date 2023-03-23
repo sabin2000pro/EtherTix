@@ -34,40 +34,32 @@ const App = () => {
         console.error(error);
       }
     }
-    
+
     fetchLoggedInUser();
   }, []);
 
   return (
     <>
     
-      <NavBar loggedInUser={loggedInUser} onLoginClicked={() => setShowLoginModal(true)}  onSignUpClicked={() => setShowSignUpModal(true)} onLogoutSuccessful={() => setLoggedInUser(null)}/>
+      <NavBar loggedInUser={loggedInUser} onLoginClicked={() => setShowLoginModal(true)} onSignUpClicked={() => setShowSignUpModal(true)} onLogoutSuccessful={() => setLoggedInUser(null)}/>
 
        <Container>
 
         <Routes>
 
-          <Route
-            path="/reset-password/:resetToken"
-            element={<ResetPassword onDismiss={() => navigate("/")} />}
-          />
-
+          <Route path="/reset-password/:resetToken" element={<ResetPassword onDismiss = {() => navigate("/")} />} />
           <Route path="/" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-
-          <Route
-            path="/reset-password"
-            element={<ResetPassword onDismiss={() => navigate("/")} />}
-          />
-
+          <Route path="/reset-password" element = {<ResetPassword onDismiss = {() => navigate("/")} />} />
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
           <Route path="/cart" element={<CartPage />} />
 
-          <Route path = "*" element={<NotFound />} />\
+          <Route path = "*" element = {<NotFound />} />
 
         </Routes>
+
       </Container>
       
       {showSignUpModal && (
@@ -75,12 +67,17 @@ const App = () => {
         <Register onDismiss={() => setShowSignUpModal(false)} onSignUpSuccessful = {(user) => {setLoggedInUser(user);
             setShowSignUpModal(false);
           }}
+          
         />
       )}
 
       {showLoginModal && (
 
-        <Login onDismiss={() => setShowLoginModal(false)} onLoginSuccessful={(user: User) => { setLoggedInUser(user); setShowLoginModal(false);
+        <Login
+          onDismiss={() => setShowLoginModal(false)}
+          onLoginSuccessful={(user: User) => {
+            setLoggedInUser(user);
+            setShowLoginModal(false);
           }}
 
         />

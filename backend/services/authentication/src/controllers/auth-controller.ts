@@ -576,7 +576,7 @@ export const updateUserProfile = async (request: any, response: any, next: NextF
 
 }
 
-export const deactivateUserAccount = async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const deactivateUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     
     const {userId} = request.body;
     const user = await User.findById(userId);
@@ -598,7 +598,7 @@ export const deactivateUserAccount = async (request: any, response: any, next: N
 
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated", status: user.isValid, sentAt: new Date(Date.now().toFixed())});
 
-}
+});
 
 export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
