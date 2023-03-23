@@ -7,8 +7,8 @@ import { addToCartReducer, removeItemFromCart } from 'reducers/cart-reducers'
 const store: any = configureStore({
 
     reducer: {
-       tickets: fetchAllTicketsReducer,
-       ticket: fetchSingleTicketByIDReducer,
+       tickets: ticketsReducer,
+       ticket: singleTicketReducer,
 
        events: fetchAllEvents,
        event: fetchSingleEventReducer,

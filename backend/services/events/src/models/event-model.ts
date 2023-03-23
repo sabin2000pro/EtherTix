@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 interface EventAttributes { // Interface for the event attributes
     name: string;
     summary: string;
@@ -12,7 +13,7 @@ interface EventAttributes { // Interface for the event attributes
     isOnline: boolean
     format: string;
     hasSeating: boolean;
-    event_logo: string;
+    image: string;
     capacity: number;
     salesStatus: string;
     isSoldOut: boolean;
@@ -24,6 +25,7 @@ interface EventAttributes { // Interface for the event attributes
     ticket: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
     category: mongoose.Schema.Types.ObjectId; // Category ID of the Specifid Event
 }
+
 interface EventDocument extends mongoose.Model<EventAttributes> {
     name: string;
     summary: string;
@@ -32,7 +34,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
     slug: string;
     endsAt: Date;
     createdAt: Date;
-    event_logo: string;
+    image: string;
     changedAt: Date;
     format: string
     isOnline: boolean;
@@ -103,7 +105,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify the status that the event is in"]
     },
 
-    event_logo: {
+    image: {
         type: String,
         default: 'no-photo.jpg'
     },
