@@ -1,4 +1,4 @@
-import { fetchAllTicketsReducer, fetchSingleTicketByIDReducer } from './reducers/ticket-reducers'
+import { ticketsReducer, singleTicketReducer } from './reducers/ticket-reducers'
 import {configureStore} from '@reduxjs/toolkit'
 import { fetchAllEvents, fetchSingleEventReducer } from 'reducers/event-reducers'
 import { addToCartReducer, removeItemFromCart } from 'reducers/cart-reducers'
