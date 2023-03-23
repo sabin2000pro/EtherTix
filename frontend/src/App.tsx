@@ -79,10 +79,15 @@ const App = () => {
             setLoggedInUser(user);
             setShowLoginModal(false);
           }}
+
         />
+
       )}
+
     </>
+    
   );
+
 };
 
 export default App;
