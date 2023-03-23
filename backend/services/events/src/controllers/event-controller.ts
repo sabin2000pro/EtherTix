@@ -6,6 +6,7 @@ import { Event } from "../models/event-model";
 import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const keyword = request.query.keyword;
     const events = await Event.find();
 
     if(!events) {
@@ -46,6 +47,10 @@ export const editEventByID = async (request: any, response: any, next: NextFunct
 
         const id = request.params.id;
         let event = await Event.findById(id);
+
+        if(!isValidObjectId(id)) {
+            return next(new ErrorResponse(`Event ID is invalid. Please check again`, StatusCodes.BAD_REQUEST));
+        }
 
         // Check if the event status is not started already or canceled
         if(event.eventStatus === 'started') {
@@ -88,10 +93,24 @@ export const uploadEventPhoto = asyncHandler(async (request: any, response: any,
 
 })
 
-export const editEventStartTime = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+export const editEventStartTime = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+  const fieldsToUpdate = {newStartsAt: request.body.startsAt, newEndsAt: request.body.newEndsAt};
+  const id = request.params.id; // Take the event ID to update
+  let event = await Event.findById(id);
+  
+  if(!isValidObjectId(id)) {
+     return next(new ErrorResponse(`Event ID is not valid`, StatusCodes.BAD_REQUEST));
+  }
 
-})
+  if(!event) {
+     return next(new ErrorResponse(`No event found with that ID`, StatusCodes.BAD_REQUEST));
+  }
 
-export const editEventEndTime = asyncHandler(async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+  event = await Event.findByIdAndUpdate(id, fieldsToUpdate, {new: true, runValidators: true})
+  await event.save();
 
+  event.startAt = request.body.startsAt;
+  event.endsAt = request.body.endsAt;
+
+  return response.status(StatusCodes.OK).json({success: true, message: "Event Start / End Dates Modified", event});
 })

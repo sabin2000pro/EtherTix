@@ -78,23 +78,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     startAt: { // Start Date of the event
         type: Date,
-        required: [true, "Please include when the event starts"],
+        required: [true, "Please include when the event is going to start"],
         default: Date.now
     },
 
     endsAt: { // End date of the event
         type: Date,
-        required: [true, "Please include when the event finishes"],
-        default: Date.now
-    },
-
-    createdAt: { // Time at which the event is created at
-        type: Date,
-        default: Date.now
-    },
-
-    changedAt: {
-        type: Date,
+        required: [true, "Please include when the event is going to end"],
         default: Date.now
     },
 
@@ -122,7 +112,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    capacity: {
+    capacity: { // Capacity that the event holds
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
         min: [3, "There must be at least 3 minimum people at the event"],
@@ -150,6 +140,16 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         type: String,
         enum: ["on_sale", "not_on_sale", "pending", "sale_ended", "sold_out", "unavailable"],
         required: [true, "Please specify the sales status of the event."]
+    },
+
+    createdAt: { // Time at which the event is created at
+        type: Date,
+        default: Date.now
+    },
+
+    changedAt: {
+        type: Date,
+        default: Date.now
     },
     
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
