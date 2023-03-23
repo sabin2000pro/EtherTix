@@ -12,9 +12,9 @@ const NavBarLoggedOutView = ({ onSignUpClicked, onLoginClicked }: NavBarLoggedOu
     const goToCart = (type: any) => navigate("/Cart");
     return (
         <>
-            <Button onClick={goToCart}>Cart</Button>
-            <Button onClick={onSignUpClicked}>Register</Button>
-            <Button onClick={onLoginClicked}>Log In</Button>
+            <Button onClick={goToCart} style={{backgroundColor: "transparent", border:"none"}}>Cart</Button>
+            <Button onClick={onSignUpClicked} style={{backgroundColor: "transparent", border:"none"}}>Register</Button>
+            <Button onClick={onLoginClicked} style={{backgroundColor: "transparent", border:"none"}}>Log In</Button>
         </>
     );
 }
