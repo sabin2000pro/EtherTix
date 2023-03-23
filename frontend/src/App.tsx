@@ -78,11 +78,12 @@ const App = () => {
 
       {showLoginModal && (
 
-            <Route path='/' element={<Home />} />
-            <Route path="/service1" element={<Service1 />} />
-            <Route path="/service2" element={<Service2 />} />
-            <Route path="/service3" element={<Service3 />} />
-
+        <Login
+          onDismiss={() => setShowLoginModal(false)}
+          onLoginSuccessful={(user: User) => {
+            setLoggedInUser(user);
+            setShowLoginModal(false);
+          }}
 
         />
 
