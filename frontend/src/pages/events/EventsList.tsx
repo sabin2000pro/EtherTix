@@ -20,9 +20,12 @@ const EventList: React.FC = () => {
       try {
         const response = await axios.get("/events");
         setEvents(response.data);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
+
     };
 
     fetchEvents();
@@ -42,8 +45,11 @@ const EventList: React.FC = () => {
   };
 
   return (
+
     <Container className="mt-5">
+
       <Row>
+        
         {currentPage !== 1 && (
           <ArrowLeft onClick={previousPage} className="mr-3" />
         )}
@@ -54,10 +60,12 @@ const EventList: React.FC = () => {
             className="text-center"
           >
             <Card.Img variant="top" src={event.image} />
+
             <Card.Body>
               <Card.Title>{event.name}</Card.Title>
               <Card.Text>{event.description}</Card.Text>
             </Card.Body>
+
           </Card>
         ))}
         {currentPage !== Math.ceil(events.length / eventsPerPage) && (
