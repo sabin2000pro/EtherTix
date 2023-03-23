@@ -6,6 +6,12 @@ interface IEventState {
     events?: []
 }
 
+interface ISingleEventState {
+    loading?: boolean,
+    error?: string,
+    event?: {}
+}
+
 const initialEventState = { // Initial state for the events (empty array)
     events: []
 }
@@ -27,16 +33,13 @@ export const eventsReducer = (state = initialEventState as IEventState, action: 
         case FETCH_ALL_EVENTS_FAIL:
             return {loading: false, error: action.payload.error, events: []}
 
-        case CREATE_NEW_EVENT_REQUEST:
-            return {loading: true, error: undefined, event: {}}
-
         default:
             return state
     }
 
 }
 
-export const singleEventReducer = (state = singleEventState as any, action: any) => {
+export const singleEventReducer = (state = singleEventState as ISingleEventState, action: any): ISingleEventState => {
 
     switch(action.type) {
 
@@ -47,7 +50,7 @@ export const singleEventReducer = (state = singleEventState as any, action: any)
             return {loading: false, ...state, event: action.payload.event}
 
         case FETCH_SINGLE_EVENT_FAILURE:
-            return {loading: false, error: action.payload.error, message: action.payload.error.message}
+            return {loading: false, error: action.payload.error, event: {}}
 
         default:
             return state;
