@@ -1,4 +1,4 @@
-import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCESS, FETCH_SINGLE_TICKET_FAIL } from './../constants/ticket-constants';
+import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL } from './../constants/ticket-constants';
 
 const initialTicketsState = {
     tickets: [] // Initial state for the tickets
@@ -8,7 +8,7 @@ const singleTicketState = {
     ticket: {}
 }
 
-export const fetchAllTicketsReducer = (state = initialTicketsState as any, action: any) => {
+export const ticketsReducer = (state = initialTicketsState as any, action: any) => {
 
     switch(action.type) {
 
@@ -16,10 +16,16 @@ export const fetchAllTicketsReducer = (state = initialTicketsState as any, actio
             return {loading: true, tickets: []}
 
         case FETCH_ALL_TICKETS_SUCCESS:
-            return {loading: false, ...state, tickets: action.payload.tickets}
+            return {loading: false, ...state, tickets: action.payload}
 
         case FETCH_ALL_TICKETS_FAIL:
             return {loading: false, error: action.payload.error, message: action.payload.error.message}
+
+        case FETCH_SINGLE_TICKET_REQUEST:
+            return {loading: true, error: undefined, ticket: {} }
+
+        case FETCH_SINGLE_TICKET_SUCCESS:
+            return {}
 
         default: // By default just return the state
             return state
@@ -28,7 +34,7 @@ export const fetchAllTicketsReducer = (state = initialTicketsState as any, actio
 
 }
 
-export const fetchSingleTicketByIDReducer = (state = singleTicketState as any, action: any) => {
+export const singleTicketReducer = (state = singleTicketState as any, action: any) => {
 
     switch(action.type) {
 

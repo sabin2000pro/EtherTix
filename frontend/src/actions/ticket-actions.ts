@@ -1,4 +1,4 @@
-import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST } from './../constants/ticket-constants';
+import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL } from './../constants/ticket-constants';
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
@@ -50,21 +50,30 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
 
 }
 
-export const createTicket = (name: string, ticketClass: string, stock: Number, description: string) => async (dispatch: Dispatch): Promise<void> => {
+export const createTicket = (event: string, issuer: string, name: string, ticketClass: string, stock: Number, description: string, cost: Number) => async (dispatch: Dispatch): Promise<void> => {
     try {
         dispatch({type: CREATE_TICKET_REQUEST});
 
-        const {data} = await axios.post(`http://localhost:5303/api/v1/tickets`, {name, ticketClass, stock, description})
+        const {data} = await axios.post(`http://localhost:5303/api/v1/tickets`, {event, issuer, name, ticketClass, stock, description, cost})
+
+        console.log(`Created Ticket Data : `, data);
+        dispatch({type: CREATE_TICKET_SUCCESS, payload: data.ticket});
     } 
     
     catch(error) {
+
+      if(error) {
+        console.log(`Create Ticket Error : `, error);
+        dispatch({type: CREATE_TICKET_FAIL, payload: error.response.data.message});
+      }
+
 
     }
 }
 
 export const editTicketDetails = (id: string) => async (dispatch: Dispatch): Promise<void> => {
     try {
-
+        
     }
     
     catch(error) {
