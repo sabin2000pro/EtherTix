@@ -111,7 +111,6 @@
             "_id": "5d7a514b5d2c12c7449be129",
             "event": "5d713995b721c3bb38c1f5d2",
             "issuer": "5d7a514b5d2c12c7449be044",
-            "venue": "5d7a514b5d2c12c7449be021",
             "name": "Agile Project Management Standard Ticket",
             "ticketClass": "standard",
             "capacity": 3,
@@ -127,31 +126,23 @@
             "name": "Agile Project Management Premium Ticket",
             "event": "5d713995b721c3bb38c1f5d2",
             "issuer": "5d7a514b5d2c12c7449be044",
-            "venue": "5d7a514b5d2c12c7449be021",
             "ticketClass": "premium",
-            "capacity": 3,
-            "minimumQuantityPurchase": 1,
-            "maximumQuantityPurchase": 3,
+            "stock": 3,
             "description": "Premium Entry Ticket for the Three Sisters Drink n Socialise Event",
             "cost": 0.0090,
-            "onSaleStatus": "Pending",
-            "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes"
+            "onSaleStatus": "Pending"
         },
 
         {
             "_id": "5d7a514b5d2c12c7449be131",
             "event": "5d713995b721c3bb38c1f5d2",
             "issuer": "5d7a514b5d2c12c7449be044",
-            "venue": "5d7a514b5d2c12c7449be021",
             "name": "Agile Project Management VIP Ticket",
             "ticketClass": "vip",
             "capacity": 3,
-            "minimumQuantityPurchase": 1,
-            "maximumQuantityPurchase": 3,
             "description": "VIP Entry Ticket for the Three Sisters Drink n Socialise Event",
             "cost": 0.0098,
-            "onSaleStatus": "Pending",
-            "confirmationMessage": "Thank you for the payment. You will receive your e-ticket soon in a couple of minutes"
+            "onSaleStatus": "Pending"
         }
 
 ]
