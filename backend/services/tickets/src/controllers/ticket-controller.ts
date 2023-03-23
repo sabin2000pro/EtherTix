@@ -121,10 +121,6 @@ export const fetchStandardTickets = async (request: any, response: any, next: Ne
     return response.status(StatusCodes.OK).json({success: true, standardTickets})
 }
 
-export const fetchVipTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
-}
-
 export const fetchTicketsSoldLastThirtyDays = async (request: any, response: any, next: NextFunction): Promise<any> => {
     
 }
