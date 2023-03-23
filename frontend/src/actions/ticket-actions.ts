@@ -50,9 +50,11 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
 
 }
 
-export const createTicket = (name: string, ticketClass: string) => async (dispatch: Dispatch): Promise<void> => {
+export const createTicket = (name: string, ticketClass: string, stock: Number, description: string) => async (dispatch: Dispatch): Promise<void> => {
     try {
-      dispatch({type: CREATE_TICKET_REQUEST});
+        dispatch({type: CREATE_TICKET_REQUEST});
+
+        const {data} = await axios.post(`http://localhost:5303/api/v1/tickets`, {name, ticketClass, stock, description})
     } 
     
     catch(error) {
