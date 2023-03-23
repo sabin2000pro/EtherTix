@@ -41,7 +41,7 @@ const NavBar = ({
 
       <Navbar.Brand as = {Link} to="/">
 
-        <img className="logo" height="89" width="270" src="/images/ethertix.png" alt="Ether Tix Logo"/>
+        <img className="logo" height="69" width="240" src="/images/ethertix.png" alt="Ether Tix Logo"/>
 
       </Navbar.Brand>
 

@@ -14,6 +14,7 @@ html {
 
 .navbar {
     background-color: #04286b;
+    height: 75px;
 }
 
 .heading-primary {
@@ -90,7 +91,7 @@ html {
     margin-bottom: 12px;
     margin-top: 10px;
     height: 40px;
-    width: 400px;
+    width: 350px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
@@ -583,3 +584,21 @@ label {
   }
   
   /*End Cart Page*/
+
+  /*EventList Page*/
+
+  .event-list-container{
+    display: flex;
+    justify-content: center;
+    /* background-color: #000;*/
+     margin-top: 75px;
+  }
+
+  .mt-5{
+    display: flex;
+    justify-content: center;
+    height: 50vh;
+    margin-bottom: 30px;
+  }
+
+  /*End EventList Page*/
