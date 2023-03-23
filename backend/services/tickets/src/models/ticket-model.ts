@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 interface ITicketAttributes { // Interface that stores the ticket data
     name: string,
     ticketClass: string,
-    ticketToken: string,
     stock: number,
-    quantityPurchase: string,
     description: string,
     cost: number,
-    deliveryMethods: string,
     onSaleStatus: string,
     ticketSold: boolean
     saleStartsAt: Date,
@@ -21,13 +18,10 @@ interface ITicketAttributes { // Interface that stores the ticket data
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    name: string,
    ticketClass: string,
-   ticketToken: string,
    capacity: number,
-   quantityPurchase: number,
    description: string,
    cost: number,
    stock: number,
-   deliveryMethods: string,
    ticketSold: boolean,
    onSaleStatus: string,
    saleStartsAt: Date,
@@ -55,14 +49,6 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             type: Number,
             required: [true, "Please specify how many tickets are currently in stock"],
             default: 1,
-        },
-
-        quantityPurchase: { // The minimum and maximum amount of tickets that can be purchased
-            type: Number,
-            required: [true, "Please specify how many tickets can be bought at a single time"],
-            default: 1,
-            min: [1, "You can only purchase a minimum of 1 ticket"],
-            max: [5, "You cannot purchase more than 5 tickets"]
         },
 
         description: { // Ticket Description for an event
