@@ -17,10 +17,6 @@ services:
     volumes:
       - /app/node_modules
       - ../backend/services/api-gateway:/app
-      - auth-service
-      - events-service
-      - venues-service
-      - tickets-service
 
   auth-service:
     container_name: ethertix-authentication-service
