@@ -60,7 +60,7 @@ export const createTicket = (event: string, issuer: string, name: string, ticket
         dispatch({type: CREATE_TICKET_SUCCESS, payload: data.ticket});
     } 
     
-    catch(error) {
+    catch(error: any) {
 
       if(error) {
         console.log(`Create Ticket Error : `, error);

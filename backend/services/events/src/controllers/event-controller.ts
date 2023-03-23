@@ -1,6 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
+import path from 'path';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
 import asyncHandler from 'express-async-handler';
@@ -90,10 +91,35 @@ export const deleteEventByID = asyncHandler(async (request: any, response: any, 
 })
 
 export const uploadEventPhoto = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-  const file = request.file.files;
+    const file = request.files.file as any
+    const id = request.params.id;
 
-  
-})
+    if(!isValidObjectId(id)) {
+      return next(new ErrorResponse(`The product ID is in the wrong format. Please check your ID again`, StatusCodes.BAD_REQUEST));
+    }
+
+    if(!file) {
+        return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: "Please upload a valid file"});
+    }
+
+    // Validate the file size
+    if(file.size > process.env.PRODUCTS_SERVICE_MAX_FILE_UPLOAD_SIZE) {
+        return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: "File size is too large, please upload again"});
+    }
+
+    const fileName = `event_${request.params.id}${path.parse(file.name).ext}`;
+
+  file.mv(`${process.env.PRODUCTS_SERVICE_FILE_UPLOAD_PATH}/${fileName}`, async (error) => {
+
+    if (error) {
+      console.error(error);
+      return next(new ErrorResponse('Problem with file upload', StatusCodes.INTERNAL_SERVER_ERROR));
+    }
+
+    await Event.findByIdAndUpdate(id, { image: `/images/${fileName}` });
+    return response.status(StatusCodes.OK).json({success: true, message: "Event Image Uploaded"});
+
+})})
 
 export const editEventStartTime = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
   const fieldsToUpdate = {newStartsAt: request.body.startsAt, newEndsAt: request.body.newEndsAt};
