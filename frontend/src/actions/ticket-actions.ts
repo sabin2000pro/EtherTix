@@ -50,7 +50,15 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
 
 }
 
-export const createTicket = ()
+export const createTicket = (name: string, ticketClass: string) => async (dispatch: Dispatch): Promise<void> => {
+    try {
+
+    } 
+    
+    catch(error) {
+
+    }
+}
 
 export const editTicketDetails = (id: string) => async (dispatch: Dispatch): Promise<void> => {
     try {
