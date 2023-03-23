@@ -72,14 +72,14 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
 
         cost: { // The ticket cost in ETHER
             type: Number,
-            required: true,
+            required: [true, "Please specify how much a ticket costs in ether"],
             default: 0.010       
          },
 
         onSaleStatus: { // Ticket on sale status can either be available for sale, sold out or pending
             type: String,
             enum: ["Available", "Sold Out", "Pending"],
-            required: [true, "Please specfify whether or not the event is available, sold out or pending to start"]
+            default: 'Pending'
         },
 
         saleStartsAt: {
@@ -90,13 +90,6 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
         saleEndsAt: { // The timestamp at which the ticket sale ends
             type: Date,
             default: Date.now
-        },
-
-        confirmationMessage: {
-            type: String,
-            required: true,
-            minlength: [10, "Minimum of 10 characters for the confirmation message"],
-            maxlength: [200, "Confirmation message cannot exceed 200 characters"]
         },
 
         ticketSold: { // Determines if the ticket ahs been sold or not

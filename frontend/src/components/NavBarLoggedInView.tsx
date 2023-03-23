@@ -28,6 +28,8 @@ const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProp
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
+
+          
           <Nav className="me-auto">
             <NavDropdown title={user.username} id="dropdown-menu-right">
               <NavDropdown.Item href="#Settings">Settings</NavDropdown.Item>
