@@ -1,4 +1,4 @@
-import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL } from './../constants/ticket-constants';
+import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL, EDIT_TICKET_REQUEST } from './../constants/ticket-constants';
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
@@ -71,9 +71,13 @@ export const createTicket = (event: string, issuer: string, name: string, ticket
     }
 }
 
-export const editTicketDetails = (id: string) => async (dispatch: Dispatch): Promise<void> => {
+export const editTicketDetails = (id: string, name: string, ticketClass: string, stock: Number, description: string, cost: Number) => async (dispatch: Dispatch): Promise<void> => {
     try {
-        
+        dispatch({type: EDIT_TICKET_REQUEST});
+
+        const {data} = await axios.put(`http://localhost:5303/api/v1/tickets/${id}`, {name, ticketClass, stock, description, cost});
+
+        console.log(`Updated Ticket Data : `, data);
     }
     
     catch(error) {
