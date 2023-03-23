@@ -90,7 +90,9 @@ export const deleteEventByID = asyncHandler(async (request: any, response: any, 
 })
 
 export const uploadEventPhoto = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+  const file = request.file.files;
 
+  
 })
 
 export const editEventStartTime = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
