@@ -99,8 +99,8 @@ export const deleteTickets = () => async (dispatch: Dispatch): Promise<void> => 
 
     }
     
-    catch(error) {
-        
+    catch(error: any) {
+
       if(error) {
 
       }
