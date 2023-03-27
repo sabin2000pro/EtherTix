@@ -87,6 +87,8 @@ const EventList: React.FC = () => {
                     <Button type = "submit" onClick = {goToEvent}>View Event</Button>
                   </Card.Body>
                 </Card>
+
+
               ))}
         </Row>
         <Button className ="click-right" onClick={scrollRight}>&gt;</Button>
