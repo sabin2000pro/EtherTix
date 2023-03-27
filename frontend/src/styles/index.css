@@ -573,7 +573,7 @@ label {
   .event-list-container{
     display: flex;
     justify-content: center;
-    /*background-color: #000;*/
+    background-color: #000;
     margin-top: 75px;
     width: 1000px;
   }
