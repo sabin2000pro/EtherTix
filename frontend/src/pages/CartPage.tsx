@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { fetchAllTickets } from 'actions/ticket-actions';
-import { fetchAllTickets } from 'actions/ticket-actions';
 
 type Ticket = {
   id: number;
@@ -71,12 +70,6 @@ const addToCart = (ticket: Ticket, quantity: number) => {
       0
     );
   }
-  
-
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const [ethPrice, setEthPrice] = useState<number>(0);
-
   // Fetch the live Ethereum price on component mount
   useEffect(() => {
     const fetchEthPrice = async () => {
