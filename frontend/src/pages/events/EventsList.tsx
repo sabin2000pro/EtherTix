@@ -3,30 +3,30 @@ import axios from "axios";
 import { Card, Container, Row, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {useParams} from 'react-router-dom'
+import { useSelector, useDispatch } from "react-redux";
+import { fetchEventList } from "actions/event-actions";
 
-interface Event {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-}
 
 const EventList: React.FC = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-    const [events, setEvents] = useState<Array<{ id: number; name: string; description: string; image: string }>>([]);
+    const dispatch = useDispatch();
+    const {error, events} = useSelector((state: any) => state.events);
   
     useEffect(() => {
-      const fetchEvents = async () => {
+
+      const loadEvents = async () => {
+        
         try {
-          const response = await axios.get("/events");
-          setEvents(response.data);
-        } catch (error) {
+           dispatch(fetchEventList() as any)
+        } 
+        
+        catch (error) {
           console.error(error);
         }
       };
   
-      fetchEvents();
+      loadEvents();
     }, []);
 
     const goToEvent = () => {
@@ -34,24 +34,29 @@ const EventList: React.FC = () => {
     }
 
     return (
+
     <div className="event-list-container">
-      <Container className="mt-5">
+
+      <Container className ="mt-5">
+
         <Row>
-          {events.length === 0
-            ? [1, 2, 3,].map((i) => (
-                <Card
-                  key={i}
-                  style={{ width: "18rem", margin: "0 10px" }}
-                  className="text-center"
-                >
+
+          {events.length === 0 ? [1, 2, 3,].map((i) => (
+
+                <Card key={i} style={{ width: "18rem", margin: "0 10px" }} className="text-center">
+
                   <Card.Body>
+
                     <Card.Title>Event {i}</Card.Title>
                     <Card.Text>Description for event {i}</Card.Text>
                     <Button onClick = {goToEvent}>View Event</Button>
+
                   </Card.Body>
                 </Card>
+
               ))
-            : events.map((event) => (
+
+            : events.map((event: any) => (
                 <Card
                   key={event.id}
                   style={{ width: "18rem", margin: "0 10px" }}
@@ -64,6 +69,8 @@ const EventList: React.FC = () => {
                     <Button type = "submit" onClick = {goToEvent}>View Event</Button>
                   </Card.Body>
                 </Card>
+
+
               ))}
         </Row>
       </Container>

@@ -21,6 +21,7 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
   const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
+
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [ethPrice, setEthPrice] = useState<number>(0);
@@ -38,47 +39,58 @@ const CartPage = () => {
 
   // Add an item to the cart
 const addToCart = (ticket: Ticket, quantity: number) => {
+
   const updatedCart = { ...cart };
+
   if (updatedCart[ticket.id]) {
     updatedCart[ticket.id].quantity += quantity;
-  } else {
+  } 
+  
+  else {
     updatedCart[ticket.id] = { ...ticket, quantity };
   }
+
   setCart(updatedCart);
 };
 
 
   // Remove an item from the cart
   const removeFromCart = (ticketId: number) => {
+
     const updatedCart = { ...cart };
+
     if (updatedCart[ticketId].quantity === 1) {
       delete updatedCart[ticketId];
-    } else {
+    } 
+    
+    else {
       updatedCart[ticketId].quantity -= 1;
     }
     setCart(updatedCart);
   };
-
-  function removeAllFromCart() {
-    setCart({});
-  }
-
   // Calculate total price of items in the cart
   function getTotalPrice() {
+
     return Object.values(cart).reduce(
       (acc, item) => acc + item.price * item.quantity,
       0
     );
   }
+  
+
   // Fetch the live Ethereum price on component mount
   useEffect(() => {
     const fetchEthPrice = async () => {
+
       try {
+
         const response = await axios.get(
           "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
         );
         setEthPrice(response.data.ethereum.usd);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
     };
@@ -90,11 +102,13 @@ const addToCart = (ticket: Ticket, quantity: number) => {
   }
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+
     const quantity = parseInt(event.target.value);
     if (selectedTicket) {
       addToCart(selectedTicket, quantity);
       setSelectedTicket(null);
     }
+
   };
   
   const handleAddToCart = () => {
@@ -105,14 +119,21 @@ const addToCart = (ticket: Ticket, quantity: number) => {
   };
  
   return (
+
       <div className="container">
+
         <div className="row">
+
           <div className="col-md-6">
             <div className="eth-price">
+
+
               <span>Current ETH Price:</span> ${ethPrice.toFixed(2)}
             </div>
             <div className="cart">
               <h2 className="cart__heading">Your Cart</h2>
+
+
               {Object.keys(cart).length === 0 ? (
                 <p>Your cart is empty</p>
               ) : (
@@ -180,17 +201,28 @@ const addToCart = (ticket: Ticket, quantity: number) => {
                   </li>
                 ))}
               </ul>
+
+
               {selectedTicket && (
+
+
                 <div>
                   <h2>{selectedTicket.name}</h2>
+
                   <p>
                     Price: {calculateEthPrice(selectedTicket.price).toFixed(6)} ETH (${selectedTicket.price.toFixed(2)}) x {selectedQuantity}
                   </p>
+
+
                   <button onClick={handleAddToCart}>
                     Add to Cart
                   </button>
+
+
                   <button onClick={() => setSelectedTicket(null)}>Cancel</button>
                 </div>
+
+                
               )}
             </div>
           </div>
