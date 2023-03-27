@@ -78,5 +78,5 @@ export const createNewEventReducer = (state = initialEventState, action: any) =>
 }
 
 export const updateEventReducer = (state = singleEventState, action: any) => {
-
+ 
 }

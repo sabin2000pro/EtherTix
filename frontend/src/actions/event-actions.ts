@@ -1,11 +1,20 @@
+import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, FETCH_ALL_EVENTS_FAIL } from './../constants/event-constants'
+import axios from 'axios';
+
 
 export const fetchEventList = () => async (dispatch: any) => {
-     try {
     
+     try {
+        dispatch({type: FETCH_ALL_EVENTS_REQUEST});
+
+        const {data} = await axios.get(`http://localhost:5301/api/v1/events`);
+        console.log(`Event data : `, data);
+
+        dispatch({type: FETCH_ALL_EVENTS_SUCCESS, payload: data.events});
      } 
      
      catch(error: any) {
-    
+        dispatch({FETCH_ALL_EVENTS_FAIL, payload: error.data.response.message})
      }
      
 }
