@@ -3,7 +3,7 @@ import {configureStore} from '@reduxjs/toolkit'
 /*import { fetchAllEvents, fetchSingleEventReducer } from 'reducers/event-reducers'*/
 import { addToCartReducer, removeItemFromCart } from 'reducers/cart-reducers'
 
-
+// Global store
 const store: any = configureStore({
 
     reducer: {
