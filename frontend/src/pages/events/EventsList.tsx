@@ -7,13 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from "actions/event-actions";
 
 
-interface Event {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-}
-
 const EventList: React.FC = () => {
     const {id} = useParams();
     const navigate = useNavigate();
@@ -44,12 +37,11 @@ const EventList: React.FC = () => {
 
     <div className="event-list-container">
 
-      <Container className="mt-5">
+      <Container className ="mt-5">
+
         <Row>
 
-          {events.length === 0
-
-            ? [1, 2, 3,].map((i) => (
+          {events.length === 0 ? [1, 2, 3,].map((i) => (
 
                 <Card key={i} style={{ width: "18rem", margin: "0 10px" }} className="text-center">
 
@@ -77,6 +69,8 @@ const EventList: React.FC = () => {
                     <Button type = "submit" onClick = {goToEvent}>View Event</Button>
                   </Card.Body>
                 </Card>
+
+
               ))}
         </Row>
       </Container>
