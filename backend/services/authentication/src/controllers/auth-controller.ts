@@ -133,7 +133,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
         await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
-        sendConfirmationEmail(user, userOTP as unknown as any);
+        //sendConfirmationEmail(user, userOTP as unknown as any);
 
         return sendTokenResponse(request, user, StatusCodes.CREATED, response);
     } 
@@ -196,16 +196,16 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
             const transporter = emailTransporter();
     
           
-                transporter.sendMail({
+                // transporter.sendMail({
 
-                    from: 'welcome@ethertix.com',
-                    to: user.email,
-                    subject: 'E-mail Confirmation Success',
-                    html: `
+                //     from: 'welcome@ethertix.com',
+                //     to: user.email,
+                //     subject: 'E-mail Confirmation Success',
+                //     html: `
                     
-                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                    `
-                })
+                //     <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                //     `
+                // })
     
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
@@ -300,15 +300,15 @@ export const loginUser = asyncHandler(async (request: any, response: any, next: 
         const userMfa = generateMfaToken();
         const transporter = emailTransporter();
 
-        sendLoginMfa(transporter as any, user as any, userMfa as any);
+        // sendLoginMfa(transporter as any, user as any, userMfa as any);
 
         const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
         await loginMfa.save();
 
         // Check for a valid MFA
-        if(!userMfa) {
-           return next(new ErrorResponse("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
-        }
+        // if(!userMfa) {
+        //    return next(new ErrorResponse("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
+        // }
 
          request.session = {jwt: token}; // Store the token in the session as a cookie
          return response.status(StatusCodes.OK).json({success: true, token, user});
@@ -495,7 +495,8 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
 export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     try {
-        const user = await User.findById(request.session.userId).select("+email").exec();
+        const userId = request.headers.authorization.split(' ')[2];
+        const user = await User.findById(userId);
         return response.status(StatusCodes.OK).json({success: true, user});
     } 
     

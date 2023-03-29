@@ -78,7 +78,7 @@ export const resendEmailVerification = async (
 };
 
 export interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -99,7 +99,7 @@ export const login = async (loginPayload: LoginCredentials): Promise<any> => {
 
 export const logout = async (): Promise<any> => {
   try {
-    const response = await axios.post("http://localhost:5299/api/auth/logout");
+    const response = await axios.get("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
   } catch (err: any) {
@@ -111,7 +111,7 @@ export const logout = async (): Promise<any> => {
 
 export const getUser = async (): Promise<any> => {
   try {
-    const response = await axios.get("http://localhost:5299/api/auth/me");
+    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${localStorage.getItem("token")} ${localStorage.getItem("userId")}`}});
     const data = await response.data;
     return data;
   } catch (err: any) {
