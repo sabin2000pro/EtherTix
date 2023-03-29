@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { login, LoginCredentials } from "api/auth/auth-api";
-import { User } from "../../models/user";
 import { useForm } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
+import { useDispatch } from "react-redux";
+import cookies from "../../auth/cookies";
+import * as stor from "../../auth/store";
 
 interface LoginModalProps {
   onDismiss: () => void;
-  onLoginSuccessful: (user: User) => void;
+  onLoginSuccessful: () => void;
 }
 
 // @description: Login Component
@@ -16,22 +18,28 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const {register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginCredentials>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginCredentials>();
 
+  const dispatch = useDispatch();
 
   const onSubmit = async (credentials: LoginCredentials) => {
     try {
       const response = await login(credentials);
       console.log(response);
 
-      //if (response.success === true) {
-      onLoginSuccessful(response.user);
-      //} else {
-      //return response;
-      //}
-    } 
-    
-    catch (err: any) {
+      cookies.set(stor.COOKIE_NAME_USER, response.user);
+      cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
+      cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
+
+      dispatch(stor.login(response.user));
+      dispatch(stor.setToken(response.token));
+
+      onLoginSuccessful();
+    } catch (err: any) {
       if (err) {
         setErrorText(err);
         alert(err);
@@ -46,19 +54,15 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
   return (
     <Modal show onHide={onDismiss} centered>
-
       <Modal.Header closeButton>
         <Container className="text-center">
           <Modal.Title>Welcome Back</Modal.Title>
         </Container>
-
       </Modal.Header>
 
       <Modal.Body>
-
         {errorText && <Alert variant="danger">{errorText}</Alert>}
         <Form onSubmit={handleSubmit(onSubmit)}>
-
           <Container className="text-left">
             <TextInputField
               name="email"
@@ -67,7 +71,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
               placeholder="Email"
               register={register}
               registerOptions={{ required: "Required" }}
-              error={errors.username}
+              error={errors.email}
               autoFocus
             />
 
@@ -102,44 +106,6 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
         </Form>
       </Modal.Body>
     </Modal>
-
-    // <div className="login-container">
-    //   <div className="image-container"></div>
-    //   <h1 className="heading-primary">Welcome to EtherTix</h1>
-    //   <form onSubmit={handleSubmit(onSubmit)} >
-    //     <div className="email-container">
-    //       <label htmlFor="email-login">Enter Email:</label>
-    //       <br />
-    //       <input
-    //         type="text"
-    //         name="email"
-    //         id="email-login"
-    //         value={Creds.email}
-    //         onChange={handleChange}
-    //       />
-    //     </div>
-    //     <div className="password-container">
-    //       <label htmlFor="password">Password</label>
-    //       <br />
-    //       <input
-    //         type="password"
-    //         name="password"
-    //         id="password"
-    //         value={Creds.password}
-    //         onChange={handleChange}
-    //       />
-    //     </div>
-    //     <br />
-    //     <div className="span-container">
-    //       <span>
-    //         Don't have an account? - <a href="/register">Register Here</a>{" "}
-    //       </span>
-    //     </div>
-    //     <button className="login-btn" type="submit">
-    //       Log-in
-    //     </button>
-    //   </form>
-    // </div>
   );
 };
 
