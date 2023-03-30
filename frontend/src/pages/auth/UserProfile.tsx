@@ -17,7 +17,7 @@ const UserProfile: React.FC = (props: any) => {
     <>
     
     <div>
-        User Profile 
+        User Profile
     </div>
 
     </>
