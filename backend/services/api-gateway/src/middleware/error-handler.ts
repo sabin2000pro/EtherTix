@@ -28,8 +28,5 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
 
     }
 
-    console.log(`Error : `, error.message);
-    console.log(`Error Stack : `, error.stack);
-
     return response.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
 }

@@ -67,6 +67,9 @@ services:
       ports:
         - "5301:5301"
 
+      networks:
+        - tickets-service
+
       volumes:
         - /app/node_modules
         - ../backend/services/events:/app
@@ -155,3 +158,10 @@ services:
         
 volumes:
   mongodb_data_volume:
+
+networks:
+  tickets-service:
+    driver: bridge
+
+  events-service:
+    driver: bridge

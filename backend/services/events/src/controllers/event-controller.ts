@@ -8,7 +8,7 @@ import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const keyword = request.query.keyword;
-    const events = await Event.find();
+    const events = await Event.find().populate('tickets');
 
     if(!events) {
       return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));
@@ -20,15 +20,15 @@ export const fetchAllEvents = asyncHandler(async (request: any, response: any, n
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
         const id = request.params.id;
-        const event = await Event.findById(id)
-
+        const event = await Event.findById(id);
+        
         if(!event) {
            return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }
 
         return response.status(StatusCodes.OK).json({success: true, event});
 
-    }
+}
 
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
         const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category } = request.body;
