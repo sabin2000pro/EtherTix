@@ -8,7 +8,7 @@ const EmailVerification: React.FC = () => {
   const location = useLocation();
   const userEmail = location.state.email; 
   //"mail";
-  const timeLeft = 15;
+  const timeLeft = 1;
 
   const fetchUserId = () => {
     const userId = location.state._id; 
@@ -62,7 +62,7 @@ const EmailVerification: React.FC = () => {
   };
 
   const inputfocus = (elmnt: any) => {
-    const ms = 250;
+    const ms = 100;
     if (
       elmnt.key === "Delete" ||
       elmnt.key === "Backspace" ||

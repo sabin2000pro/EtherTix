@@ -127,11 +127,8 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: user._id, token: userOTP});
         await verificationToken.save();
 
-        console.log(`Your User ID: `, user.id);
         console.log(`Your OTP: `, userOTP);
 
-        const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
-        await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
         //sendConfirmationEmail(user, userOTP as unknown as any);
 
@@ -240,7 +237,9 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
         const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
 
         if(!token) {
-            return next(new ErrorResponse("User verification token not found", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST));
+        } else {
+            await EmailVerification.deleteOne({owner: userId});
         }
 
         // Fetch the generated token
@@ -253,7 +252,7 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
         console.log(`Your User ID: `, userId);
         console.log(`Your OTP: `, otpToken);
 
-        const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
+        const newToken = new EmailVerification({owner: currentUser._id, token: otpToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
         return response.status(StatusCodes.OK).json({success: true, message: "E-mail Verification Re-sent"});
@@ -394,10 +393,10 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
-        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const thirtySecondsAgo = new Date(Date.now() - 0.3 * 60 * 1000);
         const lastSentAt = new Date(resentToken.sentAt);
 
-        if(lastSentAt >= fiveMinutesAgo) { // If the date at which the last token was sent at (current date) 
+        if(lastSentAt >= thirtySecondsAgo) { // If the date at which the last token was sent at (current date) 
             return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
 
