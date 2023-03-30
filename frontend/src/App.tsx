@@ -14,7 +14,7 @@ import CartPage from "pages/CartPage";
 import { Container } from "react-bootstrap";
 import EventsList from "pages/events/EventsList";
 import SingleEvent from "pages/events/SingleEvent";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/store";
 
@@ -26,28 +26,48 @@ const store = configureStore({
 
 const App = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  return (
+  const handleFetchTickets = (event: any): void => {
+     try {
+        
+     } 
+     
+     catch(error) {
+       if(error) {
+         console.error(error);
+       }
+     }
+
+  }
+
+   return (
+    <>
+      <button onClick = {handleFetchTickets}>Fetch Tickets</button>
+
     <Provider store={store}>
+
       <NavBar
         onLoginClicked={() => setShowLoginModal(true)}
         onSignUpClicked={() => setShowSignUpModal(true)}
       />
 
+
       <Container style={{ padding: "32px 0" }}>
         <Routes>
+
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
+
           <Route path="/" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/reset-password"
-            element={<ResetPassword onDismiss={() => navigate("/")} />}
+          <Route path="/reset-password" element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
+
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
@@ -57,27 +77,36 @@ const App = () => {
           <Route path="/events/:id" element={<SingleEvent />} />
 
           <Route path="*" element={<NotFound />} />
+
         </Routes>
       </Container>
 
       {showSignUpModal && (
+
         <Register
+        
           onDismiss={() => setShowSignUpModal(false)}
           onSignUpSuccessful={() => {
             setShowSignUpModal(false);
           }}
+
         />
       )}
 
       {showLoginModal && (
+
         <Login
           onDismiss={() => setShowLoginModal(false)}
           onLoginSuccessful={() => {
             setShowLoginModal(false);
           }}
+
         />
       )}
+
     </Provider>
+
+    </>
   );
 };
 

@@ -16,16 +16,16 @@ export const fetchUserBookedEvents = asyncHandler(async (request: any, response:
     } 
 )
 
-export const createNewEvent = asyncHandler(async (request, response, next): Promise<any> => {
 
-})
-
-export const fetchTicketEventDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const ticketEventDetails = await axios.get(`http://tickets-service:5303/api/tickets/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
+export const fetchEventTicketDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const ticketEventDetails = await axios.get(`http://tickets-service:5303/api/v1/tickets/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
     const ticketData = ticketEventDetails.data;
 
     const eventDetails = await axios.get(`http://events-service:5301/api/v1/events/${ticketData.ticket.event}`, {headers: {Authorization: request.headers.authorization}});
     const eventData = eventDetails.data;
+
+    console.log(`Ticket Data : `, ticketData);
+    console.log(`Event Data : `, eventData);
 
     return response.status(StatusCodes.OK).json({success: true, data: eventData});
 
@@ -37,8 +37,4 @@ export const editEventDetails = asyncHandler(async (request, response, next): Pr
 
 export const fetchUsers = asyncHandler(async (request: any, response: Response, next: NextFunction) => {
 
-})
-
-export const fetchEventTicketDetails = asyncHandler(async (request: any, response: any, next: NextFunction) => {
-    return response.status(StatusCodes.OK).json({success: true, message: 'Event Ticket Details Here'});
 })

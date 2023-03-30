@@ -14,9 +14,7 @@ interface NavBarProps {
 
 const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<
-    { name: string; path: string }[]
-  >([]);
+  const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
 
   let useR = useSelector((state: any) => state.auth.user as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
@@ -27,22 +25,23 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
     if (!searchTerm) {
       setSearchResults([]);
     }
+
   };
 
   return (
+
     <Navbar className="navbar" expand="sm" sticky="top">
-      <Navbar.Brand as={Link} to="/">
-        <img
-          className="logo"
-          height="69"
-          width="240"
-          src="/images/ethertix.png"
-          alt="Ether Tix Logo"
-        />
+
+      <Navbar.Brand as = {Link} to="/">
+
+        <img className = "logo" height="69" width="240" src="/images/ethertix.png" alt = "Ether Tix Logo" />
+
       </Navbar.Brand>
 
       <Container>
+
         <Nav className="justify-content-center">
+
           <Search
             searchTerm={searchTerm as any}
             handleSearch={handleSearch as any}
@@ -51,17 +50,19 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
         </Nav>
 
         <Nav className="justify-content-right">
-          {isLoggedIn ? (
-            <NavBarLoggedInView
-              user={useR}
-            />
+
+          {isLoggedIn ? (<NavBarLoggedInView user = {useR} />
+
           ) : (
             <NavBarLoggedOutView
               onLoginClicked={onLoginClicked}
               onSignUpClicked={onSignUpClicked}
             />
+            
           )}
+
         </Nav>
+
       </Container>
     </Navbar>
   );
