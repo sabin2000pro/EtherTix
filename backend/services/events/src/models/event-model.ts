@@ -22,7 +22,7 @@ interface EventAttributes { // Interface for the event attributes
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
-    ticket: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
+    tickets: mongoose.Schema.Types.ObjectId; // The Ticket ID of the specific Event
     category: mongoose.Schema.Types.ObjectId; // Category ID of the Specifid Event
 }
 
@@ -48,7 +48,7 @@ interface EventDocument extends mongoose.Model<EventAttributes> {
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
     venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
-    ticket: mongoose.Schema.Types.ObjectId; // Ticket corresponding to an event
+    tickets: mongoose.Schema.Types.ObjectId; // Ticket corresponding to an event
     category: mongoose.Schema.Types.ObjectId;
 }
 
@@ -164,11 +164,11 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         required: [true, "Please specify a valid venue ID for this event"]
     },
 
-    ticket: { // Event -> Ticket Relationship
+    tickets: [{ // Event -> Ticket Relationship
         type: mongoose.Schema.Types.ObjectId,
         ref: "ticket",
         required: [true, "Please specify a valid Ticket ID for this event"]
-    },
+    }],
 
     category: {
         type: mongoose.Schema.Types.ObjectId,
@@ -181,25 +181,6 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     timestamps: true,
     toJSON: {virtuals: true}
 }) 
-
-// Virtual populate
-EventSchema.virtual('tickets', {
-    ref: 'ticket',
-    foreignField: 'Ticket',
-    localField: '_id'
-});
-
-EventSchema.virtual('reviews', {
-    ref: 'Review',
-    foreignField: 'Review',
-    localField: '_id'
-});
-
-EventSchema.virtual('venues', {
-    ref: 'Venue',
-    foreignField: 'Venue',
-    localField: '_id'
-});
 
 const Event = mongoose.model<EventDocument>("Event", EventSchema);
 export {Event}

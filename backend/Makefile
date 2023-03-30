@@ -15,12 +15,12 @@ process-data-script:
 	- cd services/shared && ts-node global-data-seeder.ts --import
 
 build-services:
-	- cd services/auth*&& npm run build
-	- cd services/events* && npm run build
-	- cd services/venues* && npm run build
-	- cd services/categories* && npm run build
-	- cd services/discount* && npm run build
-	- cd services/api-gateway* && npm run build
+	- cd services/auth* && npm run build && docker build -t sabin2000/ethertix-auth-service .
+	- cd services/events* && npm run build && docker build -t sabin2000/ethertix-events-service .
+	- cd services/venues* && npm run build && docker build -t sabin2000/ethertix-venues-service .
+	- cd services/categories* && npm run build && docker build -t sabin2000/ethertix-categories-service .
+	- cd services/discount* && npm run build && docker build -t sabin2000/ethertix-discount-service .
+	- cd services/api-gateway* && npm run build && docker build -t sabin2000/ethertix-api-gateway-service .
 
 	- docker login
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build

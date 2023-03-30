@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import axios from "axios";
 import { Card, Container, Row, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +6,23 @@ import {useParams} from 'react-router-dom'
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from "actions/event-actions";
 
+interface Event {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+}
 
 const EventList: React.FC = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {error, events} = useSelector((state: any) => state.events);
-  
-    useEffect(() => {
+   /* const {error, events} = useSelector((state: any) => state.events);*/
+    const [events] = useState<Array<{ id: number; name: string; description: string; image: string }>>([]);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const rowRef = useRef(null);
+
+   useEffect(() => {
 
       const loadEvents = async () => {
         
@@ -27,21 +36,30 @@ const EventList: React.FC = () => {
       };
   
       loadEvents();
-    }, []);
+    }, []); 
 
     const goToEvent = () => {
        navigate(`/events/${id}`)
     }
 
+    const scrollLeft = () => {
+      setScrollPosition(scrollPosition - 200); // You can adjust the scroll amount
+    };
+    
+    const scrollRight = () => {
+      setScrollPosition(scrollPosition + 200); // You can adjust the scroll amount
+    };
+
     return (
 
     <div className="event-list-container">
 
-      <Container className ="mt-5">
+    <Container className="mt-5">
+        <Button className ="click-left" onClick={scrollLeft}>&lt;</Button>
+    <Row>
+          {events.length === 0
 
-        <Row>
-
-          {events.length === 0 ? [1, 2, 3,].map((i) => (
+            ? [1, 2, 3,].map((i) => (
 
                 <Card key={i} style={{ width: "18rem", margin: "0 10px" }} className="text-center">
 
@@ -73,6 +91,7 @@ const EventList: React.FC = () => {
 
               ))}
         </Row>
+        <Button className ="click-right" onClick={scrollRight}>&gt;</Button>
       </Container>
     </div>
     )

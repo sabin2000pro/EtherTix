@@ -2,7 +2,7 @@
   
   {
     "_id": "5d713995b721c3bb38c1f5d0",
-    "ticket": "5d7a514b5d2c12c7449be120",
+    "tickets": ["5d7a514b5d2c12c7449be120", "5d7a514b5d2c12c7449be121", "5d7a514b5d2c12c7449be122", "5d7a514b5d2c12c7449be123"],
     "category": "63ef748a0e98bc969c768381",
     "organiser": "5d7a514b5d2c12c7449be042",
     "venue": "5d7a514b5d2c12c7449be020",

@@ -7,72 +7,89 @@ import Register from "pages/auth/Register";
 import ResetPassword from "pages/auth/ResetPassword";
 import UpdatePassword from "pages/auth/UpdatePassword";
 import UpdateProfile from "pages/auth/UpdateProfile";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import NotFound from "pages/NotFound";
 import CartPage from "pages/CartPage";
-import { User } from "./models/user";
-import { getUser } from "./api/auth/auth-api";
 import { Container } from "react-bootstrap";
 import EventsList from "pages/events/EventsList";
 import SingleEvent from "pages/events/SingleEvent";
+import { Provider, useDispatch } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./auth/store";
+
+const store = configureStore({
+  reducer: {
+    auth: authReducer,
+  },
+});
 
 const App = () => {
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  useEffect(() => {
+  const handleFetchTickets = (event: any): void => {
+     try {
+        
+     } 
+     
+     catch(error) {
+       if(error) {
+         console.error(error);
+       }
+     }
 
-    const fetchLoggedInUser = async () => {
+  }
 
-      try {
-        const response = await getUser();
-        setLoggedInUser(response.user);
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchLoggedInUser();
-  }, []);
-
-  return (
+   return (
     <>
-    
-      <NavBar loggedInUser = {loggedInUser} onLoginClicked={() => setShowLoginModal(true)} onSignUpClicked={() => setShowSignUpModal(true)} onLogoutSuccessful={() => setLoggedInUser(null)}/>
+      <button onClick = {handleFetchTickets}>Fetch Tickets</button>
 
-       <Container>
+    <Provider store={store}>
 
+      <NavBar
+        onLoginClicked={() => setShowLoginModal(true)}
+        onSignUpClicked={() => setShowSignUpModal(true)}
+      />
+
+
+      <Container style={{ padding: "32px 0" }}>
         <Routes>
 
-          <Route path="/reset-password/:resetToken" element={<ResetPassword onDismiss = {() => navigate("/")} />} />
-          <Route path = "/" element={<Home />} />
+          <Route
+            path="/reset-password/:resetToken"
+            element={<ResetPassword onDismiss={() => navigate("/")} />}
+          />
+
+          <Route path="/" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element = {<ResetPassword onDismiss = {() => navigate("/")} />} />
+          <Route path="/reset-password" element={<ResetPassword onDismiss={() => navigate("/")} />}
+          />
+
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
           <Route path="/my-cart" element={<CartPage />} />
 
-          <Route path = "/events" element = {<EventsList />} />
-          <Route path = '/events/:id' element = {<SingleEvent />} />
+          <Route path="/events" element={<EventsList />} />
+          <Route path="/events/:id" element={<SingleEvent />} />
 
-          <Route path = "*" element = {<NotFound />} />
+          <Route path="*" element={<NotFound />} />
 
         </Routes>
-
       </Container>
-      
+
       {showSignUpModal && (
 
-        <Register onDismiss={() => setShowSignUpModal(false)} onSignUpSuccessful = {(user) => {setLoggedInUser(user);
+        <Register
+        
+          onDismiss={() => setShowSignUpModal(false)}
+          onSignUpSuccessful={() => {
             setShowSignUpModal(false);
           }}
-          
+
         />
       )}
 
@@ -80,19 +97,17 @@ const App = () => {
 
         <Login
           onDismiss={() => setShowLoginModal(false)}
-          onLoginSuccessful={(user: User) => {
-            setLoggedInUser(user);
+          onLoginSuccessful={() => {
             setShowLoginModal(false);
           }}
 
         />
-
       )}
 
-    </>
-    
-  );
+    </Provider>
 
+    </>
+  );
 };
 
 export default App;

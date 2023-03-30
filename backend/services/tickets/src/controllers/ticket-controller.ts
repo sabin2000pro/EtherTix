@@ -10,7 +10,6 @@ import { ErrorResponse } from '../utils/error-response';
 // @access    Private (Authorization Token Required
 
 export const fetchAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-        const keyword = request.query.keyword;
         const tickets = await Ticket.find();
 
         if(!tickets) {
