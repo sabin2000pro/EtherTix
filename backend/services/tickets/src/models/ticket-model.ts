@@ -81,13 +81,7 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             type: Boolean,
             default: false
         },
-
-        event: { // Relationship between the Ticket and Event
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "event",
-            required: [true, "Please specify the event that this ticket is related to"]
-        },
-
+        
         issuer: { // Relationship between the Event Ticket and the Event ID
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",

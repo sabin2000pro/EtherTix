@@ -166,7 +166,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     tickets: [{ // Event -> Ticket Relationship
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ticket",
+        ref: "Ticket",
         required: [true, "Please specify a valid Ticket ID for this event"]
     }],
 

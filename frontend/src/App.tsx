@@ -19,19 +19,24 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/store";
 
 const store = configureStore({
+
   reducer: {
     auth: authReducer,
   },
+
 });
 
-const App = () => {
+const App: React.FC = () => {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleFetchTickets = (event: any): void => {
+    
      try {
+
         
      } 
      
@@ -44,10 +49,10 @@ const App = () => {
   }
 
    return (
-    <>
-      <button onClick = {handleFetchTickets}>Fetch Tickets</button>
 
-    <Provider store={store}>
+    <>
+
+     <Provider store = {store}>
 
       <NavBar
         onLoginClicked={() => setShowLoginModal(true)}
@@ -58,10 +63,7 @@ const App = () => {
       <Container style={{ padding: "32px 0" }}>
         <Routes>
 
-          <Route
-            path="/reset-password/:resetToken"
-            element={<ResetPassword onDismiss={() => navigate("/")} />}
-          />
+          <Route path="/reset-password/:resetToken" element={<ResetPassword onDismiss={() => navigate("/")} />} />
 
           <Route path="/" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -79,16 +81,12 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
 
         </Routes>
+
       </Container>
 
       {showSignUpModal && (
 
-        <Register
-        
-          onDismiss={() => setShowSignUpModal(false)}
-          onSignUpSuccessful={() => {
-            setShowSignUpModal(false);
-          }}
+        <Register onDismiss={() => setShowSignUpModal(false)} onSignUpSuccessful={() => {setShowSignUpModal(false);}}
 
         />
       )}
