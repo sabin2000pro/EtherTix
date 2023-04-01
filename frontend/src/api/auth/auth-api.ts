@@ -1,3 +1,5 @@
+import cookies from "auth/cookies";
+import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 
 const defaultOptions = {
@@ -6,7 +8,7 @@ const defaultOptions = {
   headers: {
     "Content-Type": "application/json",
   },
-  credentials: true
+  withCredentials: true
 };
 
 let axiosInstance = axios.create(defaultOptions);
@@ -100,7 +102,7 @@ export const login = async (loginPayload: LoginCredentials): Promise<any> => {
 
 export const logout = async (): Promise<any> => {
   try {
-    const response = await axios.get("http://localhost:5299/api/auth/logout");
+    const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
   } catch (err: any) {
@@ -112,7 +114,7 @@ export const logout = async (): Promise<any> => {
 
 export const getUser = async (): Promise<any> => {
   try {
-    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${localStorage.getItem("token")} ${localStorage.getItem("userId")}`}});
+    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)}`}});
     const data = await response.data;
     return data;
   } catch (err: any) {

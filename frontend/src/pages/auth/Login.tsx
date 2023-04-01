@@ -31,7 +31,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
       const response = await login(credentials);
       console.log(response);
 
-      cookies.set(stor.COOKIE_NAME_USER, response.user);
+      cookies.set(stor.COOKIE_NAME_USER, response.user._id);
       cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
       cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
 
