@@ -6,6 +6,7 @@ const defaultOptions = {
   headers: {
     "Content-Type": "application/json",
   },
+  credentials: true
 };
 
 let axiosInstance = axios.create(defaultOptions);
@@ -136,9 +137,11 @@ export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
   }
 };
 
-export const forgotPassword = async (forgotPasswordPayload: {
+export interface ForgotPCredentials {
   email: string;
-}): Promise<any> => {
+}
+
+export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials): Promise<any> => {
   try {
     const response = await axios.post(
       "http://localhost:5299/api/auth/forgot-password",

@@ -4,7 +4,7 @@ const cookies = new Cookies();
 
 class Cookie {
   public set(name: string, value: any) {
-    cookies.set(name, value, { path: "/", httpOnly: false, sameSite: true });
+    cookies.set(name, value, { path: "/", httpOnly: false, sameSite: true, secure: true });
   }
 
   public get(name: string) {

@@ -428,7 +428,7 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
 
          // Check if we have an e-mail in the body of the request
         if(!email) {
-            return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
+            return next(new ErrorResponse(`Please enter an email address`, StatusCodes.BAD_REQUEST))
         }
     
         if(!user) {
@@ -438,7 +438,10 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
         if(userHasResetToken) {
-            return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
+            ///////////////////////////  DELETE THAT TOKEN //////////////////////////////////
+            await PasswordReset.deleteOne({owner: user._id});
+
+            // return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
         }
     
         const token = generateRandomResetPasswordToken();
@@ -451,7 +454,9 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         await resetPasswordToken.save();
     
         const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
-        sendPasswordResetEmail(user, resetPasswordURL);
+        //sendPasswordResetEmail(user, resetPasswordURL);
+
+        console.log("reset password url: ", resetPasswordURL);
     
         return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
     }    
