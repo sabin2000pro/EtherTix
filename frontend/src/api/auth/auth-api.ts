@@ -114,7 +114,7 @@ export const logout = async (): Promise<any> => {
 
 export const getUser = async (): Promise<any> => {
   try {
-    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)}`}});
+    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}});
     const data = await response.data;
     return data;
   } catch (err: any) {

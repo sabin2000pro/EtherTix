@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Badge, Button, Container, Nav, Navbar } from "react-bootstrap";
 import { User } from "../models/user";
 import { Link } from "react-router-dom";
 import NavBarLoggedInView from "./NavBarLoggedInView";
@@ -51,16 +51,26 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
         </Nav>
 
         <Nav className="justify-content-right">
-          {isLoggedIn ? (
-            <NavBarLoggedInView
-              user={useR}
-            />
-          ) : (
-            <NavBarLoggedOutView
-              onLoginClicked={onLoginClicked}
-              onSignUpClicked={onSignUpClicked}
-            />
-          )}
+          <ul>
+            <li style={{ display: "inline-flex" }}>
+              {isLoggedIn ? (
+                <NavBarLoggedInView user={useR} />
+              ) : (
+                <NavBarLoggedOutView
+                  onLoginClicked={onLoginClicked}
+                  onSignUpClicked={onSignUpClicked}
+                />
+              )}
+            </li>
+            <li style={{ display: "inline-flex" }}>
+              <Button
+                href="/my-cart"
+                style={{ backgroundColor: "transparent", border: "none" }}
+              >
+                Cart <Badge bg="secondary">0</Badge>
+              </Button>
+            </li>
+          </ul>
         </Nav>
       </Container>
     </Navbar>

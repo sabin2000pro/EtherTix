@@ -1,22 +1,32 @@
 import React from "react";
-import { Button, Nav } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 interface NavBarLoggedOutViewProps {
-    onSignUpClicked: () => void,
-    onLoginClicked: () => void,
+  onSignUpClicked: () => void;
+  onLoginClicked: () => void;
 }
 
-const NavBarLoggedOutView = ({ onSignUpClicked, onLoginClicked }: NavBarLoggedOutViewProps) => {
-    const navigate = useNavigate();
-    const goToCart = () => navigate("/my-cart");
-    return (
-        <Nav>
-            <Button onClick={goToCart} style={{backgroundColor: "transparent", border:"none"}}>Cart</Button>
-            <Button onClick={onSignUpClicked} style={{backgroundColor: "transparent", border:"none"}}>Register</Button>
-            <Button onClick={onLoginClicked} style={{backgroundColor: "transparent", border:"none"}}>Log In</Button>
-        </Nav>
-    );
-}
+const NavBarLoggedOutView = ({
+  onSignUpClicked,
+  onLoginClicked,
+}: NavBarLoggedOutViewProps) => {
+  return (
+    //leave as empty tag, or else...
+    <>
+      <Button
+        onClick={onSignUpClicked}
+        style={{ backgroundColor: "transparent", border: "none" }}
+      >
+        Register
+      </Button>
+      <Button
+        onClick={onLoginClicked}
+        style={{ backgroundColor: "transparent", border: "none" }}
+      >
+        Log In
+      </Button>
+    </>
+  );
+};
 
 export default NavBarLoggedOutView;
