@@ -450,10 +450,10 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
             return next(new ErrorResponse("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
         }
     
-        const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
+        const resetPasswordToken = await PasswordReset.create({owner: user._id, token: token}); // Create an instance of the Password Reset model
         await resetPasswordToken.save();
     
-        const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
+        const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}` // Create the reset password URL
         //sendPasswordResetEmail(user, resetPasswordURL);
 
         console.log("reset password url: ", resetPasswordURL);
@@ -463,32 +463,43 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
 )
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const currentPassword = request.body.currentPassword;
+        // const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
-        const resetToken = request.params.resetToken;
+        const resetToken = request.body.resetToken;
+        const userId = request.body.userId;
 
-        if(!currentPassword) {
-            return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        }
+        // if(!currentPassword) {
+        //     return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        // }
     
         if(!newPassword) {
             return next(new ErrorResponse("Please specify the new password", StatusCodes.BAD_REQUEST))
         }
     
-        const user = await User.findOne({owner: request.user._id, token: resetToken});
+        const user = await User.findById(userId);
     
         if(!user) {
             return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
         }
     
-        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+        // const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
-        if(!userPasswordsMatch) {
-           return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        // if(!userPasswordsMatch) {
+        //    return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        // }
+
+        const resetUser = await PasswordReset.findOne({owner: userId});
+
+        if(!resetUser) {
+            return next(new ErrorResponse("No reset token found", StatusCodes.BAD_REQUEST))
+        }
+
+        if(resetToken !== resetUser.token) {
+            return next(new ErrorResponse("Your reset token doesn't match ours", StatusCodes.BAD_REQUEST))
         }
     
         user.password = newPassword;
-        user.passwordConfirm = undefined;
+        user.passwordConfirm = newPassword;
     
         await user.save(); // Save new user after reset the password
     
@@ -522,6 +533,8 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 
    try {
 
+    const userId = request.headers.authorization.split(' ')[2];
+
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
     
@@ -529,7 +542,7 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
             return next(new ErrorResponse("Please provide your new password", StatusCodes.BAD_REQUEST));
         }
     
-        const user = await User.findById(<any>request.user._id);
+        const user = await User.findById(userId);
     
         if(!user) {
             return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
@@ -561,10 +574,11 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
+        const userId = request.headers.authorization.split(' ')[2];
 
         const fieldsToUpdate = {email: request.body.email, username: request.body.username, role: request.body.role};
 
-        const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
+        const updatedUserProfile = await User.findByIdAndUpdate(userId, fieldsToUpdate, {new: true, runValidators: true});
         await updatedUserProfile.save();
 
         return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
@@ -611,7 +625,9 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
         if(request.method === 'PUT') { // If the request is a PUT request
 
-            const userId = request.params.userId;
+            const userId = request.headers.authorization.split(' ')[2];
+
+            // const userId = request.params.userId;
             const file = request.files!.file;
             const fileName = file.name;
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { fetchAllTickets } from 'actions/ticket-actions';
+import store from 'auth/store';
+import cookies from 'auth/cookies';
 
 type Ticket = {
   id: number;
@@ -25,43 +27,43 @@ const CartPage = () => {
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [ethPrice, setEthPrice] = useState<number>(0);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-     const fetchEventTickets = async () => {
-      // Will use dispatcher to fetch the event tickets
-        dispatch(fetchAllTickets() as any);
-     }
+  //    const fetchEventTickets = async () => {
+  //     // Will use dispatcher to fetch the event tickets
+  //       dispatch(fetchAllTickets() as any);
+  //    }
 
-     fetchEventTickets();
+  //    fetchEventTickets();
 
-  }, [])
+  // }, [])
 
   // Add an item to the cart
-const addToCart = (ticket: Ticket, quantity: number) => {
-  const updatedCart = { ...cart };
-  if (updatedCart[ticket.id]) {
-    updatedCart[ticket.id].quantity += quantity;
-  } else {
-    updatedCart[ticket.id] = { ...ticket, quantity };
-  }
-  setCart(updatedCart);
-};
+// const addToCart = (ticket: Ticket, quantity: number) => {
+//   const updatedCart = { ...cart };
+//   if (updatedCart[ticket.id]) {
+//     updatedCart[ticket.id].quantity += quantity;
+//   } else {
+//     updatedCart[ticket.id] = { ...ticket, quantity };
+//   }
+//   setCart(updatedCart);
+// };
 
 
-  // Remove an item from the cart
-  const removeFromCart = (ticketId: number) => {
-    const updatedCart = { ...cart };
-    if (updatedCart[ticketId].quantity === 1) {
-      delete updatedCart[ticketId];
-    } else {
-      updatedCart[ticketId].quantity -= 1;
-    }
-    setCart(updatedCart);
-  };
+//   // Remove an item from the cart
+//   const removeFromCart = (ticketId: number) => {
+//     const updatedCart = { ...cart };
+//     if (updatedCart[ticketId].quantity === 1) {
+//       delete updatedCart[ticketId];
+//     } else {
+//       updatedCart[ticketId].quantity -= 1;
+//     }
+//     setCart(updatedCart);
+//   };
 
-  function removeAllFromCart() {
-    setCart({});
-  }
+//   function removeAllFromCart() {
+//     setCart({});
+//   }
 
   // Calculate total price of items in the cart
   function getTotalPrice() {
@@ -91,17 +93,17 @@ const addToCart = (ticket: Ticket, quantity: number) => {
     return price / ethPrice;
   }
 
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const quantity = parseInt(event.target.value);
-    if (selectedTicket) {
-      addToCart(selectedTicket, quantity);
-      setSelectedTicket(null);
-    }
-  };
+  // const handleQuantityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const quantity = parseInt(event.target.value);
+  //   if (selectedTicket) {
+  //     addToCart(selectedTicket, quantity);
+  //     setSelectedTicket(null);
+  //   }
+  // };
   
   const handleAddToCart = () => {
     if (selectedTicket) {
-      addToCart(selectedTicket, selectedQuantity);
+      // addToCart(selectedTicket, selectedQuantity);
       setSelectedTicket(null);
     }
   };
@@ -134,7 +136,8 @@ const addToCart = (ticket: Ticket, quantity: number) => {
                           {calculateEthPrice(item.price).toFixed(6)} ETH (${item.price.toFixed(2)})
                           x {item.quantity}
                         </div>
-                        <button onClick={() => removeFromCart(item.id)}>Remove</button>
+                        <button //onClick={() => removeFromCart(item.id)}
+                        >Remove</button>
                       </div>
                     </div>
                   ))}

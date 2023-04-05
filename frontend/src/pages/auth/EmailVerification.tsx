@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { verifyEmailAddress, resendEmailVerification } from "api/auth/auth-api";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { User } from "models/user";
+
 
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const userEmail = location.state.email;
-  //"mail";
+  const user = useSelector((state: any) => state.auth.user as User);
   const timeLeft = 15;
 
   const fetchUserId = () => {
-    const userId = location.state._id;
-    //"hello";
-    setCreds({ ...creds, userId: userId });
+    setCreds({ ...creds, userId: user._id });
   };
   setTimeout(() => {
     fetchUserId();
@@ -167,7 +166,7 @@ const EmailVerification: React.FC = () => {
           Verify it's you
         </Form.Label>
         <Form.Label column="sm" style={{ marginTop: "5px" }}>
-          A one-time password has been sent to "{userEmail}". It may take a
+          A one-time password has been sent to "{user.email}". It may take a
           moment to arrive.
         </Form.Label>
         <Form.Label

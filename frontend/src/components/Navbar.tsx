@@ -20,6 +20,7 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
 
   let useR = useSelector((state: any) => state.auth.user as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  let cart:Array<string> = useSelector((state: any) => state.auth.cartItems);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -67,7 +68,7 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
                 href="/my-cart"
                 style={{ backgroundColor: "transparent", border: "none" }}
               >
-                Cart <Badge bg="secondary">0</Badge>
+                Cart <Badge bg="secondary">{cart.length as unknown as string}</Badge>
               </Button>
             </li>
           </ul>

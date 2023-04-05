@@ -40,7 +40,7 @@ const App = () => {
       <Container style={{ padding: "32px 0", maxWidth: "1400px" }}>
         <Routes>
           <Route
-            path="/reset-password/:resetToken"
+            path="/reset-password/:resetToken/:userId"
             element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
           <Route path="/" element={<Home />} />
