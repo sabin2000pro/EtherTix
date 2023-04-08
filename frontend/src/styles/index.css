@@ -402,8 +402,6 @@ label {
 }
 
 .verify-container {
-    /* font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
-    line-height: 1.15385; */
     border: 1px solid gray;
     border-radius: 15px;
     width: 550px;
@@ -586,3 +584,17 @@ label {
   }
 
   /*End EventList Page*/
+
+  /*Profile Page - Start*/
+  .profile-container {
+    border: 1px solid gray;
+    border-radius: 15px;
+    width: 900px;
+    height: 650px;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+}
+/*Profile Page - End*/
