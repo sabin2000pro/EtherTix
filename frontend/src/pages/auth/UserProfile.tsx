@@ -1,5 +1,4 @@
-import { User } from "models/user";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { getUser } from "api/auth/auth-api";
@@ -11,7 +10,6 @@ interface UserProfileData {
   email: string;
   username: string;
   role: string;
-  password: string;
 }
 
 const UserProfile: React.FC = () => {
@@ -19,7 +17,7 @@ const UserProfile: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfileData | null>(null);
 
-  let ethBalance: number;
+  let ethBalance: number = 0;
 
   const fetchUserId = async () => {
     if (user === null) {
@@ -32,7 +30,6 @@ const UserProfile: React.FC = () => {
           email: response.user.email,
           username: response.user.username,
           role: response.user.role,
-          password: "********",
         };
         setUser(data);
       } catch (error: any) {
@@ -45,10 +42,29 @@ const UserProfile: React.FC = () => {
   fetchUserId();
 
   return (
-    <Container className="profile-container">
+    <Container className="profile-container text-center">
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
-      <div>Your Profile</div>
+      <h1>Your Profile</h1>
+
+      <Row style={{paddingTop: "30px"}}>
+        <Col>
+          <img
+            src="https://source.unsplash.com/random/400x400"
+            alt="user-propic"
+            style={{ height: "250px", width: "250px" }}
+          />
+        </Col>
+        <Col>
+          <p>Name: {user?.forename}</p>
+          <p>Surname: {user?.surname}</p>
+          <p>Email: {user?.email}</p>
+          <p>Username: {user?.username}</p>
+          <p>Role: {user?.role}</p>
+          <p>ETH balance: {ethBalance}</p>
+          <Button variant="primary">Edit Profile</Button>
+        </Col>
+      </Row>
     </Container>
   );
 };

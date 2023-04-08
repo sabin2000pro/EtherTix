@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { fetchAllTickets } from "actions/ticket-actions";
 import * as stor from "auth/store";
 import { CartItem } from "models/cart";
 
@@ -31,24 +30,11 @@ const tickets: CartItem[] = [
 
 const CartPage = () => {
   const dispatch = useDispatch();
-  // const [currentTickets, setCurrentTickets] = useState<[] | undefined>(); // All the tickets are going to be stored in this array
-  // const [cart, setCart] = useState<{ [key: number]: Ticket & { quantity: number } }> ({} );
   const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [ethPrice, setEthPrice] = useState<number>(0);
 
   const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
-
-  // useEffect(() => {
-
-  //    const fetchEventTickets = async () => {
-  //     // Will use dispatcher to fetch the event tickets
-  //       dispatch(fetchAllTickets() as any);
-  //    }
-
-  //    fetchEventTickets();
-
-  // }, [])
 
   const getTotalPrice = cart.reduce(
     (total: number, item: CartItem) => total + item.price * item.quantity,

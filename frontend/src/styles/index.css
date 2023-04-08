@@ -589,8 +589,8 @@ label {
   .profile-container {
     border: 1px solid gray;
     border-radius: 15px;
-    width: 900px;
-    height: 650px;
+    width: 800px;
+    height: 500px;
     position: absolute;
     top: 45%;
     left: 50%;
