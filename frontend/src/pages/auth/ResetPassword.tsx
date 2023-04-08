@@ -47,15 +47,15 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
 
   return (
     <Modal show onHide={onDismiss} backdrop="static" centered>
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Container className="text-center">
           <Modal.Title>Reset Password</Modal.Title>
         </Container>
       </Modal.Header>
       <Modal.Body>
-        <Form.Label>Please enter your new password below:</Form.Label>
-        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         <Form onSubmit={handleSubmit(onSubmit)}>
+        <p className="text-center">Please enter your new password below:</p>
           <Container className="text-left">
             <TextInputField
               name="newPassword"

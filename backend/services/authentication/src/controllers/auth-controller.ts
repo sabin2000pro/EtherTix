@@ -502,6 +502,8 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
         user.passwordConfirm = newPassword;
     
         await user.save(); // Save new user after reset the password
+
+        await PasswordReset.deleteOne({owner: userId});
     
         return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
    } 
