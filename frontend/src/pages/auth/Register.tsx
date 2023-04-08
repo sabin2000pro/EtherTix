@@ -37,12 +37,9 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
       cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
 
       dispatch(stor.login(response.user));
-      dispatch(stor.setToken(response.token));
-
+      
       onSignUpSuccessful();
-      navigate("/verify-email", {
-        state: { email: credentials.email, _id: response.user._id },
-      });
+      navigate("/verify-email");
     } catch (error: any) {
       if (error) {
         setErrorText(error.message);

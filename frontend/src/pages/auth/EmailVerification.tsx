@@ -1,40 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { verifyEmailAddress, resendEmailVerification } from "api/auth/auth-api";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { User } from "models/user";
+
 
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const userEmail = location.state.email; 
-  //"mail";
+  const user = useSelector((state: any) => state.auth.user as User);
   const timeLeft = 15;
 
   const fetchUserId = () => {
-    const userId = location.state._id; 
-    //"hello";
-    setCreds({ ...creds, userId: userId });
+    setCreds({ ...creds, userId: user._id });
   };
   setTimeout(() => {
     fetchUserId();
   }, 2000);
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [OTP, setOTP] = useState({
-    // OTP: "",
     otp1: "",
     otp2: "",
     otp3: "",
     otp4: "",
     otp5: "",
     otp6: "",
-    // userId: "",
   });
 
   const [creds, setCreds] = useState({
     OTP: "",
     userId: "",
-  })
+  });
 
   const [buttonState, setButtonState] = useState({
     verify: false,
@@ -62,10 +60,11 @@ const EmailVerification: React.FC = () => {
   };
 
   const inputfocus = (elmnt: any) => {
-    const ms = 250;
+    const ms = 100;
     if (
       elmnt.key === "Delete" ||
       elmnt.key === "Backspace" ||
+      //left arrow key
       elmnt.keyCode === 37
     ) {
       const next = elmnt.target.tabIndex - 2;
@@ -88,13 +87,21 @@ const EmailVerification: React.FC = () => {
   };
 
   const bundleTogether = () => {
-    creds.OTP = OTP.otp1.concat(OTP.otp2, OTP.otp3, OTP.otp4, OTP.otp5, OTP.otp6);
+    creds.OTP = OTP.otp1.concat(
+      OTP.otp2,
+      OTP.otp3,
+      OTP.otp4,
+      OTP.otp5,
+      OTP.otp6
+    );
     //console.log(OTP.OTP);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setButtonState({ ...buttonState, verify: true, resend: true });
     event.preventDefault();
+    setError(null);
+    setSuccess(null);
     try {
       bundleTogether();
       const response = await verifyEmailAddress(creds);
@@ -112,6 +119,7 @@ const EmailVerification: React.FC = () => {
         }, 5000);
       }
     } catch (err: any) {
+      setSuccess(null);
       setError(err.message);
 
       if (timer === 0) {
@@ -126,17 +134,20 @@ const EmailVerification: React.FC = () => {
   const handleResend = async (event: React.MouseEvent<HTMLButtonElement>) => {
     setButtonState({ ...buttonState, resend: true });
     event.preventDefault();
+    setError(null);
+    setSuccess(null);
     try {
       const response = await resendEmailVerification(creds);
 
       if (response.message === "E-mail Verification Re-sent") {
-        alert("A new one-time password has been sent to your email");
+        setError(null);
+        setSuccess("A new one-time password has been sent to your email");
+        // alert("A new one-time password has been sent to your email");
         setTimer(timeLeft);
         setButtonState({ ...buttonState, resend: true });
-
-        // Create an alert component with a green success background
       }
     } catch (err: any) {
+      setSuccess(null);
       setError(err.message);
       setTimer(timeLeft);
       setButtonState({ ...buttonState, resend: true });
@@ -146,6 +157,7 @@ const EmailVerification: React.FC = () => {
   return (
     <Container>
       {error && <Alert variant="danger">{error}</Alert>}
+      {success && <Alert variant="success">{success}</Alert>}
       <Container className="verify-container">
         <Form.Label
           column="lg"
@@ -153,14 +165,14 @@ const EmailVerification: React.FC = () => {
         >
           Verify it's you
         </Form.Label>
-        <Form.Label
-          column="sm"
-          style={{ marginTop: "5px" }}
-        >
-          A one-time password has been sent to "{userEmail}". It may take a moment
-          to arrive.
+        <Form.Label column="sm" style={{ marginTop: "5px" }}>
+          A one-time password has been sent to "{user.email}". It may take a
+          moment to arrive.
         </Form.Label>
-        <Form.Label column="lg" style={{ marginTop: "5px", textAlign: "center" }}>
+        <Form.Label
+          column="lg"
+          style={{ marginTop: "5px", textAlign: "center" }}
+        >
           Enter OTP:
         </Form.Label>
         <Form onSubmit={handleSubmit}>
@@ -280,107 +292,6 @@ const EmailVerification: React.FC = () => {
         </Form>
       </Container>
     </Container>
-
-    // <div className="verify-container">
-    //   <br />
-    //   <h1 className="inputHeading">
-    //     Please verify your account
-    //   </h1>
-    //   <br />
-    //   <h4 className="inputHeading">A one-time password has been sent to {userEmail}</h4>
-    //   <br />
-    //   <br />
-    //   <form onSubmit={handleSubmit} method="POST">
-    //     <div className="otp-verify-container">
-    //       <br />
-    //       <input
-    // name="otp1"
-    // type="text"
-    // autoComplete="off"
-    // className="otpInput"
-    // value={OTP.otp1}
-    // onChange={handleChange}
-    // tabIndex={1}
-    // maxLength={1}
-    // onKeyUp={(e) => inputfocus(e)}
-    //       />
-    //       <input
-    //         name="otp2"
-    //         type="text"
-    //         autoComplete="off"
-    //         className="otpInput"
-    //         value={OTP.otp2}
-    //         onChange={handleChange}
-    //         tabIndex={2}
-    //         maxLength={1}
-    //         onKeyUp={(e) => inputfocus(e)}
-    //       />
-    //       <input
-    //         name="otp3"
-    //         type="text"
-    //         autoComplete="off"
-    //         className="otpInput"
-    //         value={OTP.otp3}
-    //         onChange={handleChange}
-    //         tabIndex={3}
-    //         maxLength={1}
-    //         onKeyUp={(e) => inputfocus(e)}
-    //       />
-    //       <input
-    //         name="otp4"
-    //         type="text"
-    //         autoComplete="off"
-    //         className="otpInput"
-    //         value={OTP.otp4}
-    //         onChange={handleChange}
-    //         tabIndex={4}
-    //         maxLength={1}
-    //         onKeyUp={(e) => inputfocus(e)}
-    //       />
-    //       <input
-    //         name="otp5"
-    //         type="text"
-    //         autoComplete="off"
-    //         className="otpInput"
-    //         value={OTP.otp5}
-    //         onChange={handleChange}
-    //         tabIndex={5}
-    //         maxLength={1}
-    //         onKeyUp={(e) => inputfocus(e)}
-    //       />
-    //       <input
-    //         name="otp6"
-    //         type="text"
-    //         autoComplete="off"
-    //         className="otpInput"
-    //         value={OTP.otp6}
-    //         onChange={handleChange}
-    //         tabIndex={6}
-    //         maxLength={1}
-    //         onKeyUp={(e) => inputfocus(e)}
-    //       />
-    //     </div>
-    //     <br />
-    //     <div className="buttons">
-    //       <button
-    //         className="verify-btn"
-    //         type="submit"
-    //         disabled={buttonState.verify}
-    //       >
-    //         Verify
-    //       </button>
-    //       <button
-    //         id="resend-btn"
-    //         className="resend-btn"
-    //         onClick={handleResend}
-    //         disabled={buttonState.resend}
-    //       >
-    //         Re-send OTP
-    //       </button>
-    //     </div>
-    //   </form>
-    //   {error && <p>{error}</p>}
-    // </div>
   );
 };
 

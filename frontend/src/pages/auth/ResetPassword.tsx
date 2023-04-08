@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { resetPassword } from 'api/auth/auth-api';
-import { useForm } from 'react-hook-form';
-import TextInputField from '../../components/form/TextInputField';
-import { Alert, Button, Form, Modal, Container } from 'react-bootstrap';
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { resetPassword, ResetP } from "api/auth/auth-api";
+import { useForm } from "react-hook-form";
+import TextInputField from "../../components/form/TextInputField";
+import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 
 interface ResetPasswordModalProps {
   onDismiss: () => void;
@@ -11,34 +11,37 @@ interface ResetPasswordModalProps {
 
 const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
   const navigate = useNavigate();
-  const { resetToken = ' ' } = useParams();
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<{ newPassword: string; confirmPassword: string }>();
-  const newPassword = watch('newPassword', '');
+  const { resetToken, userId } = useParams();
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = async (data: { newPassword: string; confirmPassword: string }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+  } = useForm<ResetP>();
 
+  const newPassword = watch("newPassword", "");
+
+  const onSubmit = async (data: ResetP) => {
     if (data.newPassword !== data.confirmPassword) {
       setErrorMessage("Passwords don't match.");
       return;
     }
 
+    data.resetToken = resetToken as string;
+    data.userId = userId as string;
     try {
-      
-      const response = await resetPassword({ resetToken, newPassword: data.newPassword });
+      const response = await resetPassword(data);
       if (response.success) {
-        navigate('/login');
-      }
-      
-      else {
+        navigate("/");
+      } else {
         setErrorMessage(response.message);
       }
-    } 
-    
-    catch (error) {
+    } catch (error) {
       console.error(error);
-      setErrorMessage('Something went wrong. Please try again later.');
+      setErrorMessage("Something went wrong. Please try again later.");
     }
   };
 
@@ -50,7 +53,7 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
         </Container>
       </Modal.Header>
       <Modal.Body>
-        <p>Please enter your new password below:</p>
+        <Form.Label>Please enter your new password below:</Form.Label>
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Container className="text-left">
@@ -60,7 +63,7 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
               type="password"
               placeholder="New Password"
               register={register}
-              registerOptions={{ required: 'Required' }}
+              registerOptions={{ required: "Required" }}
               error={errors.newPassword}
               autoFocus
             />
@@ -71,8 +74,9 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
               placeholder="Confirm Password"
               register={register}
               registerOptions={{
-                required: 'Required',
-                validate: (value) => value === newPassword || "Passwords don't match.",
+                required: "Required",
+                validate: (value) =>
+                  value === newPassword || "Passwords don't match.",
               }}
               error={errors.confirmPassword}
             />

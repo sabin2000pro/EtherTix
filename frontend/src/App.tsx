@@ -17,6 +17,7 @@ import SingleEvent from "pages/events/SingleEvent";
 import { Provider, useDispatch } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/store";
+import UserProfile from "pages/auth/UserProfile";
 
 const store = configureStore({
 
@@ -59,12 +60,12 @@ const App: React.FC = () => {
         onSignUpClicked={() => setShowSignUpModal(true)}
       />
 
-
-      <Container style={{ padding: "32px 0" }}>
+      <Container style={{ padding: "32px 0", maxWidth: "1400px" }}>
         <Routes>
-
-          <Route path="/reset-password/:resetToken" element={<ResetPassword onDismiss={() => navigate("/")} />} />
-
+          <Route
+            path="/reset-password/:resetToken/:userId"
+            element={<ResetPassword onDismiss={() => navigate("/")} />}
+          />
           <Route path="/" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword onDismiss={() => navigate("/")} />}
@@ -74,6 +75,8 @@ const App: React.FC = () => {
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
           <Route path="/my-cart" element={<CartPage />} />
+
+          <Route path="/my-profile" element={<UserProfile />} />
 
           <Route path="/events" element={<EventsList />} />
           <Route path="/events/:id" element={<SingleEvent />} />

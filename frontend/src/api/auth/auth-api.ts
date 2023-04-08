@@ -1,3 +1,5 @@
+import cookies from "auth/cookies";
+import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 
 const defaultOptions = {
@@ -6,6 +8,7 @@ const defaultOptions = {
   headers: {
     "Content-Type": "application/json",
   },
+  // withCredentials: true
 };
 
 let axiosInstance = axios.create(defaultOptions);
@@ -99,24 +102,12 @@ export const login = async (loginPayload: LoginCredentials): Promise<any> => {
 
 export const logout = async (): Promise<any> => {
   try {
-    const response = await axios.get("http://localhost:5299/api/auth/logout");
+    const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
   } catch (err: any) {
     if (err) {
       return console.error(err);
-    }
-  }
-};
-
-export const getUser = async (): Promise<any> => {
-  try {
-    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${localStorage.getItem("token")} ${localStorage.getItem("userId")}`}});
-    const data = await response.data;
-    return data;
-  } catch (err: any) {
-    if (err) {
-      throw err;
     }
   }
 };
@@ -136,9 +127,11 @@ export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
   }
 };
 
-export const forgotPassword = async (forgotPasswordPayload: {
+export interface ForgotPCredentials {
   email: string;
-}): Promise<any> => {
+}
+
+export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials): Promise<any> => {
   try {
     const response = await axios.post(
       "http://localhost:5299/api/auth/forgot-password",
@@ -153,8 +146,15 @@ export const forgotPassword = async (forgotPasswordPayload: {
   }
 };
 
+export interface ResetP {
+  newPassword: string,
+  confirmPassword: string,
+  resetToken: string,
+  userId: string,
+};
+
 export const resetPassword = async (
-  resetPasswordPayload: {resetToken: string; newPassword: string}
+  resetPasswordPayload: ResetP
 ): Promise<any> => {
   try {
     const response = await axios.post(
@@ -166,6 +166,69 @@ export const resetPassword = async (
   } catch (err) {
     if (err) {
       return console.error(err);
+    }
+  }
+};
+
+export interface ProfPic {
+  pic: File,
+}
+
+export const uploadProfilePic = async (pic: ProfPic) => {
+  try {
+    const response = await axios.put("http://localhost:5299/api/auth/propic", pic);
+    return response;
+  } catch (error: any) {
+    if(error) {
+      throw error;
+    }    
+  }
+};
+
+
+// All these need an authorization header
+
+export const getUser = async (): Promise<any> => {
+  try {
+    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}});
+    const data = await response.data;
+    return data;
+  } catch (err: any) {
+    if (err) {
+      throw err;
+    }
+  }
+};
+
+export interface UpdateProfileCredentials {
+  email: string,
+  username: string,
+  role: string,
+};
+
+export const updateProfile = async (updateProfilePayload: any): Promise<any> => {
+  try {
+    const response = await axios.put("http://localhost:localhost:5299/api/auth/update-profile", updateProfilePayload, { headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}} );
+    return response;
+  } catch (error: any) {
+    if(error){
+      throw error;
+    }
+  }
+};
+
+export interface UpdatePasswordCredentials {
+  currentPassword: string,
+  newPassword: string,
+}
+
+export const updatePassword = async (updatePasswordPayload: any): Promise<any> => {
+  try {
+    const response = await axios.put("http://localhost:localhost:5299/api/auth/update-password", updatePasswordPayload, { headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}} );
+    return response;
+  } catch (error: any) {
+    if(error){
+      throw error;
     }
   }
 };

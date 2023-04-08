@@ -1,5 +1,5 @@
 
-export const generateRandomResetPasswordToken = (token_length = 6): String => {
+export const generateRandomResetPasswordToken = (token_length = 6): string => {
 
     let resetToken = ''
     let RANDOM_LENGTH = 9;
