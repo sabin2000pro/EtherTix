@@ -4,12 +4,14 @@ import { NavDropdown } from "react-bootstrap";
 import { User } from "../models/user";
 import * as stor from "../auth/store";
 import cookies from "auth/cookies";
+import { useNavigate } from "react-router-dom";
 
 interface NavBarLoggedInViewProps {
   user: User;
 }
 
 const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
+  const navigate = useNavigate()
   const logOut = async () => {
     stor.logout();
     cookies.remove(stor.COOKIE_NAME_USER);
@@ -22,6 +24,7 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
       alert(error);
     }
     window.location.reload();
+    navigate("/");
   };
 
   return (
@@ -29,7 +32,7 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
       <NavDropdown title={user.username} id="dropdown-menu-right">
         <NavDropdown.Item href="/my-profile">Profile</NavDropdown.Item>
         <NavDropdown.Item href="/my-tickets">Tickets</NavDropdown.Item>
-        <NavDropdown.Item href="#action">Some action</NavDropdown.Item>
+        <NavDropdown.Item href="/my-events">Events</NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item onClick={logOut}>Log out</NavDropdown.Item>
       </NavDropdown>

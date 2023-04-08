@@ -53,7 +53,7 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
         </Container>
       </Modal.Header>
       <Modal.Body>
-        <p>Please enter your new password below:</p>
+        <Form.Label>Please enter your new password below:</Form.Label>
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Container className="text-left">

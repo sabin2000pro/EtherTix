@@ -1,17 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../models/user";
 import { CartItem } from "../models/cart";
-import cookies from "./cookies";
+import cookies, { COOKIE_NAME_CART } from "./cookies";
 
 export const COOKIE_NAME_USER = "sessionUser";
 export const COOKIE_NAME_LOGGED_IN = "seionLoggedIn";
 export const COOKIE_NAME_TOKEN = "sessionToken";
-export const COOKIE_NAME_CART = "sessionCart";
 
 interface AuthState {
   user: User | null;
   isLoggedIn: boolean;
-  cartItems: string[];
+  cartItems: CartItem[];
 }
 
 //Initial state
@@ -20,7 +19,7 @@ const initialState: AuthState = {
   user: cookies.get(COOKIE_NAME_USER) as User | null,
   //cookies.get(COOKIE_NAME_LOGGED_IN) ? true :
   isLoggedIn: cookies.get(COOKIE_NAME_LOGGED_IN) ? true : false,
-  cartItems: cookies.getCartContent() as [], // | [],
+  cartItems: cookies.getCartContent() as [] //| [],
 };
 
 export const authSlice = createSlice({
@@ -37,36 +36,47 @@ export const authSlice = createSlice({
     },
     addItem: (state, action: PayloadAction<CartItem>) => {
       const itemIndex = state.cartItems.findIndex(
-        (itemId) => itemId === action.payload.id // find index by itemId instead of object
+        (itemId) => itemId.id === action.payload.id // find index by itemId instead of object
       );
       if (itemIndex === -1) {
-        state.cartItems.push(JSON.stringify(action.payload)); // serialize object before adding to array
+        state.cartItems.push(action.payload);
       } else {
-        const item = JSON.parse(state.cartItems[itemIndex]) as CartItem; // deserialize object before updating quantity
+        const item = state.cartItems[itemIndex] as CartItem;
         item.quantity += action.payload.quantity;
-        state.cartItems[itemIndex] = JSON.stringify(item); // serialize object before updating array
+        state.cartItems[itemIndex] = item;
       }
+      cookies.setCartContent(state.cartItems)
     },
     removeItem: (state, action: PayloadAction<string>) => {
-      state.cartItems = state.cartItems.filter(
-        (itemId) => itemId !== action.payload
+      const itemIndex = state.cartItems.findIndex(
+        (itemId) => itemId.id === action.payload // find index by itemId instead of object
       );
+      if (state.cartItems[itemIndex].quantity === 1) {
+        state.cartItems = state.cartItems.filter(
+          (itemId) => itemId.id !== action.payload
+        );
+      } else {
+        state.cartItems[itemIndex].quantity -= 1; 
+      }
+      cookies.setCartContent(state.cartItems);
     },
     updateItemQuantity: (
       state,
       action: PayloadAction<{ id: string; quantity: number }>
     ) => {
       const itemIndex = state.cartItems.findIndex(
-        (itemId) => itemId === action.payload.id // find index by itemId instead of object
+        (itemId) => itemId.id === action.payload.id // find index by itemId instead of object
       );
       if (itemIndex !== -1) {
-        const item = JSON.parse(state.cartItems[itemIndex]) as CartItem; // deserialize object before updating quantity
+        const item = state.cartItems[itemIndex] as CartItem;
         item.quantity = action.payload.quantity;
-        state.cartItems[itemIndex] = JSON.stringify(item); // serialize object before updating array
+        state.cartItems[itemIndex] = item;
       }
+      cookies.setCartContent(state.cartItems);
     },
     clearCart: (state) => {
       state.cartItems = [];
+      cookies.remove(COOKIE_NAME_CART);
     },
   },
 });
