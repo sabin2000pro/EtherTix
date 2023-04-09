@@ -587,7 +587,7 @@ label {
 
   /*Profile Page - Start*/
   .profile-container {
-    border: 1px solid gray;
+    border: 5px solid gray;
     border-radius: 15px;
     width: 800px;
     height: 500px;
