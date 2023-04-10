@@ -116,7 +116,6 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
             if(error) {
                 return console.error(error);
             }
-
             
         }
     }

@@ -11,7 +11,7 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnected, conn
   return (
 
     <>
-     <h2>Connect Wallet Button Component</h2>
+       <h2>Connect Wallet Component</h2>
     </>
 
   )

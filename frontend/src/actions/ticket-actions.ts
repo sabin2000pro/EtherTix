@@ -1,4 +1,4 @@
-import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL, EDIT_TICKET_REQUEST } from './../constants/ticket-constants';
+import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL, EDIT_TICKET_REQUEST, EDIT_TICKET_FAIL, EDIT_TICKET_SUCCESS } from './../constants/ticket-constants';
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
@@ -9,8 +9,6 @@ export const fetchAllTickets = (keyword = '', page = 1) => async (dispatch: any)
         dispatch({type: FETCH_ALL_TICKETS_REQUEST});
 
         const {data} = await axios.get(`http://localhost:5303/api/tickets?keyword=${keyword}`);
-
-        console.log(`All Tickets : `, data.tickets);
         dispatch({type: FETCH_ALL_TICKETS_SUCCESS, payload: data.tickets});
 
     } 
@@ -52,11 +50,10 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
 
 export const createTicket = (event: string, issuer: string, name: string, ticketClass: string, stock: Number, description: string, cost: Number) => async (dispatch: Dispatch): Promise<void> => {
     try {
-        dispatch({type: CREATE_TICKET_REQUEST});
 
+        dispatch({type: CREATE_TICKET_REQUEST});
         const {data} = await axios.post(`http://localhost:5303/api/v1/tickets`, {event, issuer, name, ticketClass, stock, description, cost})
 
-        console.log(`Created Ticket Data : `, data);
         dispatch({type: CREATE_TICKET_SUCCESS, payload: data.ticket});
     } 
     
@@ -73,14 +70,18 @@ export const createTicket = (event: string, issuer: string, name: string, ticket
 
 export const editTicketDetails = (id: string, name: string, ticketClass: string, stock: Number, description: string, cost: Number) => async (dispatch: Dispatch): Promise<void> => {
     try {
-        dispatch({type: EDIT_TICKET_REQUEST});
 
+        dispatch({type: EDIT_TICKET_REQUEST});
         const {data} = await axios.put(`http://localhost:5303/api/v1/tickets/${id}`, {name, ticketClass, stock, description, cost});
 
         console.log(`Updated Ticket Data : `, data);
+        dispatch({type: EDIT_TICKET_SUCCESS, payload: data.message});
     }
     
-    catch(error) {
+    catch(error: any) {
+     if(error) {
+        dispatch({type: EDIT_TICKET_FAIL, payload: error.response.data.message});
+    }
 
     }
 

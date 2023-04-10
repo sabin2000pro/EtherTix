@@ -12,14 +12,17 @@ interface NavBarLoggedInViewProps {
 
 const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
   const navigate = useNavigate()
+
   const logOut = async () => {
 
     stor.logout();
+
     cookies.remove(stor.COOKIE_NAME_USER);
     cookies.remove(stor.COOKIE_NAME_LOGGED_IN);
     cookies.remove(stor.COOKIE_NAME_TOKEN);
 
     try {
+
       await logout();
     }
     
@@ -33,14 +36,19 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
   };
 
   return (
+
     <div style={{ backgroundColor: "red", fontWeight: "bold" }}>
+
       <NavDropdown title={user.username} id="dropdown-menu-right">
-        <NavDropdown.Item href="/my-profile">Profile</NavDropdown.Item>
-        <NavDropdown.Item href="/my-tickets">Tickets</NavDropdown.Item>
-        <NavDropdown.Item href="/my-events">Events</NavDropdown.Item>
+
+        <NavDropdown.Item href = "/my-profile">Profile</NavDropdown.Item>
+        <NavDropdown.Item href = "/my-tickets">Tickets</NavDropdown.Item>
+        <NavDropdown.Item href = "/my-events">Events</NavDropdown.Item>
         <NavDropdown.Divider />
-        <NavDropdown.Item onClick={logOut}>Log out</NavDropdown.Item>
+        <NavDropdown.Item onClick = {logOut}>Log out</NavDropdown.Item>
       </NavDropdown>
+
+
     </div>
   );
 };

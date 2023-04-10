@@ -34,21 +34,6 @@ const App: React.FC = () => {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const handleFetchTickets = (event: any): void => {
-    
-     try {
-
-        
-     } 
-     
-     catch(error) {
-       if(error) {
-         console.error(error);
-       }
-     }
-
-  }
-
    return (
 
     <>

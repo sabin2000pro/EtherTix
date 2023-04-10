@@ -438,10 +438,8 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
         if(userHasResetToken) {
-            ///////////////////////////  DELETE THAT TOKEN //////////////////////////////////
             await PasswordReset.deleteOne({owner: user._id});
-
-            // return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
         }
     
         const token = generateRandomResetPasswordToken();
