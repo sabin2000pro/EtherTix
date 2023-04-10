@@ -10,10 +10,9 @@ export const fetchEventTicketDetails = asyncHandler(async (request: any, respons
 
     console.log(`Event Data : ,`, eventData.event.tickets);
 
-    // const ticketEventDetails = await axios.get(`http://tickets-service:5303/api/v1/tickets/event/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
+    // const ticketEventDetails = await axios.get(`http://tickets-service:5303/api/v1/tickets/${request.params.id}`, {headers: {Authorization: request.headers.authorization}})
     // const ticketData = ticketEventDetails.data;
 
-    
     // console.log(`Ticket Data : `, ticketData);
 
     return response.status(StatusCodes.OK).json({success: true, eventData});

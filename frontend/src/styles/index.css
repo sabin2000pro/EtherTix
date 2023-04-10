@@ -402,8 +402,6 @@ label {
 }
 
 .verify-container {
-    /* font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
-    line-height: 1.15385; */
     border: 1px solid gray;
     border-radius: 15px;
     width: 550px;
@@ -428,7 +426,7 @@ label {
 /*end-Email Verification*/
 
 .container {
-    max-width: 960px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
   }
@@ -746,3 +744,17 @@ label {
   .footer-col a:hover {
     text-decoration: underline;
   }
+
+  /*Profile Page - Start*/
+  .profile-container {
+    border: 5px solid gray;
+    border-radius: 15px;
+    width: 800px;
+    height: 550px;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+}
+/*Profile Page - End*/

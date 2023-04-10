@@ -127,11 +127,8 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: user._id, token: userOTP});
         await verificationToken.save();
 
-        console.log(`Your User ID: `, user.id);
         console.log(`Your OTP: `, userOTP);
 
-        const userOTPVerification = new EmailVerification({owner: user._id, token: userOTP});
-        await userOTPVerification.save(); // Save the User OTP token to the database after creating a new instance of OTP
 
         //sendConfirmationEmail(user, userOTP as unknown as any);
 
@@ -240,7 +237,9 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
         const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
 
         if(!token) {
-            return next(new ErrorResponse("User verification token not found", StatusCodes.BAD_REQUEST));
+            return next(new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST));
+        } else {
+            await EmailVerification.deleteOne({owner: userId});
         }
 
         // Fetch the generated token
@@ -253,7 +252,7 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
         console.log(`Your User ID: `, userId);
         console.log(`Your OTP: `, otpToken);
 
-        const newToken = new EmailVerification({owner: currentUser, token: otpToken}); // Create a new instance of the token
+        const newToken = new EmailVerification({owner: currentUser._id, token: otpToken}); // Create a new instance of the token
         await newToken.save(); // Save the new token
     
         return response.status(StatusCodes.OK).json({success: true, message: "E-mail Verification Re-sent"});
@@ -394,10 +393,10 @@ export const resendTwoFactorLoginCode = asyncHandler(async (request: any, respon
         resentToken.mfaToken = undefined; // Clear the generated token from the database
         await currentUser.save();
 
-        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const thirtySecondsAgo = new Date(Date.now() - 0.3 * 60 * 1000);
         const lastSentAt = new Date(resentToken.sentAt);
 
-        if(lastSentAt >= fiveMinutesAgo) { // If the date at which the last token was sent at (current date) 
+        if(lastSentAt >= thirtySecondsAgo) { // If the date at which the last token was sent at (current date) 
             return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
         }
 
@@ -429,7 +428,7 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
 
          // Check if we have an e-mail in the body of the request
         if(!email) {
-            return next(new ErrorResponse(`User with that e-mail not found`, StatusCodes.BAD_REQUEST))
+            return next(new ErrorResponse(`Please enter an email address`, StatusCodes.BAD_REQUEST))
         }
     
         if(!user) {
@@ -439,7 +438,10 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
         const userHasResetToken = await PasswordReset.findOne({owner: user._id});
     
         if(userHasResetToken) {
-            return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
+            ///////////////////////////  DELETE THAT TOKEN //////////////////////////////////
+            await PasswordReset.deleteOne({owner: user._id});
+
+            // return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
         }
     
         const token = generateRandomResetPasswordToken();
@@ -448,45 +450,60 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
             return next(new ErrorResponse("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
         }
     
-        const resetPasswordToken = await PasswordReset.create({owner: user._id, resetToken: token}); // Create an instance of the Password Reset model
+        const resetPasswordToken = await PasswordReset.create({owner: user._id, token: token}); // Create an instance of the Password Reset model
         await resetPasswordToken.save();
     
-        const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}&id=${user._id}` // Create the reset password URL
-        sendPasswordResetEmail(user, resetPasswordURL);
+        const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}` // Create the reset password URL
+        //sendPasswordResetEmail(user, resetPasswordURL);
+
+        console.log("reset password url: ", resetPasswordURL);
     
         return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
     }    
 )
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const currentPassword = request.body.currentPassword;
+        // const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
-        const resetToken = request.params.resetToken;
+        const resetToken = request.body.resetToken;
+        const userId = request.body.userId;
 
-        if(!currentPassword) {
-            return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        }
+        // if(!currentPassword) {
+        //     return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        // }
     
         if(!newPassword) {
             return next(new ErrorResponse("Please specify the new password", StatusCodes.BAD_REQUEST))
         }
     
-        const user = await User.findOne({owner: request.user._id, token: resetToken});
+        const user = await User.findById(userId);
     
         if(!user) {
             return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
         }
     
-        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+        // const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
-        if(!userPasswordsMatch) {
-           return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        // if(!userPasswordsMatch) {
+        //    return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        // }
+
+        const resetUser = await PasswordReset.findOne({owner: userId});
+
+        if(!resetUser) {
+            return next(new ErrorResponse("No reset token found", StatusCodes.BAD_REQUEST))
+        }
+
+        if(resetToken !== resetUser.token) {
+            return next(new ErrorResponse("Your reset token doesn't match ours", StatusCodes.BAD_REQUEST))
         }
     
         user.password = newPassword;
-        user.passwordConfirm = undefined;
+        user.passwordConfirm = newPassword;
     
         await user.save(); // Save new user after reset the password
+
+        await PasswordReset.deleteOne({owner: userId});
     
         return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
    } 
@@ -518,6 +535,8 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 
    try {
 
+    const userId = request.headers.authorization.split(' ')[2];
+
         const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
     
@@ -525,7 +544,7 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
             return next(new ErrorResponse("Please provide your new password", StatusCodes.BAD_REQUEST));
         }
     
-        const user = await User.findById(<any>request.user._id);
+        const user = await User.findById(userId);
     
         if(!user) {
             return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
@@ -557,10 +576,11 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
+        const userId = request.headers.authorization.split(' ')[2];
 
         const fieldsToUpdate = {email: request.body.email, username: request.body.username, role: request.body.role};
 
-        const updatedUserProfile = await User.findByIdAndUpdate(request.params.id, fieldsToUpdate, {new: true, runValidators: true});
+        const updatedUserProfile = await User.findByIdAndUpdate(userId, fieldsToUpdate, {new: true, runValidators: true});
         await updatedUserProfile.save();
 
         return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
@@ -607,7 +627,9 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
 
         if(request.method === 'PUT') { // If the request is a PUT request
 
-            const userId = request.params.userId;
+            const userId = request.headers.authorization.split(' ')[2];
+
+            // const userId = request.params.userId;
             const file = request.files!.file;
             const fileName = file.name;
 

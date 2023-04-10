@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Badge, Button, Container, Nav, Navbar } from "react-bootstrap";
 import { User } from "../models/user";
 import { Link } from "react-router-dom";
 import NavBarLoggedInView from "./NavBarLoggedInView";
 import NavBarLoggedOutView from "./NavBarLoggedOutView";
 import Search from "./Search";
 import { useSelector } from "react-redux";
+import { CartItem } from "models/cart";
 
 interface NavBarProps {
   onSignUpClicked: () => void;
@@ -18,6 +19,7 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
 
   let useR = useSelector((state: any) => state.auth.user as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  const cart:CartItem[] = useSelector((state: any) => state.auth.cartItems);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -50,17 +52,26 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
         </Nav>
 
         <Nav className="justify-content-right">
-
-          {isLoggedIn ? (<NavBarLoggedInView user = {useR} />
-
-          ) : (
-            <NavBarLoggedOutView
-              onLoginClicked={onLoginClicked}
-              onSignUpClicked={onSignUpClicked}
-            />
-            
-          )}
-
+          <ul>
+            <li style={{ display: "inline-flex" }}>
+              {isLoggedIn ? (
+                <NavBarLoggedInView user={useR} />
+              ) : (
+                <NavBarLoggedOutView
+                  onLoginClicked={onLoginClicked}
+                  onSignUpClicked={onSignUpClicked}
+                />
+              )}
+            </li>
+            <li style={{ display: "inline-flex" }}>
+              <Button
+                href="/my-cart"
+                style={{ backgroundColor: "transparent", border: "none" }}
+              >
+                Cart <Badge bg="danger">{cart.length as unknown as string}</Badge>
+              </Button>
+            </li>
+          </ul>
         </Nav>
 
       </Container>

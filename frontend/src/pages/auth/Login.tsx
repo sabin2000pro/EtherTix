@@ -36,7 +36,6 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
       cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
 
       dispatch(stor.login(response.user));
-      dispatch(stor.setToken(response.token));
 
       onLoginSuccessful();
     } catch (err: any) {

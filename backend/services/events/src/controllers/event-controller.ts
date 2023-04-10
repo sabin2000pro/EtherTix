@@ -5,10 +5,11 @@ import path from 'path';
 import { NextFunction, Request, Response } from 'express';
 import { Event } from "../models/event-model";
 import asyncHandler from 'express-async-handler';
+import axios from 'axios';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const keyword = request.query.keyword;
-    const events = await Event.find().populate('tickets');
+    const events = await Event.find().populate("tickets").lean();
 
     if(!events) {
       return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));
@@ -21,7 +22,7 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 
         const id = request.params.id;
         const event = await Event.findById(id);
-        
+
         if(!event) {
            return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
         }
