@@ -1,9 +1,5 @@
 import React from 'react'
 
-interface ICartProps {
-
-}
-
 const Cart = () => {
 
   return (

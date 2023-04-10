@@ -6,6 +6,7 @@ import "@testing-library/jest-dom";
 describe('Search component', () => {
 
   const searchTerm = 'concert';
+  
   const searchResults = [
     { path: '/concerts/1', name: 'Concert 1' },
     { path: '/concerts/2', name: 'Concert 2' },
@@ -18,10 +19,7 @@ describe('Search component', () => {
 
     render(
 
-      <Search searchTerm={searchTerm}
-        searchResults={searchResults}
-        handleSearch={handleSearch}
-      />
+      <Search searchTerm={searchTerm} searchResults={searchResults} handleSearch={handleSearch} />
     );
 
     searchResults.forEach(result => {
