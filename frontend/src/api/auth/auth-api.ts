@@ -131,7 +131,9 @@ export interface ForgotPCredentials {
   email: string;
 }
 
-export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials): Promise<any> => {
+export const forgotPassword = async (
+  forgotPasswordPayload: ForgotPCredentials
+): Promise<any> => {
   try {
     const response = await axios.post(
       "http://localhost:5299/api/auth/forgot-password",
@@ -147,11 +149,11 @@ export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials):
 };
 
 export interface ResetP {
-  newPassword: string,
-  confirmPassword: string,
-  resetToken: string,
-  userId: string,
-};
+  newPassword: string;
+  confirmPassword: string;
+  resetToken: string;
+  userId: string;
+}
 
 export const resetPassword = async (
   resetPasswordPayload: ResetP
@@ -170,27 +172,17 @@ export const resetPassword = async (
   }
 };
 
-export interface ProfPic {
-  pic: File,
-}
-
-export const uploadProfilePic = async (pic: ProfPic) => {
-  try {
-    const response = await axios.put("http://localhost:5299/api/auth/propic", pic);
-    return response;
-  } catch (error: any) {
-    if(error) {
-      throw error;
-    }    
-  }
-};
-
-
 // All these need an authorization header
 
 export const getUser = async (): Promise<any> => {
   try {
-    const response = await axios.get("http://localhost:5299/api/auth/me",{ headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}});
+    const response = await axios.get("http://localhost:5299/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
+          cookies.get(COOKIE_NAME_USER)._id
+        }`,
+      },
+    });
     const data = await response.data;
     return data;
   } catch (err: any) {
@@ -201,33 +193,78 @@ export const getUser = async (): Promise<any> => {
 };
 
 export interface UpdateProfileCredentials {
-  email: string,
-  username: string,
-  role: string,
-};
+  email: string;
+  username: string;
+  role: string;
+}
 
-export const updateProfile = async (updateProfilePayload: any): Promise<any> => {
+export const updateProfile = async (
+  updateProfilePayload: any
+): Promise<any> => {
   try {
-    const response = await axios.put("http://localhost:localhost:5299/api/auth/update-profile", updateProfilePayload, { headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}} );
+    const response = await axios.put(
+      "http://localhost:localhost:5299/api/auth/update-profile",
+      updateProfilePayload,
+      {
+        headers: {
+          Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
+            cookies.get(COOKIE_NAME_USER)._id
+          }`,
+        },
+      }
+    );
     return response;
   } catch (error: any) {
-    if(error){
+    if (error) {
       throw error;
     }
   }
 };
 
 export interface UpdatePasswordCredentials {
-  currentPassword: string,
-  newPassword: string,
+  currentPassword: string;
+  newPassword: string;
 }
 
-export const updatePassword = async (updatePasswordPayload: any): Promise<any> => {
+export const updatePassword = async (
+  updatePasswordPayload: any
+): Promise<any> => {
   try {
-    const response = await axios.put("http://localhost:localhost:5299/api/auth/update-password", updatePasswordPayload, { headers: {"Authorization" : `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}} );
+    const response = await axios.put(
+      "http://localhost:localhost:5299/api/auth/update-password",
+      updatePasswordPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
+            cookies.get(COOKIE_NAME_USER)._id
+          }`,
+        },
+      }
+    );
     return response;
   } catch (error: any) {
-    if(error){
+    if (error) {
+      throw error;
+    }
+  }
+};
+
+export const uploadProfilePic = async (pic: any) => {
+  try {
+    const response = await axios.put(
+      "http://localhost:5299/api/auth/propic",
+      pic,
+      {
+        headers: {
+          Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
+            cookies.get(COOKIE_NAME_USER)._id
+          }`,
+        },
+      }
+    );
+    return response;
+  } catch (error: any) {
+    if (error) {
       throw error;
     }
   }

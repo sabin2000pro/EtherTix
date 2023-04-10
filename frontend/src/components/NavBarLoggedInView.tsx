@@ -31,8 +31,8 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
       alert(error);
     }
     
-    window.location.reload();
     navigate("/");
+    window.location.reload();
   };
 
   return (

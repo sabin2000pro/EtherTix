@@ -46,7 +46,7 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
                 const convertedBalance = web3Client.utils.fromWei(currentAccountBalance);
 
                 setCurrentAccountAddress(currentAccount[0]);
-                setCurrentBalance(parseInt(convertedBalance));
+                setCurrentBalance(parseFloat(convertedBalance));
 
                 const nftContract = await initialiseNftContract();
                 localStorage.setItem("account", currentAccount);
