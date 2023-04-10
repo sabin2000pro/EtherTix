@@ -1,6 +1,10 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
+interface HomeProps {
+  onSignUpClicked: () => void;
+}
+
 const services = [  { id: 1, title: "Service 1", image: "https://source.unsplash.com/random/400x400", description: "Service 1 description" },  
 { id: 2, title: "Service 2", image: "https://source.unsplash.com/random/400x400", description: "Service 2 description" },  
 { id: 3, title: "Service 3", image: "https://source.unsplash.com/random/400x400", description: "Service 3 description" },  
@@ -10,7 +14,7 @@ const services = [  { id: 1, title: "Service 1", image: "https://source.unsplash
 { id: 7, title: "Service 7", image: "https://source.unsplash.com/random/400x400", description: "Service 7 description" },  
 { id: 8, title: "Service 8", image: "https://source.unsplash.com/random/400x400", description: "Service 8 description" }];
 
-const Home = () => {
+const Home = ({ onSignUpClicked }: HomeProps) => {
   const containerRef = useRef(null);
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
@@ -30,7 +34,7 @@ const Home = () => {
           <div className="hero-text">
             <h1 className="hero-title">Ether Tix</h1>
             <p className="hero-subtitle">Buy and sell tickets for your favorite events using Ethereum.</p>
-            <button className="hero-cta">Get Started, Register here!</button>
+            <button className="hero-cta" onClick={onSignUpClicked}>Get Started, Register here!</button>
           </div>
         </div>
       </section>
