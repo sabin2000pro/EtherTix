@@ -27,16 +27,15 @@ const UserProfile: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-
-  let ethBalance: number = 0;
+  const [balance, setBalance] = useState(0);
 
   const { connectMetaMaskWallet } = useContext(blockchain.Web3Context);
 
   const handleConnect = async () => {
     const currentAccount = await connectMetaMaskWallet();
-    console.log("mata mask wallet balance: ", currentAccount.convertedBalance);
+    console.log("mata mask wallet: ", currentAccount);
     if (currentAccount) {
-      ethBalance = currentAccount.convertedBalance;
+      setBalance(parseFloat(currentAccount.convertedBalance));
     }
   };
 
@@ -96,7 +95,7 @@ const UserProfile: React.FC = () => {
           <p>Email: {user?.email}</p>
           <p>Username: {user?.username}</p>
           <p>Role: {user?.role}</p>
-          <p>ETH balance: {ethBalance}</p>
+          <p>ETH balance: {balance}</p>
           <Button
             variant="primary"
             onClick={handleChange}
