@@ -1,10 +1,14 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useContext } from 'react'
 
 interface IMintNFTProps {
     mintNFT: () => Promise<any>
 }
 
-export const MintToken = ({mintNFT}: IMintNFTProps) => {
+const MintToken = ({mintNFT}: IMintNFTProps) => {
+  const dispatch = useDispatch();
+  const {} = useSelector((state: any) => state.nfts);
 
   return (
 

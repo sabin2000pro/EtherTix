@@ -1,7 +1,6 @@
 import { Venue } from '../models/venue-model';
 import {Request, Response, NextFunction} from 'express';
 
-
 // @desc      Fetch All Event Tickets
 // @route     GET /api/v1/tickets
 // @route     GET /api/v1/events/:eventId/tickets
@@ -9,24 +8,25 @@ import {Request, Response, NextFunction} from 'express';
 
 export const fetchAllVenues = async (request: any, response: any, next: NextFunction): Promise<any> => {
   try {
-     // @todo
+     // @tod
   }
   
   catch(error: any) {
 
   }
 
-
 }
-
-// @desc      Fetch All Event Tickets
-// @route     GET /api/v1/tickets
-// @route     GET /api/v1/events/:eventId/tickets
-// @access    Private (Authorization Token Required)
 
 export const fetchVenueByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
   try {
     
+      const venueId = request.params.venueId;
+      const venue = await Venue.findById(venueId);
+
+      if(!venue) {
+
+      }
+
   } 
   
   catch(error) {
