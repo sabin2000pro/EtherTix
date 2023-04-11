@@ -28,14 +28,16 @@ const UserProfile: React.FC = () => {
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [address, setAddress] = useState("");
 
   const { connectMetaMaskWallet } = useContext(blockchain.Web3Context);
 
   const handleConnect = async () => {
-    const currentAccount = await connectMetaMaskWallet();
-    console.log("mata mask wallet: ", currentAccount);
-    if (currentAccount) {
-      setBalance(parseFloat(currentAccount.convertedBalance));
+    const ethAccount = await connectMetaMaskWallet();
+    console.log("mata mask wallet: ", ethAccount);
+    if (ethAccount) {
+      setBalance(parseFloat(ethAccount.convertedBalance));
+      setAddress(ethAccount.currentAccount[0]);
     }
   };
 
@@ -75,59 +77,73 @@ const UserProfile: React.FC = () => {
   };
 
   return (
-    <Container className="profile-container text-center">
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
-
-      <Row style={{ paddingTop: "5px" }}>
-        <Col style={{ textAlign: "right", paddingLeft: "60px" }}>
-          <h1
-            style={{
-              paddingRight: "87px",
-              textAlign: "left",
-              paddingBottom: "60px",
-            }}
-          >
-            Your Profile
-          </h1>
-          <p>Name: {user?.forename}</p>
-          <p>Surname: {user?.surname}</p>
-          <p>Email: {user?.email}</p>
-          <p>Username: {user?.username}</p>
-          <p>Role: {user?.role}</p>
-          <p>ETH balance: {balance}</p>
-          <Button
-            variant="primary"
-            onClick={handleChange}
-            style={{ display: "flex", borderRadius: "7px", marginTop: "40px" }}
-          >
-            Edit Profile
-          </Button>
-        </Col>
-        <Col
-          style={{
-            textAlign: "right",
-            paddingRight: "100px",
-            paddingTop: "30px",
-          }}
-        >
-          <img
-            src={`/images/${user?.photo}`}
-            alt="user-propic"
-            style={{
-              height: "250px",
-              width: "250px",
-              border: "5px solid gray",
-              borderRadius: "15px",
-            }}
-          />
-        </Col>
-      </Row>
-      {showEditModal && (
-        <Modal show onHide={handleChange} centered>
-          <Modal.Body></Modal.Body>
-        </Modal>
+    <Container>
+      {error && (
+        <Alert variant="danger" style={{ textAlign: "center" }}>
+          {error}
+        </Alert>
       )}
+      {success && (
+        <Alert variant="success" style={{ textAlign: "center" }}>
+          {success}
+        </Alert>
+      )}
+      <Container className="profile-container text-center">
+        <Row style={{ paddingTop: "5px" }}>
+          <Col style={{ textAlign: "right", paddingLeft: "60px" }}>
+            <h1
+              style={{
+                paddingRight: "87px",
+                textAlign: "left",
+                paddingBottom: "60px",
+              }}
+            >
+              Your Profile
+            </h1>
+            <p>Name: {user?.forename}</p>
+            <p>Surname: {user?.surname}</p>
+            <p>Email: {user?.email}</p>
+            <p>Username: {user?.username}</p>
+            <p>Role: {user?.role}</p>
+            <p>ETH balance: {balance}</p>
+            <p>Wallet address: {address}</p>
+            <Button
+              variant="primary"
+              onClick={handleChange}
+              style={{
+                display: "flex",
+                borderRadius: "7px",
+                marginTop: "40px",
+              }}
+            >
+              Edit Profile
+            </Button>
+          </Col>
+          <Col
+            style={{
+              textAlign: "right",
+              paddingRight: "100px",
+              paddingTop: "30px",
+            }}
+          >
+            <img
+              src={`/images/${user?.photo}`}
+              alt="user-propic"
+              style={{
+                height: "250px",
+                width: "250px",
+                border: "5px solid gray",
+                borderRadius: "15px",
+              }}
+            />
+          </Col>
+        </Row>
+        {showEditModal && (
+          <Modal show onHide={handleChange} centered>
+            <Modal.Body></Modal.Body>
+          </Modal>
+        )}
+      </Container>
     </Container>
   );
 };

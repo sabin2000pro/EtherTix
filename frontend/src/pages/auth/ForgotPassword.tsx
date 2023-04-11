@@ -52,8 +52,8 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <Container>
-      {errorText && <Alert variant="danger">{errorText}</Alert>}
-      {successText && <Alert variant="success">{successText}</Alert>}
+      {errorText && <Alert variant="danger" style={{textAlign: "center"}}>{errorText}</Alert>}
+      {successText && <Alert variant="success" style={{textAlign: "center"}}>{successText}</Alert>}
       <Container className="verify-container">
         <Form.Label
           column="lg"

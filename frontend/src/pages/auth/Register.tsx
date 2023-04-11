@@ -26,7 +26,10 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm<registerCredentials>();
+
+  const Password = watch("password", "");
 
   async function onSubmit(credentials: registerCredentials) {
     try {
@@ -37,7 +40,7 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
       cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
 
       dispatch(stor.login(response.user));
-      
+
       onSignUpSuccessful();
       navigate("/verify-email");
     } catch (error: any) {
@@ -63,7 +66,11 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
       </Modal.Header>
 
       <Modal.Body>
-        {errorText && <Alert variant="danger">{errorText}</Alert>}
+        {errorText && (
+          <Alert variant="danger" style={{ textAlign: "center" }}>
+            {errorText}
+          </Alert>
+        )}
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Container className="text-left">
             <TextInputField
@@ -118,8 +125,12 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
               type={showPassword ? "text" : "password"}
               placeholder="Confirm Password"
               register={register}
-              registerOptions={{ required: "Required" }}
-              error={errors.password}
+              registerOptions={{
+                required: "Required",
+                validate: (value) =>
+                  value === Password || "Passwords don't match.",
+              }}
+              error={errors.passwordConfirm}
             />
             <Form.Check
               style={{ marginBottom: "15px" }}

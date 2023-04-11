@@ -5,18 +5,10 @@ import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { User } from "models/user";
 
-
 const EmailVerification: React.FC = () => {
   const navigate = useNavigate();
-  const user = useSelector((state: any) => state.auth.user as User);
+  const user: User = useSelector((state: any) => state.auth.user) as User;
   const timeLeft = 15;
-
-  const fetchUserId = () => {
-    setCreds({ ...creds, userId: user._id });
-  };
-  setTimeout(() => {
-    fetchUserId();
-  }, 2000);
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -41,6 +33,15 @@ const EmailVerification: React.FC = () => {
 
   const [timer, setTimer] = useState(timeLeft);
 
+  const fetchUserId = () => {
+    if (user) {
+      setCreds({ ...creds, userId: user._id });
+    }
+  };
+  setTimeout(() => {
+    fetchUserId();
+  }, 2000);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer > 0) {
@@ -55,12 +56,17 @@ const EmailVerification: React.FC = () => {
   }, [buttonState, timer]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOTP({ ...OTP, [event.target.name]: event.target.value });
+    const result = event.target.value.replace(/\D/g, "");
+
+    setOTP({ ...OTP, [event.target.name]: result });
     //console.log(OTP);
   };
 
   const inputfocus = (elmnt: any) => {
+    setError(null);
+    setSuccess(null);
     const ms = 100;
+    const nOfFields = 6;
     if (
       elmnt.key === "Delete" ||
       elmnt.key === "Backspace" ||
@@ -74,10 +80,22 @@ const EmailVerification: React.FC = () => {
           elmnt.target.form.elements[next].select();
         }, ms);
       }
-    } else {
-      //console.log("next");
+      //if right arrow key, move focus right
+    } else if (elmnt.keyCode === 39) {
       const next = elmnt.target.tabIndex;
-      if (next < 6) {
+      if (next < nOfFields) {
+        setTimeout(() => {
+          elmnt.target.form.elements[next].focus();
+          elmnt.target.form.elements[next].select();
+        }, ms);
+      }
+    } else {
+      if (elmnt.keyCode < 48 || elmnt.keyCode > 57) {
+        setError("Only digits allowed");
+        return;
+      }
+      const next = elmnt.target.tabIndex;
+      if (next < nOfFields) {
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
@@ -98,29 +116,40 @@ const EmailVerification: React.FC = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    setButtonState({ ...buttonState, verify: true, resend: true });
     event.preventDefault();
     setError(null);
     setSuccess(null);
+    if (
+      OTP.otp1 === "" ||
+      OTP.otp2 === "" ||
+      OTP.otp3 === "" ||
+      OTP.otp4 === "" ||
+      OTP.otp5 === "" ||
+      OTP.otp6 === ""
+    ) {
+      setError("Please enter a valid one-time password...");
+      return;
+    }
+    setButtonState({ ...buttonState, verify: true, resend: true });
+
     try {
       bundleTogether();
       const response = await verifyEmailAddress(creds);
 
       if (response.message === "E-mail Address verified") {
         navigate("/");
-      } else {
-        alert("Wrong OTP, try again");
-
-        if (timer === 0) {
-          setButtonState({ ...buttonState, resend: false });
-        }
-        setTimeout(() => {
-          setButtonState({ ...buttonState, verify: false });
-        }, 5000);
       }
+
+      if (timer === 0) {
+        setButtonState({ ...buttonState, resend: false });
+      }
+      setTimeout(() => {
+        setButtonState({ ...buttonState, verify: false });
+      }, 5000);
     } catch (err: any) {
       setSuccess(null);
-      setError(err.message);
+      setError("Wrong OTP, try again");
+      console.error(err);
 
       if (timer === 0) {
         setButtonState({ ...buttonState, resend: false });
@@ -142,22 +171,30 @@ const EmailVerification: React.FC = () => {
       if (response.message === "E-mail Verification Re-sent") {
         setError(null);
         setSuccess("A new one-time password has been sent to your email");
-        // alert("A new one-time password has been sent to your email");
         setTimer(timeLeft);
         setButtonState({ ...buttonState, resend: true });
       }
     } catch (err: any) {
       setSuccess(null);
-      setError(err.message);
+      setError("Something went wrong, please try again later...");
       setTimer(timeLeft);
       setButtonState({ ...buttonState, resend: true });
+      console.error(err);
     }
   };
 
   return (
     <Container>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      {error && (
+        <Alert variant="danger" style={{ textAlign: "center" }}>
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert variant="success" style={{ textAlign: "center" }}>
+          {success}
+        </Alert>
+      )}
       <Container className="verify-container">
         <Form.Label
           column="lg"
@@ -166,7 +203,7 @@ const EmailVerification: React.FC = () => {
           Verify it's you
         </Form.Label>
         <Form.Label column="sm" style={{ marginTop: "5px" }}>
-          A one-time password has been sent to "{user.email}". It may take a
+          A one-time password has been sent to "{user?.email}". It may take a
           moment to arrive.
         </Form.Label>
         <Form.Label

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { login, LoginCredentials } from "api/auth/auth-api";
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,7 @@ interface LoginModalProps {
 
 // @description: Login Component
 const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
-  const [errorText, setErrorText] = useState<string | null>(null);
+  const [errorText, setErrorText] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,19 +29,21 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
   const onSubmit = async (credentials: LoginCredentials) => {
     try {
       const response = await login(credentials);
-      console.log(response);
 
-      cookies.set(stor.COOKIE_NAME_USER, response.user);
-      cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
-      cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
+      if (response.success) {
+        cookies.set(stor.COOKIE_NAME_USER, response.user);
+        cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
+        cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
 
-      dispatch(stor.login(response.user));
+        dispatch(stor.login(response.user));
 
-      onLoginSuccessful();
+        onLoginSuccessful();
+      }
     } catch (err: any) {
-      if (err) {
-        setErrorText(err);
-        alert(err);
+      if (err.response === undefined) {
+        setErrorText("Something went wrong, please try again later...");
+      } else {
+        setErrorText(err.response.data.message);
       }
       console.error(err);
     }
@@ -60,7 +62,11 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
       </Modal.Header>
 
       <Modal.Body>
-        {errorText && <Alert variant="danger">{errorText}</Alert>}
+        {errorText && (
+          <Alert variant="danger" style={{ textAlign: "center" }}>
+            {errorText}
+          </Alert>
+        )}
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Container className="text-left">
             <TextInputField
