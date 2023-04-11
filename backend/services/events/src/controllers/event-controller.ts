@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const keyword = request.query.keyword;
-    const events = await Event.find().populate("tickets").lean();
+    const events = await Event.find();
 
     if(!events) {
       return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));

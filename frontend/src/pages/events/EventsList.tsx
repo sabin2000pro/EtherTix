@@ -18,25 +18,24 @@ const EventList: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
    /* const {error, events} = useSelector((state: any) => state.events);*/
-    const [events] = useState<Array<{ id: number; name: string; description: string; image: string }>>([]);
+    const [events, setEvents] = useState<Array<Event>>([]);;
     const [scrollPosition, setScrollPosition] = useState(0);
     const rowRef = useRef(null);
 
    useEffect(() => {
 
-      const loadEvents = async () => {
-        
+      const fetchEvents = async () => {
         try {
-           dispatch(fetchEventList() as any)
-        } 
-        
-        catch (error) {
+          const { data } = await axios.get("http://localhost:5301/api/v1/events");
+          setEvents(data.events);
+        } catch (error) {
           console.error(error);
         }
       };
   
-      loadEvents();
-    }, []); 
+      fetchEvents();
+    }, []);
+  
 
     const goToEvent = () => {
        navigate(`/events/${id}`)
@@ -51,30 +50,16 @@ const EventList: React.FC = () => {
     };
 
     return (
-
-    <div className="event-list-container">
-
-    <Container className="mt-5">
-        <Button className ="click-left" onClick={scrollLeft}>&lt;</Button>
-    <Row>
-          {events.length === 0
-
-            ? [1, 2, 3,].map((i) => (
-
-                <Card key={i} style={{ width: "18rem", margin: "0 10px" }} className="text-center">
-
-                  <Card.Body>
-
-                    <Card.Title>Event {i}</Card.Title>
-                    <Card.Text>Description for event {i}</Card.Text>
-                    <Button onClick = {goToEvent}>View Event</Button>
-
-                  </Card.Body>
-                </Card>
-
-              ))
-
-            : events.map((event: any) => (
+      <div className="event-list-container">
+        <Container className="mt-5">
+          <Button className="click-left" onClick={scrollLeft}>
+            &lt;
+          </Button>
+          <Row>
+            {events.length === 0 ? (
+              <p>Loading events...</p>
+            ) : (
+              events.map((event: Event) => (
                 <Card
                   key={event.id}
                   style={{ width: "18rem", margin: "0 10px" }}
@@ -84,17 +69,21 @@ const EventList: React.FC = () => {
                   <Card.Body>
                     <Card.Title>{event.name}</Card.Title>
                     <Card.Text>{event.description}</Card.Text>
-                    <Button type = "submit" onClick = {goToEvent}>View Event</Button>
+                    <Button type="submit" onClick={goToEvent}>
+                      View Event
+                    </Button>
                   </Card.Body>
                 </Card>
-
-
-              ))}
-        </Row>
-        <Button className ="click-right" onClick={scrollRight}>&gt;</Button>
-      </Container>
-    </div>
-    )
-  };
+              ))
+            )}
+          </Row>
+          <Button className="click-right" onClick={scrollRight}>
+            &gt;
+          </Button>
+        </Container>
+      </div>
+    );
+    };
+    
   
   export default EventList;

@@ -568,7 +568,7 @@ label {
 
   /*EventList Page*/
 
-  .event-list-container{
+  /*.event-list-container{
     display: flex;
     justify-content: center;
     background-color: #000;
@@ -581,7 +581,7 @@ label {
     justify-content: center;
     height: 50vh;
     margin-bottom: 30px;
-  }
+  }*/
 
   /*End EventList Page*/
 /* Hero section */
