@@ -25,12 +25,16 @@ const EventList: React.FC = () => {
    useEffect(() => {
 
       const fetchEvents = async () => {
+
         try {
           const { data } = await axios.get("http://localhost:5301/api/v1/events");
           setEvents(data.events);
-        } catch (error) {
+        } 
+        
+        catch (error) {
           console.error(error);
         }
+
       };
   
       fetchEvents();
@@ -50,40 +54,51 @@ const EventList: React.FC = () => {
     };
 
     return (
+
       <div className="event-list-container">
+
         <Container className="mt-5">
-          <Button className="click-left" onClick={scrollLeft}>
-            &lt;
-          </Button>
+
           <Row>
+
             {events.length === 0 ? (
-              <p>Loading events...</p>
+              <p>No events found</p>
             ) : (
               events.map((event: Event) => (
-                <Card
-                  key={event.id}
+
+                <Card key = {event.id}
                   style={{ width: "18rem", margin: "0 10px" }}
                   className="text-center"
                 >
                   <Card.Img variant="top" src={event.image} />
+
                   <Card.Body>
                     <Card.Title>{event.name}</Card.Title>
                     <Card.Text>{event.description}</Card.Text>
+
                     <Button type="submit" onClick={goToEvent}>
                       View Event
                     </Button>
+
+                    
                   </Card.Body>
                 </Card>
+
               ))
             )}
           </Row>
-          <Button className="click-right" onClick={scrollRight}>
-            &gt;
-          </Button>
+          <div className="event-scroll">
+            <Button className="click-left" onClick={scrollLeft}>
+              &lt;
+            </Button>
+            <Button className="click-right" onClick={scrollRight}>
+              &gt;
+            </Button>
+          </div>
         </Container>
       </div>
     );
-    };
+  };
     
   
   export default EventList;

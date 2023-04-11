@@ -568,20 +568,21 @@ label {
 
   /*EventList Page*/
 
-  /*.event-list-container{
+  .event-list-container{
     display: flex;
     justify-content: center;
-    background-color: #000;
-    margin-top: 75px;
-    width: 1000px;
+    margin-top: 50px;
+    /*width: 1000px;*/
   }
 
   .mt-5{
+    width:1000px;
+  }
+
+  .event-scroll{
     display: flex;
     justify-content: center;
-    height: 50vh;
-    margin-bottom: 30px;
-  }*/
+  }
 
   /*End EventList Page*/
 /* Hero section */
