@@ -13,6 +13,9 @@ export const authReducer = (state = initialAuthState as any, action: any) => {
 
         case REGISTER_USER_SUCCESS:
             return {...state, loading: false, error: undefined, user: action.payload}
+
+        case REGISTER_USER_FAIL:
+            return {...state, error: action.payload, user: {}, loading: false}
         
         default:
             return state

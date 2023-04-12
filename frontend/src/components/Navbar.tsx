@@ -20,7 +20,8 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
 
   const {user} = useSelector((state: any) => state.auth.user as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
-  const cart:CartItem[] = useSelector((state: any) => state.auth.cartItems);
+
+  const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -53,16 +54,20 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
         </Nav>
 
         <Nav className="justify-content-right">
+          
           <ul>
             <li style={{ display: "inline-flex" }}>
+
+
               {isLoggedIn ? (
-                <NavBarLoggedInView user={user} />
+                <NavBarLoggedInView user= {user} />
               ) : (
                 <NavBarLoggedOutView
                   onLoginClicked={onLoginClicked}
                   onSignUpClicked={onSignUpClicked}
                 />
               )}
+
             </li>
             <li style={{ display: "inline-flex" }}>
               <Button
