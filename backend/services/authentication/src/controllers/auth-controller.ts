@@ -127,9 +127,6 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
         const verificationToken = new EmailVerification({owner: user._id, token: userOTP});
         await verificationToken.save();
 
-        console.log(`Your OTP: `, userOTP);
-
-
         //sendConfirmationEmail(user, userOTP as unknown as any);
 
         return sendTokenResponse(request, user, StatusCodes.CREATED, response);
@@ -193,16 +190,16 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
             const transporter = emailTransporter();
     
           
-                // transporter.sendMail({
+                transporter.sendMail({
 
-                //     from: 'welcome@ethertix.com',
-                //     to: user.email,
-                //     subject: 'E-mail Confirmation Success',
-                //     html: `
+                    from: 'welcome@ethertix.com',
+                    to: user.email,
+                    subject: 'E-mail Confirmation Success',
+                    html: `
                     
-                //     <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                //     `
-                // })
+                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+                    `
+                })
     
             const jwtToken = user.getAuthenticationToken();
             request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
@@ -461,14 +458,14 @@ export const forgotPassword =  asyncHandler(async(request: any, response: any, n
 )
 
 export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        // const currentPassword = request.body.currentPassword;
+        const currentPassword = request.body.currentPassword;
         const newPassword = request.body.newPassword;
         const resetToken = request.body.resetToken;
         const userId = request.body.userId;
 
-        // if(!currentPassword) {
-        //     return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        // }
+        if(!currentPassword) {
+            return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
+        }
     
         if(!newPassword) {
             return next(new ErrorResponse("Please specify the new password", StatusCodes.BAD_REQUEST))
@@ -480,11 +477,11 @@ export const resetPassword = asyncHandler(async (request: any, response: any, ne
             return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
         }
     
-        // const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
     
-        // if(!userPasswordsMatch) {
-        //    return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
-        // }
+        if(!userPasswordsMatch) {
+           return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
+        }
 
         const resetUser = await PasswordReset.findOne({owner: userId});
 

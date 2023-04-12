@@ -4,7 +4,7 @@ import { addToCartReducer, removeItemFromCart } from 'reducers/cart-reducers'
 import { eventsReducer } from 'reducers/event-reducers'
 
 // Global store
-const store: any = configureStore({
+export const store = configureStore({
 
     reducer: {
        tickets: ticketsReducer,
@@ -15,6 +15,3 @@ const store: any = configureStore({
     }
     
 })
-
-
-export default store

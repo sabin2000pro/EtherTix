@@ -5,7 +5,7 @@ import {Ticket} from '../tickets/src/models/ticket-model';
 import {Venue} from '../venues/src/models/venue-model'
 
 import {connectAuthSchema} from  '../authentication/src/database/auth-schema'
-import connectEventsDatabase from '../events/src/database/event-db'
+import connectEventsDatabase from '../events-service/src/database/event-db'
 import {connectTicketsSchema} from '../tickets/src/database/tickets-db'
 import { connectVenuesSchema } from '../venues/src/database/venues-db';
 

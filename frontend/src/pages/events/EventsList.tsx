@@ -1,16 +1,9 @@
 import React, { useState, useEffect} from "react";
-import { Card, Container, Row, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import {useParams} from 'react-router-dom'
+import { Container, Row, Button } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchEventList } from "actions/event-actions";
+import { fetchEventList } from 'actions/event-actions'
 
-interface Event {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-}
 
 const EventList: React.FC = () => {
     const {id} = useParams();
@@ -18,15 +11,22 @@ const EventList: React.FC = () => {
     const dispatch = useDispatch();
 
     const [scrollPosition, setScrollPosition] = useState(0);
-    const {events} = useSelector((state: any) => state.eventsReducer.events);
+    const {events} = useSelector((state: any) => state.events);
+
+    if(events) {
+      console.log(`Events : `, events);
+    }
+
+
 
    useEffect(() => {
 
       const fetchEvents = async () => {
 
         try {
+
            dispatch(fetchEventList() as any);
-           console.log("Found Events : ", events);
+ 
         } 
         
         catch (error) {
@@ -37,10 +37,7 @@ const EventList: React.FC = () => {
   
       fetchEvents();
 
-      return () => {
-
-      }
-    }, [dispatch, events]);
+    }, [dispatch])
   
 
     const goToEvent = () => {
@@ -63,32 +60,26 @@ const EventList: React.FC = () => {
 
           <Row>
 
-            {events.length === 0 ? (
+            {/* {events.length === 0 ? (
               <p>No events found</p>
             ) : (
-
               events.map((event: Event) => (
-
                 <Card key = {event.id}
                   style={{ width: "18rem", margin: "0 10px" }}
                   className="text-center"
                 >
                   <Card.Img variant="top" src={event.image} />
-
                   <Card.Body>
                     <Card.Title>{event.name}</Card.Title>
                     <Card.Text>{event.description}</Card.Text>
-
                     <Button type="submit" onClick={goToEvent}>
                       View Event
                     </Button>
-
                     
                   </Card.Body>
                 </Card>
-
               ))
-            )}
+            )} */}
 
           </Row>
 
@@ -106,6 +97,5 @@ const EventList: React.FC = () => {
       </div>
     );
   };
-    
-  
+
   export default EventList;

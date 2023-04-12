@@ -8,10 +8,10 @@ import {
   Alert,
   Modal,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
 import { getUser } from "api/auth/auth-api";
 import * as blockchain from "context/Web3Context";
-
 interface UserProfileData {
   _id: string;
   surname: string;
@@ -33,12 +33,16 @@ const UserProfile: React.FC = () => {
   const { connectMetaMaskWallet } = useContext(blockchain.Web3Context);
 
   const handleConnect = async () => {
+
     const ethAccount = await connectMetaMaskWallet();
     console.log("mata mask wallet: ", ethAccount);
+
     if (ethAccount) {
       setBalance(parseFloat(ethAccount.convertedBalance));
       setAddress(ethAccount.currentAccount[0]);
     }
+
+    
   };
 
   handleConnect();
@@ -47,6 +51,7 @@ const UserProfile: React.FC = () => {
     if (user === null) {
       try {
         const response = await getUser();
+
         const data: UserProfileData = {
           _id: response.user._id,
           surname: response.user.surname,

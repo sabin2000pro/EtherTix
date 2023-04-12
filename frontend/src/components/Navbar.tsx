@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import NavBarLoggedInView from "./NavBarLoggedInView";
 import NavBarLoggedOutView from "./NavBarLoggedOutView";
 import Search from "./Search";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { CartItem } from "models/cart";
 
 interface NavBarProps {
@@ -14,12 +14,14 @@ interface NavBarProps {
 }
 
 const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
+  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
 
-  let useR = useSelector((state: any) => state.auth.user as User);
+  const {user} = useSelector((state: any) => state.auth.user as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
-  const cart:CartItem[] = useSelector((state: any) => state.auth.cartItems);
+
+  const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -52,16 +54,20 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
         </Nav>
 
         <Nav className="justify-content-right">
+          
           <ul>
             <li style={{ display: "inline-flex" }}>
+
+
               {isLoggedIn ? (
-                <NavBarLoggedInView user={useR} />
+                <NavBarLoggedInView user= {user} />
               ) : (
                 <NavBarLoggedOutView
                   onLoginClicked={onLoginClicked}
                   onSignUpClicked={onSignUpClicked}
                 />
               )}
+
             </li>
             <li style={{ display: "inline-flex" }}>
               <Button

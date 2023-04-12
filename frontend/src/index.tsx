@@ -5,7 +5,7 @@ import "./styles/index.css";
 import { BrowserRouter } from "react-router-dom";
 import { Web3Provider } from "context/Web3Context";
 import { Provider } from "react-redux";
-import store from "./store";
+import {store} from './store'
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 
           <Provider store = {store}>
 
-            <App />
+              <App />
 
           </Provider>
 
