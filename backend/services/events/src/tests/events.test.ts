@@ -9,10 +9,20 @@ beforeAll(async() => {
 })
 
 describe("Fetch Events Unit Tests", () => {
-    
+
     it("Fetch Events - Unit Test", async () => {
 
     })
+
+    it("Fetch Events - Unit Test Events Length > 0", async () => {
+
+    })
+
+    it("Create New Event - Valid Details Unit Test", () => {
+        
+    })
+
+   
 
 })
 
