@@ -35,6 +35,7 @@ export const fetchSingleEvent = (id: number) => async (dispatch: any): Promise<v
     } 
     
     catch(error: any) {
+        
         if(error) {
 
             dispatch({type: FETCH_SINGLE_EVENT_FAILURE, payload: error.data.response.message});

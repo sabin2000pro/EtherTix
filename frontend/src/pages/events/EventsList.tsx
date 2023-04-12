@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef} from "react";
-import axios from "axios";
 import { Card, Container, Row, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {useParams} from 'react-router-dom'
@@ -17,18 +16,16 @@ const EventList: React.FC = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-   /* const {error, events} = useSelector((state: any) => state.events);*/
-    const [events, setEvents] = useState<Array<Event>>([]);;
+    const {events} = useSelector((state: any) => state.events);
+
     const [scrollPosition, setScrollPosition] = useState(0);
-    const rowRef = useRef(null);
 
    useEffect(() => {
 
       const fetchEvents = async () => {
 
         try {
-          const { data } = await axios.get("http://localhost:5301/api/v1/events");
-          setEvents(data.events);
+          dispatch(fetchEventList() as any);
         } 
         
         catch (error) {
@@ -86,7 +83,9 @@ const EventList: React.FC = () => {
 
               ))
             )}
+
           </Row>
+
           <div className="event-scroll">
             <Button className="click-left" onClick={scrollLeft}>
               &lt;
@@ -96,6 +95,8 @@ const EventList: React.FC = () => {
             </Button>
           </div>
         </Container>
+
+
       </div>
     );
   };
