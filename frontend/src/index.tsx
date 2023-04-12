@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 
         <Web3Provider>
 
-          <Provider store={store}>
+          <Provider store = {store}>
 
             <App />
 

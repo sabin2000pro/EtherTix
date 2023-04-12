@@ -8,8 +8,6 @@ export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> =>
         dispatch({type: FETCH_ALL_EVENTS_REQUEST});
 
         const {data} = await axios.get(`http://localhost:5301/api/v1/events`);
-        console.log(`Event data : `, data);
-
         dispatch({type: FETCH_ALL_EVENTS_SUCCESS, payload: data.events});
     } 
     
@@ -35,7 +33,7 @@ export const fetchSingleEvent = (id: number) => async (dispatch: any): Promise<v
     } 
     
     catch(error: any) {
-        
+
         if(error) {
 
             dispatch({type: FETCH_SINGLE_EVENT_FAILURE, payload: error.data.response.message});

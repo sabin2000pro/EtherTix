@@ -15,13 +15,13 @@ export const eventsReducer = (state = initialEventState as IEventState, action: 
     switch(action.type) {
 
         case FETCH_ALL_EVENTS_REQUEST:
-            return {loading: true, error: undefined, events: []}
+            return {loading: true, error: undefined}
 
         case FETCH_ALL_EVENTS_SUCCESS:
             return {...state, loading: false, events: action.payload.events}
 
         case FETCH_ALL_EVENTS_FAIL:
-            return {loading: false, error: action.payload.error, events: []}
+            return {loading: false, error: action.payload.error}
 
         default:
             return state

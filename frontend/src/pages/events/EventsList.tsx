@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect} from "react";
 import { Card, Container, Row, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {useParams} from 'react-router-dom'
@@ -16,16 +16,17 @@ const EventList: React.FC = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {events} = useSelector((state: any) => state.events);
 
     const [scrollPosition, setScrollPosition] = useState(0);
+    const {events} = useSelector((state: any) => state.events || {});
 
    useEffect(() => {
 
       const fetchEvents = async () => {
 
         try {
-          dispatch(fetchEventList() as any);
+           dispatch(fetchEventList() as any);
+           console.log("FOund Events : ", events);
         } 
         
         catch (error) {
@@ -35,7 +36,11 @@ const EventList: React.FC = () => {
       };
   
       fetchEvents();
-    }, []);
+
+      return () => {
+
+      }
+    }, [dispatch, events]);
   
 
     const goToEvent = () => {
@@ -58,9 +63,10 @@ const EventList: React.FC = () => {
 
           <Row>
 
-            {events.length === 0 ? (
+            {/* {events.length === 0 ? (
               <p>No events found</p>
             ) : (
+
               events.map((event: Event) => (
 
                 <Card key = {event.id}
@@ -82,7 +88,7 @@ const EventList: React.FC = () => {
                 </Card>
 
               ))
-            )}
+            )} */}
 
           </Row>
 
