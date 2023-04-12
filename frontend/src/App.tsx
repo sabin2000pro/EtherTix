@@ -19,11 +19,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/store";
 import UserProfile from "pages/auth/UserProfile";
 
-const store = configureStore({
-  reducer: {
-    auth: authReducer,
-  },
-});
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -31,18 +26,10 @@ const App: React.FC = () => {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const handleFetchTickets = (event: any): void => {
-    try {
-    } catch (error) {
-      if (error) {
-        console.error(error);
-      }
-    }
-  };
 
   return (
     <>
-      <Provider store={store}>
+
         <NavBar
           onLoginClicked={() => setShowLoginModal(true)}
           onSignUpClicked={() => setShowSignUpModal(true)}
@@ -97,7 +84,7 @@ const App: React.FC = () => {
             }}
           />
         )}
-      </Provider>
+
     </>
   );
 };

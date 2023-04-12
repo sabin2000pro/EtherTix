@@ -10,15 +10,15 @@ const singleEventState = {
     event: {}
 }
 
-export const eventsReducer = (state = initialEventState as IEventState, action: any): IEventState => {
+export const eventsReducer = (state = initialEventState as any, action: any): any => {
 
     switch(action.type) {
 
         case FETCH_ALL_EVENTS_REQUEST:
-            return {loading: true, error: undefined}
+            return {loading: true, error: undefined, events: []}
 
         case FETCH_ALL_EVENTS_SUCCESS:
-            return {...state, loading: false, events: action.payload.events}
+            return {...state, loading: false, events: action.payload}
 
         case FETCH_ALL_EVENTS_FAIL:
             return {loading: false, error: action.payload.error}

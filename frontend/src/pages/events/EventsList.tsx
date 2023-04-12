@@ -1,16 +1,9 @@
 import React, { useState, useEffect} from "react";
-import { Card, Container, Row, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import {useParams} from 'react-router-dom'
+import { Container, Row, Button } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchEventList } from "actions/event-actions";
+import { fetchEventList } from 'actions/event-actions'
 
-interface Event {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-}
 
 const EventList: React.FC = () => {
     const {id} = useParams();
@@ -18,15 +11,22 @@ const EventList: React.FC = () => {
     const dispatch = useDispatch();
 
     const [scrollPosition, setScrollPosition] = useState(0);
-    const {events} = useSelector((state: any) => state.events || {});
+    const {events} = useSelector((state: any) => state.events);
+
+    if(events) {
+      console.log(`Events : `, events);
+    }
+
+
 
    useEffect(() => {
 
       const fetchEvents = async () => {
 
         try {
+
            dispatch(fetchEventList() as any);
-           console.log("FOund Events : ", events);
+ 
         } 
         
         catch (error) {
@@ -37,10 +37,7 @@ const EventList: React.FC = () => {
   
       fetchEvents();
 
-      return () => {
-
-      }
-    }, [dispatch, events]);
+    }, [dispatch])
   
 
     const goToEvent = () => {
