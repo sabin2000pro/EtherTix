@@ -14,7 +14,6 @@ interface ITicketAttributes { // Interface that stores the ticket data
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
 }
-
 interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    name: string,
    ticketClass: string,
