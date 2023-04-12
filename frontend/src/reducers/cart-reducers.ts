@@ -1,7 +1,6 @@
 
 import { ADD_TO_CART, REMOVE_ITEM_FROM_CART, CLEAR_CART } from "constants/cart-constants"
 
-
 const cartInitialState = {
   cartItems: []   
 }
@@ -11,6 +10,7 @@ export const addToCartReducer = (state = cartInitialState as any , action: any) 
     switch(action.type) {
 
         case ADD_TO_CART:
+
             const currentCartItem = action.payload// Get the current cart item
             const currentCartItemExists = state.cartItems.find((currItem: any) => currItem.product === currentCartItem)
 
@@ -23,10 +23,10 @@ export const addToCartReducer = (state = cartInitialState as any , action: any) 
             }
 
         case REMOVE_ITEM_FROM_CART:
-            return {}
+            return {...state, cartItems: state.cartItems.filter((currItem: any) => currItem.item !== action.payload)}
 
         case CLEAR_CART:
-            return {}
+            return {...state, cartItems: [] }
 
 
         default:
