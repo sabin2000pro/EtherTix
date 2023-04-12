@@ -18,7 +18,7 @@ const EventList: React.FC = () => {
     const dispatch = useDispatch();
 
     const [scrollPosition, setScrollPosition] = useState(0);
-    const {events} = useSelector((state: any) => state.events || {});
+    const {events} = useSelector((state: any) => state.eventsReducer.events);
 
    useEffect(() => {
 
@@ -26,7 +26,7 @@ const EventList: React.FC = () => {
 
         try {
            dispatch(fetchEventList() as any);
-           console.log("FOund Events : ", events);
+           console.log("Found Events : ", events);
         } 
         
         catch (error) {
@@ -63,7 +63,7 @@ const EventList: React.FC = () => {
 
           <Row>
 
-            {/* {events.length === 0 ? (
+            {events.length === 0 ? (
               <p>No events found</p>
             ) : (
 
@@ -88,7 +88,7 @@ const EventList: React.FC = () => {
                 </Card>
 
               ))
-            )} */}
+            )}
 
           </Row>
 

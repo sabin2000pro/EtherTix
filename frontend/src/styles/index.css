@@ -575,10 +575,6 @@ label {
     /*width: 1000px;*/
   }
 
-  .mt-5{
-    width:1000px;
-  }
-
   .event-scroll{
     display: flex;
     justify-content: center;
@@ -593,13 +589,14 @@ label {
   
   .hero-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: Left;
     height: 100%;
   }
   
   .hero-text {
-    text-align: center;
+    text-align: left;
+    margin-left: 50px;
   }
   
   .hero-title {
@@ -608,7 +605,7 @@ label {
   }
   
   .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: 1rem;
     margin-bottom: 30px;
   }
   
@@ -626,6 +623,18 @@ label {
   .hero-cta:hover {
     background-color: #0062cc;
   }
+
+  .homepage-image{
+    justify-content: right;
+    align-items: right;
+  }
+  
+  .homepage-image img{
+    width:750px;
+    height:500px;
+    margin-left: 100px;
+  }
+  
   
   .services-container {
     overflow-x: scroll;
@@ -706,10 +715,13 @@ label {
     margin-right: 0;
   }
   
-  .footer {
-    background-color: #252525;
-    color: #ffffff;
-    padding: 50px 0;
+  footer {
+    position: absolute;
+    background-color: #f5f5f5;
+    left: 0;
+    right: 0;
+    text-align: center;
+    height: 210px;
   }
   
   .footer-row {
@@ -720,7 +732,6 @@ label {
   
   .footer-col {
     flex-basis: 30%;
-    padding: 0 20px;
   }
   
   .footer-col h4 {
@@ -733,16 +744,7 @@ label {
     padding: 0;
   }
   
-  .footer-col li {
-    margin-bottom: 10px;
-  }
-  
-  .footer-col a {
-    color: #ffffff;
-    text-decoration: none;
-  }
-  
-  .footer-col a:hover {
+  .footer-col li:hover {
     text-decoration: underline;
   }
 

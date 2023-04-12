@@ -18,6 +18,7 @@ import { Provider, useDispatch } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/store";
 import UserProfile from "pages/auth/UserProfile";
+import Footer from "components/Footer";
 
 const store = configureStore({
   reducer: {
@@ -78,6 +79,10 @@ const App: React.FC = () => {
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+
+          {<Footer />}
+
+
         </Container>
 
         {showSignUpModal && (

@@ -15,11 +15,15 @@ const services = [  { id: 1, title: "Service 1", image: "https://source.unsplash
 { id: 8, title: "Service 8", image: "https://source.unsplash.com/random/400x400", description: "Service 8 description" }];
 
 const Home = ({ onSignUpClicked }: HomeProps) => {
+
   const containerRef = useRef(null);
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+
     const container = event.currentTarget;
     const scrollPosition = container.scrollLeft;
+
+
     container.scrollTo({
       top: 0,
       left: scrollPosition + event.deltaY,
@@ -29,13 +33,21 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
 
   return (
     <>
+
       <section className="hero-section">
-        <div className="container hero-container">
+
+        <div className="hero-container">
           <div className="hero-text">
             <h1 className="hero-title">Ether Tix</h1>
-            <p className="hero-subtitle">Buy and sell tickets for your favorite events using Ethereum.</p>
+            <p className="hero-subtitle">Buy and sell tickets for your favourite events using Ethereum.</p>
             <button className="hero-cta" onClick={onSignUpClicked}>Get Started, Register here!</button>
           </div>
+
+          <div className="homepage-image">
+            <img src = "images\threesisters.jpg" alt="image"/>
+          </div>
+
+
         </div>
       </section>
 
@@ -57,33 +69,6 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
           </div>
         </div>
       </section>
-
-<footer className="footer">
-  <div className="container">
-    <div className="footer-row">
-      <div className="col-md-4">
-        <h4>About Ether Tix</h4>
-        <p>Hello we are Ether Tix</p>
-      </div>
-      <div className="col-md-4">
-        <h4>Contact Us</h4>
-        <ul>
-          <li>Email: contact@ethertix.com</li>
-          <li>Phone: 555-555-5555</li>
-          <li>Address: 123 St, Ednburgh, United Kingdom</li>
-        </ul>
-      </div>
-      <div className="col-md-4">
-        <h4>Follow Us</h4>
-        <ul>
-          <li>Facebook</li>
-          <li>Twitter</li>
-          <li>Instagram</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-    </footer>
     </>
   );
 };
