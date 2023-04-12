@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 import { StatusCodes } from 'http-status-codes';
 import request from "supertest"
 import mongoose from "mongoose"
@@ -19,13 +19,15 @@ describe("Fetch Events Unit Tests", () => {
     })
 
     it("Create New Event - Valid Details Unit Test", () => {
-        
+
     })
 
    
 
 })
 
-afterAll(async () => {
+// Close the connection to the server after all tests are ran
+afterAll(done => {
     mongoose.connection.close();
-})
+    done()
+});
