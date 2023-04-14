@@ -1,959 +1,1291 @@
-import { emailTransporter } from './../utils/send-email';
-import { NextFunction, Request, Response } from 'express';
-import {User} from '../models/user-model';
-import {EmailVerification} from '../models/email-verification-model';
-import {PasswordReset} from '../models/password-reset-model';
-import {StatusCodes} from "http-status-codes";
-import { generateOTPVerificationToken } from '../utils/generate-otp';
-import { generateMfaToken } from '../utils/generate-mfa';
-import { isValidObjectId } from 'mongoose';
-import { TwoFactorVerification } from '../models/two-factor-model';
-import asyncHandler from 'express-async-handler';                        
-import { generateRandomResetPasswordToken } from '../utils/generateResetPasswordToken';
-import path from 'path'
-import { ErrorResponse } from '../utils/error-response';
+import { emailTransporter } from "./../utils/send-email";
+import { NextFunction, Request, Response } from "express";
+import { User } from "../models/user-model";
+import { EmailVerification } from "../models/email-verification-model";
+import { PasswordReset } from "../models/password-reset-model";
+import { StatusCodes } from "http-status-codes";
+import { generateOTPVerificationToken } from "../utils/generate-otp";
+import { generateMfaToken } from "../utils/generate-mfa";
+import { isValidObjectId } from "mongoose";
+import { TwoFactorVerification } from "../models/two-factor-model";
+import asyncHandler from "express-async-handler";
+import { generateRandomResetPasswordToken } from "../utils/generateResetPasswordToken";
+import path from "path";
+import { ErrorResponse } from "../utils/error-response";
 
+// @description: Sends the verify confirmation e-mail to the user after registering an account
+// @parameters: Transporter Object, User Object, Randomly Generated User OTP
+// @returns: void
+// @public: True (No Authorization Required)
 
-  // @description: Sends the verify confirmation e-mail to the user after registering an account
-  // @parameters: Transporter Object, User Object, Randomly Generated User OTP
-  // @returns: void
-  // @public: True (No Authorization Required)
-
-  export const sendLoginMfa = (transporter: any, user: any, userMfa: any) => {
-
-    return transporter.sendMail({
-        
-        from: 'mfa@ethertix.com',
-        to: user.email,
-        subject: 'Login MFA Verification',
-        html: `
+export const sendLoginMfa = (transporter: any, email: any, userMfa: any) => {
+  return transporter.sendMail({
+    from: "mfa@ethertix.com",
+    to: email,
+    subject: "Login MFA Verification",
+    html: `
         
         <p>Your MFA code</p>
         <h1> ${userMfa}</h1>
-        `
-    })
-
-}
+        `,
+  });
+};
 
 export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
-     
-    const transporter = emailTransporter();
+  const transporter = emailTransporter();
 
-       transporter.sendMail({
-           from: 'resetpassword@ethertix.com',
-           to: user.email,
-           subject: 'Reset Password',
-           html: `
+  transporter.sendMail({
+    from: "resetpassword@ethertix.com",
+    to: user.email,
+    subject: "Reset Password",
+    html: `
            
            <h1> ${resetPasswordURL}</h1>
-           `
-       })
-
-}
+           `,
+  });
+};
 
 export const sendConfirmationEmail = (user: any, userOTP: number) => {
+  const transporter = emailTransporter();
 
-    const transporter = emailTransporter();
-
-    return transporter.sendMail({
-
-        from: 'verification@ethertix.com',
-        to: user.email,
-        subject: 'E-mail Verification',
-        html: `
+  return transporter.sendMail({
+    from: "verification@ethertix.com",
+    to: user.email,
+    subject: "E-mail Verification",
+    html: `
         
         <p>Your verification OTP</p>
         <h1> ${userOTP}</h1>
 
-        `
-    })
-}
+        `,
+  });
+};
 
-  // @description: Send The JWT Token Response
-  // @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
-  // @returns: Server Response Promise Including the User Object and Token
-  // @access: Public (NO Bearer Token Required)
+// @description: Send The JWT Token Response
+// @parameters: request: Request Object, response: Response Object, next: Next Function, user: User Object, statusCode: Status Code of The request
+// @returns: Server Response Promise Including the User Object and Token
+// @access: Public (NO Bearer Token Required)
 
-  export const sendTokenResponse = (request: Express.Request, user: any, statusCode: number, response: any) => {
-    const token = user.getAuthenticationToken();
-    request.session = {token}; // Store the token in the session
- 
-    return response.status(statusCode).json({user, token});
-}
-  
-  // @description: Register New User Account
-  // @parameters: request: Request Object, response: Response Object, next: Next Function
-  // @returns: Server Response Promise
-  // @public: True (No Authorization Token Required)
+export const sendTokenResponse = (
+  request: Express.Request,
+  user: any,
+  statusCode: number,
+  response: any
+) => {
+  const token = user.getAuthenticationToken();
+  request.session = { token }; // Store the token in the session
 
-export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {forename, surname, username, email, password, passwordConfirm} = request.body;
+  return response.status(statusCode).json({ user, token });
+};
 
-        if(!forename) {
-            return next(new ErrorResponse(`Forename missing, please try again`, StatusCodes.BAD_REQUEST))
-        }
+// @description: Register New User Account
+// @parameters: request: Request Object, response: Response Object, next: Next Function
+// @returns: Server Response Promise
+// @public: True (No Authorization Token Required)
 
-        if(!surname) {
-            return next(new ErrorResponse("Surname is missing. Please try enter again", StatusCodes.BAD_REQUEST));
-        }
+export const registerUser = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const { forename, surname, username, email, password, passwordConfirm } =
+      request.body;
 
-        if(!email) {
-          return next(new ErrorResponse("No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
-        }
+    if (!forename) {
+      return next(
+        new ErrorResponse(
+          `Forename missing, please try again`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        if(password !== passwordConfirm ) {
-            return next(new ErrorResponse(`Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST));
-        }
+    if (!surname) {
+      return next(
+        new ErrorResponse(
+          "Surname is missing. Please try enter again",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        const existingUser = await User.findOne({email}) // Find an existing user
+    if (!email) {
+      return next(
+        new ErrorResponse(
+          "No E-mail provided. Please check your entries",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        if(existingUser) {
-            return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: `User already exists`});
-        }
+    if (password !== passwordConfirm) {
+      return next(
+        new ErrorResponse(
+          `Password confirmation error. Please check passwords`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        const user = await User.create({forename, surname, username, email, password, passwordConfirm});
-        const token = user.getAuthenticationToken(); // Get the users JWT token
+    const existingUser = await User.findOne({ email }); // Find an existing user
 
-        if(!token) {
-            return next(new ErrorResponse("JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST))
-        }
+    if (existingUser) {
+      return response
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ success: false, message: `User already exists` });
+    }
 
-        const currentUser = user._id; // Get the current user's ID
-        user.isNewUser = (!user.isNewUser);
+    const user = await User.create({
+      forename,
+      surname,
+      username,
+      email,
+      password,
+      passwordConfirm,
+    });
+    const token = user.getAuthenticationToken(); // Get the users JWT token
 
-        await user.save();
+    if (!token) {
+      return next(
+        new ErrorResponse(
+          "JWT Token invalid. Please ensure it is valid",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
-        const verificationToken = new EmailVerification({owner: user._id, token: userOTP});
-        await verificationToken.save();
+    const currentUser = user._id; // Get the current user's ID
+    user.isNewUser = !user.isNewUser;
 
-        //sendConfirmationEmail(user, userOTP as unknown as any);
+    await user.save();
 
-        return sendTokenResponse(request, user, StatusCodes.CREATED, response);
-    } 
-    
-)
+    const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
+    const verificationToken = new EmailVerification({
+      owner: user._id,
+      token: userOTP,
+    });
+    await verificationToken.save();
 
-  // @description: Verify User E-mail Address
-  // @parameters: request: Request Object, response: Response Object, next: Next Function
-  // @returns: Server Response Promise w/ Status Code 200
-  // @public: True (No Authorization Token Required)
-  
-export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    //sendConfirmationEmail(user, userOTP as unknown as any);
 
-        const {userId, OTP} = request.body;
-        const user = await User.findById(userId);
+    return sendTokenResponse(request, user, StatusCodes.CREATED, response);
+  }
+);
 
-        // Check for invalid User ID
-        if(!isValidObjectId(userId)) {
-            return next(new ErrorResponse("User ID not found. Please check your entry again.", StatusCodes.NOT_FOUND))
-        }
+// @description: Verify User E-mail Address
+// @parameters: request: Request Object, response: Response Object, next: Next Function
+// @returns: Server Response Promise w/ Status Code 200
+// @public: True (No Authorization Token Required)
 
-        // Check for missing OTP
-        if(!OTP) {
-            return next(new ErrorResponse("OTP Entered not found. Please check your entry", StatusCodes.NOT_FOUND))
-        }
+export const verifyEmailAddress = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const { userId, OTP } = request.body;
+    const user = await User.findById(userId);
 
-        if(!user) {
-            return next(new ErrorResponse(`No user found with that ID`, StatusCodes.BAD_REQUEST));
-        }
+    // Check for invalid User ID
+    if (!isValidObjectId(userId)) {
+      return next(
+        new ErrorResponse(
+          "User ID not found. Please check your entry again.",
+          StatusCodes.NOT_FOUND
+        )
+      );
+    }
 
-        // If the user is already verified
-        if(user.isVerified) {
-            return next(new ErrorResponse(`User account is already verified`, StatusCodes.BAD_REQUEST));
-        }
+    // Check for missing OTP
+    if (!OTP) {
+      return next(
+        new ErrorResponse(
+          "OTP Entered not found. Please check your entry",
+          StatusCodes.NOT_FOUND
+        )
+      );
+    }
 
-        if(user.isActive) { // If the user account is already active before verifying their e-mail address, send back error
-            return next(new ErrorResponse(`User account is already active`, StatusCodes.BAD_REQUEST));
-        }
+    if (!user) {
+      return next(
+        new ErrorResponse(`No user found with that ID`, StatusCodes.BAD_REQUEST)
+      );
+    }
 
-        const token = await EmailVerification.findOne({owner: userId}); // Find a verification token
+    // If the user is already verified
+    if (user.isVerified) {
+      return next(
+        new ErrorResponse(
+          `User account is already verified`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        if(!token) {
-            return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
-        }
+    if (user.isActive) {
+      // If the user account is already active before verifying their e-mail address, send back error
+      return next(
+        new ErrorResponse(
+          `User account is already active`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
+    const token = await EmailVerification.findOne({ owner: userId }); // Find a verification token
 
-        if(!otpTokensMatch) {
-            return next(new ErrorResponse(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
-        }
+    if (!token) {
+      return next(
+        new ErrorResponse(
+          `OTP Verification token is not found. Please try again`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        if(otpTokensMatch) { // If the OTP Tokens Match
+    const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
 
-            user.isVerified = true // Set theu ser is Verified field to true
-            user.accountActive = true;
-    
-            await user.save();
-            await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
-    
-            const transporter = emailTransporter();
-    
-          
-                transporter.sendMail({
+    if (!otpTokensMatch) {
+      return next(
+        new ErrorResponse(
+          `The token you entered does not match the one in the database.`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-                    from: 'welcome@ethertix.com',
-                    to: user.email,
-                    subject: 'E-mail Confirmation Success',
-                    html: `
+    if (otpTokensMatch) {
+      // If the OTP Tokens Match
+
+      user.isVerified = true; // Set theu ser is Verified field to true
+      user.accountActive = true;
+
+      await user.save();
+      await EmailVerification.findByIdAndDelete(token._id); // Find the token and delete it
+
+      const transporter = emailTransporter();
+
+      transporter.sendMail({
+        from: "welcome@ethertix.com",
+        to: user.email,
+        subject: "E-mail Confirmation Success",
+        html: `
                     
                     <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                    `
-                })
-    
-            const jwtToken = user.getAuthenticationToken();
-            request.session = {token: jwtToken} as any || undefined;  // Get the authentication JWT token
+                    `,
+      });
 
-            const date = new Date();
-            const currentDate = date.toISOString();
-    
-            return response.status(StatusCodes.CREATED).json({message: "E-mail Address verified", sentAt: currentDate});
-        }
+      const jwtToken = user.getAuthenticationToken();
+      request.session = ({ token: jwtToken } as any) || undefined; // Get the authentication JWT token
 
-    } 
-)
+      const date = new Date();
+      const currentDate = date.toISOString();
 
-  // @description: Resend the E-mail Verification code to the user if not received
-  // @parameters: request: Request Object, response: Response Object, next: Next Function
-  // @returns: Server Response Promise
-  // @public: True (No Authorization Token Required)
+      return response
+        .status(StatusCodes.CREATED)
+        .json({ message: "E-mail Address verified", sentAt: currentDate });
+    }
+  }
+);
 
-export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+// @description: Resend the E-mail Verification code to the user if not received
+// @parameters: request: Request Object, response: Response Object, next: Next Function
+// @returns: Server Response Promise
+// @public: True (No Authorization Token Required)
 
-        const {userId} = request.body;
-        const currentUser = await User.findById(userId);
+export const resendEmailVerificationCode = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const { userId } = request.body;
+    const currentUser = await User.findById(userId);
 
-        if(!currentUser) { // If we have no current user
-            return next(new ErrorResponse("Current user does not exist. Check user again", StatusCodes.BAD_REQUEST));
-        }
+    if (!currentUser) {
+      // If we have no current user
+      return next(
+        new ErrorResponse(
+          "Current user does not exist. Check user again",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        if(!isValidObjectId(userId)) {
-            return next(new ErrorResponse("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
-        }
+    if (!isValidObjectId(userId)) {
+      return next(
+        new ErrorResponse(
+          "Owner ID invalid. Check again",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        const token = await EmailVerification.findOne({owner: userId});  // Find associating user token
+    const token = await EmailVerification.findOne({ owner: userId }); // Find associating user token
 
-        if(!token) {
-            return next(new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST));
-        } else {
-            await EmailVerification.deleteOne({owner: userId});
-        }
+    if (!token) {
+      return next(
+        new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST)
+      );
+    } else {
+      await EmailVerification.deleteOne({ owner: userId });
+    }
 
-        // Fetch the generated token
-        const otpToken = generateOTPVerificationToken(); 
+    // Fetch the generated token
+    const otpToken = generateOTPVerificationToken();
 
-        if(!otpToken) {
-            return next(new ErrorResponse("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
-        }
+    if (!otpToken) {
+      return next(
+        new ErrorResponse(
+          "OTP Token generated is invalid.",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        console.log(`Your User ID: `, userId);
-        console.log(`Your OTP: `, otpToken);
+    console.log(`Your User ID: `, userId);
+    console.log(`Your OTP: `, otpToken);
 
-        const newToken = new EmailVerification({owner: currentUser._id, token: otpToken}); // Create a new instance of the token
-        await newToken.save(); // Save the new token
-    
-        return response.status(StatusCodes.OK).json({success: true, message: "E-mail Verification Re-sent"});
-    } 
-)
+    const newToken = new EmailVerification({
+      owner: currentUser._id,
+      token: otpToken,
+    }); // Create a new instance of the token
+    await newToken.save(); // Save the new token
 
+    return response
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "E-mail Verification Re-sent" });
+  }
+);
 
-  // @description: Login User
-  // @parameters: request: Request Object, response: Response Object, next: Next Function
-  // @returns: Server Response Promise w/ Status Code 200
-  // @public: True (No Authorization Token Required)
+// @description: Login User
+// @parameters: request: Request Object, response: Response Object, next: Next Function
+// @returns: Server Response Promise w/ Status Code 200
+// @public: True (No Authorization Token Required)
 
-export const loginUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+export const loginUser = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
+    const { email, password, mfa } = request.body;
 
-        const {email, password} = request.body;
+    if (!email || !password || !mfa) {
+      return next(
+        new ErrorResponse(
+          `Missing parameter(s). Check entries`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        if(!email || !password) {
-            return next(new ErrorResponse(`Missing e-mail address or password. Check entries`, StatusCodes.BAD_REQUEST));
-        }
-    
-        const user = await User.findOne({email});
-    
-        if(!user) {
-            return next(new ErrorResponse(`Could not find that user`, StatusCodes.BAD_REQUEST));
-        }
+    const user = await User.findOne({ email });
 
-        if(user.isLocked) {
-            return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
-        }
+    if (!user) {
+      return next(
+        new ErrorResponse(`Could not find that user`, StatusCodes.BAD_REQUEST)
+      );
+    }
 
-        if(!user.isVerified) {
-            return next(new ErrorResponse(`You cannot login. Please verify your e-mail address first`, StatusCodes.BAD_REQUEST));
-        }
-    
-        // Compare user passwords before logging in
-        const matchPasswords = await user.comparePasswords(password);
-    
-        if(!matchPasswords) {
-            return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
-        }
-    
-        // Generate new JWT and store in in the session
-        const token = user.getAuthenticationToken();
-        const userMfa = generateMfaToken();
-        const transporter = emailTransporter();
+    if (user.isLocked) {
+      return next(
+        new ErrorResponse(
+          "Cannot login. Your account is locked",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        // sendLoginMfa(transporter as any, user as any, userMfa as any);
+    if (!user.isVerified) {
+      return next(
+        new ErrorResponse(
+          `You cannot login. Please verify your e-mail address first`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-        const loginMfa = new TwoFactorVerification({owner: user, mfaToken: userMfa});
-        await loginMfa.save();
+    // Compare user passwords before logging in
+    const matchPasswords = await user.comparePasswords(password);
 
-        // Check for a valid MFA
-        // if(!userMfa) {
-        //    return next(new ErrorResponse("User MFA not valid. Try again", StatusCodes.BAD_REQUEST))
-        // }
+    if (!matchPasswords) {
+      return next(
+        new ErrorResponse(
+          `Passwords do not match. Please try again`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-         request.session = {jwt: token}; // Store the token in the session as a cookie
-         return response.status(StatusCodes.OK).json({success: true, token, user});
-    } 
-    
-)
+    const verifiedMfa = verifyLoginToken(user._id, mfa, user.email, next);
+
+    // Generate new JWT and store in in the session
+    const token = user.getAuthenticationToken();
+
+    request.session = { jwt: token }; // Store the token in the session as a cookie
+    return response.status(StatusCodes.OK).json({ success: true, token, user });
+  }
+);
 
 // API - 5
 
-export const verifyLoginToken = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {userId, mfaToken} = request.body;
-        const user = await User.findById(userId);
-    
-        if(!isValidObjectId(userId)) {
-            return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
-        }
-    
-        if(!mfaToken) {
-            user.isActive = false; // User is not active yet
-            return next(new ErrorResponse("Please provide your MFA token", StatusCodes.BAD_REQUEST));
-        }
-    
-        const factorToken = await TwoFactorVerification.findOne({owner: userId});
-        const date = new Date();
-        const currentDate = date.toISOString();
-    
-        if(!factorToken) {
-            return next(new ErrorResponse(`The 2FA token associated to the user is invalid `, StatusCodes.UNAUTHORIZED));
-        }
-    
-        // Check to see if the tokens match
-        const mfaTokensMatch = await factorToken.compareVerificationTokens(mfaToken as any);    
+const verifyLoginToken = async (
+  userId: string,
+  mfaToken: string,
+  email: string,
+  next: NextFunction
+) => {
+  // const { userId, mfaToken } = request.body;
+  const user = await User.findById(userId);
 
+  if (!isValidObjectId(userId)) {
+    return next(
+      new ErrorResponse(
+        `This user ID is not valid. Please try again`,
+        StatusCodes.UNAUTHORIZED
+      )
+    );
+  }
 
-        if(!mfaTokensMatch) { // If tokens don't match
-            user.isActive = (!user.isActive)
-            user.isVerified = (!user.isVerified)
-            return next(new ErrorResponse("The MFA token you entered is invalid. Try again", StatusCodes.BAD_REQUEST));
-        }
+  if (!user) {
+    return next(
+      new ErrorResponse("No user-userId match...", StatusCodes.BAD_REQUEST)
+    );
+  }
 
-        const newToken = await TwoFactorVerification.create({owner: user, mfaToken: mfaToken}); // Create a new instance of the token
-        await newToken.save(); // Save the new token
-    
-        user.isVerified = true; // User account is now verified
-        user.isActive = true; // And user account is active
+  if (!mfaToken) {
+    return next(
+      new ErrorResponse("Please provide an MFA token", StatusCodes.BAD_REQUEST)
+    );
+  }
 
-        return response.status(StatusCodes.OK).json({message: "Your account is now active", sentAt: currentDate});
-    } 
-    
-)
+  const MfactorToken = await TwoFactorVerification.findOne({ owner: userId });
+
+  if (!MfactorToken) {
+    return next(
+      new ErrorResponse(
+        "No mfa token found in our system...",
+        StatusCodes.BAD_REQUEST
+      )
+    );
+  }
+
+  const expired = await tokenExpired(userId);
+
+  if (expired === true) {
+    await newToken(userId, user.email);
+    return next(
+      new ErrorResponse(
+        "The token you entered has expired, a new one has been sent to your email",
+        StatusCodes.UNAUTHORIZED
+      )
+    );
+  }
+
+  const date = new Date();
+  const currentDate = date.toISOString();
+
+  // Check to see if the tokens match
+  const mfaTokensMatch = await MfactorToken.compareVerificationTokens(mfaToken);
+
+  if (!mfaTokensMatch) {
+    // If tokens don't match
+    user.isActive = false;
+    return next(
+      new ErrorResponse(
+        "The entered MFA token is invalid. Try again",
+        StatusCodes.BAD_REQUEST
+      )
+    );
+  }
+
+  user.isActive = true; // And user account is active
+
+  // return response
+  //   .status(StatusCodes.OK)
+  //   .json({ message: "Your account is now active", sentAt: currentDate });
+};
 
 // API 6
 
-const handleTokenExpiration = (resentToken: any) => {
-    const expiryDate = process.env.AUTH_MFA_EXPIRY || 500 // Token expires after 5 minutes
-    const currentDate = new Date(resentToken.createdAt).toISOString(); // Get the current date at which the token is created at
+//returns true of token associated with userId is expired (also deletes that token)
+const tokenExpired = async (userId: string) => {
+  const currentDate = new Date(Date.now()).toISOString(); // Get the current date at which the token is created at
 
-    console.log(`Current date of creating the token : `, currentDate);
+  const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
-    // return currentDate > expiryDate;
-}
+  if (currentDate >= tokenINdb.expiresAt) {
+    tokenINdb.deleteOne({ owner: userId });
+    return true;
+  }
+  return false;
+};
 
-export const resendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {userId} = request.body; // 1. Extract user id and the MFA code from the request body
-        const currentUser = await User.findById(userId); // 2. Find the current user
+//Generates and saves a new token, deletes the old if found any, adds an expiration to token by *specified in .env*
+const newToken = async (userId: string, email: string) => {
+  const expiryDate = new Date(
+    Date.now() + process.env.AUTH_MFA_EXPIRY * 60 * 1000
+  ); // Token expiration
+  const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
-        // 3. Check if the User ID is valid
+  if (tokenINdb) {
+    tokenINdb.deleteOne({ owner: userId });
+  }
+  const token = generateMfaToken();
+  const newToken = await TwoFactorVerification.create({
+    owner: userId,
+    mfaToken: token,
+    expiresAt: expiryDate,
+  });
+  newToken.save();
 
-        if(!isValidObjectId(userId)) {
-            return next(new ErrorResponse("User ID is invalid. Please check again", StatusCodes.NOT_FOUND));
-        }
-        // 5. Fetch Generated Two Factor code
-        const token = generateMfaToken();
-        const resentToken = await TwoFactorVerification.findOne({owner: userId}); // Find the resent token by the owner ID
+  //   sendLoginMfa(emailTransporter, email, token); //uncomment when email sender works
 
-        if(!resentToken) {
-           return next(new ErrorResponse("MFA Token could not be found", StatusCodes.NOT_FOUND))
-        }
+  console.log("Current mfa token: ", token);
+};
 
-        currentUser.isVerified = true; // User account is now verified
-        currentUser.isActive = true; // And user account is active
+export const resendTwoFactorLoginCode = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const { userId } = request.body; // 1. Extract user id and the MFA code from the request body
 
-        resentToken.mfaToken = undefined; // Clear the generated token from the database
-        await currentUser.save();
+    // 3. Check if the User ID is valid
 
-        const thirtySecondsAgo = new Date(Date.now() - 0.3 * 60 * 1000);
-        const lastSentAt = new Date(resentToken.sentAt);
-
-        if(lastSentAt >= thirtySecondsAgo) { // If the date at which the last token was sent at (current date) 
-            return next(new ErrorResponse(`The token has already been sent once, please try again after 5 minutes`, StatusCodes.BAD_REQUEST))
-        }
-
-        handleTokenExpiration(resentToken)
-
-        const date = new Date();
-        const currentDate = date.toISOString();
-
-        return response.status(StatusCodes.OK).json({success: true, message: "Two Factor Verification Code Resent", sentAt: currentDate});
-    }
-    
-)
-
-export const logoutUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-        if(request.session !== undefined) {
-            request.session = null; // Clear the session object
-        }
-    
-        return response.status(StatusCodes.OK).json({success: true, data: {}, message: "You have logged out"});
-    } 
-
-)
-
-export const forgotPassword =  asyncHandler(async(request: any, response: any, next: NextFunction): Promise<any> => {
-
-        const {email} = request.body;
-        const user = await User.findOne({email});
-
-         // Check if we have an e-mail in the body of the request
-        if(!email) {
-            return next(new ErrorResponse(`Please enter an email address`, StatusCodes.BAD_REQUEST))
-        }
-    
-        if(!user) {
-            return next(new ErrorResponse("No user found with that e-mail address", StatusCodes.NOT_FOUND));
-        }
-    
-        const userHasResetToken = await PasswordReset.findOne({owner: user._id});
-    
-        if(userHasResetToken) {
-            await PasswordReset.deleteOne({owner: user._id});
-            return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
-        }
-    
-        const token = generateRandomResetPasswordToken();
-    
-        if(token === undefined) { // If no token exists
-            return next(new ErrorResponse("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
-        }
-    
-        const resetPasswordToken = await PasswordReset.create({owner: user._id, token: token}); // Create an instance of the Password Reset model
-        await resetPasswordToken.save();
-    
-        const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}` // Create the reset password URL
-        //sendPasswordResetEmail(user, resetPasswordURL);
-
-        console.log("reset password url: ", resetPasswordURL);
-    
-        return response.status(StatusCodes.OK).json({success: true, message: "Reset Password E-mail Sent", email });
-    }    
-)
-
-export const resetPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const currentPassword = request.body.currentPassword;
-        const newPassword = request.body.newPassword;
-        const resetToken = request.body.resetToken;
-        const userId = request.body.userId;
-
-        if(!currentPassword) {
-            return next(new ErrorResponse("Current password missing. Please try again", StatusCodes.BAD_REQUEST))
-        }
-    
-        if(!newPassword) {
-            return next(new ErrorResponse("Please specify the new password", StatusCodes.BAD_REQUEST))
-        }
-    
-        const user = await User.findById(userId);
-    
-        if(!user) {
-            return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
-        }
-    
-        const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
-    
-        if(!userPasswordsMatch) {
-           return next(new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST))
-        }
-
-        const resetUser = await PasswordReset.findOne({owner: userId});
-
-        if(!resetUser) {
-            return next(new ErrorResponse("No reset token found", StatusCodes.BAD_REQUEST))
-        }
-
-        if(resetToken !== resetUser.token) {
-            return next(new ErrorResponse("Your reset token doesn't match ours", StatusCodes.BAD_REQUEST))
-        }
-    
-        user.password = newPassword;
-        user.passwordConfirm = newPassword;
-    
-        await user.save(); // Save new user after reset the password
-
-        await PasswordReset.deleteOne({owner: userId});
-    
-        return response.status(StatusCodes.OK).json({success: true, message: "Password Reset Successfully"});
-   } 
-)
-
-export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
-    try {
-        const userId = request.headers.authorization.split(' ')[2];
-        const user = await User.findById(userId);
-        return response.status(StatusCodes.OK).json({success: true, user});
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return next(error)
-        }
-
+    if (!isValidObjectId(userId)) {
+      return next(
+        new ErrorResponse(
+          "User ID is invalid. Please check again",
+          StatusCodes.NOT_FOUND
+        )
+      );
     }
 
-});
+    const currentUser = await User.findById(userId); // 2. Find the current user
 
-export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    return response.status(StatusCodes.OK).json({isValid: true})
-}
-
-export const updateUserPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-   try {
-
-    const userId = request.headers.authorization.split(' ')[2];
-
-        const currentPassword = request.body.currentPassword;
-        const newPassword = request.body.newPassword;
-    
-        if(!newPassword) {
-            return next(new ErrorResponse("Please provide your new password", StatusCodes.BAD_REQUEST));
-        }
-    
-        const user = await User.findById(userId);
-    
-        if(!user) {
-            return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST))
-        }
-    
-        const currentPasswordMatch = user.comparePasswords(currentPassword);
-    
-        if(!currentPasswordMatch) { // If passwords do not match
-            return next(new ErrorResponse("Current password is invalid.", StatusCodes.BAD_REQUEST))
-        }
-    
-        user.password = request.body.newPassword
-        await user.save(); // Save new user
-    
-        return response.status(StatusCodes.OK).json({success: true, message: "User Password Updated"});
-   } 
-   
-   catch(error) {
-
-        if(error) {
-            return next(error)
-        }
-        
-   }
-
-
-})
-
-export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-        const userId = request.headers.authorization.split(' ')[2];
-
-        const fieldsToUpdate = {email: request.body.email, username: request.body.username, role: request.body.role};
-
-        const updatedUserProfile = await User.findByIdAndUpdate(userId, fieldsToUpdate, {new: true, runValidators: true});
-        await updatedUserProfile.save();
-
-        return response.status(StatusCodes.OK).json({success: true, message: "Update User Password Here"});
-
-    } 
-    
-    catch(error) {
-
-       if(error) {
-          return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-       }
-
+    if (!currentUser) {
+      return next(
+        new ErrorResponse("No user-userId match...", StatusCodes.NOT_FOUND)
+      );
     }
 
-}
+    if (currentUser.isLocked) {
+      return next(
+        new ErrorResponse(
+          "Cannot login. Your account is locked",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-export const deactivateUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
-    const {userId} = request.body;
+    const new_Token = await newToken(userId, currentUser.email);
+
+    const date = new Date();
+    const currentDate = date.toISOString();
+
+    return response.status(StatusCodes.OK).json({
+      success: true,
+      message: "Two Factor Verification Code Resent",
+      sentAt: currentDate,
+    });
+  }
+);
+
+export const logoutUser = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    if (request.session !== undefined) {
+      request.session = null; // Clear the session object
+    }
+
+    return response
+      .status(StatusCodes.OK)
+      .json({ success: true, data: {}, message: "You have logged out" });
+  }
+);
+
+export const forgotPassword = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const { email } = request.body;
+    const user = await User.findOne({ email });
+
+    // Check if we have an e-mail in the body of the request
+    if (!email) {
+      return next(
+        new ErrorResponse(
+          `Please enter an email address`,
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
+    if (!user) {
+      return next(
+        new ErrorResponse(
+          "No user found with that e-mail address",
+          StatusCodes.NOT_FOUND
+        )
+      );
+    }
+
+    const userHasResetToken = await PasswordReset.findOne({ owner: user._id });
+
+    if (userHasResetToken) {
+      await PasswordReset.deleteOne({ owner: user._id });
+      return next(
+        new ErrorResponse(
+          "User already has the password reset token",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
+    const token = generateRandomResetPasswordToken();
+
+    if (token === undefined) {
+      // If no token exists
+      return next(
+        new ErrorResponse(
+          "Reset Password Token is invalid",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
+    const resetPasswordToken = await PasswordReset.create({
+      owner: user._id,
+      token: token,
+    }); // Create an instance of the Password Reset model
+    await resetPasswordToken.save();
+
+    const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}`; // Create the reset password URL
+    //sendPasswordResetEmail(user, resetPasswordURL);
+
+    console.log("reset password url: ", resetPasswordURL);
+
+    return response
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "Reset Password E-mail Sent", email });
+  }
+);
+
+export const resetPassword = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const currentPassword = request.body.currentPassword;
+    const newPassword = request.body.newPassword;
+    const resetToken = request.body.resetToken;
+    const userId = request.body.userId;
+
+    if (!currentPassword) {
+      return next(
+        new ErrorResponse(
+          "Current password missing. Please try again",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
+    if (!newPassword) {
+      return next(
+        new ErrorResponse(
+          "Please specify the new password",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
     const user = await User.findById(userId);
 
-    if(!user) {
-        return next(new ErrorResponse("No user found with that ID", StatusCodes.NOT_FOUND));
+    if (!user) {
+      return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST));
     }
 
-    if((!user.isValid) || (!user.isActive) ) {
-        return next(new ErrorResponse("User account is already inactive", StatusCodes.BAD_REQUEST));
+    const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
+
+    if (!userPasswordsMatch) {
+      return next(
+        new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST)
+      );
     }
 
-    if(user.isActive && user.isValid) { // If the current user account is active and the user account is valid
-        user.isActive = (!user.isActive);
-        user.isValid = (!user.isValid);
+    const resetUser = await PasswordReset.findOne({ owner: userId });
 
-        await user.save();
+    if (!resetUser) {
+      return next(
+        new ErrorResponse("No reset token found", StatusCodes.BAD_REQUEST)
+      );
     }
 
-    return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated", status: user.isValid, sentAt: new Date(Date.now().toFixed())});
+    if (resetToken !== resetUser.token) {
+      return next(
+        new ErrorResponse(
+          "Your reset token doesn't match ours",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-});
+    user.password = newPassword;
+    user.passwordConfirm = newPassword;
 
-export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+    await user.save(); // Save new user after reset the password
 
+    await PasswordReset.deleteOne({ owner: userId });
+
+    return response
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "Password Reset Successfully" });
+  }
+);
+
+export const getCurrentUser = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
     try {
-
-        if(request.method === 'PUT') { // If the request is a PUT request
-
-            const userId = request.headers.authorization.split(' ')[2];
-
-            // const userId = request.params.userId;
-            const file = request.files!.file;
-            const fileName = file.name;
-
-            const currentUser = await User.findById(userId); // Find the current user
-        
-            if(!currentUser) {
-                return next(new ErrorResponse("User Not found with that ID", StatusCodes.NOT_FOUND));
-            }
-        
-            if(!request.files) {
-                return next(new ErrorResponse(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
-            }
-                
-            if(!file.mimetype.startsWith("image")) {
-                return next(new ErrorResponse("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
-            }
-        
-            // Validate File size. Check if file size exceeds the maximum size
-            if(file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-                return next(new ErrorResponse("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
-            }
-        
-             // Create custom filename
-          file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
-        
-          file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
-        
-                if(error) {
-                   return next(new ErrorResponse("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
-                }
-        
-                await User.findByIdAndUpdate(request.params.id, { photo: fileName }); // Update the NFT by its ID and add the respective file
-                return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now() )})
-          })
-
-    
-        }
+      const userId = request.headers.authorization.split(" ")[2];
+      const user = await User.findById(userId);
+      return response.status(StatusCodes.OK).json({ success: true, user });
+    } catch (error: any) {
+      if (error) {
+        return next(error);
+      }
     }
-    
-    catch(error: any) {
+  }
+);
 
-        if(error) {
-            return next(error)
-        }
-    }
+export const sendResetPasswordTokenStatus = async (
+  request: any,
+  response: any,
+  next: NextFunction
+): Promise<any> => {
+  return response.status(StatusCodes.OK).json({ isValid: true });
+};
 
-
-})
-
-export const getAllUserPremiumAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
+export const updateUserPassword = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
     try {
+      const userId = request.headers.authorization.split(" ")[2];
 
-        if(request.method === 'GET') {
+      const currentPassword = request.body.currentPassword;
+      const newPassword = request.body.newPassword;
 
-            const premiumUsers = await User.find({premium: true});
+      if (!newPassword) {
+        return next(
+          new ErrorResponse(
+            "Please provide your new password",
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
 
-            if(!premiumUsers) {
-                return next(new ErrorResponse("No premium users found", StatusCodes.BAD_REQUEST));
-            }
-    
-            return response.status(StatusCodes.OK).json({success: true, data: premiumUsers});
-        }
-      
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return next(
+          new ErrorResponse("No user found", StatusCodes.BAD_REQUEST)
+        );
+      }
+
+      const currentPasswordMatch = user.comparePasswords(currentPassword);
+
+      if (!currentPasswordMatch) {
+        // If passwords do not match
+        return next(
+          new ErrorResponse(
+            "Current password is invalid.",
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
+
+      user.password = request.body.newPassword;
+      await user.save(); // Save new user
+
+      return response
+        .status(StatusCodes.OK)
+        .json({ success: true, message: "User Password Updated" });
+    } catch (error) {
+      if (error) {
+        return next(error);
+      }
     }
-    
-    catch(error: any) {
+  }
+);
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
+export const updateUserProfile = async (
+  request: any,
+  response: any,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    const userId = request.headers.authorization.split(" ")[2];
+
+    const fieldsToUpdate = {
+      email: request.body.email,
+      username: request.body.username,
+      role: request.body.role,
+    };
+
+    const updatedUserProfile = await User.findByIdAndUpdate(
+      userId,
+      fieldsToUpdate,
+      { new: true, runValidators: true }
+    );
+    await updatedUserProfile.save();
+
+    return response
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "Update User Password Here" });
+  } catch (error) {
+    if (error) {
+      return response
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: error.message, stack: error.stack });
+    }
+  }
+};
+
+export const deactivateUserAccount = asyncHandler(
+  async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const { userId } = request.body;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return next(
+        new ErrorResponse("No user found with that ID", StatusCodes.NOT_FOUND)
+      );
     }
 
-})
+    if (!user.isValid || !user.isActive) {
+      return next(
+        new ErrorResponse(
+          "User account is already inactive",
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
 
-export const fetchLockedUserAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+    if (user.isActive && user.isValid) {
+      // If the current user account is active and the user account is valid
+      user.isActive = !user.isActive;
+      user.isValid = !user.isValid;
 
+      await user.save();
+    }
+
+    return response.status(StatusCodes.OK).json({
+      success: true,
+      message: "User Account Deactivated",
+      status: user.isValid,
+      sentAt: new Date(Date.now().toFixed()),
+    });
+  }
+);
+
+export const uploadUserProfilePicture = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
     try {
+      if (request.method === "PUT") {
+        // If the request is a PUT request
 
-       const lockedUserAccounts = await User.find({accountLocked: !false});
+        const userId = request.headers.authorization.split(" ")[2];
 
-       if(!lockedUserAccounts) {
-            return next(new ErrorResponse("Could not find any locked user accounts", StatusCodes.BAD_REQUEST));
-       }
+        // const userId = request.params.userId;
+        const file = request.files!.file;
+        const fileName = file.name;
 
-       return response.status(StatusCodes.OK).json({success: true, data: lockedUserAccounts});
-    } 
-    
-    catch(error) {
+        const currentUser = await User.findById(userId); // Find the current user
 
-        if(error) {
-            return next(error);
+        if (!currentUser) {
+          return next(
+            new ErrorResponse(
+              "User Not found with that ID",
+              StatusCodes.NOT_FOUND
+            )
+          );
         }
 
+        if (!request.files) {
+          return next(
+            new ErrorResponse(
+              `Please upload a valid avatar for the user`,
+              StatusCodes.BAD_REQUEST
+            )
+          );
+        }
+
+        if (!file.mimetype.startsWith("image")) {
+          return next(
+            new ErrorResponse(
+              "Please make sure the uploaded file is an image",
+              StatusCodes.BAD_REQUEST
+            )
+          );
+        }
+
+        // Validate File size. Check if file size exceeds the maximum size
+        if (file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
+          return next(
+            new ErrorResponse(
+              "File Size Too Large - Please check file size again",
+              StatusCodes.BAD_REQUEST
+            )
+          );
+        }
+
+        // Create custom filename
+        file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
+
+        file.mv(
+          `${process.env.FILE_UPLOAD_PATH}/${file.name}`,
+          async (error: any) => {
+            if (error) {
+              return next(
+                new ErrorResponse(
+                  "Problem with file upload",
+                  StatusCodes.INTERNAL_SERVER_ERROR
+                )
+              );
+            }
+
+            await User.findByIdAndUpdate(request.params.id, {
+              photo: fileName,
+            }); // Update the NFT by its ID and add the respective file
+            return response.status(StatusCodes.OK).json({
+              success: true,
+              message: "User Avatar Uploaded",
+              sentAt: new Date(Date.now()),
+            });
+          }
+        );
+      }
+    } catch (error: any) {
+      if (error) {
+        return next(error);
+      }
     }
+  }
+);
 
+export const getAllUserPremiumAccounts = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
+    try {
+      if (request.method === "GET") {
+        const premiumUsers = await User.find({ premium: true });
 
-})
+        if (!premiumUsers) {
+          return next(
+            new ErrorResponse("No premium users found", StatusCodes.BAD_REQUEST)
+          );
+        }
+
+        return response
+          .status(StatusCodes.OK)
+          .json({ success: true, data: premiumUsers });
+      }
+    } catch (error: any) {
+      if (error) {
+        return response
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: error.message, stack: error.stack });
+      }
+    }
+  }
+);
+
+export const fetchLockedUserAccounts = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
+    try {
+      const lockedUserAccounts = await User.find({ accountLocked: !false });
+
+      if (!lockedUserAccounts) {
+        return next(
+          new ErrorResponse(
+            "Could not find any locked user accounts",
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
+
+      return response
+        .status(StatusCodes.OK)
+        .json({ success: true, data: lockedUserAccounts });
+    } catch (error) {
+      if (error) {
+        return next(error);
+      }
+    }
+  }
+);
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
+export const fetchAllUsers = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
     try {
+      const users = await User.find();
 
-        const users = await User.find();
+      if (!users) {
+        return next(
+          new ErrorResponse(
+            "No users found in the database",
+            StatusCodes.NOT_FOUND
+          )
+        );
+      }
 
-        if(!users) {
-            return next(new ErrorResponse("No users found in the database", StatusCodes.NOT_FOUND));
-        }
-
-        return response.status(StatusCodes.OK).json({success: true, users});
-    
+      return response.status(StatusCodes.OK).json({ success: true, users });
+    } catch (error: any) {
+      if (error) {
+        return response
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: error.message, stack: error.stack });
+      }
     }
-    
-    catch(error: any) {
+  }
+);
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
-
-    }
-
-})
-
-export const fetchUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
+export const fetchUserByID = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
     try {
+      const userId = request.params.userId;
+      const user = await User.findById(userId);
 
-        const userId = request.params.userId;
-        const user = await User.findById(userId);
+      if (!userId) {
+        return next(
+          new ErrorResponse(
+            "User ID not found. Please check your query params",
+            StatusCodes.NOT_FOUND
+          )
+        );
+      }
 
-         if(!userId) {
-            return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        }
-
-        return response.status(StatusCodes.OK).json({success: true, user})
-    
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
+      return response.status(StatusCodes.OK).json({ success: true, user });
+    } catch (error: any) {
+      if (error) {
+        return response
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: error.message, stack: error.stack });
+      }
     }
+  }
+);
 
-
-})
-
-export const createNewUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any| Response> => {
-
+export const createNewUser = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
     try {
+      const body = request.body;
+      const user = await User.create(body);
 
-        const body = request.body;
-        const user = await User.create(body);
-
-        return response.status(StatusCodes.CREATED).json({success: true, data: user});
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
+      return response
+        .status(StatusCodes.CREATED)
+        .json({ success: true, data: user });
+    } catch (error: any) {
+      if (error) {
+        return response
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: error.message, stack: error.stack });
+      }
     }
+  }
+);
 
-})
-
-export const editUserByID = async (request: any, response: any, next: NextFunction): Promise<any| Response> => {
-
-   try {
-
+export const editUserByID = async (
+  request: any,
+  response: any,
+  next: NextFunction
+): Promise<any | Response> => {
+  try {
     // Verify incoming HTTP method
 
-     if(request.method === 'PUT') {
-        const userId = request.params.userId; // Extract User ID
+    if (request.method === "PUT") {
+      const userId = request.params.userId; // Extract User ID
 
-        if(!userId) {
-           return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
-        }
-  
-        let user = await User.findById(userId);
-  
-        if(!user) {
-           return next(new ErrorResponse("User not found", StatusCodes.NOT_FOUND));
-        }
-  
-        user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
-        await user.save();
-  
-        return response.status(StatusCodes.OK).json({success: true, data: user});
+      if (!userId) {
+        return next(
+          new ErrorResponse(
+            "User ID not found. Please check your query params",
+            StatusCodes.NOT_FOUND
+          )
+        );
       }
- 
-    
-   } 
-   
-   catch(error: any) {
 
-      if(error) {
-        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-      }    
+      let user = await User.findById(userId);
 
-   }
+      if (!user) {
+        return next(new ErrorResponse("User not found", StatusCodes.NOT_FOUND));
+      }
 
-}
+      user = await User.findByIdAndUpdate(userId, request.body, {
+        new: true,
+        runValidators: true,
+      });
+      await user.save();
 
-export const deleteUserByID = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
-    try {
-
-        if(request.method === 'DELETE') {
-
-            const userId = request.params.userId;
-
-            if(!userId) {
-                return next(new ErrorResponse(`User with that ID not found`, StatusCodes.BAD_REQUEST))
-            }
-    
-            await User.findByIdAndDelete(userId);
-            return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "User Deleted", data: null })
-        }
-
-    } 
-    
-    catch(error: any) {
-
-     if(error) {
-        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-     }
-
-
+      return response
+        .status(StatusCodes.OK)
+        .json({ success: true, data: user });
     }
- 
-}
-
-export const deleteAllUsers = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    try {
-
-        if(request.method === 'DELETE') {
-            await User.deleteMany();
-
-            return response.status(StatusCodes.NO_CONTENT).json({success: true, data: {}});
-        }
-
-
-    } 
-    
-    catch(error: any) {
-
-          if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-          }
-
+  } catch (error: any) {
+    if (error) {
+      return response
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: error.message, stack: error.stack });
     }
- 
-}
+  }
+};
 
-export const lockUserAccount = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+export const deleteUserByID = async (
+  request: any,
+  response: any,
+  next: NextFunction
+): Promise<any | Response> => {
+  try {
+    if (request.method === "DELETE") {
+      const userId = request.params.userId;
 
-   try {
-        const userId = request.user.id;
-        const user = await User.findById(userId);
-    
-        if(!user) {
-            return next(new ErrorResponse("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
-        }
-    
-        return response.status(StatusCodes.OK).json({success: true, message: "User Account Locked"})
-   } 
-   
-   catch(error: any) {
+      if (!userId) {
+        return next(
+          new ErrorResponse(
+            `User with that ID not found`,
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
 
-     if(error) {
-        return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-     }
+      await User.findByIdAndDelete(userId);
+      return response
+        .status(StatusCodes.NO_CONTENT)
+        .json({ success: true, message: "User Deleted", data: null });
+    }
+  } catch (error: any) {
+    if (error) {
+      return response
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: error.message, stack: error.stack });
+    }
+  }
+};
 
-   }
+export const deleteAllUsers = async (
+  request: any,
+  response: any,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    if (request.method === "DELETE") {
+      await User.deleteMany();
 
-}
+      return response
+        .status(StatusCodes.NO_CONTENT)
+        .json({ success: true, data: {} });
+    }
+  } catch (error: any) {
+    if (error) {
+      return response
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: error.message, stack: error.stack });
+    }
+  }
+};
 
-export const unlockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+export const lockUserAccount = async (
+  request: any,
+  response: any,
+  next: NextFunction
+): Promise<any | Response> => {
+  try {
+    const userId = request.user.id;
+    const user = await User.findById(userId);
 
-    try {
-          // Find the user by their ID
-        const user = await User.findById(request.params.id);
-
-        if (!user) {
-          return response.status(StatusCodes.NOT_FOUND).json({ msg: 'User not found with that ID' });
-        }
-
-        if(user.isLocked) {
-
-            user.isLocked = false // If the user is currently locked, set the isLocked flag to false
-            await user.save();
-
-            return response.status(StatusCodes.OK).json({success: true, message: "User account unlocked", isLocked: user.isLocked});
-        }
-
-
-    } 
-    
-    catch(error: any) {
-
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
-
+    if (!user) {
+      return next(
+        new ErrorResponse(
+          "That user is not found not found. Please check your query params",
+          StatusCodes.NOT_FOUND
+        )
+      );
     }
 
-})
+    return response
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "User Account Locked" });
+  } catch (error: any) {
+    if (error) {
+      return response
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: error.message, stack: error.stack });
+    }
+  }
+};
 
-export const fetchTotalUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+export const unlockUserAccount = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
+    try {
+      // Find the user by their ID
+      const user = await User.findById(request.params.id);
 
-   try {
-        const totalUsers = await User.countDocuments({});
-        return response.status(StatusCodes.OK).json({success: true, count: totalUsers});
-   } 
-   
-   catch(error) {
+      if (!user) {
+        return response
+          .status(StatusCodes.NOT_FOUND)
+          .json({ msg: "User not found with that ID" });
+      }
 
-        if(error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, message: error.message, stack: error.stack});
-        }
+      if (user.isLocked) {
+        user.isLocked = false; // If the user is currently locked, set the isLocked flag to false
+        await user.save();
 
-   }
+        return response.status(StatusCodes.OK).json({
+          success: true,
+          message: "User account unlocked",
+          isLocked: user.isLocked,
+        });
+      }
+    } catch (error: any) {
+      if (error) {
+        return response
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: error.message, stack: error.stack });
+      }
+    }
+  }
+);
 
-})
+export const fetchTotalUsers = asyncHandler(
+  async (
+    request: any,
+    response: any,
+    next: NextFunction
+  ): Promise<any | Response> => {
+    try {
+      const totalUsers = await User.countDocuments({});
+      return response
+        .status(StatusCodes.OK)
+        .json({ success: true, count: totalUsers });
+    } catch (error) {
+      if (error) {
+        return response
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ success: false, message: error.message, stack: error.stack });
+      }
+    }
+  }
+);

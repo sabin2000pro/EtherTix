@@ -112,7 +112,27 @@ export const logout = async (): Promise<any> => {
   }
 };
 
-export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
+export interface MfaEmailProps {
+  userId: string;
+};
+
+export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
+  try {
+    const response = await axios.post("http://localhost:5299/api/auth/resend-login-mfa", mfaPayload);
+    return response.data;
+  } catch (error) {
+    if (error){
+      return console.error(error);
+    };
+  };
+};
+
+export interface verifyMfaProps {
+  userId: string;
+  mfaToken: string;
+};
+
+export const sendLoginMfa = async (mfaPayload: verifyMfaProps): Promise<any> => {
   try {
     const response = await axios.post(
       "http://localhost:5299/api/auth/verify-login-mfa",
@@ -123,8 +143,8 @@ export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
   } catch (err: any) {
     if (err) {
       return console.error(err);
-    }
-  }
+    };
+  };
 };
 
 export interface ForgotPCredentials {

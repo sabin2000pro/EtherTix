@@ -20,6 +20,11 @@ import authReducer from "./auth/store";
 import UserProfile from "pages/auth/UserProfile";
 import Footer from "components/Footer";
 
+const store = configureStore({
+  reducer: {
+    auth: authReducer,
+  },
+});
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -27,10 +32,9 @@ const App: React.FC = () => {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-
   return (
     <>
-
+      <Provider store={store}>
         <NavBar
           onLoginClicked={() => setShowLoginModal(true)}
           onSignUpClicked={() => setShowSignUpModal(true)}
@@ -68,8 +72,6 @@ const App: React.FC = () => {
           </Routes>
 
           {<Footer />}
-
-
         </Container>
 
         {showSignUpModal && (
@@ -89,7 +91,7 @@ const App: React.FC = () => {
             }}
           />
         )}
-
+      </Provider>
     </>
   );
 };
