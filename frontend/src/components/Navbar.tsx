@@ -73,6 +73,12 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
             </li>
             <li style={{ display: "inline-flex" }}>
               <Button
+                href="/events"
+                style={{ backgroundColor: "transparent", border: "none" }}
+              >
+                Events 
+              </Button>
+              <Button
                 href="/my-cart"
                 style={{ backgroundColor: "transparent", border: "none" }}
               >
