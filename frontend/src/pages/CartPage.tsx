@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import {useDispatch } from "react-redux";
 import { removeItemFromCart } from "actions/cart-actions";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const cart = JSON.parse(localStorage.getItem('cartItems') as any);
 
-  console.log(`Cart : `, cart);
-
   return (
+    
+    <div className = "container">
 
-
-    <div className="container">
       <div className="row">
 
         <div className="col-md-6">

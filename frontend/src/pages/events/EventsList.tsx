@@ -1,24 +1,23 @@
 import React, { useState, useEffect} from "react";
 import { Container, Row, Button } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
 import { CartItem } from "models/cart";
 import { Card } from "react-bootstrap";
-import { addToCart } from "actions/cart-actions";
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 const EventList: React.FC = () => {
-    const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
-    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
+
     const [ethPrice, setEthPrice] = useState<number>(0);
   
     const [scrollPosition, setScrollPosition] = useState(0);
     const {events} = useSelector((state: any) => state.events);
-
 
   useEffect(() => {
 
@@ -27,8 +26,6 @@ const EventList: React.FC = () => {
       try {
 
         const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
-
-        console.log(`ETH Price : `, response);
         setEthPrice(response.data.ethereum.usd);
       } 
       
@@ -41,11 +38,6 @@ const EventList: React.FC = () => {
     fetchEthPrice();
 
   }, [dispatch]);
-
-
-  const calculateEthPrice = (price: number) => {
-    return price / ethPrice;
-  }
 
    useEffect(() => {
 
@@ -64,18 +56,14 @@ const EventList: React.FC = () => {
       fetchEvents();
 
     }, [dispatch])
-  
 
-    const goToEvent = () => {
-       navigate(`/events/${id}`)
-    }
 
     const scrollLeft = () => {
-      setScrollPosition(scrollPosition - 200); // You can adjust the scroll amount
+       setScrollPosition(scrollPosition - 200); // You can adjust the scroll amount
     };
     
     const scrollRight = () => {
-      setScrollPosition(scrollPosition + 200); // You can adjust the scroll amount
+       setScrollPosition(scrollPosition + 200); // You can adjust the scroll amount
     };
 
     return (
@@ -96,15 +84,9 @@ const EventList: React.FC = () => {
 
               events.map((event: any) => (
 
-                <Card key = {event.id}
+                <Card key = {event.id} style={{ width: "18rem", margin: "0 10px" }} className="text-center" >
 
-                  style={{ width: "18rem", margin: "0 10px" }}
-                  className="text-center"
-                >
                   <Card.Img variant = "top" src={event.image} />
-
-                  
-      
 
                   <Card.Body>
 
@@ -112,13 +94,14 @@ const EventList: React.FC = () => {
 
                     <Card.Text>{event.description}</Card.Text>
 
-                    <Button type="submit" onClick={goToEvent}>
-                        View Event
-                    </Button>
+                    <Link to = {`/event-details/${event._id}`}>View Event</Link>
                     
                   </Card.Body>
+
                 </Card>
               ))
+
+
             )} 
 
           </Row>
@@ -133,12 +116,12 @@ const EventList: React.FC = () => {
               &gt;
             </Button>
 
-
           </div>
+
         </Container>
 
-
       </div>
+      
     );
   };
 
