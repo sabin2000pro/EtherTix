@@ -1,4 +1,4 @@
-# Platform - ethertix.co.uk
+# Platform - https://ethertix.co.uk
 
 # Project Proposal
 
