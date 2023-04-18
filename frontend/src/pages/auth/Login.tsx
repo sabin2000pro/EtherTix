@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { sendMfaEmail, MfaEmailProps } from "api/auth/auth-api";
-import { useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
 import { useNavigate } from "react-router-dom";
-import cookies from "auth/cookies";
 
 interface LoginModalProps {
   onDismiss: () => void;
@@ -29,13 +28,11 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
     try {
       const response = await sendMfaEmail(credentials);
 
-      // cookies.set("mail", credentials.email);
-
-      const mail = credentials.email as string;
-
       if (response.success) {
-        onLoginSuccessful()
-        navigate("/mfa", {state: {email: mail, password: credentials.password}});
+        onLoginSuccessful();
+        navigate("/mfa", {
+          state: { email: credentials.email, password: credentials.password },
+        });
       }
     } catch (err: any) {
       if (err.response === undefined) {

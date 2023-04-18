@@ -18,8 +18,6 @@ const MfaInput = () => {
     mfaToken: "",
   });
 
-  const [mail, setMail] = useState("");
-
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [OTP, setOTP] = useState({
@@ -42,26 +40,11 @@ const MfaInput = () => {
     if (loginData.password !== "") {
       return;
     }
-    const email = location.state.email
-      const password = location.state.password;
-    if (!email || !password) {
-      return;
-    }
-      
+    const email = location.state.email;
+    const password = location.state.password;
 
-        setLoginData(loginData => ({...loginData, email: email}));
-        //setMail(email);
-
-        setLoginData(loginData => ({ ...loginData, password: password }));
-
-
-      //redirect back to login
-      // if (!email || !password) {
-
-      // }
-    
-    console.log("loginData: ", loginData);
-      console.log("email state: ", mail);
+    setLoginData((loginData) => ({ ...loginData, email: email }));
+    setLoginData((loginData) => ({ ...loginData, password: password }));
   };
   setTimeout(() => {
     fetchLoginData();

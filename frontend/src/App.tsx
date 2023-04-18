@@ -41,7 +41,14 @@ const App: React.FC = () => {
           onSignUpClicked={() => setShowSignUpModal(true)}
         />
 
-        <Container style={{ padding: "32px 0", maxWidth: "1400px" }}>
+        <Container
+          style={{
+            // padding: "32px 0",
+            maxWidth: "100%",
+            position: "relative",
+            minHeight: "100vh",
+          }}
+        >
           <Routes>
             <Route
               path="/reset-password/:resetToken/:userId"
@@ -73,7 +80,7 @@ const App: React.FC = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
 
-          {<Footer />}
+          <Footer />
         </Container>
 
         {showSignUpModal && (
