@@ -8,9 +8,7 @@ import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const events = await Event.find();
-
-    console.log(`List of events : `, events);
-
+    
     if(!events) {
       return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));
     }
@@ -19,7 +17,6 @@ export const fetchAllEvents = asyncHandler(async (request: any, response: any, n
 })
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
         const id = request.params.id;
         const event = await Event.findById(id);
 
