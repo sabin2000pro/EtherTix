@@ -9,16 +9,14 @@ import { addToCart } from "actions/cart-actions";
 import axios from 'axios';
 
 const EventList: React.FC = () => {
-    const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
-    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
     const [ethPrice, setEthPrice] = useState<number>(0);
   
     const [scrollPosition, setScrollPosition] = useState(0);
     const {events} = useSelector((state: any) => state.events);
-
 
   useEffect(() => {
 
@@ -42,11 +40,6 @@ const EventList: React.FC = () => {
 
   }, [dispatch]);
 
-
-  const calculateEthPrice = (price: number) => {
-    return price / ethPrice;
-  }
-
    useEffect(() => {
 
       const fetchEvents = async () => {
@@ -66,16 +59,13 @@ const EventList: React.FC = () => {
     }, [dispatch])
   
 
-    const goToEvent = () => {
-       navigate(`/events/${id}`)
-    }
 
     const scrollLeft = () => {
-      setScrollPosition(scrollPosition - 200); // You can adjust the scroll amount
+       setScrollPosition(scrollPosition - 200); // You can adjust the scroll amount
     };
     
     const scrollRight = () => {
-      setScrollPosition(scrollPosition + 200); // You can adjust the scroll amount
+       setScrollPosition(scrollPosition + 200); // You can adjust the scroll amount
     };
 
     return (
@@ -96,15 +86,9 @@ const EventList: React.FC = () => {
 
               events.map((event: any) => (
 
-                <Card key = {event.id}
+                <Card key = {event.id} style={{ width: "18rem", margin: "0 10px" }} className="text-center" >
 
-                  style={{ width: "18rem", margin: "0 10px" }}
-                  className="text-center"
-                >
                   <Card.Img variant = "top" src={event.image} />
-
-                  
-      
 
                   <Card.Body>
 
@@ -112,11 +96,10 @@ const EventList: React.FC = () => {
 
                     <Card.Text>{event.description}</Card.Text>
 
-                    <Button type="submit" onClick={goToEvent}>
-                        View Event
-                    </Button>
+                    <Link to = {`/event/${events._id}`}
                     
                   </Card.Body>
+
                 </Card>
               ))
             )} 
@@ -133,10 +116,9 @@ const EventList: React.FC = () => {
               &gt;
             </Button>
 
-
           </div>
-        </Container>
 
+        </Container>
 
       </div>
     );

@@ -16,17 +16,13 @@ import EventsList from "pages/events/EventsList";
 import SingleEvent from "pages/events/SingleEvent";
 import { Provider, useDispatch } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./auth/store";
 import UserProfile from "pages/auth/UserProfile";
 import Footer from "components/Footer";
 
-
 const App: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-
 
   return (
     <>
@@ -37,34 +33,39 @@ const App: React.FC = () => {
         />
 
         <Container style={{ padding: "32px 0", maxWidth: "1400px" }}>
+
           <Routes>
+
             <Route
               path="/reset-password/:resetToken/:userId"
               element={<ResetPassword onDismiss={() => navigate("/")} />}
             />
-            <Route
-              path="/"
-              element={
+
+            <Route path = "/" element={
+
                 <Home onSignUpClicked={() => setShowSignUpModal(true)} />
               }
             />
+
             <Route path="/forgot-password" element={<ForgotPassword />} />
+
             <Route
               path="/reset-password"
               element={<ResetPassword onDismiss={() => navigate("/")} />}
             />
 
-            <Route path="/verify-email" element={<EmailVerification />} />
-            <Route path="/update-password" element={<UpdatePassword />} />
-            <Route path="/update-profile" element={<UpdateProfile />} />
-            <Route path="/my-cart" element={<CartPage />} />
+            <Route path = "/verify-email" element = {<EmailVerification />} />
+            <Route path = "/update-password" element = {<UpdatePassword />} />
+            <Route path = "/update-profile" element = {<UpdateProfile />} />
+            <Route path = "/my-cart" element = {<CartPage />} />
 
-            <Route path="/my-profile" element={<UserProfile />} />
+            <Route path = "/my-profile" element={<UserProfile />} />
 
-            <Route path="/events" element={<EventsList />} />
-            <Route path="/events/:id" element={<SingleEvent />} />
+            <Route path = "/events" element = {<EventsList />} />
+            <Route path = "/event-details/:id" element = {<SingleEvent />} />
 
-            <Route path="*" element={<NotFound />} />
+            <Route path = "*" element = {<NotFound />} />
+
           </Routes>
 
           {<Footer />}
@@ -73,20 +74,26 @@ const App: React.FC = () => {
         </Container>
 
         {showSignUpModal && (
+
           <Register
-            onDismiss={() => setShowSignUpModal(false)}
+
+            onDismiss = {() => setShowSignUpModal(false)}
             onSignUpSuccessful={() => {
               setShowSignUpModal(false);
             }}
+
+
           />
         )}
 
         {showLoginModal && (
-          <Login
-            onDismiss={() => setShowLoginModal(false)}
+
+          <Login onDismiss={() => setShowLoginModal(false)}
             onLoginSuccessful={() => {
               setShowLoginModal(false);
             }}
+
+
           />
         )}
 
