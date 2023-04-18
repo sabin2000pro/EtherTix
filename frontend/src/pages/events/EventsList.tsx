@@ -7,6 +7,7 @@ import { CartItem } from "models/cart";
 import { Card } from "react-bootstrap";
 import { addToCart } from "actions/cart-actions";
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 const EventList: React.FC = () => {
     const navigate = useNavigate();
@@ -25,8 +26,6 @@ const EventList: React.FC = () => {
       try {
 
         const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
-
-        console.log(`ETH Price : `, response);
         setEthPrice(response.data.ethereum.usd);
       } 
       
@@ -96,7 +95,7 @@ const EventList: React.FC = () => {
 
                     <Card.Text>{event.description}</Card.Text>
 
-                    <Link to = {`/event/${events._id}`}
+                    <Link to = {`/event-details/${event._id}`}>View Event</Link>
                     
                   </Card.Body>
 

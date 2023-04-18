@@ -15,7 +15,6 @@ export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> =>
     catch(error: any) {
 
        if(error) {
-        console.log(`Fetch Events Error : `, error);
            dispatch({type: FETCH_ALL_EVENTS_FAIL, payload: error.data.response.message})
        }
 

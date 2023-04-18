@@ -6,11 +6,8 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const cart = JSON.parse(localStorage.getItem('cartItems') as any);
 
-  console.log(`Cart : `, cart);
-
   return (
-
-
+    
     <div className = "container">
 
       <div className="row">
