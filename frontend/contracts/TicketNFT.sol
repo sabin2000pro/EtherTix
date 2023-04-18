@@ -57,7 +57,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currMintedToken.tokenPrice = _tokenPrice;
 
         currMintedToken.isListedForSale = false;
-        tokenOwner[totalTokenSupply] = owner; // Update the token owner at the current token supply with the new owner
+        tokenOwner[totalTokenSupply] = owner;
     
         bool isTokenListed = currMintedToken.isListedForSale;
         allMintedTokens.push(currMintedToken); // Push the newly minted tokens to the array
@@ -135,11 +135,10 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         currentToken.tokenOwner = tokenBuyer;
         isTokenForSale[tokenId] = false;
 
-        // After buying an NFT token, burn it directly to increase its value over time potentially
         burnNftToken(tokenId);
 
-        emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice); // Emit the event that an NFT Has been purchased
-        return tokenBuyer; // Return the new address of the token owner (current buyer)
+        emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice);
+        return tokenBuyer;
    }
 
    function burnNftToken(uint tokenId) public { // Function responsible for burning
@@ -147,8 +146,8 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         NftToken storage currentTokenToBurn = circulatingTokens[tokenId];
         require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the current owner of the NFT to burn it");
 
-        uint256 currentTokenIndex = currentTokenToBurn.tokenIndex; // Retrieve the current index of the current token to be burned
-        uint256 lastMintedTokensIndex = allMintedTokens.length - 1; // Retrieve the last index of the last minted token
+        uint256 currentTokenIndex = currentTokenToBurn.tokenIndex;
+        uint256 lastMintedTokensIndex = allMintedTokens.length - 1;
 
         allMintedTokens[currentTokenIndex] = allMintedTokens[lastMintedTokensIndex]; // Overwrite the current token index in the all minted tokens array to the last index
         allMintedTokens.pop();

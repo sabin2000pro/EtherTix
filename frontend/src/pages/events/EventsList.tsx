@@ -3,30 +3,56 @@ import { Container, Row, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
-
+import { CartItem } from "models/cart";
+import { Card } from "react-bootstrap";
+import { addToCart } from "actions/cart-actions";
+import axios from 'axios';
 
 const EventList: React.FC = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [ethPrice, setEthPrice] = useState<number>(0);
+  
     const [scrollPosition, setScrollPosition] = useState(0);
     const {events} = useSelector((state: any) => state.events);
 
-    if(events) {
-      console.log(`Events : `, events);
-    }
+
+  useEffect(() => {
+
+    const fetchEthPrice = async () => {
+
+      try {
+
+        const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+
+        console.log(`ETH Price : `, response);
+        setEthPrice(response.data.ethereum.usd);
+      } 
+      
+      catch (error) {
+        console.error(error);
+      }
+
+    };
+
+    fetchEthPrice();
+
+  }, [dispatch]);
 
 
+  const calculateEthPrice = (price: number) => {
+    return price / ethPrice;
+  }
 
    useEffect(() => {
 
       const fetchEvents = async () => {
 
         try {
-
            dispatch(fetchEventList() as any);
- 
         } 
         
         catch (error) {
@@ -56,40 +82,58 @@ const EventList: React.FC = () => {
 
       <div className="event-list-container">
 
+         <span>Current ETH Price:</span> ${ethPrice.toFixed(2)}
+
         <Container className="mt-5">
 
           <Row>
 
-            {/* {events.length === 0 ? (
+            {events.length === 0 ? (
+
               <p>No events found</p>
+
             ) : (
-              events.map((event: Event) => (
+
+              events.map((event: any) => (
+
                 <Card key = {event.id}
+
                   style={{ width: "18rem", margin: "0 10px" }}
                   className="text-center"
                 >
-                  <Card.Img variant="top" src={event.image} />
+                  <Card.Img variant = "top" src={event.image} />
+
+                  
+      
+
                   <Card.Body>
+
                     <Card.Title>{event.name}</Card.Title>
+
                     <Card.Text>{event.description}</Card.Text>
+
                     <Button type="submit" onClick={goToEvent}>
-                      View Event
+                        View Event
                     </Button>
                     
                   </Card.Body>
                 </Card>
               ))
-            )} */}
+            )} 
 
           </Row>
 
           <div className="event-scroll">
+
             <Button className="click-left" onClick={scrollLeft}>
               &lt;
             </Button>
+
             <Button className="click-right" onClick={scrollRight}>
               &gt;
             </Button>
+
+
           </div>
         </Container>
 

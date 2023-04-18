@@ -5,7 +5,7 @@ const cartInitialState = {
   cartItems: []   
 }
 
-export const addToCartReducer = (state = cartInitialState as any , action: any) => {
+export const cartReducers = (state = cartInitialState as any , action: any) => {
 
     switch(action.type) {
 
@@ -14,7 +14,7 @@ export const addToCartReducer = (state = cartInitialState as any , action: any) 
             const currentCartItem = action.payload// Get the current cart item
             const currentCartItemExists = state.cartItems.find((currItem: any) => currItem.product === currentCartItem)
 
-            if(currentCartItemExists) { // @TODO
+            if(currentCartItemExists) {
                 return {...state, cartItems: state.cartItems.map((cartItem: any) => cartItem.product === currentCartItemExists.product ? currentCartItem : cartItem)}
             }
 
@@ -23,6 +23,7 @@ export const addToCartReducer = (state = cartInitialState as any , action: any) 
             }
 
         case REMOVE_ITEM_FROM_CART:
+
             return {...state, cartItems: state.cartItems.filter((currItem: any) => currItem.item !== action.payload)}
 
         case CLEAR_CART:
@@ -32,18 +33,4 @@ export const addToCartReducer = (state = cartInitialState as any , action: any) 
         default:
             return state
     }
-}
-
-export const removeItemFromCart = (state = cartInitialState as any, action: any) => {
-
-    switch(action.type) {
-
-        case REMOVE_ITEM_FROM_CART:
-            return {loading: false, ...state, cartItems: state.cartItems.filter((currentItemToRemove: any) => currentItemToRemove.id !== action.payload)}
-
-        default:
-            return state;
-    }
-
-
 }

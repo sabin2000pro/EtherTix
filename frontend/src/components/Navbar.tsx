@@ -21,7 +21,9 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const {user} = useSelector((state: any) => state.auth.user as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
-  const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
+  const cart: CartItem[] = useSelector((state: any) => state.cart);
+
+  console.log(`Cart : `, cart);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);

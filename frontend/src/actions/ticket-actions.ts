@@ -2,15 +2,13 @@ import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
-export const fetchAllTickets = (keyword = '', page = 1) => async (dispatch: any) => {
+export const fetchAllTickets = () => async (dispatch: any) => {
 
     try {
 
         dispatch({type: FETCH_ALL_TICKETS_REQUEST});
-
-        const {data} = await axios.get(`http://localhost:5303/api/tickets?keyword=${keyword}`);
+        const {data} = await axios.get(`http://localhost:5303/api/tickets`);
         dispatch({type: FETCH_ALL_TICKETS_SUCCESS, payload: data.tickets});
-
     } 
     
     catch(error: any) {
@@ -21,8 +19,7 @@ export const fetchAllTickets = (keyword = '', page = 1) => async (dispatch: any)
         }
 
     }
-
-
+    
 }
 
 // @description: Returns a single ticket by its ID
