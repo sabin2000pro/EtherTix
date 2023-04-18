@@ -6,21 +6,24 @@ import { fetchSingleEvent } from 'actions/event-actions';
 const SingleEvent: React.FC = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
-  const {loading, error, event} = useSelector((state: any) => state.event);
+  const {event} = useSelector((state: any) => state.event);
 
   console.log(`The event : `, event);
 
    useEffect(() => {
     
     const getSingleEvent = async () => {
+
        try {
            dispatch(fetchSingleEvent(id as any) as any);
        } 
        
        catch(error) {
+
         if(error) {
           return console.error(error);
         }
+
 
        }
     }
@@ -33,7 +36,7 @@ const SingleEvent: React.FC = () => {
     <>
 
     <div className = "events-container">
-     
+       {event._id}
     </div>
 
 

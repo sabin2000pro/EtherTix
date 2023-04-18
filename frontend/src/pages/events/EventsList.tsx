@@ -1,11 +1,10 @@
 import React, { useState, useEffect} from "react";
 import { Container, Row, Button } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
 import { CartItem } from "models/cart";
 import { Card } from "react-bootstrap";
-import { addToCart } from "actions/cart-actions";
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
@@ -14,6 +13,7 @@ const EventList: React.FC = () => {
     const dispatch = useDispatch();
     const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
     const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
+
     const [ethPrice, setEthPrice] = useState<number>(0);
   
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -32,8 +32,6 @@ const EventList: React.FC = () => {
       catch (error) {
         console.error(error);
       }
-
-      return () => {}
 
     };
 
@@ -103,7 +101,7 @@ const EventList: React.FC = () => {
                 </Card>
               ))
 
-              
+
             )} 
 
           </Row>
