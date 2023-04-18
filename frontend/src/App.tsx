@@ -14,8 +14,6 @@ import CartPage from "pages/CartPage";
 import { Container } from "react-bootstrap";
 import EventsList from "pages/events/EventsList";
 import SingleEvent from "pages/events/SingleEvent";
-import { Provider, useDispatch } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 import UserProfile from "pages/auth/UserProfile";
 import Footer from "components/Footer";
 
