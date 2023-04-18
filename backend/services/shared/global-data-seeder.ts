@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { User } from '../authentication/src/models/user-model'
-import {Event} from  '../events/src/models/event-model'
+import {Event} from  '../events-service/src/models/event-model'
 import {Ticket} from '../tickets/src/models/ticket-model';
 import {Venue} from '../venues/src/models/venue-model'
 
@@ -10,7 +10,7 @@ import {connectTicketsSchema} from '../tickets/src/database/tickets-db'
 import { connectVenuesSchema } from '../venues/src/database/venues-db';
 
 const users = require( '../authentication/src/data/users.json')
-const events = require('../events/src/data/events.json');
+const events = require('../events-service/src/data/events.json');
 const tickets = require('../tickets/src/data/tickets.json');
 const venues = require('../venues/src/data/venues.json');
 
@@ -19,7 +19,7 @@ connectEventsDatabase();
 connectTicketsSchema();
 connectVenuesSchema();
 
-export const loadAllData = async (): Promise<any> => {
+export const loadAllData = async (): Promise<any> => { // Load the data into the database
     
         try {
 

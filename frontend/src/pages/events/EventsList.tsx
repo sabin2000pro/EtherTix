@@ -9,7 +9,6 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 
 const EventList: React.FC = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
     const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
@@ -18,6 +17,8 @@ const EventList: React.FC = () => {
   
     const [scrollPosition, setScrollPosition] = useState(0);
     const {events} = useSelector((state: any) => state.events);
+
+    console.log(`Events : `, events);
 
   useEffect(() => {
 
@@ -76,17 +77,17 @@ const EventList: React.FC = () => {
 
           <Row>
 
-            {events.length === 0 ? (
+            {events && events.length === 0 ? (
 
               <p>No events found</p>
 
             ) : (
 
-              events.map((event: any) => (
+             events && events.map((event: any) => (
 
                 <Card key = {event.id} style={{ width: "18rem", margin: "0 10px" }} className="text-center" >
 
-                  <Card.Img variant = "top" src={event.image} />
+                  <Card.Img variant = "top" src = {event.image} />
 
                   <Card.Body>
 
