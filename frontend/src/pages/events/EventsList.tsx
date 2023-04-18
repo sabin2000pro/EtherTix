@@ -33,6 +33,8 @@ const EventList: React.FC = () => {
         console.error(error);
       }
 
+      return () => {}
+
     };
 
     fetchEthPrice();
@@ -56,7 +58,6 @@ const EventList: React.FC = () => {
       fetchEvents();
 
     }, [dispatch])
-  
 
 
     const scrollLeft = () => {
@@ -101,6 +102,8 @@ const EventList: React.FC = () => {
 
                 </Card>
               ))
+
+              
             )} 
 
           </Row>

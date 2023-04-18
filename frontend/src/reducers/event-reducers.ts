@@ -34,22 +34,13 @@ export const singleEventReducer = (state = singleEventState as ISingleEventState
     switch(action.type) {
 
          case FETCH_SINGLE_EVENT_REQUEST:
-            return {loading: true, ...state, event: {}, error: undefined }
+            return {loading: true, event: {}, error: undefined }
 
         case FETCH_SINGLE_EVENT_SUCCESS:
-            return {loading: false, ...state, event: action.payload, error: undefined}
+            return {...state, loading: false, event: action.payload, error: undefined}
 
         case FETCH_SINGLE_EVENT_FAILURE:
             return {loading: false, error: action.payload.error, event: {}}
-
-        case CREATE_NEW_EVENT_REQUEST:
-            return {loading: true, error: undefined, event: {}}
-
-        case CREATE_NEW_EVENT_SUCCESS:
-            return {...state, loading: false, error: undefined, event: action.payload}
-
-        case CREATE_NEW_EVENT_FAIL:
-            return {loading: false, error: action.payload, event: {} }
 
         default:
             return state;

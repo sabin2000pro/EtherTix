@@ -8,6 +8,8 @@ const SingleEvent: React.FC = () => {
   const dispatch = useDispatch();
   const {loading, error, event} = useSelector((state: any) => state.event);
 
+  console.log(`The event : `, event);
+
    useEffect(() => {
     
     const getSingleEvent = async () => {
@@ -31,7 +33,7 @@ const SingleEvent: React.FC = () => {
     <>
 
     <div className = "events-container">
-    
+     
     </div>
 
 
