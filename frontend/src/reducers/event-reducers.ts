@@ -15,7 +15,7 @@ export const eventsReducer = (state = initialEventState as any, action: any): an
     switch(action.type) {
 
         case FETCH_ALL_EVENTS_REQUEST:
-            return {loading: true, error: undefined, events: []}
+            return {loading: true}
 
         case FETCH_ALL_EVENTS_SUCCESS:
             return {...state, loading: false, events: action.payload}
@@ -40,7 +40,7 @@ export const singleEventReducer = (state = singleEventState as ISingleEventState
             return {...state, loading: false, event: action.payload}
 
         case FETCH_SINGLE_EVENT_FAILURE:
-            return {loading: false, error: action.payload.error, event: {}}
+            return {loading: false, error: action.payload.error}
 
         default:
             return state;

@@ -121,6 +121,7 @@ const EventList: React.FC = () => {
         </Container>
 
       </div>
+      
     );
   };
 

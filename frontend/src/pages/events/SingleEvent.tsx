@@ -6,9 +6,7 @@ import { fetchSingleEvent } from 'actions/event-actions';
 const SingleEvent: React.FC = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
-  const {event} = useSelector((state: any) => state.event);
-
-  console.log(`The event : `, event);
+  const {loading, error, event} = useSelector((state: any) => state.event);
 
    useEffect(() => {
     
@@ -31,12 +29,14 @@ const SingleEvent: React.FC = () => {
     getSingleEvent();
 
    }, [dispatch, id])
+
+   console.log(`Loading ? `, loading);
   
   return (
     <>
 
     <div className = "events-container">
-       {event._id}
+        <h2>{event && event.name}</h2>
     </div>
 
 
