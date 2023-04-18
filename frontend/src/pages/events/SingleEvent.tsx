@@ -37,6 +37,7 @@ const SingleEvent: React.FC = () => {
 
     <div className = "events-container">
         <h2>{event && event.name}</h2>
+        <img src = {event && event.image} alt="image"/>
     </div>
 
 

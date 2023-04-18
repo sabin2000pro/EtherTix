@@ -76,13 +76,13 @@ const EventList: React.FC = () => {
 
           <Row>
 
-            {events.length === 0 ? (
+            {events && events.length === 0 ? (
 
               <p>No events found</p>
 
             ) : (
 
-              events.map((event: any) => (
+             events && events.map((event: any) => (
 
                 <Card key = {event.id} style={{ width: "18rem", margin: "0 10px" }} className="text-center" >
 
