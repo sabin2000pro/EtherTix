@@ -163,6 +163,8 @@ export const registerUser = asyncHandler(
     });
     await verificationToken.save();
 
+    console.log("email verification token: ", userOTP);
+
     //sendConfirmationEmail(user, userOTP as unknown as any);
 
     return sendTokenResponse(request, user, StatusCodes.CREATED, response);
@@ -358,9 +360,9 @@ export const loginUser = asyncHandler(
     response: any,
     next: NextFunction
   ): Promise<any | Response> => {
-    const { email, password, mfa } = request.body;
+    const { email, password, mfaToken } = request.body;
 
-    if (!email || !password || !mfa) {
+    if (!email || !password || !mfaToken) {
       return next(
         new ErrorResponse(
           `Missing parameter(s). Check entries`,
@@ -407,7 +409,7 @@ export const loginUser = asyncHandler(
       );
     }
 
-    const verifiedMfa = verifyLoginToken(user._id, mfa, user.email, next);
+    await verifyLoginToken(user._id.toString(), mfaToken, user.email, next);
 
     // Generate new JWT and store in in the session
     const token = user.getAuthenticationToken();
@@ -425,7 +427,6 @@ const verifyLoginToken = async (
   email: string,
   next: NextFunction
 ) => {
-  // const { userId, mfaToken } = request.body;
   const user = await User.findById(userId);
 
   if (!isValidObjectId(userId)) {
@@ -472,9 +473,6 @@ const verifyLoginToken = async (
     );
   }
 
-  const date = new Date();
-  const currentDate = date.toISOString();
-
   // Check to see if the tokens match
   const mfaTokensMatch = await MfactorToken.compareVerificationTokens(mfaToken);
 
@@ -489,6 +487,8 @@ const verifyLoginToken = async (
     );
   }
 
+  await TwoFactorVerification.deleteOne({owner: userId});
+
   user.isActive = true; // And user account is active
 
   // return response
@@ -500,11 +500,10 @@ const verifyLoginToken = async (
 
 //returns true of token associated with userId is expired (also deletes that token)
 const tokenExpired = async (userId: string) => {
-  const currentDate = new Date(Date.now()).toISOString(); // Get the current date at which the token is created at
-
+  const currentDate = new Date(); // Get the current date at which the token is created at
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
-  if (currentDate >= tokenINdb.expiresAt) {
+  if (currentDate.getTime() >= tokenINdb.expiresAt.getTime()) {
     tokenINdb.deleteOne({ owner: userId });
     return true;
   }
@@ -513,14 +512,17 @@ const tokenExpired = async (userId: string) => {
 
 //Generates and saves a new token, deletes the old if found any, adds an expiration to token by *specified in .env*
 const newToken = async (userId: string, email: string) => {
-  const expiryDate = new Date(
-    Date.now() + process.env.AUTH_MFA_EXPIRY * 60 * 1000
-  ); // Token expiration
+  const currentDate = new Date();
+  const expiresAfter = parseInt(process.env.AUTH_MFA_EXPIRY as string);
+
+  const expiryTime = currentDate.getTime() + expiresAfter * 1000 * 60;
+  const expiryDate = new Date(expiryTime);
+
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
   if (tokenINdb) {
     tokenINdb.deleteOne({ owner: userId });
-  }
+  };
   const token = generateMfaToken();
   const newToken = await TwoFactorVerification.create({
     owner: userId,
@@ -534,26 +536,27 @@ const newToken = async (userId: string, email: string) => {
   console.log("Current mfa token: ", token);
 };
 
-export const resendTwoFactorLoginCode = asyncHandler(
+export const sendTwoFactorLoginCode = asyncHandler(
   async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const { userId } = request.body; // 1. Extract user id and the MFA code from the request body
+    const { email, password } = request.body;
 
-    // 3. Check if the User ID is valid
-
-    if (!isValidObjectId(userId)) {
-      return next(
-        new ErrorResponse(
-          "User ID is invalid. Please check again",
-          StatusCodes.NOT_FOUND
-        )
-      );
-    }
-
-    const currentUser = await User.findById(userId); // 2. Find the current user
+    const currentUser = await User.findOne({email: email});
 
     if (!currentUser) {
       return next(
-        new ErrorResponse("No user-userId match...", StatusCodes.NOT_FOUND)
+        new ErrorResponse("No user found, check email entry...", StatusCodes.NOT_FOUND)
+      );
+    }
+
+    // Compare user passwords before logging in
+    const matchPasswords = await currentUser.comparePasswords(password);
+
+    if (!matchPasswords) {
+      return next(
+        new ErrorResponse(
+          `Wrong password, check entry`,
+          StatusCodes.BAD_REQUEST
+        )
       );
     }
 
@@ -566,14 +569,14 @@ export const resendTwoFactorLoginCode = asyncHandler(
       );
     }
 
-    const new_Token = await newToken(userId, currentUser.email);
+    await newToken(currentUser._id.toString(), email);
 
     const date = new Date();
     const currentDate = date.toISOString();
 
     return response.status(StatusCodes.OK).json({
       success: true,
-      message: "Two Factor Verification Code Resent",
+      message: "Two Factor Verification Code Sent",
       sentAt: currentDate,
     });
   }
@@ -658,19 +661,9 @@ export const forgotPassword = asyncHandler(
 
 export const resetPassword = asyncHandler(
   async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const currentPassword = request.body.currentPassword;
     const newPassword = request.body.newPassword;
     const resetToken = request.body.resetToken;
     const userId = request.body.userId;
-
-    if (!currentPassword) {
-      return next(
-        new ErrorResponse(
-          "Current password missing. Please try again",
-          StatusCodes.BAD_REQUEST
-        )
-      );
-    }
 
     if (!newPassword) {
       return next(
@@ -685,14 +678,6 @@ export const resetPassword = asyncHandler(
 
     if (!user) {
       return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST));
-    }
-
-    const userPasswordsMatch = await user.comparePasswords(currentPassword); // Check if passwords match before resetting password
-
-    if (!userPasswordsMatch) {
-      return next(
-        new ErrorResponse("Current Password Invalid", StatusCodes.BAD_REQUEST)
-      );
     }
 
     const resetUser = await PasswordReset.findOne({ owner: userId });

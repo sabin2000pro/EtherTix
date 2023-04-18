@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { login, LoginCredentials } from "api/auth/auth-api";
+import { sendMfaEmail, MfaEmailProps } from "api/auth/auth-api";
 import { useForm, useFormState } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
-import { useDispatch } from "react-redux";
-import cookies from "../../auth/cookies";
-import * as stor from "../../auth/store";
+import { useNavigate } from "react-router-dom";
+import cookies from "auth/cookies";
 
 interface LoginModalProps {
   onDismiss: () => void;
@@ -22,22 +21,21 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginCredentials>();
+  } = useForm<MfaEmailProps>();
 
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const onSubmit = async (credentials: LoginCredentials) => {
+  const onSubmit = async (credentials: MfaEmailProps) => {
     try {
-      const response = await login(credentials);
+      const response = await sendMfaEmail(credentials);
+
+      // cookies.set("mail", credentials.email);
+
+      const mail = credentials.email as string;
 
       if (response.success) {
-        cookies.set(stor.COOKIE_NAME_USER, response.user);
-        cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
-        cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
-
-        dispatch(stor.login(response.user));
-
-        onLoginSuccessful();
+        onLoginSuccessful()
+        navigate("/mfa", {state: {email: mail, password: credentials.password}});
       }
     } catch (err: any) {
       if (err.response === undefined) {

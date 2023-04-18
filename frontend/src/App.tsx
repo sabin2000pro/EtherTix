@@ -19,6 +19,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/store";
 import UserProfile from "pages/auth/UserProfile";
 import Footer from "components/Footer";
+import MfaInput from "components/MfaInput";
 
 const store = configureStore({
   reducer: {
@@ -58,6 +59,7 @@ const App: React.FC = () => {
               element={<ResetPassword onDismiss={() => navigate("/")} />}
             />
 
+            <Route path="/mfa" element={<MfaInput />} />
             <Route path="/verify-email" element={<EmailVerification />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/update-profile" element={<UpdateProfile />} />

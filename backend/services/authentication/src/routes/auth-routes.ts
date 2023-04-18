@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { RATE_LIMIT_MINUTES } from "../constants/auth-constants";
-import {registerUser, updateUserPassword, fetchAllUsers, editUserByID, updateUserProfile, loginUser, resendEmailVerificationCode, resendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, verifyLoginToken, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount, deleteUserByID, uploadUserProfilePicture} from "../controllers/auth-controller";
+import {registerUser, updateUserPassword, fetchAllUsers, editUserByID, updateUserProfile, loginUser, resendEmailVerificationCode, sendTwoFactorLoginCode, forgotPassword, resetPassword, verifyEmailAddress, logoutUser, getCurrentUser, fetchTotalUsers, deactivateUserAccount, deleteUserByID, uploadUserProfilePicture} from "../controllers/auth-controller";
 import rateLimit from 'express-rate-limit';
 import { protectAuth } from '../middleware/auth-middleware';
 
@@ -18,8 +18,8 @@ authRouter.route('/verify-email').post(rateLimiter as any, verifyEmailAddress as
 authRouter.route('/resend-email-verification').post(rateLimiter as any, resendEmailVerificationCode as any);
 
 authRouter.route('/login').post(rateLimiter as any, loginUser as any);
-authRouter.route('/verify-login-mfa').post(rateLimiter as any, verifyLoginToken as any)
-authRouter.route('/resend-login-mfa').post(rateLimiter as any, resendTwoFactorLoginCode as any);
+// authRouter.route('/verify-login-mfa').post(rateLimiter as any, verifyLoginToken as any)
+authRouter.route('/send-login-mfa').post(rateLimiter as any, sendTwoFactorLoginCode as any);
 
 authRouter.route('/logout').post(rateLimiter as any, logoutUser as any);
 authRouter.route('/forgot-password').post(rateLimiter as any, forgotPassword as any);

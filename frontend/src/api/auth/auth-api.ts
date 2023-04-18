@@ -83,6 +83,7 @@ export const resendEmailVerification = async (
 export interface LoginCredentials {
   email: string;
   password: string;
+  mfaToken: string;
 }
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
@@ -113,12 +114,13 @@ export const logout = async (): Promise<any> => {
 };
 
 export interface MfaEmailProps {
-  userId: string;
+  email: string;
+  password: string;
 };
 
 export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
   try {
-    const response = await axios.post("http://localhost:5299/api/auth/resend-login-mfa", mfaPayload);
+    const response = await axios.post("http://localhost:5299/api/auth/send-login-mfa", mfaPayload);
     return response.data;
   } catch (error) {
     if (error){
@@ -127,25 +129,25 @@ export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
   };
 };
 
-export interface verifyMfaProps {
-  userId: string;
-  mfaToken: string;
-};
+// export interface verifyMfaProps {
+//   userId: string;
+//   mfaToken: string;
+// };
 
-export const sendLoginMfa = async (mfaPayload: verifyMfaProps): Promise<any> => {
-  try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/verify-login-mfa",
-      mfaPayload
-    );
-    const data = await response.data;
-    return data;
-  } catch (err: any) {
-    if (err) {
-      return console.error(err);
-    };
-  };
-};
+// export const verifyLoginMfa = async (mfaPayload: verifyMfaProps): Promise<any> => {
+//   try {
+//     const response = await axios.post(
+//       "http://localhost:5299/api/auth/verify-login-mfa",
+//       mfaPayload
+//     );
+//     const data = await response.data;
+//     return data;
+//   } catch (err: any) {
+//     if (err) {
+//       return console.error(err);
+//     };
+//   };
+// };
 
 export interface ForgotPCredentials {
   email: string;

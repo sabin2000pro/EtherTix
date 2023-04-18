@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { User } from "models/user";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
-import { sendLoginMfa, sendMfaEmail } from "api/auth/auth-api";
+import { sendMfaEmail, login } from "api/auth/auth-api";
+import { useDispatch } from "react-redux";
+import cookies from "../auth/cookies";
+import * as stor from "../auth/store";
 
-const MfaInput: React.FC = () => {
+const MfaInput = () => {
   const navigate = useNavigate();
-  const user: User = useSelector((state: any) => state.auth.user) as User;
+  const location = useLocation();
+  const dispatch = useDispatch();
   const timeLeft = 15;
+
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+    mfaToken: "",
+  });
+
+  const [mail, setMail] = useState("");
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -21,11 +31,6 @@ const MfaInput: React.FC = () => {
     otp6: "",
   });
 
-  const [creds, setCreds] = useState({
-    mfaToken: "",
-    userId: "",
-  });
-
   const [buttonState, setButtonState] = useState({
     verify: false,
     resend: true,
@@ -33,13 +38,33 @@ const MfaInput: React.FC = () => {
 
   const [timer, setTimer] = useState(timeLeft);
 
-  const fetchUserId = () => {
-    if (user) {
-      setCreds({ ...creds, userId: user._id });
-    };
+  const fetchLoginData = () => {
+    if (loginData.password !== "") {
+      return;
+    }
+    const email = location.state.email
+      const password = location.state.password;
+    if (!email || !password) {
+      return;
+    }
+      
+
+        setLoginData(loginData => ({...loginData, email: email}));
+        //setMail(email);
+
+        setLoginData(loginData => ({ ...loginData, password: password }));
+
+
+      //redirect back to login
+      // if (!email || !password) {
+
+      // }
+    
+    console.log("loginData: ", loginData);
+      console.log("email state: ", mail);
   };
   setTimeout(() => {
-    fetchUserId();
+    fetchLoginData();
   }, 2000);
 
   useEffect(() => {
@@ -48,7 +73,7 @@ const MfaInput: React.FC = () => {
         setTimer(timer - 1);
       } else {
         setButtonState({ ...buttonState, resend: false });
-      };
+      }
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -105,14 +130,14 @@ const MfaInput: React.FC = () => {
   };
 
   const bundleTogether = () => {
-    creds.mfaToken = OTP.otp1.concat(
+    loginData.mfaToken = OTP.otp1.concat(
       OTP.otp2,
       OTP.otp3,
       OTP.otp4,
       OTP.otp5,
       OTP.otp6
     );
-    //console.log(OTP.OTP);
+    console.log(loginData);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -134,9 +159,14 @@ const MfaInput: React.FC = () => {
 
     try {
       bundleTogether();
-      const response = await sendLoginMfa(creds);
+      const response = await login(loginData);
 
-      if (response.message === "Your account is now active") {
+      if (response.success) {
+        cookies.set(stor.COOKIE_NAME_USER, response.user);
+        cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
+        cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
+
+        dispatch(stor.login(response.user));
         navigate("/");
       }
 
@@ -166,7 +196,7 @@ const MfaInput: React.FC = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await sendMfaEmail(creds);
+      const response = await sendMfaEmail(loginData);
 
       if (response.message === "Two Factor Verification Code Resent") {
         setError(null);
@@ -200,11 +230,10 @@ const MfaInput: React.FC = () => {
           column="lg"
           style={{ marginTop: "15px", textAlign: "center" }}
         >
-          Verify it's you
+          Multi-factor authenication is active on your account
         </Form.Label>
         <Form.Label column="sm" style={{ marginTop: "5px" }}>
-          A token has been sent to "{user?.email}". It may take a
-          moment to arrive.
+          A token has been sent to your email. It may take a moment to arrive.
         </Form.Label>
         <Form.Label
           column="lg"
@@ -312,7 +341,7 @@ const MfaInput: React.FC = () => {
             disabled={buttonState.verify}
             style={{ marginBottom: "5px", marginTop: "10px" }}
           >
-            Verify
+            Log In
           </Button>
           <Button
             className="w-100 resend-btn"
