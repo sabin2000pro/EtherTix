@@ -9,11 +9,9 @@ export default () => {
 
         try {
     
-            return await mongoose.connect(EVENTS_SERVICE_DB_URI as any).then(conn => {
+            const currConnection = await mongoose.connect(EVENTS_SERVICE_DB_URI as any)
     
-                if(conn.connection) {
-                    console.log(`Read env var successfully : ${EVENTS_SERVICE_DB_URI}`);
-
+                if(currConnection.connection) {
                     return console.log(`Connected to events database...`)
                 }
     
@@ -22,7 +20,7 @@ export default () => {
                 }
 
                 
-            })
+            
         } 
         
         catch(error: any) {
