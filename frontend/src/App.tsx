@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import NavBar from "components/Navbar";
 import Home from "pages/Home";
 import EmailVerification from "pages/auth/EmailVerification";
@@ -7,7 +8,6 @@ import {Register} from "pages/auth/Register";
 import ResetPassword from "pages/auth/ResetPassword";
 import UpdatePassword from "pages/auth/UpdatePassword";
 import UpdateProfile from "pages/auth/UpdateProfile";
-import React, { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import NotFound from "pages/NotFound";
 import CartPage from "pages/CartPage";
