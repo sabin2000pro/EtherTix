@@ -40,6 +40,7 @@
     "web3": "^1.8.2",
     "yup": "^0.32.11"
   },
+
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -47,6 +48,8 @@
     "pm2:frontend": "NODE_ENV=production pm2 serve build",
     "test": "jest"
   },
+
+  
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -65,6 +68,8 @@
       "last 1 safari version"
     ]
   },
+
+
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
