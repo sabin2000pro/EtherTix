@@ -17,9 +17,7 @@ export default () => {
     
                 else {
                     return console.log(`Could not connect to events DB`)
-                }
-
-                
+            }
             
         } 
         
