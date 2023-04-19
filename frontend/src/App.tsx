@@ -2,8 +2,8 @@ import NavBar from "components/Navbar";
 import Home from "pages/Home";
 import EmailVerification from "pages/auth/EmailVerification";
 import ForgotPassword from "pages/auth/ForgotPassword";
-import Login from "pages/auth/Login";
-import Register from "pages/auth/Register";
+import {Login} from "pages/auth/Login";
+import {Register} from "pages/auth/Register";
 import ResetPassword from "pages/auth/ResetPassword";
 import UpdatePassword from "pages/auth/UpdatePassword";
 import UpdateProfile from "pages/auth/UpdateProfile";
@@ -22,9 +22,11 @@ import Footer from "components/Footer";
 import MfaInput from "components/MfaInput";
 
 const store = configureStore({
+
   reducer: {
     auth: authReducer,
   },
+
 });
 
 const App: React.FC = () => {
@@ -34,6 +36,7 @@ const App: React.FC = () => {
 
   return (
     <>
+
       <Provider store={store}>
         <NavBar
           onLoginClicked={() => setShowLoginModal(true)}

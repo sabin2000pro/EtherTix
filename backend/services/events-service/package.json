@@ -12,8 +12,6 @@
     "start:production": "NODE_ENV=production node dist/index.js",
     "events-service:test": "jest tests/events.test.ts --bail"
   },
-
-
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -42,6 +40,7 @@
     "express-async-handler": "^1.2.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.7.0",
+    "express-rate-limiter": "^1.3.1",
     "express-validator": "^6.14.2",
     "helmet": "^6.0.0",
     "hpp": "^0.2.3",
