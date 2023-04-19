@@ -50,9 +50,11 @@ const EmailVerification: React.FC = () => {
         setButtonState({ ...buttonState, resend: false });
       }
     }, 1000);
+
     return () => {
       clearInterval(interval);
     };
+
   }, [buttonState, timer]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +65,8 @@ const EmailVerification: React.FC = () => {
   };
 
   const inputfocus = (elmnt: any) => {
+
+
     setError(null);
     setSuccess(null);
     const ms = 100;
@@ -133,6 +137,7 @@ const EmailVerification: React.FC = () => {
     setButtonState({ ...buttonState, verify: true, resend: true });
 
     try {
+      
       bundleTogether();
       const response = await verifyEmailAddress(creds);
 

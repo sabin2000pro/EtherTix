@@ -28,11 +28,7 @@ export interface IRegisterCredentials {
   passwordConfirm: string;
 }
 
-export interface IVerificationPayload {
-  OTP: string,
-  user: string
-}
-
+// Register user function. Accepts the register payload as a paramter
 export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
 
   try {
@@ -53,7 +49,7 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
 
 };
 
-export const verifyEmailAddress = async (verificationPayload: IVerificationPayload): Promise<any> => {
+export const verifyEmailAddress = async (verificationPayload: any): Promise<any> => {
 
   try {
 
@@ -289,7 +285,7 @@ export const uploadProfilePic = async (pic: any) => {
   }
   
   catch (error: any) {
-    
+
     if (error) {
       throw error;
     }

@@ -10,13 +10,13 @@ const CartPage = () => {
 
     <div className = "container">
 
-      <div className="row">
+      <div className = "row">
 
-        <div className="col-md-6">
+        <div className = "col-md-6">
 
-          <div className="cart">
+          <div className = "cart">
 
-          <h2 className="cart__heading">Your Cart</h2>
+          <h2 className = "cart__heading">Your Cart</h2>
 
             {cart?.length === 0 ? (
 
@@ -29,16 +29,13 @@ const CartPage = () => {
 
                   <>
 
-                    <div key={item.id} className = "cart__item">
-
-                      <img className = "cart__item-image" src={item.image} alt={item.name}
-                      />
-
+                    <div key = {item.id} className = "cart__item">
+                      
                       <div className="cart__item-description">
 
-                        <div className="cart__item-name">{item.name}</div>
+                         <div className="cart__item-name">{item.name}</div>
 
-                        <div className="cart__item-price">
+                        <div className = "cart__item-price">
 
                         
                         </div>
