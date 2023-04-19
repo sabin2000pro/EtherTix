@@ -96,7 +96,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return circulatingTokens[_tokenIndex];
     }
 
-    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public { // Function which will list the NFT for sale
+    function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public {
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
         require((tokenIsOnSale(_tokenId)), "The token must NOT already be on sale to list the nft for sale");
 
@@ -108,8 +108,6 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         emit NftListedForSale(_tokenId, _listingPrice);
     }
 
-    // @description: The function is responsible for transferring the ownership of a token from the ticket issuer's address to the buyer address
-    // @parameters: Token ID and the new token owner's metamask wallet address
     function transferTokenOwnership(uint256 _tokenId, address _newTokenOwnerAddress) public payable {
         address currentTokenOwner = msg.sender;
         NftToken storage nftToken = circulatingTokens[_tokenId];

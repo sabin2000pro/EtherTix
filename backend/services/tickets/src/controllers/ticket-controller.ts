@@ -52,7 +52,7 @@ export const createNewTicket = asyncHandler(async (request: any, response: any, 
         const {name, ticketClass, ticketToken, stock, description, cost} = request.body;
 
         if(!name || !ticketClass || !ticketToken || !stock || !description || !cost) {
-
+            return next(new ErrorResponse(`One or more ticket entries are missing. Please check again`, StatusCodes.BAD_REQUEST));
         }
 
         const ticket = await Ticket.create({event, issuer, name, ticketClass, ticketToken, stock, description, cost});
@@ -73,7 +73,7 @@ export const editTicketByID = asyncHandler(async (request: any, response: any, n
       let ticket = await Ticket.findById(id);
 
       if(!isValidObjectId(id)) {
-
+         return next(new ErrorResponse(`The ticket ID to edit is invalid. Please check the ID again`, StatusCodes.BAD_REQUEST));
       }
 
       if(!ticket) {
@@ -100,15 +100,14 @@ export const deleteAllTickets = asyncHandler(async (request: any, response: any,
   
 )
 
-
 export const deleteTicketByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const id = request.params.id;
-    await Ticket.findByIdAndDelete(id);
 
     if(!isValidObjectId(id)) {
-      
+      return next(new ErrorResponse(`The Ticket ID to delete is invalid. Please check the ID again`, StatusCodes.BAD_REQUEST));
     }
 
+    await Ticket.findByIdAndDelete(id);
     return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Ticket Deleted"});
 }
 
@@ -132,8 +131,4 @@ export const fetchBasicTickets = asyncHandler(async (request: any, response: any
 export const fetchStandardTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const standardTickets = await Ticket.find({ticketClass: "standard"})
     return response.status(StatusCodes.OK).json({success: true, standardTickets})
-}
-
-export const fetchTicketsSoldLastThirtyDays = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
 }
