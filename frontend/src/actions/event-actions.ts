@@ -1,4 +1,4 @@
-import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, FETCH_ALL_EVENTS_FAIL, FETCH_SINGLE_EVENT_REQUEST, FETCH_SINGLE_EVENT_FAILURE, FETCH_SINGLE_EVENT_SUCCESS } from './../constants/event-constants'
+import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, CREATE_NEW_EVENT_REQUEST, CREATE_NEW_EVENT_SUCCESS, CREATE_NEW_EVENT_FAIL, FETCH_ALL_EVENTS_FAIL, FETCH_SINGLE_EVENT_REQUEST, FETCH_SINGLE_EVENT_FAILURE, FETCH_SINGLE_EVENT_SUCCESS } from './../constants/event-constants'
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
@@ -24,10 +24,9 @@ export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> =>
 export const fetchSingleEvent = (id: number) => async (dispatch: any): Promise<void> => {
 
     try {
-        dispatch({type: FETCH_SINGLE_EVENT_REQUEST});
 
+        dispatch({type: FETCH_SINGLE_EVENT_REQUEST});
         const {data} = await axios.get(`http://localhost:5301/api/v1/events/${id}`);
-        console.log(`Event data : `, data.event.name);
 
         dispatch({type: FETCH_SINGLE_EVENT_SUCCESS, payload: data.event});
     } 
@@ -35,20 +34,25 @@ export const fetchSingleEvent = (id: number) => async (dispatch: any): Promise<v
     catch(error: any) {
 
         if(error) {
-
             dispatch({type: FETCH_SINGLE_EVENT_FAILURE, payload: error.data.response.message});
         }
+
     }
 
 }
 
 export const createNewEvent = () => async (dispatch: any) => {
+
     try {
-   
+       dispatch({type: CREATE_NEW_EVENT_REQUEST});
     } 
     
     catch(error: any) {
-   
+
+       if(error) {
+            dispatch({type: CREATE_NEW_EVENT_FAIL, payload: error.data.response.message});
+       }
+
     }
 
 

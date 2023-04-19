@@ -7,7 +7,7 @@ const CartPage = () => {
   const cart = JSON.parse(localStorage.getItem('cartItems') as any);
 
   return (
-    
+
     <div className = "container">
 
       <div className="row">
@@ -33,14 +33,14 @@ const CartPage = () => {
                 {cart.map((item: any) => (
 
                   <>
-                    <div key={item.id} className="cart__item">
-                      <img
-                        className="cart__item-image"
-                        src={item.image}
-                        alt={item.name}
+
+                    <div key={item.id} className = "cart__item">
+
+                      <img className = "cart__item-image" src={item.image} alt={item.name}
                       />
 
                       <div className="cart__item-description">
+
                         <div className="cart__item-name">{item.name}</div>
 
                         <div className="cart__item-price">
@@ -48,36 +48,22 @@ const CartPage = () => {
                         
                         </div>
 
-                        <button onClick={() => dispatch(removeItemFromCart(item.id) as any)}>
-                          Remove
-                        </button>
                       </div>
                     </div>
                   </>
                 ))}
-                <div className="cart__total">
-                 
-                </div>
 
-               
               </>
+
+
             )}
           </div>
         </div>
-        <div className="col-md-6">
 
-          <div className="tickets">
-            <h2 className="tickets__heading">Popular tickets:</h2>
-            <ul>
-              
-            </ul>
-
-
-          
-          </div>
-        </div>
       </div>
     </div>
   );
 };
+
+
 export default CartPage;

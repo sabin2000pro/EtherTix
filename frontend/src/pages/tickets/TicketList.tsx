@@ -9,8 +9,7 @@ const TicketList = () => { // component that is responsible for fetching ticket 
   return (
 
     <>
-
-      
+      <h2>Available Tickets - Dashboard</h2>
     </>
 
 
