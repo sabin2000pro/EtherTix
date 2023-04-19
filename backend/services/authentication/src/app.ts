@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config({path: 'config.env'});
+require('dotenv').config();
 import cookieSession from 'cookie-session';
 import express from "express";
 import morgan from "morgan"

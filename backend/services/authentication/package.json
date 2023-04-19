@@ -1,7 +1,7 @@
 {
   "name": "authentication",
   "version": "1.0.0",
-  "description": "Authentication Microservice Dependecy File",
+  "description": "Authentication Microservice Dependencies File",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
