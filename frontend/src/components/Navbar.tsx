@@ -18,7 +18,7 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
 
-  const {user} = useSelector((state: any) => state.auth.user as User);
+  const {user} = useSelector((state: any) => state.auth as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const cart: CartItem[] = useSelector((state: any) => state.cart);
