@@ -5,7 +5,7 @@ const EVENTS_SERVICE_DB_URI = process.env.EVENTS_SERVICE_DB_URI;
 
 export default () => {
 
-    const connectEventsDatabase = async (...args: unknown[]) => {
+    const connectEventsSchema = async (...args: unknown[]) => {
 
         try {
     
@@ -35,6 +35,6 @@ export default () => {
         }
     }
 
-    connectEventsDatabase();
+    connectEventsSchema();
     
 }
