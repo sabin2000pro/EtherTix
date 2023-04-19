@@ -1,4 +1,4 @@
-import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, FETCH_ALL_EVENTS_FAIL, FETCH_SINGLE_EVENT_REQUEST, FETCH_SINGLE_EVENT_SUCCESS, FETCH_SINGLE_EVENT_FAILURE, CREATE_NEW_EVENT_REQUEST, CREATE_NEW_EVENT_SUCCESS, CREATE_NEW_EVENT_FAIL } from './../constants/event-constants';
+import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, FETCH_ALL_EVENTS_FAIL, FETCH_SINGLE_EVENT_REQUEST, FETCH_SINGLE_EVENT_SUCCESS, FETCH_SINGLE_EVENT_FAILURE, CREATE_NEW_EVENT_REQUEST, CREATE_NEW_EVENT_SUCCESS, CREATE_NEW_EVENT_FAIL, EDIT_EVENT_REQUEST, EDIT_EVENT_SUCCESS, EDIT_EVENT_FAIL } from './../constants/event-constants';
 import { IEventState } from 'types/event-types';
 import { ISingleEventState } from 'types/event-types';
 
@@ -29,7 +29,7 @@ export const eventsReducer = (state = initialEventState as IEventState, action: 
 
 }
 
-export const singleEventReducer = (state = singleEventState as ISingleEventState, action: any): ISingleEventState => {
+export const singleEventReducer = (state = singleEventState as ISingleEventState, action: any): ISingleEventState => { // Event Reducer function accepts the initial state and action to dispatch
 
     switch(action.type) {
 
@@ -49,7 +49,16 @@ export const singleEventReducer = (state = singleEventState as ISingleEventState
             return {...state, loading: false, event: action.payload, error: undefined}
 
         case CREATE_NEW_EVENT_FAIL:
-            return {loading: false, error: action.payload, event: {}}
+            return {loading: false, error: action.payload, event: {} }
+
+        case EDIT_EVENT_REQUEST:
+            return {loading: true, error: undefined, event: {} }
+
+        case EDIT_EVENT_SUCCESS:
+            return {...state, loading: false, error: undefined, event: action.payload}
+
+        case EDIT_EVENT_FAIL:
+            return {loading: false, error: action.payload, event: {} }
 
         default:
             return state;
