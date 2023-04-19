@@ -12,25 +12,21 @@ interface LoginModalProps {
   onLoginSuccessful: () => void;
 }
 
-// @description: Login Component
 const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
   const [errorText, setErrorText] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginCredentials>();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginCredentials>();
 
   const dispatch = useDispatch();
 
   const onSubmit = async (credentials: LoginCredentials) => {
     try {
+
       const response = await login(credentials);
 
       if (response.success) {
+        
         cookies.set(stor.COOKIE_NAME_USER, response.user);
         cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
         cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
@@ -39,10 +35,14 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
         onLoginSuccessful();
       }
-    } catch (err: any) {
+    } 
+    
+    catch (err: any) {
       if (err.response === undefined) {
         setErrorText("Something went wrong, please try again later...");
-      } else {
+      } 
+      
+      else {
         setErrorText(err.response.data.message);
       }
       console.error(err);

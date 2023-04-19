@@ -87,16 +87,20 @@ export interface LoginCredentials {
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
   try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/login",
-      loginPayload
-    );
+
+
+    const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
     const data = await response.data;
     return data;
-  } catch (err: any) {
+
+  } 
+  
+  catch (err: any) {
+
     if (err) {
       throw err;
     }
+
   }
 };
 
@@ -105,7 +109,9 @@ export const logout = async (): Promise<any> => {
     const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
     if (err) {
       return console.error(err);
     }
@@ -148,24 +154,27 @@ export const forgotPassword = async (
   }
 };
 
-export interface ResetP {
+export interface IResetPassword {
   newPassword: string;
   confirmPassword: string;
   resetToken: string;
   userId: string;
 }
 
-export const resetPassword = async (
-  resetPasswordPayload: ResetP
-): Promise<any> => {
+export const resetPassword = async (resetPasswordPayload: IResetPassword): Promise<any> => {
+
   try {
+
     const response = await axios.post(
       "http://localhost:5299/api/auth/reset-password",
       resetPasswordPayload
     );
+
     const data = await response.data;
     return data;
-  } catch (err) {
+  } 
+  
+  catch (err) {
     if (err) {
       return console.error(err);
     }
