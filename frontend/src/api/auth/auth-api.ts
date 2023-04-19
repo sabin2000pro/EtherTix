@@ -13,7 +13,6 @@ const defaultOptions = {
 let axiosInstance = axios.create(defaultOptions);
 
 axiosInstance.interceptors.request.use((configData: any | undefined) => {
-
   const authToken = localStorage.getItem("token");
   configData.headers.Authorization = authToken ? `Bearer ${authToken}` : ""; // Store the token in the header
   return configData;
@@ -28,15 +27,18 @@ export interface IRegisterCredentials {
   passwordConfirm: string;
 }
 
-// Register user function. Accepts the register payload as a paramter
 export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
 
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/register", registerPayload);
-    const data = await response.data;
-    return data;
+    const response = await axios.post(
+      "http://localhost:5299/api/auth/register",
+      registerPayload
+    );
 
+    const data = await response.data;
+
+    return data;
   } 
   
   catch (err: any) {
@@ -44,39 +46,38 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
     if (err) {
       throw err;
     }
-
+    
   }
-
 };
 
-export const verifyEmailAddress = async (verificationPayload: any): Promise<any> => {
-
+export const verifyEmailAddress = async (
+  verificationPayload: any
+): Promise<any> => {
   try {
-
-    const response = await axios.post("http://localhost:5299/api/auth/verify-email", verificationPayload);
-
+    const response = await axios.post(
+      "http://localhost:5299/api/auth/verify-email",
+      verificationPayload
+    );
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err: any) {
+  } catch (err: any) {
     if (err) {
       return console.error(err);
     }
   }
 };
 
-export const resendEmailVerification = async ( resendVerificationPayload: any): Promise<any> => {
-
+export const resendEmailVerification = async (
+  resendVerificationPayload: any
+): Promise<any> => {
   try {
-
-    const response = await axios.post( "http://localhost:5299/api/auth/resend-email-verification", resendVerificationPayload);
-
+    const response = await axios.post(
+      "http://localhost:5299/api/auth/resend-email-verification",
+      resendVerificationPayload
+    );
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err: any) {
+  } catch (err: any) {
     if (err) {
       return console.error(err);
     }
@@ -264,28 +265,20 @@ export const updatePassword = async (
 };
 
 export const uploadProfilePic = async (pic: any) => {
-
   try {
-
     const response = await axios.put(
       "http://localhost:5299/api/auth/propic",
       pic,
-
       {
         headers: {
-
           Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
             cookies.get(COOKIE_NAME_USER)._id
           }`,
         },
-
       }
     );
     return response;
-  }
-  
-  catch (error: any) {
-
+  } catch (error: any) {
     if (error) {
       throw error;
     }
