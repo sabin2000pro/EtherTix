@@ -10,7 +10,7 @@ const singleEventState = {
     event: {}
 }
 
-export const eventsReducer = (state = initialEventState as any, action: any): any => {
+export const eventsReducer = (state = initialEventState as IEventState, action: any): IEventState => {
 
     switch(action.type) {
 
@@ -34,7 +34,7 @@ export const singleEventReducer = (state = singleEventState as ISingleEventState
     switch(action.type) {
 
          case FETCH_SINGLE_EVENT_REQUEST:
-            return {loading: true }
+            return {loading: true, error: undefined, event: {} }
 
         case FETCH_SINGLE_EVENT_SUCCESS:
             return {...state, loading: false, event: action.payload}
@@ -48,9 +48,11 @@ export const singleEventReducer = (state = singleEventState as ISingleEventState
         case CREATE_NEW_EVENT_SUCCESS:
             return {...state, loading: false, event: action.payload, error: undefined}
 
+        case CREATE_NEW_EVENT_FAIL:
+            return {loading: false, error: action.payload, event: {}}
+
         default:
             return state;
     }
-
 
 }
