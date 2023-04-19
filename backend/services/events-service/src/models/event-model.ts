@@ -166,15 +166,9 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     tickets: [{ // Event -> Ticket Relationship
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Ticket",
+        ref: "ticket",
         required: [true, "Please specify a valid Ticket ID for this event"]
-    }],
-
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "category",
-        required: [true, "Please specify a valid Category ID for this event"]
-    }
+    }]
 
 
 }, {
