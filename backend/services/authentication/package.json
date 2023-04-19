@@ -1,20 +1,21 @@
 {
   "name": "authentication",
   "version": "1.0.0",
-  "description": "",
+  "description": "Authentication Microservice Dependecy File",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "prestart": "npm run build",
     "dev": "nodemon dist/index.js",
-    "start:server": "NODE_ENV=development npm run dev",
-    "start:production": "NODE_ENV=production node dist/index.js",
+    "start:server": "AUTH_SERVICE_NODE_ENV=development npm run dev",
+    "start:production": "AUTH_SERVICE_NODE_ENV=production node dist/index.js",
     "auth:test": "jest tests/auth.test.ts --bail",
     "pm2:production": "NODE_ENV=production pm2 start dist/index.js --watch -i max"
   },
+
   "keywords": [],
-  "author": "",
+  "author": "Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook, Archie Millar",
   "license": "ISC",
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
