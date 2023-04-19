@@ -166,10 +166,11 @@ const UserProfile: React.FC = () => {
 
         {showEditModal && (
 
-
-          <Modal show onHide={handleChange} centered>
+          <Modal show onHide = {handleChange} centered>
             <Modal.Body></Modal.Body>
           </Modal>
+
+
         )}
 
       </Container>
