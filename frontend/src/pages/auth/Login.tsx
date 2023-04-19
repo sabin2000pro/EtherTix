@@ -10,7 +10,7 @@ interface LoginModalProps {
   onLoginSuccessful: () => void;
 }
 
-const Login: React.FC = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
+export const Login: React.FC<LoginModalProps> = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
   const [errorText, setErrorText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<MfaEmailProps>();
@@ -110,5 +110,3 @@ const Login: React.FC = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
     </Modal>
   );
 };
-
-export default Login;
