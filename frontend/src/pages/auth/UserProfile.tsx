@@ -133,16 +133,12 @@ const UserProfile: React.FC = () => {
             <p>ETH balance: {balance}</p>
             <p>Wallet address: {address}</p>
 
-            <Button variant = "primary" onClick = {handleChange} style = {{display: "flex",
-                borderRadius: "7px",
-                marginTop: "40px",
-              }}
-            >
+            <Button variant = "primary" onClick = {handleChange} style = {{display: "flex", borderRadius: "7px", marginTop: "40px"}}>
               Edit Profile
-
             </Button>
 
           </Col>
+
           <Col
             style={{
               textAlign: "right",
@@ -150,6 +146,7 @@ const UserProfile: React.FC = () => {
               paddingTop: "30px",
             }}
           >
+            
             <img
               src={`/images/${user?.photo}`}
               alt="user-propic"
