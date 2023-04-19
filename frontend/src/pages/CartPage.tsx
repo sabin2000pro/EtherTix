@@ -14,11 +14,6 @@ const CartPage = () => {
 
         <div className="col-md-6">
 
-          <div className="eth-price">
-
-          
-          </div>
-
           <div className="cart">
 
           <h2 className="cart__heading">Your Cart</h2>

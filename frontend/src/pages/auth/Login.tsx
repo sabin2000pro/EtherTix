@@ -26,7 +26,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
       const response = await login(credentials);
 
       if (response.success) {
-        
+
         cookies.set(stor.COOKIE_NAME_USER, response.user);
         cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
         cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
@@ -34,19 +34,22 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
         dispatch(stor.login(response.user));
 
         onLoginSuccessful();
+
       }
     } 
     
     catch (err: any) {
+
       if (err.response === undefined) {
-        setErrorText("Something went wrong, please try again later...");
+          setErrorText(err.message);
       } 
       
       else {
         setErrorText(err.response.data.message);
       }
-      console.error(err);
     }
+
+
   };
 
   const togglePassVisibility = () => {
@@ -54,21 +57,36 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
   };
 
   return (
-    <Modal show onHide={onDismiss} centered>
+
+
+    <Modal show onHide = {onDismiss} centered>
+
+
       <Modal.Header closeButton>
+
         <Container className="text-center">
+
           <Modal.Title>Welcome Back</Modal.Title>
         </Container>
+
+
       </Modal.Header>
 
       <Modal.Body>
+
         {errorText && (
+
           <Alert variant="danger" style={{ textAlign: "center" }}>
             {errorText}
           </Alert>
+
         )}
-        <Form onSubmit={handleSubmit(onSubmit)}>
+
+
+        <Form onSubmit = {handleSubmit(onSubmit)}>
+
           <Container className="text-left">
+
             <TextInputField
               name="email"
               label="Email"
@@ -89,27 +107,31 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
               registerOptions={{ required: "Required" }}
               error={errors.password}
             />
-            <Form.Check
-              style={{ marginBottom: "15px" }}
+
+            <Form.Check style={{ marginBottom: "15px" }}
               type="checkbox"
               label={showPassword ? "Hide Password" : "Show password"}
               checked={showPassword}
               onChange={togglePassVisibility}
             />
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-100"
+
+            <Button type="submit" disabled={isSubmitting} className="w-100"
               variant="primary"
             >
               Log In
             </Button>
-            <Button variant="link" href="/forgot-password" className="w-100">
+
+            
+            <Button variant = "link" href = "/forgot-password" className = "w-100">
               Forgot your password?
             </Button>
+
+
           </Container>
         </Form>
       </Modal.Body>
+
+
     </Modal>
   );
 };

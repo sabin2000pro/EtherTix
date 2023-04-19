@@ -715,7 +715,7 @@ label {
     margin-right: 0;
   }
   
-  footer {
+  /* footer {
     position: absolute;
     background-color: #f5f5f5;
     left: 0;
@@ -746,7 +746,7 @@ label {
   
   .footer-col li:hover {
     text-decoration: underline;
-  }
+  } */
 
   /*Profile Page - Start*/
   .profile-container {
