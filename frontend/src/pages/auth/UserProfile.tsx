@@ -99,14 +99,14 @@ const UserProfile: React.FC = () => {
           {error}
         </Alert>
 
-
       )}
+
       {success && (
 
-
-        <Alert variant="success" style={{ textAlign: "center" }}>
+        <Alert variant="success" style = {{ textAlign: "center" }}>
           {success}
         </Alert>
+
       )}
 
 
@@ -116,10 +116,7 @@ const UserProfile: React.FC = () => {
 
           <Col style={{ textAlign: "right", paddingLeft: "60px" }}>
 
-            <h1
-
-
-              style={{
+            <h1 style={{
                 paddingRight: "87px",
                 textAlign: "left",
                 paddingBottom: "60px",
@@ -136,18 +133,15 @@ const UserProfile: React.FC = () => {
             <p>ETH balance: {balance}</p>
             <p>Wallet address: {address}</p>
 
-            <Button variant="primary"
-              onClick={handleChange}
-              style={{
-                display: "flex",
+            <Button variant = "primary" onClick = {handleChange} style = {{display: "flex",
                 borderRadius: "7px",
                 marginTop: "40px",
               }}
             >
               Edit Profile
 
-
             </Button>
+
           </Col>
           <Col
             style={{
