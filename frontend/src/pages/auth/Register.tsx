@@ -19,21 +19,16 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [errorText, setErrorText] = useState<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-  } = useForm<IRegisterCredentials>();
+  const {register, handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<IRegisterCredentials>();
 
   const Password = watch("password", "");
 
   async function onSubmit(credentials: IRegisterCredentials) {
 
     try {
+
       const response = await registerUser(credentials);
 
       cookies.set(stor.COOKIE_NAME_USER, response.user);
@@ -47,11 +42,16 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
     }
     
     catch (error: any) {
+
       if (error) {
         setErrorText(error.message);
-      } else {
+      } 
+      
+      else {
         alert(error);
       }
+
+
       console.error(error);
     }
   }
@@ -81,20 +81,13 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
             {errorText}
           </Alert>
 
-
         )}
+
         <Form onSubmit = {handleSubmit(onSubmit)}>
 
-          <Container className="text-left">
-            <TextInputField
-              name="forename"
-              label="Name"
-              type="text"
-              placeholder="Name"
-              register={register}
-              registerOptions={{ required: "Required" }}
-              error={errors.username}
-              autoFocus
+          <Container className = "text-left">
+
+            <TextInputField name="forename" label = "Forename" type="text" placeholder="Forename" register={register} registerOptions={{ required: "Required" }} error = {errors.username} autoFocus
             />
             <TextInputField
               name="surname"
