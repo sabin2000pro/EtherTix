@@ -30,7 +30,7 @@ export const ticketsReducer = (state = initialTicketsState as any, action: any) 
         case CREATE_TICKET_FAIL:
             return {loading: false, error: action.payload}
 
-        default: // By default just return the state
+        default:
             return state
     }
 

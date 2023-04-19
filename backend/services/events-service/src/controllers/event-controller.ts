@@ -8,7 +8,7 @@ import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const events = await Event.find();
-    
+
     if(!events) {
       return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));
     }
@@ -71,8 +71,12 @@ export const editEventByID = async (request: any, response: any, next: NextFunct
     
 
 export const deleteEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    await Event.deleteMany();
-    return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Events Deleted"})
+
+    if(request.method === 'DELETE') {
+        await Event.deleteMany();
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Events Deleted"})
+    }
+    
 })
 
 export const deleteEventByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {

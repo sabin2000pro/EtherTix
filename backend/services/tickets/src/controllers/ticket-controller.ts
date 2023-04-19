@@ -85,7 +85,6 @@ export const editTicketByID = asyncHandler(async (request: any, response: any, n
 
    } 
    
-
 )
 
 // @desc      Delete All Tickets For A specific event
@@ -93,7 +92,6 @@ export const editTicketByID = asyncHandler(async (request: any, response: any, n
 // @access    Private (JWT Authorization Token Required)
 
 export const deleteAllTickets = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
       await Ticket.deleteMany();
       return response.status(StatusCodes.NO_CONTENT).json({success: true, data: {}, message: "Tickets Deleted"});
   }    
@@ -124,8 +122,8 @@ export const fetchBasicTickets = asyncHandler(async (request: any, response: any
    }
 
    const basicTickets = await Ticket.find({ticketClass: ticketType})
-
    return response.status(StatusCodes.OK).json({success: true, basicTickets});
+
 })
 
 export const fetchStandardTickets = async (request: any, response: any, next: NextFunction): Promise<any> => {

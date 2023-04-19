@@ -8,5 +8,5 @@ export interface ISingleEventState {
     loading?: boolean,
     error?: string,
     message?: string,
-    event?: {}
+    event?: object
 }
