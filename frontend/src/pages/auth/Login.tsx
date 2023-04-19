@@ -10,15 +10,10 @@ interface LoginModalProps {
   onLoginSuccessful: () => void;
 }
 
-const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
+const Login: React.FC = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
   const [errorText, setErrorText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<MfaEmailProps>();
+  const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<MfaEmailProps>();
 
   const navigate = useNavigate();
 
@@ -27,10 +22,14 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
       const response = await sendMfaEmail(credentials);
 
       if (response.success) {
+
         onLoginSuccessful();
+
         navigate("/mfa", {
           state: { email: credentials.email, password: credentials.password },
         });
+
+
       }
     } 
     
@@ -79,10 +78,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
           <Container className="text-left">
 
-            <TextInputField name="email" label="Email" type = "email" placeholder = "Email" register={register} registerOptions={{ required: "Required" }}
-              error={errors.email}
-              autoFocus
-            />
+            <TextInputField name = "email" label = "Email" type = "email" placeholder = "Email" register={register} registerOptions={{ required: "Required" }} error = {errors.email} autoFocus />
 
             <TextInputField
               name="password"
@@ -108,6 +104,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
           </Container>
 
         </Form>
+
       </Modal.Body>
 
     </Modal>

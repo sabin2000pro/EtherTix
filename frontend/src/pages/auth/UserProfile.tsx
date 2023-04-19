@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import {Form, Button,Container, Row , Col, Alert, Modal,} from "react-bootstrap";
+import {Button,Container, Row , Col, Alert, Modal,} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser } from "api/auth/auth-api";
 import * as blockchain from "context/Web3Context";
@@ -18,7 +18,7 @@ const UserProfile: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfileData | null>(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState<boolean | undefined>(false);
   const [balance, setBalance] = useState(0);
   const [address, setAddress] = useState("");
 
@@ -146,7 +146,7 @@ const UserProfile: React.FC = () => {
               paddingTop: "30px",
             }}
           >
-            
+
             <img
               src={`/images/${user?.photo}`}
               alt="user-propic"
@@ -167,10 +167,10 @@ const UserProfile: React.FC = () => {
             <Modal.Body></Modal.Body>
           </Modal>
 
-
         )}
 
       </Container>
+
     </Container>
 
 
