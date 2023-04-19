@@ -82,8 +82,7 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
 
         )}
 
-
-        <Form onSubmit = {handleSubmit(onSubmit)}>
+        <Form method = "POST" onSubmit = {handleSubmit(onSubmit)}>
 
           <Container className="text-left">
 
@@ -115,22 +114,16 @@ const Login = ({ onDismiss, onLoginSuccessful }: LoginModalProps) => {
               onChange={togglePassVisibility}
             />
 
-            <Button type="submit" disabled={isSubmitting} className="w-100"
-              variant="primary"
-            >
-              Log In
-            </Button>
+            <Button type = "submit" disabled = {isSubmitting} className = "w-100" variant="primary"> Log In</Button>
 
-            
             <Button variant = "link" href = "/forgot-password" className = "w-100">
               Forgot your password?
             </Button>
 
-
           </Container>
+
         </Form>
       </Modal.Body>
-
 
     </Modal>
   );

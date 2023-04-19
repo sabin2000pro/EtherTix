@@ -191,16 +191,22 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
 export const getUser = async (): Promise<any> => {
   try {
+
     const response = await axios.get("http://localhost:5299/api/auth/me", {
+      
       headers: {
         Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
           cookies.get(COOKIE_NAME_USER)._id
         }`,
       },
     });
+
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
+
     if (err) {
       throw err;
     }

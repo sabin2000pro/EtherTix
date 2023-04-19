@@ -38,8 +38,11 @@ const UserProfile: React.FC = () => {
   handleConnect();
 
   const fetchUserId = async () => {
+
     if (user === null) {
+
       try {
+        
         const response = await getUser();
 
         const data: UserProfileData = {
