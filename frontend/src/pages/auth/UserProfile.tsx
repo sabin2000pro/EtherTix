@@ -26,10 +26,11 @@ const UserProfile: React.FC = () => {
   const handleConnect = async () => {
 
     const ethAccount = await connectMetaMaskWallet(); // Invoke function to connect to the meta mask wallet account
+    const currMetamaskAccount = ethAccount.currentAccount[0];
 
     if (ethAccount) {
       setBalance(parseFloat(ethAccount.convertedBalance));
-      setAddress(ethAccount.currentAccount[0]);
+      setAddress(currMetamaskAccount);
     }
 
     
@@ -59,10 +60,12 @@ const UserProfile: React.FC = () => {
       } 
       
       catch (error: any) {
+
         if (error) {
           setSuccess(null);
           setError(error.message);
         }
+
       }
     }
   };
@@ -72,8 +75,7 @@ const UserProfile: React.FC = () => {
   const handleChange = () => {
 
     if (user !== null) {
-
-      setShowEditModal(!showEditModal);
+        setShowEditModal(!showEditModal);
     } 
     
     else {
@@ -85,6 +87,7 @@ const UserProfile: React.FC = () => {
   return (
 
     <Container>
+
       {error && (
 
         <Alert variant="danger" style={{ textAlign: "center" }}>

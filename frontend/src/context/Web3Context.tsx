@@ -1,10 +1,7 @@
 import React, {useState, createContext} from "react";
 import Web3 from "web3";
 import EventNftContract from '../contracts/TicketNFT.json';
-import axios from 'axios';
-
 import { ExternalProvider } from "@ethersproject/providers";
-import { initializeConnect } from "react-redux/es/components/connect";
 declare global {
   interface Window {
     ethereum?: ExternalProvider;
@@ -92,10 +89,9 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
 
         }
 
-
     }
 
-    const mintNewToken = async (_tokenName: string, _tokenClass: string,  _tokenPrice: number, _tokenCapacity: number) => {
+    const mintNewToken = async (_tokenName: string, _tokenClass: string, _tokenPrice: number, _tokenCapacity: number) => {
 
         try {
 
