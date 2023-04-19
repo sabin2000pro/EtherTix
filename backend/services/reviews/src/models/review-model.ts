@@ -19,22 +19,22 @@ interface IReviewDocument extends mongoose.Model<IReviewAttributes> {
 // @description: Review Schema for an event
 const ReviewSchema = new mongoose.Schema<IReviewDocument>({
 
-     event: {
-      type: String,
-      ref: 'Event',
-      required: [true, "Please specify the event ID that you want to create a review for"]
-     },
-
       comment: { // Text Review
         type: String,
         required: [true, 'Please provide a comment for this review']
       },
 
       rating: { // Rating for the review
-        type: Number,
-        min: 1,
-        max: 10,
-        required: [true, 'Please add a rating for the event between 1 and 10']
+         type: Number,
+         min: 1,
+         max: 10,
+         required: [true, 'Please add a rating for the event between 1 and 10']
+      },
+
+      event: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
+        required: [true, "Please specify the Event ID that this review is for"]
       },
 
       createdAt: {
