@@ -42,6 +42,12 @@ export const singleEventReducer = (state = singleEventState as ISingleEventState
         case FETCH_SINGLE_EVENT_FAILURE:
             return {loading: false, error: action.payload.error}
 
+        case CREATE_NEW_EVENT_REQUEST:
+            return {loading: true, event: {}, error: undefined}
+
+        case CREATE_NEW_EVENT_SUCCESS:
+            return {...state, loading: false, event: action.payload, error: undefined}
+
         default:
             return state;
     }
