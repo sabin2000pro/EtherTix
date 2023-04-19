@@ -6,7 +6,7 @@
             "issuer": "5d7a514b5d2c12c7449be042",
             "name": "Highland Basic Event Ticket",
             "ticketClass": "basic", 
-            "stock": 5,
+            "currentStock": 5,
             "description": "Basic ticket for the highland tour event",
             "cost": 0.0025,
             "onSaleStatus": "Pending"
@@ -17,9 +17,9 @@
             "name": "Highland Standard Event Ticket",
             "issuer": "5d7a514b5d2c12c7449be042",
             "ticketClass": "standard",
-            "stock": 5,
+            "currentStock": 5,
             "description": "Standard Ticket for the highland tour event",
-            "cost": 0.0050,
+            "price": 0.0050,
             "onSaleStatus": "Pending"
         },
 
@@ -28,9 +28,9 @@
             "issuer": "5d7a514b5d2c12c7449be042",
             "name": "Highland Premium Event Ticket",
             "ticketClass": "premium",
-            "stock": 5,
+            "currentStock": 5,
             "description": "Premium Entry Ticket for the highland tour event",
-            "cost": 0.0075,
+            "price": 0.0075,
             "onSaleStatus": "Pending"
         },
 

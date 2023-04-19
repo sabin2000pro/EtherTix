@@ -41,16 +41,21 @@ export const fetchSingleEvent = (id: number) => async (dispatch: any): Promise<v
 
 }
 
-export const createNewEvent = () => async (dispatch: any) => {
+export const createNewEvent = (name: string, summary: string, description: string, startAt: Date, endsAt: Date) => async (dispatch: any) => {
 
     try {
+
        dispatch({type: CREATE_NEW_EVENT_REQUEST});
+
+       const {data} = await axios.post(`http://localhost:5301/api/v1/events`);
+
+       dispatch({type: CREATE_NEW_EVENT_SUCCESS, payload: data.event});
     } 
     
     catch(error: any) {
 
        if(error) {
-            dispatch({type: CREATE_NEW_EVENT_FAIL, payload: error.data.response.message});
+        dispatch({type: CREATE_NEW_EVENT_FAIL, payload: error.data.response.message});
        }
 
     }
@@ -58,7 +63,7 @@ export const createNewEvent = () => async (dispatch: any) => {
 
 }
 
-export const editEventByIDAction = (id: number) => async (dispatch: any) => {
+export const editEventByID = (id: number) => async (dispatch: Dispatch): Promise<any> => {
 
     try {
    
@@ -72,6 +77,7 @@ export const editEventByIDAction = (id: number) => async (dispatch: any) => {
 }
 
 export const uploadEventPhoto = () => async (dispatch: any) => {
+    
     try {
    
     } 
@@ -101,6 +107,5 @@ export const deleteAllEvents = () => async (dispatch: any) => {
     catch(error: any) {
    
     }
-
 
 }
