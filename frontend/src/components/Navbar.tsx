@@ -14,16 +14,14 @@ interface NavBarProps {
 }
 
 const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
-  const dispatch = useDispatch();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
 
   const {user} = useSelector((state: any) => state.auth as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const cart: CartItem[] = useSelector((state: any) => state.cart);
-
-  console.log(`Cart : `, cart);
+  console.log(`Your Cart : `, cart);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -64,26 +62,26 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
               {isLoggedIn ? (
                 <NavBarLoggedInView user= {user} />
               ) : (
-                <NavBarLoggedOutView
-                  onLoginClicked={onLoginClicked}
-                  onSignUpClicked={onSignUpClicked}
-                />
+
+                <NavBarLoggedOutView onLoginClicked={onLoginClicked} onSignUpClicked={onSignUpClicked} />
               )}
 
             </li>
+
             <li style={{ display: "inline-flex" }}>
+
               <Button
                 href="/events"
                 style={{ backgroundColor: "transparent", border: "none" }}
               >
                 Events 
               </Button>
-              <Button
-                href="/my-cart"
-                style={{ backgroundColor: "transparent", border: "none" }}
-              >
-                Cart <Badge bg="danger">{cart.length as unknown as string}</Badge>
+
+
+              <Button href="/my-cart" style={{ backgroundColor: "transparent", border: "none" }}>
+                 {/* Cart <Badge bg = "danger">{cart && cart.length as any}</Badge> */}
               </Button>
+
             </li>
           </ul>
         </Nav>

@@ -18,20 +18,17 @@ const Search: React.FC<ISearchProps> = ({searchTerm, handleSearch, searchResults
 
     </div>
 
-    {searchTerm.length > 0 && (
+     {searchTerm.length > 0 && (
 
       <ul className = "search-results">
 
         {searchResults.map((result: any) => (
 
           <li key={result.path}>
-            
-            <a className="search-results" href={result.path}>{result.name}</a>
-            
+              <a className="search-results" href={result.path}>{result.name}</a>
             </li> 
             
             ))}
-
 
       </ul>
 )}

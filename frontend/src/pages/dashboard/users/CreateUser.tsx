@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react'
+import { useDispatch } from 'react-redux'
 
-type ICreateUserProps = {
 
-}
-
-const CreateUser: React.FC = (props: ICreateUserProps) => {
+const CreateUser: React.FC = () => {
+  const dispatch = useDispatch();
 
   return (
 

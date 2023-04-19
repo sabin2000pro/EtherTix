@@ -3,6 +3,7 @@ import {Button,Container, Row , Col, Alert, Modal,} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser } from "api/auth/auth-api";
 import * as blockchain from "context/Web3Context";
+
 interface UserProfileData {
   _id: string;
   surname: string;
@@ -116,14 +117,7 @@ const UserProfile: React.FC = () => {
 
           <Col style={{ textAlign: "right", paddingLeft: "60px" }}>
 
-            <h1 style={{
-                paddingRight: "87px",
-                textAlign: "left",
-                paddingBottom: "60px",
-              }}
-            >
-              Your Profile
-            </h1>
+            <h1 style={{ paddingRight: "87px", textAlign: "left", paddingBottom: "60px"}}>Your Profile</h1>
 
             <p>Name: {user?.forename}</p>
             <p>Surname: {user?.surname}</p>
@@ -139,14 +133,8 @@ const UserProfile: React.FC = () => {
 
           </Col>
 
-          <Col
-            style={{
-              textAlign: "right",
-              paddingRight: "100px",
-              paddingTop: "30px",
-            }}
-          >
-
+          <Col style={{  textAlign: "right", paddingRight: "100px", paddingTop: "30px"}}>
+            
             <img
               src={`/images/${user?.photo}`}
               alt="user-propic"

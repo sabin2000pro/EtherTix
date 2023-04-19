@@ -6,9 +6,9 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tickets
+contract TicketNFT is ERC721URIStorage, Ownable {
 
-    struct NftToken { // Create the struct for the nft token
+    struct NftToken { 
         uint256 tokenId;
         address tokenOwner;
         string tokenName;
@@ -83,7 +83,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
         return tokenOwner[_tokenId];
     }
 
-    function tokenIsOnSale(uint256 _tokenId) public view returns (bool) { // Function that determines if the token with its ID is already on sale or not
+    function tokenIsOnSale(uint256 _tokenId) public view returns (bool) {
         return circulatingTokens[_tokenId].tokenPrice > 0;
     }
 
@@ -91,9 +91,9 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
       return balanceOf(currentNftOwner);
    }
 
-    // @description: Returns the minted NFT by its Token INDEX
+
     function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
-        return circulatingTokens[_tokenIndex];
+       return circulatingTokens[_tokenIndex];
     }
 
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public {
@@ -141,6 +141,7 @@ contract TicketNFT is ERC721URIStorage, Ownable { // NFT Contract for Event Tick
 
    function burnNftToken(uint tokenId) public { // Function responsible for burning
         address currentOwner = msg.sender;
+
         NftToken storage currentTokenToBurn = circulatingTokens[tokenId];
         require(currentTokenToBurn.tokenOwner == currentOwner, "You must be the current owner of the NFT to burn it");
 

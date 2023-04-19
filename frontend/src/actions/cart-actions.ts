@@ -3,10 +3,11 @@ import { Dispatch } from "redux";
 import axios from 'axios';
 
 export const addToCart = (id: string, currQuantity: number) => async (dispatch: Dispatch, getState: any): Promise<void> => {
+
     try {
 
         const {data} = await axios.get(`http://localhost:5303/api/v1/tickets/${id}`); // Fetch the ticket ID to add to cart
-        dispatch({type: ADD_TO_CART, payload: {name: data.ticket.name, ticketClass: data.ticket.ticketClass, quantity: Number(currQuantity)}  })
+        dispatch({type: ADD_TO_CART, payload: {name: data.ticket.name, ticketClass: data.ticket.ticketClass, quantity: Number(currQuantity)    }})
 
         localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems))
     }
