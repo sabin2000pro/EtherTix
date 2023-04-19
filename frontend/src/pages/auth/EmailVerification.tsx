@@ -21,32 +21,34 @@ const EmailVerification: React.FC = () => {
     otp6: "",
   });
 
-  const [creds, setCreds] = useState({
-    OTP: "",
-    userId: "",
-  });
-
-  const [buttonState, setButtonState] = useState({
-    verify: false,
-    resend: true,
-  });
+  const [creds, setCreds] = useState({OTP: "", userId: "" });
+  const [buttonState, setButtonState] = useState({verify: false, resend: true});
 
   const [timer, setTimer] = useState(timeLeft);
 
   const fetchUserId = () => {
+
     if (user) {
+
       setCreds({ ...creds, userId: user._id });
     }
+
   };
+
+
   setTimeout(() => {
     fetchUserId();
   }, 2000);
 
   useEffect(() => {
+
     const interval = setInterval(() => {
+
       if (timer > 0) {
         setTimer(timer - 1);
-      } else {
+      }
+      
+      else {
         setButtonState({ ...buttonState, resend: false });
       }
     }, 1000);
@@ -72,13 +74,17 @@ const EmailVerification: React.FC = () => {
     const ms = 100;
 
     const nOfFields = 6;
+
     if (elmnt.key === "Delete" || elmnt.key === "Backspace" || elmnt.keyCode === 37) {
       const next = elmnt.target.tabIndex - 2;
+
       if (next > -1) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
+
       }
      
     } 
@@ -101,13 +107,16 @@ const EmailVerification: React.FC = () => {
         setError("Only digits allowed");
         return;
       }
+
       const next = elmnt.target.tabIndex;
 
       if (next < nOfFields) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
+
 
       }
     }
@@ -317,7 +326,10 @@ const EmailVerification: React.FC = () => {
                 />
               </Col>
             </Row>
+
           </Form.Group>
+
+
           <Button
             className="w-100 verify-btn"
             variant="primary"
@@ -325,14 +337,11 @@ const EmailVerification: React.FC = () => {
             disabled={buttonState.verify}
             style={{ marginBottom: "5px", marginTop: "10px" }}
           >
+
             Verify
           </Button>
-          <Button
-            className="w-100 resend-btn"
-            variant="outline-primary"
-            onClick={handleResend}
-            disabled={buttonState.resend || timer > 0}
-          >
+
+          <Button className = "w-100 resend-btn" variant="outline-primary" onClick={handleResend} disabled = {buttonState.resend || timer > 0}>
             {timer > 0
               ? timer < 10
                 ? `Re-send OTP (00:0${timer})`
