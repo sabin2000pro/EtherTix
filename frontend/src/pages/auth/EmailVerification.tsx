@@ -330,10 +330,7 @@ const EmailVerification: React.FC = () => {
           </Form.Group>
 
 
-          <Button
-            className="w-100 verify-btn"
-            variant="primary"
-            type="submit"
+          <Button className="w-100 verify-btn" variant="primary" type="submit"
             disabled={buttonState.verify}
             style={{ marginBottom: "5px", marginTop: "10px" }}
           >
@@ -342,12 +339,10 @@ const EmailVerification: React.FC = () => {
           </Button>
 
           <Button className = "w-100 resend-btn" variant="outline-primary" onClick={handleResend} disabled = {buttonState.resend || timer > 0}>
-            {timer > 0
-              ? timer < 10
-                ? `Re-send OTP (00:0${timer})`
-                : `Re-send OTP (00:${timer})`
-              : "Re-send OTP"}
+            {timer > 0 ? timer < 10 ? `Re-send OTP (00:0${timer})` : `Re-send OTP (00:${timer})` : "Re-send OTP"}
           </Button>
+
+
         </Form>
       </Container>
     </Container>
