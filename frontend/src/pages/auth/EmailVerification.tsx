@@ -12,18 +12,10 @@ const EmailVerification: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [OTP, setOTP] = useState({
-    otp1: "",
-    otp2: "",
-    otp3: "",
-    otp4: "",
-    otp5: "",
-    otp6: "",
-  });
 
+  const [OTP, setOTP] = useState({otp1: "", otp2: "", otp3: "", otp4: "", otp5: "", otp6: ""});
   const [creds, setCreds] = useState({OTP: "", userId: "" });
   const [buttonState, setButtonState] = useState({verify: false, resend: true});
-
   const [timer, setTimer] = useState(timeLeft);
 
   const fetchUserId = () => {
@@ -61,9 +53,8 @@ const EmailVerification: React.FC = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const result = event.target.value.replace(/\D/g, "");
-
     setOTP({ ...OTP, [event.target.name]: result });
-    //console.log(OTP);
+   
   };
 
   const inputfocus = (elmnt: any) => {
@@ -76,6 +67,7 @@ const EmailVerification: React.FC = () => {
     const nOfFields = 6;
 
     if (elmnt.key === "Delete" || elmnt.key === "Backspace" || elmnt.keyCode === 37) {
+      
       const next = elmnt.target.tabIndex - 2;
 
       if (next > -1) {

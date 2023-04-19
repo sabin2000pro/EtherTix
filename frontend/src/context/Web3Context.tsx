@@ -31,7 +31,7 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
     const [tokenMinted, setTokenMinted] = useState<boolean>(false);
     const [newTokenOwner, setNewTokenOwner] = useState<string | undefined>("");
 
-    const web3Client = new Web3(window.ethereum as any); // Create new instance of a Web3 client
+    const web3Client = new Web3(window.ethereum as any);
 
     const connectMetaMaskWallet = async () => { // Function which allows the user to connect to their meta mask wallet account
 
@@ -81,7 +81,6 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
     const fetchAccountBalance = (currentAccount: string) => {
 
         try {
-
             return currentAccount;
         } 
         
@@ -116,7 +115,7 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
             if(error) {
                 return console.error(error);
             }
-            
+        
         }
     }
 

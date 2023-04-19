@@ -25,7 +25,7 @@ const UserProfile: React.FC = () => {
 
   const handleConnect = async () => {
 
-    const ethAccount = await connectMetaMaskWallet();
+    const ethAccount = await connectMetaMaskWallet(); // Invoke function to connect to the meta mask wallet account
 
     if (ethAccount) {
       setBalance(parseFloat(ethAccount.convertedBalance));
@@ -42,7 +42,7 @@ const UserProfile: React.FC = () => {
     if (user === null) {
 
       try {
-        
+
         const response = await getUser();
 
         const data: UserProfileData = {
@@ -83,6 +83,7 @@ const UserProfile: React.FC = () => {
   };
 
   return (
+
     <Container>
       {error && (
 
