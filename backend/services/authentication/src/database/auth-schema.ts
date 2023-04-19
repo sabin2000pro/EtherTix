@@ -1,7 +1,8 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config({path: '../../config.env'});
 import mongoose from "mongoose";
 
-const AUTH_SERVICE_DB_URI = process.env.AUTH_SERVICE_DB_URI;
+const AUTH_SERVICE_DB_URI = process.env.AUTH_SERVICE_DB_URI || "";
 
 export const connectAuthSchema = async (): Promise<any> => {
 
