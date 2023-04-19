@@ -14,6 +14,7 @@ interface UserProfileData {
 }
 
 const UserProfile: React.FC = () => {
+  const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfileData | null>(null);
@@ -45,6 +46,10 @@ const UserProfile: React.FC = () => {
       try {
 
         const response = await getUser();
+        
+        if(!response.data) {
+           throw new Error(`No user found`);
+        }
 
         const data: UserProfileData = {
           _id: response.user._id,
