@@ -6,25 +6,25 @@ interface NavBarLoggedOutViewProps {
   onLoginClicked: () => void;
 }
 
-const NavBarLoggedOutView = ({
-  onSignUpClicked,
-  onLoginClicked,
-}: NavBarLoggedOutViewProps) => {
+const NavBarLoggedOutView = ({ onSignUpClicked, onLoginClicked}: NavBarLoggedOutViewProps) => {
+
   return (
-    //leave as empty tag, or else...
+   
     <>
-      <Button
-        onClick={onSignUpClicked}
-        style={{ backgroundColor: "transparent", border: "none" }}
-      >
+
+      <Button onClick={onSignUpClicked} style={{ backgroundColor: "transparent", border: "none" }} >
         Register
       </Button>
+
+    
       <Button
         onClick={onLoginClicked}
         style={{ backgroundColor: "transparent", border: "none" }}
       >
         Log In
       </Button>
+
+
     </>
   );
 };

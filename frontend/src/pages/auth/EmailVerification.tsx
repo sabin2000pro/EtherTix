@@ -12,141 +12,155 @@ const EmailVerification: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [OTP, setOTP] = useState({
-    otp1: "",
-    otp2: "",
-    otp3: "",
-    otp4: "",
-    otp5: "",
-    otp6: "",
-  });
 
-  const [creds, setCreds] = useState({
-    OTP: "",
-    userId: "",
-  });
-
-  const [buttonState, setButtonState] = useState({
-    verify: false,
-    resend: true,
-  });
-
+  const [OTP, setOTP] = useState({otp1: "", otp2: "", otp3: "", otp4: "", otp5: "", otp6: ""});
+  const [creds, setCreds] = useState({OTP: "", userId: "" });
+  const [buttonState, setButtonState] = useState({verify: false, resend: true});
   const [timer, setTimer] = useState(timeLeft);
 
   const fetchUserId = () => {
+
     if (user) {
+
       setCreds({ ...creds, userId: user._id });
     }
+
   };
+
+
   setTimeout(() => {
     fetchUserId();
   }, 2000);
 
   useEffect(() => {
+
     const interval = setInterval(() => {
+
       if (timer > 0) {
         setTimer(timer - 1);
-      } else {
+      }
+      
+      else {
         setButtonState({ ...buttonState, resend: false });
       }
     }, 1000);
+
     return () => {
       clearInterval(interval);
     };
+
   }, [buttonState, timer]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const result = event.target.value.replace(/\D/g, "");
-
     setOTP({ ...OTP, [event.target.name]: result });
-    //console.log(OTP);
+   
   };
 
   const inputfocus = (elmnt: any) => {
+
     setError(null);
     setSuccess(null);
+
     const ms = 100;
+
     const nOfFields = 6;
-    if (
-      elmnt.key === "Delete" ||
-      elmnt.key === "Backspace" ||
-      //left arrow key
-      elmnt.keyCode === 37
-    ) {
+
+    if (elmnt.key === "Delete" || elmnt.key === "Backspace" || elmnt.keyCode === 37) {
+      
       const next = elmnt.target.tabIndex - 2;
+
       if (next > -1) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
+
       }
-      //if right arrow key, move focus right
-    } else if (elmnt.keyCode === 39) {
+     
+    } 
+    
+    else if (elmnt.keyCode === 39) {
+
       const next = elmnt.target.tabIndex;
+
       if (next < nOfFields) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
+
       }
-    } else {
-      if (elmnt.keyCode < 48 || elmnt.keyCode > 57) {
+    } 
+    
+    else { if (elmnt.keyCode < 48 || elmnt.keyCode > 57) {
         setError("Only digits allowed");
         return;
       }
+
       const next = elmnt.target.tabIndex;
+
       if (next < nOfFields) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
+
+
       }
     }
   };
 
-  const bundleTogether = () => {
+  const concatOTPCodes = () => {
+
     creds.OTP = OTP.otp1.concat(
       OTP.otp2,
       OTP.otp3,
       OTP.otp4,
       OTP.otp5,
       OTP.otp6
+
     );
-    //console.log(OTP.OTP);
+    
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
     setError(null);
     setSuccess(null);
-    if (
-      OTP.otp1 === "" ||
-      OTP.otp2 === "" ||
-      OTP.otp3 === "" ||
-      OTP.otp4 === "" ||
-      OTP.otp5 === "" ||
-      OTP.otp6 === ""
-    ) {
+
+    if (OTP.otp1 === "" || OTP.otp2 === "" || OTP.otp3 === "" || OTP.otp4 === "" || OTP.otp5 === "" || OTP.otp6 === "") {
       setError("Please enter a valid one-time password...");
       return;
     }
+
     setButtonState({ ...buttonState, verify: true, resend: true });
 
     try {
-      bundleTogether();
+
+      concatOTPCodes();
+
       const response = await verifyEmailAddress(creds);
 
       if (response.message === "E-mail Address verified") {
         navigate("/");
       }
 
-      if (timer === 0) {
+      if (timer === 0) { // if the time hits 0
         setButtonState({ ...buttonState, resend: false });
       }
+
       setTimeout(() => {
         setButtonState({ ...buttonState, verify: false });
       }, 5000);
-    } catch (err: any) {
+
+    } 
+    
+    catch (err: any) {
       setSuccess(null);
       setError("Wrong OTP, try again");
       console.error(err);
@@ -304,28 +318,23 @@ const EmailVerification: React.FC = () => {
                 />
               </Col>
             </Row>
+
           </Form.Group>
-          <Button
-            className="w-100 verify-btn"
-            variant="primary"
-            type="submit"
+
+
+          <Button className="w-100 verify-btn" variant="primary" type="submit"
             disabled={buttonState.verify}
             style={{ marginBottom: "5px", marginTop: "10px" }}
           >
+
             Verify
           </Button>
-          <Button
-            className="w-100 resend-btn"
-            variant="outline-primary"
-            onClick={handleResend}
-            disabled={buttonState.resend || timer > 0}
-          >
-            {timer > 0
-              ? timer < 10
-                ? `Re-send OTP (00:0${timer})`
-                : `Re-send OTP (00:${timer})`
-              : "Re-send OTP"}
+
+          <Button className = "w-100 resend-btn" variant="outline-primary" onClick={handleResend} disabled = {buttonState.resend || timer > 0}>
+            {timer > 0 ? timer < 10 ? `Re-send OTP (00:0${timer})` : `Re-send OTP (00:${timer})` : "Re-send OTP"}
           </Button>
+
+
         </Form>
       </Container>
     </Container>

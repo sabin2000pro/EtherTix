@@ -7,8 +7,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prestart": "npm run build",
-    "dev": "nodemon dist/index.js",
-    "start:server": "npm run dev"
+    "dev": "NODE_ENV=nodemon dist/index.js",
+    "start-tickets:service": "npm run dev"
   },
   "keywords": [],
   "author": "",

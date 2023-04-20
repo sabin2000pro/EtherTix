@@ -1,5 +1,5 @@
 require('dotenv').config();
-import connectEventDatabase from './database/event-db';
+import connectEventDatabase from './database/event-schema';
 import express, {NextFunction } from "express";
 import morgan from "morgan"
 import hpp from "hpp"

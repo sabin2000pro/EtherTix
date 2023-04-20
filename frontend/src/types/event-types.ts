@@ -7,5 +7,6 @@ export interface IEventState {
 export interface ISingleEventState {
     loading?: boolean,
     error?: string,
-    event?: {}
+    message?: string,
+    event?: object
 }

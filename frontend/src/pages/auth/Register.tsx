@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
 import { registerUser } from "api/auth/auth-api";
-import { registerCredentials } from "api/auth/auth-api";
+import { IRegisterCredentials } from "api/auth/auth-api";
 import { useNavigate } from "react-router-dom";
 import * as stor from "../../auth/store";
 import cookies from "auth/cookies";
@@ -14,25 +14,21 @@ interface SignUpModalProps {
   onSignUpSuccessful: () => void;
 }
 
-const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
+export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [errorText, setErrorText] = useState<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-  } = useForm<registerCredentials>();
+  const {register, handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<IRegisterCredentials>();
 
   const Password = watch("password", "");
 
-  async function onSubmit(credentials: registerCredentials) {
+  async function onSubmit(credentials: IRegisterCredentials) {
+
     try {
+
       const response = await registerUser(credentials);
 
       cookies.set(stor.COOKIE_NAME_USER, response.user);
@@ -43,12 +39,19 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
 
       onSignUpSuccessful();
       navigate("/verify-email");
-    } catch (error: any) {
+    }
+    
+    catch (error: any) {
+
       if (error) {
         setErrorText(error.message);
-      } else {
+      } 
+      
+      else {
         alert(error);
       }
+
+
       console.error(error);
     }
   }
@@ -58,30 +61,33 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
   };
 
   return (
-    <Modal show onHide={onDismiss} backdrop="static" centered>
+
+    <Modal show onHide={onDismiss} backdrop = "static" centered>
+
       <Modal.Header closeButton>
-        <Container className="text-center">
-          <Modal.Title>Welcome to EtherTix</Modal.Title>
+
+        <Container className = "text-center">
+          <Modal.Title>Register Account</Modal.Title>
         </Container>
+
+
       </Modal.Header>
 
       <Modal.Body>
+
         {errorText && (
+
           <Alert variant="danger" style={{ textAlign: "center" }}>
             {errorText}
           </Alert>
+
         )}
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Container className="text-left">
-            <TextInputField
-              name="forename"
-              label="Name"
-              type="text"
-              placeholder="Name"
-              register={register}
-              registerOptions={{ required: "Required" }}
-              error={errors.username}
-              autoFocus
+
+        <Form onSubmit = {handleSubmit(onSubmit)}>
+
+          <Container className = "text-left">
+
+            <TextInputField name="forename" label = "Forename" type="text" placeholder="Forename" register={register} registerOptions={{ required: "Required" }} error = {errors.username} autoFocus
             />
             <TextInputField
               name="surname"
@@ -92,6 +98,7 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
               registerOptions={{ required: "Required" }}
               error={errors.username}
             />
+
             <TextInputField
               name="username"
               label="Username"
@@ -119,6 +126,7 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
               registerOptions={{ required: "Required" }}
               error={errors.password}
             />
+
             <TextInputField
               name="passwordConfirm"
               label="Confirm Password"
@@ -148,4 +156,3 @@ const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
     </Modal>
   );
 };
-export default Register;

@@ -1,14 +1,8 @@
+import { ISingleTicket, ITickets } from './../types/ticket-types';
 import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL } from './../constants/ticket-constants';
+import { initialTicketsState, singleTicketState } from 'state/tickets-state';
 
-const initialTicketsState = {
-    tickets: [] // Initial state for the tickets
-}
-
-const singleTicketState = {
-    ticket: {}
-}
-
-export const ticketsReducer = (state = initialTicketsState as any, action: any) => {
+export const ticketsReducer = (state = initialTicketsState as ITickets, action: any) => {
 
     switch(action.type) {
 
@@ -30,14 +24,13 @@ export const ticketsReducer = (state = initialTicketsState as any, action: any) 
         case CREATE_TICKET_FAIL:
             return {loading: false, error: action.payload}
 
-        default: // By default just return the state
+        default:
             return state
     }
-
-
+    
 }
 
-export const singleTicketReducer = (state = singleTicketState as any, action: any) => {
+export const singleTicketReducer = (state = singleTicketState as ISingleTicket, action: any) => {
 
     switch(action.type) {
 

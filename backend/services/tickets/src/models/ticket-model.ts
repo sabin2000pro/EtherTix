@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 interface ITicketAttributes { // Interface that stores the ticket data
     name: string,
     ticketClass: string,
-    stock: number,
+    currentStock: number,
     description: string,
-    cost: number,
+    price: number,
     onSaleStatus: string,
     ticketSold: boolean
     saleStartsAt: Date,
@@ -19,8 +19,8 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    ticketClass: string,
    capacity: number,
    description: string,
-   cost: number,
-   stock: number,
+   price: number,
+   currentStock: number,
    ticketSold: boolean,
    onSaleStatus: string,
    saleStartsAt: Date,
@@ -43,7 +43,7 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             enum: ["premium", "standard", "basic", "vip"]
         },
 
-        stock: { // Number of tickets in stock for an event
+        currentStock: { // Number of tickets in stock for an event
             type: Number,
             required: [true, "Please specify how many tickets are currently in stock"],
             default: 1,
@@ -54,9 +54,9 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             required: [true, "Please specify the description for this ticket"]
         },
 
-        cost: { // The ticket cost in ETHER
+        price: { // The ticket cost in ETHER
             type: Number,
-            required: [true, "Please specify how much a ticket costs in ether"],
+            required: [true, "Please specify the price of a ticket in ETH"],
             default: 0.010       
          },
 
@@ -84,7 +84,7 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
         issuer: { // Relationship between the Event Ticket and the Event ID
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
-            required: [true, "Please specify who the issuer ID of this ticket is"]
+            required: [true, "Please specify the Isser ID"]
         }
 
 }, {

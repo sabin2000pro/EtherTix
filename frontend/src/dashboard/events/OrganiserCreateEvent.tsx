@@ -1,14 +1,20 @@
 import React from 'react'
 
-const OrganiserCreateEvent = () => {
+const OrganiserCreateEvent: React.FC = () => {
 
   return (
     
     <>
     
-      <div>
-         <h2>Organiser Dashboard - Create New Event</h2>
-      </div>
+      <>
+
+       <div className = "event-container">
+          <h2>Organiser Dashboard - Create New Event</h2>
+       </div>
+       
+        
+      </>
+
 
     </>
 

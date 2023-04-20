@@ -3,12 +3,11 @@ import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 
 const defaultOptions = {
-  // Default config options for authentication
 
   headers: {
     "Content-Type": "application/json",
   },
-  // withCredentials: true
+ 
 };
 
 let axiosInstance = axios.create(defaultOptions);
@@ -19,7 +18,7 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
   return configData;
 });
 
-export interface registerCredentials {
+export interface IRegisterCredentials {
   forename: string;
   surname: string;
   username: string;
@@ -28,21 +27,26 @@ export interface registerCredentials {
   passwordConfirm: string;
 }
 
-export const registerUser = async (
-  registerPayload: registerCredentials
-): Promise<any> => {
+export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
+
   try {
+
     const response = await axios.post(
       "http://localhost:5299/api/auth/register",
       registerPayload
     );
+
     const data = await response.data;
 
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
+
     if (err) {
       throw err;
     }
+    
   }
 };
 
@@ -83,46 +87,59 @@ export const resendEmailVerification = async (
 export interface LoginCredentials {
   email: string;
   password: string;
+  mfaToken: string;
 }
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
   try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/login",
-      loginPayload
-    );
+
+
+    const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
     const data = await response.data;
     return data;
-  } catch (err: any) {
+
+  } 
+  
+  catch (err: any) {
+
     if (err) {
       throw err;
     }
+
   }
 };
 
 export const logout = async (): Promise<any> => {
+
   try {
+    
     const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
     if (err) {
       return console.error(err);
     }
   }
 };
 
-export const sendLoginMfa = async (mfaPayload: any): Promise<any> => {
+export interface MfaEmailProps {
+  email: string;
+  password: string;
+}
+
+export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
   try {
     const response = await axios.post(
-      "http://localhost:5299/api/auth/verify-login-mfa",
+      "http://localhost:5299/api/auth/send-login-mfa",
       mfaPayload
     );
-    const data = await response.data;
-    return data;
-  } catch (err: any) {
-    if (err) {
-      return console.error(err);
+    return response.data;
+  } catch (error) {
+    if (error) {
+      return console.error(error);
     }
   }
 };
@@ -148,24 +165,27 @@ export const forgotPassword = async (
   }
 };
 
-export interface ResetP {
+export interface IResetPassword {
   newPassword: string;
   confirmPassword: string;
   resetToken: string;
   userId: string;
 }
 
-export const resetPassword = async (
-  resetPasswordPayload: ResetP
-): Promise<any> => {
+export const resetPassword = async (resetPasswordPayload: IResetPassword): Promise<any> => {
+
   try {
+
     const response = await axios.post(
       "http://localhost:5299/api/auth/reset-password",
       resetPasswordPayload
     );
+
     const data = await response.data;
     return data;
-  } catch (err) {
+  } 
+  
+  catch (err) {
     if (err) {
       return console.error(err);
     }
@@ -176,16 +196,22 @@ export const resetPassword = async (
 
 export const getUser = async (): Promise<any> => {
   try {
+
     const response = await axios.get("http://localhost:5299/api/auth/me", {
+      
       headers: {
         Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
           cookies.get(COOKIE_NAME_USER)._id
         }`,
       },
     });
+
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
+
     if (err) {
       throw err;
     }

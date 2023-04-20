@@ -6,7 +6,7 @@
             "issuer": "5d7a514b5d2c12c7449be042",
             "name": "Highland Basic Event Ticket",
             "ticketClass": "basic", 
-            "stock": 5,
+            "currentStock": 5,
             "description": "Basic ticket for the highland tour event",
             "cost": 0.0025,
             "onSaleStatus": "Pending"
@@ -17,9 +17,9 @@
             "name": "Highland Standard Event Ticket",
             "issuer": "5d7a514b5d2c12c7449be042",
             "ticketClass": "standard",
-            "stock": 5,
+            "currentStock": 5,
             "description": "Standard Ticket for the highland tour event",
-            "cost": 0.0050,
+            "price": 0.0050,
             "onSaleStatus": "Pending"
         },
 
@@ -28,9 +28,9 @@
             "issuer": "5d7a514b5d2c12c7449be042",
             "name": "Highland Premium Event Ticket",
             "ticketClass": "premium",
-            "stock": 5,
+            "currentStock": 5,
             "description": "Premium Entry Ticket for the highland tour event",
-            "cost": 0.0075,
+            "price": 0.0075,
             "onSaleStatus": "Pending"
         },
 
@@ -39,9 +39,9 @@
             "issuer": "5d7a514b5d2c12c7449be042",
             "name": "Highland VIP Event Ticket",
             "ticketClass": "vip",
-            "stock": 2,
+            "currentStock": 2,
             "description": "Premium VIP Entry Ticket for the highland tour event",
-            "cost": 0.0095,
+            "price": 0.0095,
             "onSaleStatus": "Pending"
         },
 
@@ -50,9 +50,9 @@
             "issuer": "5d7a514b5d2c12c7449be043",
             "name": "Three Sisters Drink n Socialise Basic Ticket",
             "ticketClass": "basic",
-            "stock": 5,
+            "currentStock": 5,
             "description": "Basic Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0025,
+            "price": 0.0025,
             "onSaleStatus": "Pending"
         },
 
@@ -61,9 +61,9 @@
             "issuer": "5d7a514b5d2c12c7449be043",
             "name": "Three Sisters Drink n Socialise Standard Ticket",
             "ticketClass": "standard",
-            "stock": 5,
+            "currentStock": 5,
             "description": "Standard Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0045,
+            "price": 0.0045,
             "onSaleStatus": "Pending"
         },
 
@@ -72,8 +72,9 @@
             "name": "Three Sisters Drink n Socialise Premium Ticket",
             "issuer": "5d7a514b5d2c12c7449be043",
             "ticketClass": "premium",
+            "currentStock": 2,
             "description": "Premium Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0075,
+            "price": 0.0075,
             "onSaleStatus": "Pending"
         },
 
@@ -82,8 +83,9 @@
             "issuer": "5d7a514b5d2c12c7449be043",
             "name": "Three Sisters Drink n Socialise VIP Ticket",
             "ticketClass": "vip",
+            "currentStock": 3,
             "description": "VIP Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0095,
+            "price": 0.0095,
             "onSaleStatus": "Pending"
         },
 
@@ -92,9 +94,9 @@
             "issuer": "5d7a514b5d2c12c7449be044",
             "name": "Agile Project Management Basic Ticket",
             "ticketClass": "basic",
-            "stock": 3,
+            "currentStock": 3,
             "description": "Basic Entry Ticket for the Agile Project Management Conference Event",
-            "cost": 0.0075,
+            "price": 0.0075,
             "onSaleStatus": "Pending"
         },
 
@@ -103,11 +105,9 @@
             "issuer": "5d7a514b5d2c12c7449be044",
             "name": "Agile Project Management Standard Ticket",
             "ticketClass": "standard",
-            "capacity": 3,
-            "minimumQuantityPurchase": 1,
-            "maximumQuantityPurchase": 3,
+            "currentStock": 3,
             "description": "Standard Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0080,
+            "price": 0.0080,
             "onSaleStatus": "Pending"
         },
 
@@ -116,9 +116,9 @@
             "name": "Agile Project Management Premium Ticket",
             "issuer": "5d7a514b5d2c12c7449be044",
             "ticketClass": "premium",
-            "stock": 3,
+            "currentStock": 3,
             "description": "Premium Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0090,
+            "price": 0.0090,
             "onSaleStatus": "Pending"
         },
 
@@ -127,9 +127,9 @@
             "issuer": "5d7a514b5d2c12c7449be044",
             "name": "Agile Project Management VIP Ticket",
             "ticketClass": "vip",
-            "stock": 3,
+            "currentStock": 3,
             "description": "VIP Entry Ticket for the Three Sisters Drink n Socialise Event",
-            "cost": 0.0098,
+            "price": 0.0098,
             "onSaleStatus": "Pending"
         }
 

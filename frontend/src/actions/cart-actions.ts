@@ -3,14 +3,17 @@ import { Dispatch } from "redux";
 import axios from 'axios';
 
 export const addToCart = (id: string, currQuantity: number) => async (dispatch: Dispatch, getState: any): Promise<void> => {
+
     try {
-        const {data} = await axios.get(`http://localhost:5303/api/v1/tickets/${id}`);
-        dispatch({type: ADD_TO_CART, payload: {name: data.ticket.name, ticketClass: data.ticket.ticketClass, quantity: Number(currQuantity)}  })
+
+        const {data} = await axios.get(`http://localhost:5303/api/v1/tickets/${id}`); // Fetch the ticket ID to add to cart
+        dispatch({type: ADD_TO_CART, payload: {name: data.ticket.name, ticketClass: data.ticket.ticketClass, quantity: Number(currQuantity)    }})
 
         localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems))
     }
     
     catch(error) {
+
         if(error) {
             return console.error(error);
         }
@@ -20,6 +23,7 @@ export const addToCart = (id: string, currQuantity: number) => async (dispatch: 
 
 export const removeItemFromCart = (id: string) => async (dispatch: Dispatch, getState: any): Promise<void> => {
     try {
+        
         dispatch({type: REMOVE_ITEM_FROM_CART, payload: id});
         localStorage.setItem('basketItems', JSON.stringify(getState().cart.cartItems))
     } 

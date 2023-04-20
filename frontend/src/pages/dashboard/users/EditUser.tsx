@@ -1,17 +1,14 @@
 import React, {useState, useEffect} from 'react'
 
-type IEditUserProps = {
 
-}
-
-const EditUser: React.FC = (props: IEditUserProps) => {
+const EditUser: React.FC = () => {
 
   return (
 
     <>
 
      <div>
-        Edit User Here - Event Organiser Dashboard
+        <h2>Edit User</h2>
      </div>
 
 
