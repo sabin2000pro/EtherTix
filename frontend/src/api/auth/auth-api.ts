@@ -208,7 +208,7 @@ export const updateProfile = async (
 ): Promise<any> => {
   try {
     const response = await axios.put(
-      "http://localhost:localhost:5299/api/auth/update-profile",
+      "http://localhost:5299/api/auth/update-profile",
       updateProfilePayload,
       {
         headers: {
@@ -229,14 +229,15 @@ export const updateProfile = async (
 export interface UpdatePasswordCredentials {
   currentPassword: string;
   newPassword: string;
+  passwordConfirm: string;
 }
 
 export const updatePassword = async (
-  updatePasswordPayload: any
+  updatePasswordPayload: UpdatePasswordCredentials
 ): Promise<any> => {
   try {
     const response = await axios.put(
-      "http://localhost:localhost:5299/api/auth/update-password",
+      "http://localhost:5299/api/auth/update-password",
       updatePasswordPayload,
       {
         headers: {
@@ -246,7 +247,7 @@ export const updatePassword = async (
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error) {
       throw error;

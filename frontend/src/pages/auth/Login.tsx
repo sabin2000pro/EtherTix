@@ -37,7 +37,7 @@ export const Login: React.FC<LoginModalProps> = ({
       }
     } catch (err: any) {
       if (err.response === undefined) {
-        setErrorText(err.message);
+        setErrorText("Something went wrong, check entries and try again.");
       } else {
         setErrorText(err.response.data.message);
       }

@@ -15,13 +15,14 @@ interface NavBarProps {
 
 const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
+  const [searchResults, setSearchResults] = useState<
+    { name: string; path: string }[]
+  >([]);
 
-  const {user} = useSelector((state: any) => state.auth as User);
-  let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  const { user } = useSelector((state: any) => state.auth as User);
+  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
-  const cart: CartItem[] = useSelector((state: any) => state.cart);
-  console.log(`Your Cart : `, cart);
+  const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -29,23 +30,22 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
     if (!searchTerm) {
       setSearchResults([]);
     }
-
   };
 
   return (
-
     <Navbar className="navbar" expand="sm" sticky="top">
-
-      <Navbar.Brand as = {Link} to="/">
-
-        <img className = "logo" height="69" width="240" src="/images/ethertix.png" alt = "Ether Tix Logo" />
-
+      <Navbar.Brand as={Link} to="/">
+        <img
+          className="logo"
+          height="69"
+          width="240"
+          src="/images/ethertix.png"
+          alt="Ether Tix Logo"
+        />
       </Navbar.Brand>
 
       <Container>
-
         <Nav className="justify-content-center">
-
           <Search
             searchTerm={searchTerm as any}
             handleSearch={handleSearch as any}
@@ -54,38 +54,36 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
         </Nav>
 
         <Nav className="justify-content-right">
-          
           <ul>
             <li style={{ display: "inline-flex" }}>
-
-
               {isLoggedIn ? (
-                <NavBarLoggedInView user= {user} />
+                <NavBarLoggedInView user={user} />
               ) : (
-
-                <NavBarLoggedOutView onLoginClicked={onLoginClicked} onSignUpClicked={onSignUpClicked} />
+                <NavBarLoggedOutView
+                  onLoginClicked={onLoginClicked}
+                  onSignUpClicked={onSignUpClicked}
+                />
               )}
-
             </li>
 
             <li style={{ display: "inline-flex" }}>
-
               <Button
                 href="/events"
                 style={{ backgroundColor: "transparent", border: "none" }}
               >
-                Events 
+                Events
               </Button>
 
-
-              <Button href="/my-cart" style={{ backgroundColor: "transparent", border: "none" }}>
-                 {/* Cart <Badge bg = "danger">{cart && cart.length as any}</Badge> */}
+              <Button
+                href="/my-cart"
+                style={{ backgroundColor: "transparent", border: "none" }}
+              >
+                Cart{" "}
+                <Badge bg="danger">{cart.length as unknown as string}</Badge>
               </Button>
-
             </li>
           </ul>
         </Nav>
-
       </Container>
     </Navbar>
   );
