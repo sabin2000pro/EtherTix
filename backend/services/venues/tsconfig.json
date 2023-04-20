@@ -100,7 +100,7 @@
 
   "include": [
     "src/**/*",
-    "src",
+    "src/tests",
     "package.json"
   ]
 
