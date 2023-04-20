@@ -11,10 +11,17 @@ interface NavBarLoggedInViewProps {
 }
 
 const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const checkRole = () => {
+    if (user.role === "Admin" || user.role === "Organiser") {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const logOut = async () => {
-
     stor.logout();
 
     cookies.remove(stor.COOKIE_NAME_USER);
@@ -22,33 +29,53 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
     cookies.remove(stor.COOKIE_NAME_TOKEN);
 
     try {
-
       await logout();
-    }
-    
-    catch (error) {
+    } catch (error) {
       console.error(error);
       alert(error);
     }
-    
+
     navigate("/");
     window.location.reload();
   };
 
   return (
-
-    <div style={{ backgroundColor: "red", fontWeight: "bold" }}>
-
+    <div>
       <NavDropdown title={user.username} id="dropdown-menu-right">
-
-        <NavDropdown.Item href = "/my-profile">Profile</NavDropdown.Item>
-        <NavDropdown.Item href = "/my-tickets">Tickets</NavDropdown.Item>
-        <NavDropdown.Item href = "/my-events">Events</NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item onClick = {logOut}>Log out</NavDropdown.Item>
+        <NavDropdown.Item
+          style={{ color: "#04286b", fontWeight: "bold" }}
+          href="/my-profile"
+        >
+          My profile
+        </NavDropdown.Item>
+        <NavDropdown.Item
+          style={{ color: "#04286b", fontWeight: "bold" }}
+          href="/my-events"
+        >
+          My events
+        </NavDropdown.Item>
+        <NavDropdown.Item
+          style={{ color: "#04286b", fontWeight: "bold" }}
+          href="/my-tickets"
+        >
+          My tickets
+        </NavDropdown.Item>
+        {checkRole() && (
+          <NavDropdown.Item
+            style={{ color: "#04286b", fontWeight: "bold" }}
+            href="/admin-panel"
+          >
+            Admin panel
+          </NavDropdown.Item>
+        )}
+        <NavDropdown.Divider style={{ border: "2px solid #04286b" }} />
+        <NavDropdown.Item
+          style={{ color: "#04286b", fontWeight: "bold" }}
+          onClick={logOut}
+        >
+          Log out
+        </NavDropdown.Item>
       </NavDropdown>
-
-
     </div>
   );
 };

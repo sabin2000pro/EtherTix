@@ -1,13 +1,105 @@
-import React from 'react'
+import React, { useState } from "react";
+import { Alert, Button, Form, Container } from "react-bootstrap";
+import { UpdatePasswordCredentials, updatePassword } from "api/auth/auth-api";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import TextInputField from "components/form/TextInputField";
 
 const UpdatePassword: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+  } = useForm<UpdatePasswordCredentials>();
+
+  const newPassword = watch("newPassword", "");
+
+  const onSubmit = async (data: UpdatePasswordCredentials) => {
+    if (data.newPassword !== data.passwordConfirm) {
+      setError("Passwords don't match.");
+      return;
+    }
+    try {
+      const response = await updatePassword(data);
+
+      if (response.success) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong. Please try again later.");
+    }
+  };
   return (
+    <Container>
+      {error && (
+        <Alert variant="danger" style={{ textAlign: "center" }}>
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert variant="success" style={{ textAlign: "center" }}>
+          {success}
+        </Alert>
+      )}
+      <Container className="update-password-container">
+        <Form.Label
+          column="lg"
+          style={{
+            marginTop: "15px",
+            marginBottom: "15px",
+            textAlign: "center",
+          }}
+        >
+          Update your password
+        </Form.Label>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <TextInputField
+            name="currentPassword"
+            label="Please enter your current password:"
+            type="password"
+            placeholder="Current password"
+            register={register}
+            registerOptions={{ required: "Required" }}
+            error={errors.currentPassword}
+            autoFocus
+          />
+          <TextInputField
+            name="newPassword"
+            label="Please enter your new password:"
+            type="password"
+            placeholder="New password"
+            register={register}
+            registerOptions={{ required: "Required" }}
+            error={errors.newPassword}
+            autoFocus
+          />
+          <TextInputField
+            name="passwordConfirm"
+            label="Please confirm your new password:"
+            type="password"
+            placeholder="Confirm new password"
+            register={register}
+            registerOptions={{
+              required: "Required",
+              validate: (value) =>
+                value === newPassword || "Passwords don't match.",
+            }}
+            error={errors.passwordConfirm}
+            autoFocus
+          />
+          <Button type="submit" disabled={isSubmitting} className="w-100">
+            Update Password
+          </Button>
+        </Form>
+      </Container>
+    </Container>
+  );
+};
 
-    <>
-       <h2>Update Password Page</h2>
-    </>
-
-  )
-}
-
-export default UpdatePassword
+export default UpdatePassword;

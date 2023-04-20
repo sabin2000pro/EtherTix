@@ -487,7 +487,7 @@ const verifyLoginToken = async (
     );
   }
 
-  await TwoFactorVerification.deleteOne({owner: userId});
+  await TwoFactorVerification.deleteOne({ owner: userId });
 
   user.isActive = true; // And user account is active
 
@@ -522,7 +522,7 @@ const newToken = async (userId: string, email: string) => {
 
   if (tokenINdb) {
     tokenINdb.deleteOne({ owner: userId });
-  };
+  }
   const token = generateMfaToken();
   const newToken = await TwoFactorVerification.create({
     owner: userId,
@@ -540,11 +540,14 @@ export const sendTwoFactorLoginCode = asyncHandler(
   async (request: any, response: any, next: NextFunction): Promise<any> => {
     const { email, password } = request.body;
 
-    const currentUser = await User.findOne({email: email});
+    const currentUser = await User.findOne({ email: email });
 
     if (!currentUser) {
       return next(
-        new ErrorResponse("No user found, check email entry...", StatusCodes.NOT_FOUND)
+        new ErrorResponse(
+          "No user found, check email entry...",
+          StatusCodes.BAD_REQUEST
+        )
       );
     }
 
@@ -743,11 +746,39 @@ export const updateUserPassword = asyncHandler(
 
       const currentPassword = request.body.currentPassword;
       const newPassword = request.body.newPassword;
+      const passwordConfirm = request.body.passwordConfirm;
+
+      if (!currentPassword) {
+        return next(
+          new ErrorResponse(
+            "Please enter your current password",
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
 
       if (!newPassword) {
         return next(
           new ErrorResponse(
             "Please provide your new password",
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
+
+      if (!passwordConfirm) {
+        return next(
+          new ErrorResponse(
+            "Please confirm your new password",
+            StatusCodes.BAD_REQUEST
+          )
+        );
+      }
+
+      if (passwordConfirm !== newPassword) {
+        return next(
+          new ErrorResponse(
+            "New passwords don't match",
             StatusCodes.BAD_REQUEST
           )
         );
@@ -767,13 +798,14 @@ export const updateUserPassword = asyncHandler(
         // If passwords do not match
         return next(
           new ErrorResponse(
-            "Current password is invalid.",
+            "Current password entered is invalid.",
             StatusCodes.BAD_REQUEST
           )
         );
       }
 
-      user.password = request.body.newPassword;
+      user.password = newPassword;
+      user.passwordConfirm = passwordConfirm;
       await user.save(); // Save new user
 
       return response

@@ -13,8 +13,8 @@ html {
 }
 
 .navbar {
-    background-color: #04286b;
-    height: 100px;
+  background-color: #04286b;
+  height: 100px;
 }
 
 .heading-primary {
@@ -773,3 +773,25 @@ footer {
 }
 
 /*Profile Page - End*/
+
+/*User dropdown menu (when logged in)---Start*/
+#dropdown-menu-right {
+  color: white;
+}
+
+/*User dropdown menu (when logged in)---End*/
+
+/*Update password---Start*/
+.update-password-container {
+  border: 1px solid gray;
+  border-radius: 15px;
+  width: 550px;
+  height: 520px;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+}
+
+/*Update password---End*/
