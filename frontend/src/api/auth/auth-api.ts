@@ -3,11 +3,9 @@ import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 
 const defaultOptions = {
-
   headers: {
     "Content-Type": "application/json",
   },
- 
 };
 
 let axiosInstance = axios.create(defaultOptions);
@@ -27,10 +25,10 @@ export interface IRegisterCredentials {
   passwordConfirm: string;
 }
 
-export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
-
+export const registerUser = async (
+  registerPayload: IRegisterCredentials
+): Promise<any> => {
   try {
-
     const response = await axios.post(
       "http://localhost:5299/api/auth/register",
       registerPayload
@@ -39,14 +37,10 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
     const data = await response.data;
 
     return data;
-  } 
-  
-  catch (err: any) {
-
+  } catch (err: any) {
     if (err) {
       throw err;
     }
-    
   }
 };
 
@@ -92,33 +86,25 @@ export interface LoginCredentials {
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
   try {
-
-
-    const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
+    const response = await axios.post(
+      "http://localhost:5299/api/auth/login",
+      loginPayload
+    );
     const data = await response.data;
     return data;
-
-  } 
-  
-  catch (err: any) {
-
+  } catch (err: any) {
     if (err) {
       throw err;
     }
-
   }
 };
 
 export const logout = async (): Promise<any> => {
-
   try {
-    
     const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err: any) {
+  } catch (err: any) {
     if (err) {
       return console.error(err);
     }
@@ -172,10 +158,10 @@ export interface IResetPassword {
   userId: string;
 }
 
-export const resetPassword = async (resetPasswordPayload: IResetPassword): Promise<any> => {
-
+export const resetPassword = async (
+  resetPasswordPayload: IResetPassword
+): Promise<any> => {
   try {
-
     const response = await axios.post(
       "http://localhost:5299/api/auth/reset-password",
       resetPasswordPayload
@@ -183,9 +169,7 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err) {
+  } catch (err) {
     if (err) {
       return console.error(err);
     }
@@ -196,9 +180,7 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
 export const getUser = async (): Promise<any> => {
   try {
-
     const response = await axios.get("http://localhost:5299/api/auth/me", {
-      
       headers: {
         Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
           cookies.get(COOKIE_NAME_USER)._id
@@ -208,10 +190,7 @@ export const getUser = async (): Promise<any> => {
 
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err: any) {
-
+  } catch (err: any) {
     if (err) {
       throw err;
     }
