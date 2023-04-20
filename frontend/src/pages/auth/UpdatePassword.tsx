@@ -65,7 +65,7 @@ const UpdatePassword: React.FC = () => {
           column="lg"
           style={{
             marginTop: "15px",
-            marginBottom: "15px",
+            marginBottom: "5px",
             textAlign: "center",
           }}
         >

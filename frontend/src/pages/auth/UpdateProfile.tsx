@@ -43,10 +43,7 @@ const UpdateProfile = () => {
 
     setError(null);
     setSuccess(
-      `Succesfully updated your ${(details: string) =>
-        updatedDetails.map((item: string) =>
-          details.concat(item, ", ")
-        )}redirecting now...`
+      `Successfully updated your ${updatedDetails.join(", ")}redirecting now...`
     );
     setTimeout(() => {
       navigate("/");
@@ -61,7 +58,7 @@ const UpdateProfile = () => {
         const response = await updateProfile(formData);
 
         if (response.success) {
-          setShowConfirm(false);
+          changeVis(); // Dismiss the modal
           handleRedirect();
         }
       } catch (error) {
@@ -155,16 +152,12 @@ const UpdateProfile = () => {
             )}
             {user.role !== "User" && <option value="User">User</option>}
           </select>
-          <Button
-            className="w-100"
-            style={{ bottom: "0" }}
-            onClick={handleSubmit(onSubmit)}
-          >
+          <Button className="w-100" onClick={handleSubmit(onSubmit)}>
             Update Profile
           </Button>
         </Form>
         {showConfirm && (
-          <Modal show onHide={changeVis} centered>
+          <Modal show={showConfirm} onHide={changeVis} centered>
             <Modal.Header>
               <Container>
                 <Modal.Title> Confirm your selection</Modal.Title>
