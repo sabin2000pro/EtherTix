@@ -198,13 +198,13 @@ export const getUser = async (): Promise<any> => {
 };
 
 export interface UpdateProfileCredentials {
-  email: string;
-  username: string;
-  role: string;
+  email?: string;
+  username?: string;
+  role?: string;
 }
 
 export const updateProfile = async (
-  updateProfilePayload: any
+  updateProfilePayload: UpdateProfileCredentials
 ): Promise<any> => {
   try {
     const response = await axios.put(

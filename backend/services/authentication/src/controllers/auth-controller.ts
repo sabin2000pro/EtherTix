@@ -827,22 +827,36 @@ export const updateUserProfile = async (
   try {
     const userId = request.headers.authorization.split(" ")[2];
 
-    const fieldsToUpdate = {
-      email: request.body.email,
-      username: request.body.username,
-      role: request.body.role,
-    };
+    const { email, username, role } = request.body;
+
+    const updateData: any = {};
+
+    if (email) {
+      updateData.email = email;
+    }
+
+    if (username) {
+      updateData.username = username;
+    }
+
+    if (role) {
+      updateData.role = role;
+    }
 
     const updatedUserProfile = await User.findByIdAndUpdate(
       userId,
-      fieldsToUpdate,
-      { new: true, runValidators: true }
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
     );
+
     await updatedUserProfile.save();
 
     return response
       .status(StatusCodes.OK)
-      .json({ success: true, message: "Update User Password Here" });
+      .json({ success: true, message: "User profile updated" });
   } catch (error) {
     if (error) {
       return response
