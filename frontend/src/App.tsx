@@ -25,7 +25,7 @@ const App: React.FC = () => {
 
   return (
     <>
-    
+
       <NavBar
         onLoginClicked={() => setShowLoginModal(true)}
         onSignUpClicked={() => setShowSignUpModal(true)}
@@ -42,20 +42,13 @@ const App: React.FC = () => {
 
         <Routes>
 
-          <Route
-            path="/reset-password/:resetToken/:userId"
-            element={<ResetPassword onDismiss={() => navigate("/")} />}
+          <Route path = "/reset-password/:resetToken/:userId" element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
-          <Route
-            path="/"
-            element={<Home onSignUpClicked={() => setShowSignUpModal(true)} />}
-          />
+
+          <Route path="/" element={<Home onSignUpClicked={() => setShowSignUpModal(true)} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          <Route
-            path="/reset-password"
-            element={<ResetPassword onDismiss={() => navigate("/")} />}
-          />
+          <Route path="/reset-password" element={<ResetPassword onDismiss={() => navigate("/")} />} />
 
           <Route path = "/mfa" element={<MfaInput />} />
           <Route path = "/verify-email" element={<EmailVerification />} />
@@ -72,9 +65,11 @@ const App: React.FC = () => {
         </Routes>
 
         <Footer />
+
       </Container>
 
       {showSignUpModal && ( <Register onDismiss={() => setShowSignUpModal(false)}
+      
           onSignUpSuccessful={() => {
             setShowSignUpModal(false);
           }}
@@ -82,6 +77,7 @@ const App: React.FC = () => {
       )}
 
       {showLoginModal && (
+
         <Login
           onDismiss={() => setShowLoginModal(false)}
           onLoginSuccessful={() => {
@@ -89,7 +85,9 @@ const App: React.FC = () => {
           }}
         />
       )}
+
     </>
+
   );
 };
 
