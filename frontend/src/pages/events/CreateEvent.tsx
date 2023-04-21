@@ -1,6 +1,9 @@
 import React from 'react'
+import { useDispatch, useSelector} from 'react-redux'
 
-const CreateEvent: React.FC = (props) => {
+const CreateEvent: React.FC = () => {
+  const dispatch = useDispatch();
+
   return (
     <>
 
