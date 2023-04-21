@@ -985,35 +985,16 @@ export const fetchAllUsers = asyncHandler(
   }
 );
 
-export const fetchUserByID = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
-    try {
+export const fetchUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
       const userId = request.params.userId;
       const user = await User.findById(userId);
 
       if (!userId) {
-        return next(
-          new ErrorResponse(
-            "User ID not found. Please check your query params",
-            StatusCodes.NOT_FOUND
-          )
-        );
+        return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
       }
 
       return response.status(StatusCodes.OK).json({ success: true, user });
-    } catch (error: any) {
-      if (error) {
-        return response
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ success: false, message: error.message, stack: error.stack });
-      }
-    }
-  }
-);
+})
 
 export const createNewUser = asyncHandler (async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
       const body = request.body;
@@ -1114,6 +1095,7 @@ export const unlockUserAccount = asyncHandler(async (request: any, response: any
     } 
     
     catch (error: any) {
+      
       if (error) {
         return response
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
