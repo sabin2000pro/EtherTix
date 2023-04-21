@@ -27,11 +27,28 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
         required: [true, "Please specify the total price for this booking"]
     },
 
+    title: {
+        type: String,
+        default: "",
+        required: [true, "Please specify your title"],
+        enum: ["Mr", "Mrs", "Miss"]
+    },
+
     guests: {
         type: Number,
         default: 0,
         required: [true, "Please specify how many guests are part of this booking"]
      },
+
+    phoneNumber: {
+        type: String,
+        required: [true, "Please specify your phone number belonging to this booking"]
+    },
+
+    bookingDate: {
+        type: Date,
+        default: Date.now
+    },
 
     createdAt: {
         type: Date,
