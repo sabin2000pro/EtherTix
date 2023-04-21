@@ -144,6 +144,13 @@ services:
     volumes:
         - /app/node_modules
         - ../backend/services/discount:/app
+
+  bookings-service:
+    container_name: ethertix-bookings-service
+    image: sabin2000/ethertix-bookings-service
+
+    build:
+      context: ../backend/services/bookings-service
 volumes:
   mongodb_data_volume:
 
