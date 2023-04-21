@@ -18,11 +18,9 @@ export interface LoginCredentials {
 }
 
 const defaultOptions = {
-
   headers: {
     "Content-Type": "application/json",
   },
- 
 };
 
 let axiosInstance = axios.create(defaultOptions);
@@ -34,10 +32,10 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
 
 });
 
-export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
-
+export const registerUser = async (
+  registerPayload: IRegisterCredentials
+): Promise<any> => {
   try {
-
     const response = await axios.post(
       "http://localhost:5299/api/auth/register",
       registerPayload
@@ -46,14 +44,10 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
     const data = await response.data;
 
     return data;
-  } 
-  
-  catch (err: any) {
-
+  } catch (err: any) {
     if (err) {
       throw err;
     }
-    
   }
 };
 
@@ -96,35 +90,40 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
+<<<<<<< HEAD
 
   try {
 
     const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
+=======
+  try {
+    const response = await axios.post(
+      "http://localhost:5299/api/auth/login",
+      loginPayload
+    );
+>>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
     const data = await response.data;
     return data;
-
-  } 
-  
-  catch (err: any) {
-
+  } catch (err: any) {
     if (err) {
       throw err;
     }
-
   }
 };
 
 export const logout = async (): Promise<any> => {
-
   try {
-    
     const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
+<<<<<<< HEAD
   } 
   
   catch (err: any) {
 
+=======
+  } catch (err: any) {
+>>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
     if (err) {
       return console.error(err);
     }
@@ -185,10 +184,10 @@ export interface IResetPassword {
   userId: string;
 }
 
-export const resetPassword = async (resetPasswordPayload: IResetPassword): Promise<any> => {
-
+export const resetPassword = async (
+  resetPasswordPayload: IResetPassword
+): Promise<any> => {
   try {
-
     const response = await axios.post(
       "http://localhost:5299/api/auth/reset-password",
       resetPasswordPayload
@@ -196,9 +195,7 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err) {
+  } catch (err) {
     if (err) {
       return console.error(err);
     }
@@ -209,9 +206,7 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
 export const getUser = async (): Promise<any> => {
   try {
-
     const response = await axios.get("http://localhost:5299/api/auth/me", {
-      
       headers: {
         Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
           cookies.get(COOKIE_NAME_USER)._id
@@ -221,10 +216,7 @@ export const getUser = async (): Promise<any> => {
 
     const data = await response.data;
     return data;
-  } 
-  
-  catch (err: any) {
-
+  } catch (err: any) {
     if (err) {
       throw err;
     }
@@ -242,7 +234,7 @@ export const updateProfile = async (
 ): Promise<any> => {
   try {
     const response = await axios.put(
-      "http://localhost:localhost:5299/api/auth/update-profile",
+      "http://localhost:5299/api/auth/update-profile",
       updateProfilePayload,
       {
         headers: {
@@ -263,14 +255,15 @@ export const updateProfile = async (
 export interface UpdatePasswordCredentials {
   currentPassword: string;
   newPassword: string;
+  passwordConfirm: string;
 }
 
 export const updatePassword = async (
-  updatePasswordPayload: any
+  updatePasswordPayload: UpdatePasswordCredentials
 ): Promise<any> => {
   try {
     const response = await axios.put(
-      "http://localhost:localhost:5299/api/auth/update-password",
+      "http://localhost:5299/api/auth/update-password",
       updatePasswordPayload,
       {
         headers: {
@@ -280,7 +273,7 @@ export const updatePassword = async (
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error) {
       throw error;

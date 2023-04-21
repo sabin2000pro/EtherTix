@@ -2,7 +2,7 @@ import { ticketsReducer, singleTicketReducer } from './reducers/ticket-reducers'
 import {configureStore} from '@reduxjs/toolkit'
 import { cartReducers } from 'reducers/cart-reducers'
 import { eventsReducer, singleEventReducer } from 'reducers/event-reducers'
-import { authReducer } from 'reducers/auth-reducer'
+import authReducer from "./auth/store"
 
 // Global store
 export const store = configureStore({

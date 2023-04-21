@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
-import {Button,Container, Row , Col, Alert, Modal,} from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { Button, Container, Row, Col, Alert, Modal } from "react-bootstrap";
 import { getUser } from "api/auth/auth-api";
 import * as blockchain from "context/Web3Context";
 
@@ -15,18 +14,16 @@ interface UserProfileData {
 }
 
 const UserProfile: React.FC = () => {
-  const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfileData | null>(null);
-  const [showEditModal, setShowEditModal] = useState<boolean | undefined>(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [balance, setBalance] = useState(0);
   const [address, setAddress] = useState("");
 
   const { connectMetaMaskWallet } = useContext(blockchain.Web3Context);
 
   const handleConnect = async () => {
-
     const ethAccount = await connectMetaMaskWallet(); // Invoke function to connect to the meta mask wallet account
     const currMetamaskAccount = ethAccount.currentAccount[0];
 
@@ -34,22 +31,17 @@ const UserProfile: React.FC = () => {
       setBalance(parseFloat(ethAccount.convertedBalance));
       setAddress(currMetamaskAccount);
     }
-
-    
   };
 
   handleConnect();
 
   const fetchUserId = async () => {
-
     if (user === null) {
-
       try {
-
         const response = await getUser();
-        
-        if(!response.data) {
-           throw new Error(`No user found`);
+
+        if (!response.success) {
+          throw new Error(`No user found`);
         }
 
         const data: UserProfileData = {
@@ -63,15 +55,11 @@ const UserProfile: React.FC = () => {
         };
 
         setUser(data);
-      } 
-      
-      catch (error: any) {
-
+      } catch (error: any) {
         if (error) {
           setSuccess(null);
           setError(error.message);
         }
-
       }
     }
   };
@@ -79,45 +67,40 @@ const UserProfile: React.FC = () => {
   fetchUserId();
 
   const handleChange = () => {
-
     if (user !== null) {
-        setShowEditModal(!showEditModal);
-    } 
-    
-    else {
+      setShowEditModal(!showEditModal);
+    } else {
       setSuccess(null);
       setError("You need to be logged in to make any changes");
     }
   };
 
   return (
-
     <Container>
-
       {error && (
-
         <Alert variant="danger" style={{ textAlign: "center" }}>
           {error}
         </Alert>
-
       )}
 
       {success && (
-
-        <Alert variant="success" style = {{ textAlign: "center" }}>
+        <Alert variant="success" style={{ textAlign: "center" }}>
           {success}
         </Alert>
-
       )}
 
-
       <Container className="profile-container text-center">
-
-        <Row style = {{ paddingTop: "5px" }}>
-
+        <Row style={{ paddingTop: "5px" }}>
           <Col style={{ textAlign: "right", paddingLeft: "60px" }}>
-
-            <h1 style={{ paddingRight: "87px", textAlign: "left", paddingBottom: "60px"}}>Your Profile</h1>
+            <h1
+              style={{
+                paddingRight: "87px",
+                textAlign: "left",
+                paddingBottom: "60px",
+              }}
+            >
+              Your Profile
+            </h1>
 
             <p>Name: {user?.forename}</p>
             <p>Surname: {user?.surname}</p>
@@ -127,14 +110,26 @@ const UserProfile: React.FC = () => {
             <p>ETH balance: {balance}</p>
             <p>Wallet address: {address}</p>
 
-            <Button variant = "primary" onClick = {handleChange} style = {{display: "flex", borderRadius: "7px", marginTop: "40px"}}>
+            <Button
+              variant="primary"
+              onClick={handleChange}
+              style={{
+                display: "flex",
+                borderRadius: "7px",
+                marginTop: "40px",
+              }}
+            >
               Edit Profile
             </Button>
-
           </Col>
 
-          <Col style={{  textAlign: "right", paddingRight: "100px", paddingTop: "30px"}}>
-            
+          <Col
+            style={{
+              textAlign: "right",
+              paddingRight: "100px",
+              paddingTop: "30px",
+            }}
+          >
             <img
               src={`/images/${user?.photo}`}
               alt="user-propic"
@@ -146,22 +141,54 @@ const UserProfile: React.FC = () => {
               }}
             />
           </Col>
-
         </Row>
 
         {showEditModal && (
+          <Modal show onHide={handleChange} centered>
+            <Modal.Header style={{ borderBottom: "2px solid gray" }}>
+              <Container className="text-center">
+                <Modal.Title>Edit User</Modal.Title>
+              </Container>
+            </Modal.Header>
 
-          <Modal show onHide = {handleChange} centered>
-            <Modal.Body></Modal.Body>
+            <Modal.Body>
+              <Container>
+                <Row>
+                  <Col>
+                    <Button href="/update-profile" className="w-100">
+                      Update profile
+                    </Button>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Button
+                      href="/update-password"
+                      className="w-100"
+                      style={{ marginTop: "10px" }}
+                    >
+                      Update password
+                    </Button>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Button
+                      onClick={handleChange}
+                      variant="outline-secondary"
+                      className="w-100"
+                      style={{ marginTop: "50px" }}
+                    >
+                      Cancel
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+            </Modal.Body>
           </Modal>
-
         )}
-
       </Container>
-
     </Container>
-
-
   );
 };
 
