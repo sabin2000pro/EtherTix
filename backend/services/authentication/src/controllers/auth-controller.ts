@@ -1083,12 +1083,9 @@ export const editUserByID = async (
   }
 };
 
-export const deleteUserByID = async (
-  request: any,
-  response: any,
-  next: NextFunction
-): Promise<any | Response> => {
-  try {
+export const deleteUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+  
+
     if (request.method === "DELETE") {
       const userId = request.params.userId;
 
@@ -1102,18 +1099,13 @@ export const deleteUserByID = async (
       }
 
       await User.findByIdAndDelete(userId);
-      return response
-        .status(StatusCodes.NO_CONTENT)
-        .json({ success: true, message: "User Deleted", data: null });
+      
+      return response.status(StatusCodes.NO_CONTENT).json({ success: true, message: "User Deleted", data: null });
     }
-  } catch (error: any) {
-    if (error) {
-      return response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ success: false, message: error.message, stack: error.stack });
-    }
-  }
-};
+  } 
+
+
+)
 
 export const deleteAllUsers = asyncHandler(async (request: any, response: any,next: NextFunction): Promise<any> => {
 
