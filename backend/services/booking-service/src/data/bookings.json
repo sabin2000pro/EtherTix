@@ -3,16 +3,16 @@
       "_id": "5d7a514b5d2c12c8990be010",
       "userId": "5d7a514b5d2c12c7449be048",
       "eventId": "5d713995b721c3bb38c1f5d0",
-      "ticketIds": ["5d7a514b5d2c12c7449be120", "5d7a514b5d2c12c7449be121"],
+      "ticketIds": ["5d7a514b5d2c12c7449be120"],
       "totalPrice": 0.0075
     },
 
     {
       "_id": "235d7a514b5d2c12c8990be011",
-      "eventId": "567",
-      "userId": "890",
-      "ticketIds": ["333"],
-      "totalPrice": 5
+      "eventId": "5d713995b721c3bb38c1f5d1",
+      "userId": "5d7a514b5d2c12c7449be047",
+      "ticketIds": ["5d7a514b5d2c12c7449be125"],
+      "totalPrice": 0.0045
     },
 
     {
