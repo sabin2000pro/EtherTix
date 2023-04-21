@@ -4,22 +4,30 @@ import { CartItem } from "models/cart";
 import * as stor from "../auth/store";
 import axios from "axios";
 
-const CartPage = () => {
+const CartPage: React.FC = () => {
+
   const dispatch = useDispatch();
   const [ethPrice, setEthPrice] = useState<number>(0);
   const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
 
   useEffect(() => {
+
     const fetchEthPrice = async () => {
       try {
+
         const response = await axios.get(
           "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
         );
+        
         setEthPrice(response.data.ethereum.usd);
-      } catch (error) {
+      }
+      
+      catch (error) {
         console.error(error);
       }
     };
+
+
     fetchEthPrice();
   }, []);
 
@@ -40,8 +48,10 @@ const CartPage = () => {
             <span>Current ETH Price in USD:</span> ${ethPrice.toFixed(2)}
           </div>
           <div className="cart">
+
             <h2 className="cart__heading">Your Cart</h2>
             {cart.length === 0 ? (
+
               <p>Your cart is empty</p>
             ) : (
               <>
