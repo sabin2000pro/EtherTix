@@ -150,19 +150,14 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     // Check for missing OTP
 
     if (!OTP) {
-      return next(new ErrorResponse("OTP not found. Please check your entry",
-          StatusCodes.NOT_FOUND
-        )
-      );
+      return next(new ErrorResponse("OTP not found. Please check your entry", StatusCodes.BAD_REQUEST));
     }
 
     if (!user) {
-      return next(
-        new ErrorResponse(`No user found with that ID`, StatusCodes.BAD_REQUEST)
-      );
+      return next(new ErrorResponse(`No user found with that ID`, StatusCodes.BAD_REQUEST));
     }
 
-    // If the user is already verified
+  
     if (user.isVerified) {
       return next(
         new ErrorResponse(
