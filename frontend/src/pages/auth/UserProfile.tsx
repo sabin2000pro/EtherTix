@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Button, Container, Row, Col, Alert, Modal } from "react-bootstrap";
-import { getUser } from "api/auth/auth-api";
 import * as blockchain from "context/Web3Context";
 import { useSelector } from "react-redux";
 import { User } from "models/user";
@@ -109,7 +108,7 @@ const UserProfile: React.FC = () => {
           <Modal show onHide={handleChange} centered>
             <Modal.Header style={{ borderBottom: "2px solid gray" }}>
               <Container className="text-center">
-                <Modal.Title>Edit User</Modal.Title>
+                <Modal.Title>Edit Your Profile</Modal.Title>
               </Container>
             </Modal.Header>
 

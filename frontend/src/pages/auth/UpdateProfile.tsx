@@ -4,12 +4,11 @@ import { updateProfile, UpdateProfileCredentials } from "api/auth/auth-api";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import TextInputField from "components/form/TextInputField";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { User } from "models/user";
 
 const UpdateProfile = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [formData, setFormData] = useState<UpdateProfileCredentials | null>(
@@ -43,11 +42,13 @@ const UpdateProfile = () => {
 
     setError(null);
     setSuccess(
-      `Successfully updated your ${updatedDetails.join(", ")}redirecting now...`
+      `Successfully updated your ${updatedDetails.join(
+        ", "
+      )}, redirecting now...`
     );
     setTimeout(() => {
       navigate("/");
-    }, 2500);
+    }, 3500);
   };
 
   const handleModalSubmit = async () => {
@@ -57,8 +58,9 @@ const UpdateProfile = () => {
       try {
         const response = await updateProfile(formData);
 
+        setShowConfirm(false);
+
         if (response.success) {
-          changeVis(); // Dismiss the modal
           handleRedirect();
         }
       } catch (error) {
@@ -86,10 +88,6 @@ const UpdateProfile = () => {
       }
       return null;
     });
-  };
-
-  const changeVis = () => {
-    setShowConfirm(!showConfirm);
   };
 
   return (
@@ -157,7 +155,11 @@ const UpdateProfile = () => {
           </Button>
         </Form>
         {showConfirm && (
-          <Modal show={showConfirm} onHide={changeVis} centered>
+          <Modal
+            show={showConfirm}
+            onHide={() => setShowConfirm(false)}
+            centered
+          >
             <Modal.Header>
               <Container>
                 <Modal.Title> Confirm your selection</Modal.Title>
@@ -165,16 +167,6 @@ const UpdateProfile = () => {
             </Modal.Header>
 
             <Modal.Body>
-              {error && (
-                <Alert variant="danger" style={{ textAlign: "center" }}>
-                  {error}
-                </Alert>
-              )}
-              {success && (
-                <Alert variant="success" style={{ textAlign: "center" }}>
-                  {success}
-                </Alert>
-              )}
               <Container>
                 {formData?.email && <p>New Email: {formData?.email}</p>}
                 {formData?.username && (

@@ -34,6 +34,8 @@ const App: React.FC = () => {
         const response = await getUser();
         if (response.success) {
           dispatch(stor.login(response.user));
+
+          cookies.set(stor.COOKIE_NAME_USER, response.user);
         }
       } catch (error) {
         console.error(error);

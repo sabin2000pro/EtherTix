@@ -218,7 +218,7 @@ export const updateProfile = async (
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error) {
       throw error;
@@ -268,7 +268,7 @@ export const uploadProfilePic = async (pic: any) => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error) {
       throw error;
