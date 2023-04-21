@@ -25,6 +25,7 @@ const App: React.FC = () => {
 
   return (
     <>
+    
       <NavBar
         onLoginClicked={() => setShowLoginModal(true)}
         onSignUpClicked={() => setShowSignUpModal(true)}
@@ -38,7 +39,9 @@ const App: React.FC = () => {
           minHeight: "100vh",
         }}
       >
+
         <Routes>
+
           <Route
             path="/reset-password/:resetToken/:userId"
             element={<ResetPassword onDismiss={() => navigate("/")} />}
@@ -48,31 +51,30 @@ const App: React.FC = () => {
             element={<Home onSignUpClicked={() => setShowSignUpModal(true)} />}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
           <Route
             path="/reset-password"
             element={<ResetPassword onDismiss={() => navigate("/")} />}
           />
 
-          <Route path="/mfa" element={<MfaInput />} />
-          <Route path="/verify-email" element={<EmailVerification />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
-          <Route path="/update-profile" element={<UpdateProfile />} />
-          <Route path="/my-cart" element={<CartPage />} />
+          <Route path = "/mfa" element={<MfaInput />} />
+          <Route path = "/verify-email" element={<EmailVerification />} />
+          <Route path = "/update-password" element={<UpdatePassword />} />
+          <Route path = "/update-profile" element={<UpdateProfile />} />
+          <Route path = "/my-cart" element={<CartPage />} />
+          <Route path = "/my-profile" element={<UserProfile />} />
 
-          <Route path="/my-profile" element={<UserProfile />} />
+          <Route path = "/events" element={<EventsList />} />
+          <Route path = "/events/:id" element={<SingleEvent />} />
 
-          <Route path="/events" element={<EventsList />} />
-          <Route path="/events/:id" element={<SingleEvent />} />
+          <Route path ="*" element = { <NotFound />} />
 
-          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <Footer />
       </Container>
 
-      {showSignUpModal && (
-        <Register
-          onDismiss={() => setShowSignUpModal(false)}
+      {showSignUpModal && ( <Register onDismiss={() => setShowSignUpModal(false)}
           onSignUpSuccessful={() => {
             setShowSignUpModal(false);
           }}
