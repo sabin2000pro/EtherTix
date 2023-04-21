@@ -638,29 +638,26 @@ export const resetPassword = asyncHandler(
   }
 );
 
-export const getCurrentUser = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
+export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
     try {
+
       const userId = request.headers.authorization.split(" ")[2];
       const user = await User.findById(userId);
       return response.status(StatusCodes.OK).json({ success: true, user });
-    } catch (error: any) {
+
+    } 
+    
+    catch (error: any) {
+
       if (error) {
         return next(error);
       }
+
     }
   }
 );
 
-export const sendResetPasswordTokenStatus = async (
-  request: any,
-  response: any,
-  next: NextFunction
-): Promise<any> => {
+export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
   return response.status(StatusCodes.OK).json({ isValid: true });
 };
 
