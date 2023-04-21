@@ -159,31 +159,19 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 
   
     if (user.isVerified) {
-      return next(
-        new ErrorResponse(
-          `User account is already verified`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+
+      return next(new ErrorResponse(`User account is already verified`, StatusCodes.BAD_REQUEST));
     }
 
-    if (user.isActive) {
-      // If the user account is already active before verifying their e-mail address, send back error
-      return next(
-        new ErrorResponse(
-          `User account is already active`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+    if (user.isActive) {  // If the user account is already active before verifying their e-mail address, send back error
+      return next( new ErrorResponse(`User account is already active`, StatusCodes.BAD_REQUEST));
     }
 
     const token = await EmailVerification.findOne({ owner: userId }); // Find a verification token
 
     if (!token) {
-      return next(
-        new ErrorResponse(
-          `OTP Verification token is not found. Please try again`,
-          StatusCodes.BAD_REQUEST
+
+      return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST
         )
       );
     }
