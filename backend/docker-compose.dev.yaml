@@ -107,7 +107,7 @@ services:
         - /app/node_modules
         - ../backend/services/venues:/app
   
-  tickets-service: ## Tickets Service Configuration
+  tickets: ## Tickets Service Configuration
     container_name: ethertix-tickets-service
     image: sabin2000/ethertix-tickets-service
 
