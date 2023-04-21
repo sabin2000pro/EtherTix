@@ -1115,27 +1115,16 @@ export const deleteUserByID = async (
   }
 };
 
-export const deleteAllUsers = async (
-  request: any,
-  response: any,
-  next: NextFunction
-): Promise<any> => {
-  try {
+export const deleteAllUsers = asyncHandler(async (request: any, response: any,next: NextFunction): Promise<any> => {
+
     if (request.method === "DELETE") {
       await User.deleteMany();
+      return response.status(StatusCodes.NO_CONTENT).json({ success: true, data: {}, message: "Users deleted" });
+    }
 
-      return response
-        .status(StatusCodes.NO_CONTENT)
-        .json({ success: true, data: {} });
-    }
-  } catch (error: any) {
-    if (error) {
-      return response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ success: false, message: error.message, stack: error.stack });
-    }
-  }
-};
+  } 
+
+)
 
 export const lockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
     const userId = request.user.id;
