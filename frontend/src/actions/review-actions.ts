@@ -11,3 +11,7 @@ export const fetchReviewByID = (id: string) => async (dispatch: Dispatch): Promi
 export const createReview = (...data: any) => async (dispatch: Dispatch): Promise<void> => {
 
 }
+
+export const editReviewByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
+    
+}
