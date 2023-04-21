@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 
 export interface ConnectWalletProps {
    checkWalletConnected: () => Promise<any>
@@ -11,6 +11,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnecte
   return (
 
     <>
+
        <h2>Connect Wallet</h2>
     </>
 

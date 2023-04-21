@@ -1,4 +1,4 @@
-import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL, EDIT_TICKET_REQUEST, EDIT_TICKET_FAIL, EDIT_TICKET_SUCCESS } from './../constants/ticket-constants';
+import { FETCH_ALL_TICKETS_REQUEST, FETCH_ALL_TICKETS_SUCCESS, FETCH_ALL_TICKETS_FAIL, FETCH_SINGLE_TICKET_REQUEST, FETCH_SINGLE_TICKET_SUCCESS, FETCH_SINGLE_TICKET_FAIL, CREATE_TICKET_REQUEST, CREATE_TICKET_SUCCESS, CREATE_TICKET_FAIL, EDIT_TICKET_REQUEST, EDIT_TICKET_FAIL, EDIT_TICKET_SUCCESS, DELETE_TICKET_REQUEST, DELETE_TICKET_FAIL } from './../constants/ticket-constants';
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
@@ -87,11 +87,19 @@ export const editTicketDetails = (id: string, name: string, ticketClass: string,
 export const deleteTicketByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
 
     try {
-        dispatch({type: DELETE_TICK})
+
+        if(!id) {
+            throw new Error(`No id found`)
+        }
+        
+        dispatch({type: DELETE_TICKET_REQUEST});
     }
 
-     catch(error) {
+     catch(error: any) {
 
+        if(error) {
+            dispatch({type: DELETE_TICKET_FAIL, payload: error.response.data.message});
+        }
      }
 
 }
