@@ -62,6 +62,7 @@ export const removeAllData = async (): Promise<any> => {
         await Event.remove();
         await Ticket.remove();
         await Venue.remove();
+        await Booking.remove();
 
         console.log(`All the services data removed from the schemas.`);
 
