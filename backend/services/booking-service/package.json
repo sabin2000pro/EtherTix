@@ -5,8 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start:booking-service": "BOOKINGS_SERVICE_DEV_MODE=development nodemon"
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "dev": "nodemon dist/index.js",
+    "start:booking-service": "BOOKINGS_SERVICE_DEV_MODE=development nodemon dist/index.js"
   },
+
   "keywords": [],
   "author": "Sabin Constantin Lungu",
   "license": "ISC",

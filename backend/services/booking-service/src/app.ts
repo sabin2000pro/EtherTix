@@ -3,6 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 import { NextFunction } from 'express';
 import express from 'express';
 import morgan from 'morgan';
+import { connectBookingSchema } from './database/booking-schema';
+
+connectBookingSchema();
 
 const app: any = express();
 
