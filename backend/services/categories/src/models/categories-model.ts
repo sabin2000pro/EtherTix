@@ -1,26 +1,7 @@
 import mongoose from 'mongoose';
-interface CategoryAttributes {
-    icon: string;
-    categoryType: string;
-    isTrending: boolean;
-    isNew: boolean;
-    event: mongoose.Schema.Types.ObjectId
-}
-interface CategoryDocument extends mongoose.Model<CategoryAttributes> {
-    icon: string;
-    categoryType: string;
-    isTrending: boolean;
-    isNew: boolean;
-
-    event: mongoose.Schema.Types.ObjectId
-}
+import { CategoryDocument } from '../interface/categories-interface';
 
 const CategorySchema = new mongoose.Schema<CategoryDocument>({
-
-    icon: { // Icon for the category
-        type: String,
-        default: ''
-    },
 
     categoryType: {
         type: String,
