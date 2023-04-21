@@ -145,12 +145,12 @@ services:
         - /app/node_modules
         - ../backend/services/discount:/app
 
-  bookings-service:
-    container_name: ethertix-bookings-service
-    image: sabin2000/ethertix-bookings-service
+  booking-service:
+    container_name: ethertix-booking-service
+    image: sabin2000/ethertix-booking-service
 
     build:
-      context: ../backend/services/bookings-service
+      context: ../backend/services/booking-service
       dockerfile: Dockerfile
 
     depends_on:
