@@ -124,42 +124,44 @@ export interface MfaEmailProps {
 }
 
 export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
+
   try {
 
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/send-login-mfa",
-      mfaPayload
-    );
+    const response = await axios.post("http://localhost:5299/api/auth/send-login-mfa", mfaPayload);
     return response.data;
   } 
   
   catch (error) {
+
     if (error) {
       return console.error(error);
     }
+    
   }
+
+
 };
 
 export interface ForgotPCredentials {
   email: string;
 }
 
-export const forgotPassword = async (
-  forgotPasswordPayload: ForgotPCredentials
-): Promise<any> => {
+export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials): Promise<any> => {
   try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/forgot-password",
-      forgotPasswordPayload
-    );
+
+    const response = await axios.post("http://localhost:5299/api/auth/forgot-password", forgotPasswordPayload);
     const data = await response.data;
     return data;
+
   } 
   
   catch (err: any) {
+
     if (err) {
       return console.error(err);
     }
+
+
   }
 };
 
@@ -181,9 +183,11 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
   } 
   
   catch (err) {
+
     if (err) {
       return console.error(err);
     }
+
   }
 };
 
