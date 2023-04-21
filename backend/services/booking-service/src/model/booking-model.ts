@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IBookingDocument } from '../types/booking-types';
+import { IBookingDocument } from '../interfaces/booking-interface';
 
 const BookingSchema = new mongoose.Schema<IBookingDocument>({
 
@@ -19,7 +19,13 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Ticket",
         required: [true, "Please specify the Ticket IDs that this booking belongs to"]
-    }]
+    }],
+
+    totalPrice: {
+        type: Number,
+        default: 0.0,
+        required: [true, "Please specify the total price for this booking"]
+    }
 
 }, {timestamps: true })
 
