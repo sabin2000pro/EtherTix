@@ -936,32 +936,22 @@ export const uploadUserProfilePicture = asyncHandler(
 
         // Validate File size. Check if file size exceeds the maximum size
         if (file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-          return next(
-            new ErrorResponse(
-              "File Size Too Large - Please check file size again",
-              StatusCodes.BAD_REQUEST
-            )
+          return next( new ErrorResponse("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST)
+
           );
         }
 
-        // Create custom filename
         file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
 
-        file.mv(
-          `${process.env.FILE_UPLOAD_PATH}/${file.name}`,
-          async (error: any) => {
+        file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error: any) => {
+
             if (error) {
-              return next(
-                new ErrorResponse(
-                  "Problem with file upload",
-                  StatusCodes.INTERNAL_SERVER_ERROR
-                )
-              );
+               return next( new ErrorResponse("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
             }
 
             await User.findByIdAndUpdate(request.params.id, {
               photo: fileName,
-            }); // Update the NFT by its ID and add the respective file
+            });
             return response.status(StatusCodes.OK).json({
               success: true,
               message: "User Avatar Uploaded",
