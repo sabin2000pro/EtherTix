@@ -16,16 +16,12 @@ const NavBarLoggedOutView = ({ onSignUpClicked, onLoginClicked}: NavBarLoggedOut
         Register
       </Button>
 
-    
-      <Button
-        onClick={onLoginClicked}
-        style={{ backgroundColor: "transparent", border: "none" }}
-      >
+      <Button onClick={onLoginClicked} style={{ backgroundColor: "transparent", border: "none" }}>
         Log In
       </Button>
 
-
     </>
+    
   );
 };
 

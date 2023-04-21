@@ -16,11 +16,10 @@ interface NavBarProps {
 const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
-
   const {user} = useSelector((state: any) => state.auth as User);
   let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
-
   const cart: CartItem[] = useSelector((state: any) => state.cart);
+
   console.log(`Your Cart : `, cart);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,16 +45,14 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
 
         <Nav className="justify-content-center">
 
-          <Search
-            searchTerm={searchTerm as any}
-            handleSearch={handleSearch as any}
-            searchResults={searchResults as any}
-          />
+          <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />
         </Nav>
 
         <Nav className="justify-content-right">
           
           <ul>
+
+
             <li style={{ display: "inline-flex" }}>
 
 
@@ -76,7 +73,6 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
               >
                 Events 
               </Button>
-
 
               <Button href="/my-cart" style={{ backgroundColor: "transparent", border: "none" }}>
                  {/* Cart <Badge bg = "danger">{cart && cart.length as any}</Badge> */}

@@ -1,15 +1,16 @@
 {
   "name": "tickets",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
+  "description": "Tickets Microservice Dependencies",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "prestart": "npm run build",
-    "dev": "NODE_ENV=nodemon dist/index.js",
+    "dev": "TICKETS_DEV_MODE=development nodemon dist/src/index.js",
     "start-tickets:service": "npm run dev"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

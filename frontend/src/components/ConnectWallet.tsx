@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from 'react'
 
-type ConnectWalletProps = {
+export interface ConnectWalletProps {
    checkWalletConnected: () => Promise<any>
    connectWallet: () => Promise<any>
    walletConnected: () => boolean;
 }
 
-const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnected, connectWallet, walletConnected}) => {
+export const ConnectWallet: React.FC<ConnectWalletProps> = ({checkWalletConnected, connectWallet, walletConnected}: ConnectWalletProps) => {
 
   return (
 
     <>
-       <h2>Connect Wallet Component</h2>
+       <h2>Connect Wallet</h2>
     </>
 
   )
 }
 
-export default ConnectWallet

@@ -9,4 +9,4 @@ RUN npm install --silent
 COPY . .
 EXPOSE 5303
 RUN npm run build
-CMD [ "npm", "run", "start:server" ]
+CMD [ "npm", "run", "start-tickets:service" ]

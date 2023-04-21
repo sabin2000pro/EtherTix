@@ -60,6 +60,7 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
   const containerRef = useRef(null);
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+
     const container = event.currentTarget;
     const scrollPosition = container.scrollLeft;
 
@@ -68,17 +69,25 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
       left: scrollPosition + event.deltaY,
       behavior: "smooth",
     });
+
+
   };
 
   return (
     <>
       <section className="hero-section">
+
         <div className="hero-container">
           <div className="hero-text">
+
+
             <h1 className="hero-title">Ether Tix</h1>
+
             <p className="hero-subtitle">
-              Buy and sell tickets for your favourite events using Ethereum.
+
+              Buy and sell tickets for your favourite events on the Ethereum Blockchain
             </p>
+
             <button className="hero-cta" onClick={onSignUpClicked}>
               Get Started, Register here!
             </button>
@@ -87,6 +96,8 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
           <div className="homepage-image">
             <img src="images\threesisters.jpg" alt="display_image" />
           </div>
+
+          
         </div>
       </section>
 

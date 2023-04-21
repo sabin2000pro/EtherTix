@@ -1,18 +1,13 @@
 import React, { useState, useEffect} from "react";
-import { Container, Row, Button } from "react-bootstrap";
-import { useNavigate} from "react-router-dom";
+import { Container, Row, Button, Card} from "react-bootstrap";
+import {Link} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
 import { CartItem } from "models/cart";
-import { Card } from "react-bootstrap";
 import axios from 'axios';
-import { Link } from "react-router-dom";
 
 const EventList: React.FC = () => {
     const dispatch = useDispatch();
-    const [selectedTicket, setSelectedTicket] = useState<CartItem | null>(null);
-    const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
-
     const [ethPrice, setEthPrice] = useState<number>(0);
   
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -69,7 +64,7 @@ const EventList: React.FC = () => {
 
     return (
 
-      <div className="event-list-container">
+      <div className = "event-list-container">
 
          <span>Current ETH Price:</span> ${ethPrice.toFixed(2)}
 
@@ -94,10 +89,8 @@ const EventList: React.FC = () => {
                     <Card.Title>{event.name}</Card.Title>
 
                     <Card.Text>{event.description}</Card.Text>
-
-                    <Link to = {`/event-details/${event._id}`}>View Event</Link>
-                    
-                  </Card.Body>
+                        <Link to = {`/event-details/${event._id}`}>View Event</Link>
+                    </Card.Body>
 
                 </Card>
               ))

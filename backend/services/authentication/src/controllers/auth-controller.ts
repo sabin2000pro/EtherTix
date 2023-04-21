@@ -962,11 +962,11 @@ export const getAllUserPremiumAccounts = asyncHandler(
           );
         }
 
-        return response
-          .status(StatusCodes.OK)
-          .json({ success: true, data: premiumUsers });
+        return response.status(StatusCodes.OK).json({ success: true, data: premiumUsers });
       }
-    } catch (error: any) {
+    } 
+    
+    catch (error: any) {
       if (error) {
         return response
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -1188,16 +1188,14 @@ export const deleteAllUsers = async (
   }
 };
 
-export const lockUserAccount = async (
-  request: any,
-  response: any,
-  next: NextFunction
-): Promise<any | Response> => {
+export const lockUserAccount = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+
   try {
     const userId = request.user.id;
     const user = await User.findById(userId);
 
     if (!user) {
+
       return next(
         new ErrorResponse(
           "That user is not found not found. Please check your query params",
@@ -1209,7 +1207,9 @@ export const lockUserAccount = async (
     return response
       .status(StatusCodes.OK)
       .json({ success: true, message: "User Account Locked" });
-  } catch (error: any) {
+  } 
+  
+  catch (error: any) {
     if (error) {
       return response
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -1254,9 +1254,7 @@ export const unlockUserAccount = asyncHandler(
   }
 );
 
-export const fetchTotalUsers = asyncHandler(
-  async (
-    request: any,
+export const fetchTotalUsers = asyncHandler(async (request: any,
     response: any,
     next: NextFunction
   ): Promise<any | Response> => {

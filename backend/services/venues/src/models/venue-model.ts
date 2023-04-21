@@ -1,48 +1,6 @@
 import mongoose from "mongoose";
+import { IVenueDocument } from "../types/venue-types";
 
-interface IVenueAttributes {
-    name: string;
-    slug: string;
-    venueCapacity: number;
-    phone: string;
-    ageRestriction: string;
-    openTime: Date,
-    closeTime: Date,
-    hasPublicAccess: boolean;
-    smokingAllowed: boolean;
-    photo: string;
-    createdAt: Date;
-    website: string;
-    location: Object;
-    address: string
-    email: string
-    organiser: mongoose.Schema.Types.ObjectId // Organiser -> Venue Relationship
-    event: mongoose.Schema.Types.ObjectId
-    ticket: mongoose.Schema.Types.ObjectId
-}
-
-interface IVenueDocument extends mongoose.Model<IVenueAttributes> {
-    name: string;
-    slug: string;
-    venue: Object;
-    phone: string;
-    website: string;
-    openTime: Date;
-    email: string;
-    closeTime: Date;
-    hasPublicAccess: boolean;
-    smokingAllowed: boolean;
-    photo: string;
-    createdAt: Date;
-
-    venueCapacity: number;
-    ageRestriction: string;
-    address: string;
-    location: Object;
-    organiser: mongoose.Schema.Types.ObjectId
-    event: mongoose.Schema.Types.ObjectId
-    ticket: mongoose.Schema.Types.ObjectId
-}
 
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
@@ -84,7 +42,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             default: 0
         },
 
-        openTime: { // The opening time of the venue
+        openTime: { 
            type: Date,
            default: Date.now,
            required: [true, "Please specify the date at which the venue opens"]
@@ -143,12 +101,6 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
             default: Date.now
           },
 
-        organiser: { // Event Venue Organiser: One venue at a time can have only one organiser
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: [true, "Please specify the Organiser ID at this Venue"]
-        },
-
         event: { // One venue can have multiple events being hosted at different dates
           type: mongoose.Schema.Types.ObjectId,
           ref: "Event",
@@ -167,12 +119,12 @@ VenueSchema.virtual('events', {
   localField: '_id'
 });
 
-VenueSchema.pre('save', async function(next) { // Geocode the latitude and longitude
-  // Geocode the coordinates
- 
+// Middleware to geocode the address for the venue that the event is being held at.
+
+VenueSchema.pre('save', async function(next) {
+
 })
 
-// Middleware to geocode the address for the venue that the event is being held at.
 
 const Venue = mongoose.model<IVenueDocument>("Venue", VenueSchema);
 export {Venue}

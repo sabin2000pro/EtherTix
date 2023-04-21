@@ -2,6 +2,21 @@ import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 
+export interface IRegisterCredentials {
+  forename: string;
+  surname: string;
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+  mfaToken: string;
+}
+
 const defaultOptions = {
 
   headers: {
@@ -16,16 +31,8 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
   const authToken = localStorage.getItem("token");
   configData.headers.Authorization = authToken ? `Bearer ${authToken}` : ""; // Store the token in the header
   return configData;
-});
 
-export interface IRegisterCredentials {
-  forename: string;
-  surname: string;
-  username: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}
+});
 
 export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
 
@@ -50,49 +57,47 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
   }
 };
 
-export const verifyEmailAddress = async (
-  verificationPayload: any
-): Promise<any> => {
+export const verifyEmailAddress = async (verificationPayload: any): Promise<any> => {
+
   try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/verify-email",
-      verificationPayload
-    );
+
+    const response = await axios.post("http://localhost:5299/api/auth/verify-email", verificationPayload);
     const data = await response.data;
     return data;
-  } catch (err: any) {
+
+  }
+  
+  catch (err: any) {
+
+    if (err) {
+      return console.error(err);
+    }
+
+  }
+};
+
+export const resendEmailVerification = async (resendVerificationPayload: any): Promise<any> => {
+  try {
+
+    const response = await axios.post("http://localhost:5299/api/auth/resend-email-verification", resendVerificationPayload);
+    const data = await response.data;
+
+    return data;
+  } 
+  
+  catch (err: any) {
+
     if (err) {
       return console.error(err);
     }
   }
+
 };
 
-export const resendEmailVerification = async (
-  resendVerificationPayload: any
-): Promise<any> => {
-  try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/resend-email-verification",
-      resendVerificationPayload
-    );
-    const data = await response.data;
-    return data;
-  } catch (err: any) {
-    if (err) {
-      return console.error(err);
-    }
-  }
-};
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-  mfaToken: string;
-}
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
-  try {
 
+  try {
 
     const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
     const data = await response.data;
@@ -119,9 +124,12 @@ export const logout = async (): Promise<any> => {
   } 
   
   catch (err: any) {
+
     if (err) {
       return console.error(err);
     }
+
+
   }
 };
 
@@ -132,12 +140,15 @@ export interface MfaEmailProps {
 
 export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
   try {
+
     const response = await axios.post(
       "http://localhost:5299/api/auth/send-login-mfa",
       mfaPayload
     );
     return response.data;
-  } catch (error) {
+  } 
+  
+  catch (error) {
     if (error) {
       return console.error(error);
     }
@@ -158,7 +169,9 @@ export const forgotPassword = async (
     );
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
     if (err) {
       return console.error(err);
     }

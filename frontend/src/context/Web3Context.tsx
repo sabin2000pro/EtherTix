@@ -3,6 +3,7 @@ import Web3 from "web3";
 import EventNftContract from '../contracts/TicketNFT.json';
 import { ExternalProvider } from "@ethersproject/providers";
 declare global {
+    
   interface Window {
     ethereum?: ExternalProvider;
   }

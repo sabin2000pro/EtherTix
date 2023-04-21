@@ -1,7 +1,6 @@
 import { initialEventState, singleEventState } from './../state/event-state';
 import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, FETCH_ALL_EVENTS_FAIL, FETCH_SINGLE_EVENT_REQUEST, FETCH_SINGLE_EVENT_SUCCESS, FETCH_SINGLE_EVENT_FAILURE, CREATE_NEW_EVENT_REQUEST, CREATE_NEW_EVENT_SUCCESS, CREATE_NEW_EVENT_FAIL, EDIT_EVENT_REQUEST, EDIT_EVENT_SUCCESS, EDIT_EVENT_FAIL, UPLOAD_EVENT_PHOTO_REQUEST, UPLOAD_EVENT_PHOTO_SUCCESS, UPLOAD_EVENT_PHOTO_FAIL } from './../constants/event-constants';
-import { IEventState } from 'types/event-types';
-import { ISingleEventState } from 'types/event-types';
+import { IEventState, ISingleEventState } from 'types/event-types';
 
 export const eventsReducer = (state = initialEventState as IEventState, action: any): IEventState => {
 

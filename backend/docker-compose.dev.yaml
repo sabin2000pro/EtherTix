@@ -56,6 +56,7 @@ services:
       - ../frontend:/app
 
   events-service:
+  
       container_name: ethertix-events-service
       image: sabin2000/ethertix-events-service
       build:
