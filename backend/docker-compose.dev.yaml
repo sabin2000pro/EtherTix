@@ -151,6 +151,18 @@ services:
 
     build:
       context: ../backend/services/bookings-service
+      dockerfile: Dockerfile
+
+    depends_on:
+      - tickets-service
+      - events-service
+
+    ports:
+      - "5050:5050"
+
+    volumes:
+      - /app/node_modules
+      - ../backend/services/booking-service:/app
 volumes:
   mongodb_data_volume:
 

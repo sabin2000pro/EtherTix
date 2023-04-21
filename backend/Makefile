@@ -21,8 +21,8 @@ build-services:
 	- cd services/categories* && npm run build && docker build -t sabin2000/ethertix-categories-service .
 	- cd services/discount* && npm run build && docker build -t sabin2000/ethertix-discount-service .
 	- cd services/api-gateway* && npm run build && docker build -t sabin2000/ethertix-api-gateway-service .
-
-	- docker login
+	- cd services/bookings-service* && npm run build && docker build -t sabin2000/ethertix-bookings-service .
+	
 	- docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.yaml up --build
 
 stop-services:

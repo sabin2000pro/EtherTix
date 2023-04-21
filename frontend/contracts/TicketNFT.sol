@@ -19,8 +19,8 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         uint256 tokenIndex;
     }
 
-    uint256 public totalTokenSupply; // Total supply for the tokens
-    uint256 public initialListingPrice = 0.015 ether; // Initial listing price of the ticket as an NFT to £20GBP
+    uint256 public totalTokenSupply; // Stores the total token supply
+    uint256 public initialListingPrice = 0.015 ether;
     uint256 public maxTokenSupply = 50;
 
     NftToken[] public allMintedTokens;
@@ -29,7 +29,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
     mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint) public tokensPrice;
-    mapping(string => bool) tokenNames; // Store the token names in a mapping between a string and boolean
+    mapping(string => bool) tokenNames;
 
     event NewTokenMinted(uint256 tokenId, string tokenName, string tokenClass, uint tokenPrice, uint256 tokenCapacity, bool isListed, NftToken[] allMintedTokens);
     event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
@@ -53,7 +53,6 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         circulatingTokens[newTokenID] = NftToken(newTokenID, owner, _tokenName, _tokenPrice, _tokenCapacity, _tokenClass, false, allTokensLength);
 
         NftToken storage currMintedToken = circulatingTokens[newTokenID]; // Set the currently minted token to the circulating token ID
-
         currMintedToken.tokenPrice = _tokenPrice;
 
         currMintedToken.isListedForSale = false;
@@ -91,8 +90,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
       return balanceOf(currentNftOwner);
    }
 
-
-    function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
+   function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
        return circulatingTokens[_tokenIndex];
     }
 
@@ -120,7 +118,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
 
 
     function buyNftToken(uint256 tokenId) public payable returns (address) { // Function that allows the ticket buyer to to purchase the NFT Token given the Token ID
-        address tokenBuyer = msg.sender; // Store the token buyer in msg.sender
+        address tokenBuyer = msg.sender; 
         require(tokenOwner[tokenId] != address(0), "The NFT has already been sold");
         require(msg.value == tokensPrice[tokenId], "The value of the msg must be equal to the price of the token");
         require(tokenBuyer.balance >= msg.value, "The token buyer does not have enough funds to buy the token");
@@ -139,7 +137,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         return tokenBuyer;
    }
 
-   function burnNftToken(uint tokenId) public { // Function responsible for burning
+   function burnNftToken(uint tokenId) public {
         address currentOwner = msg.sender;
 
         NftToken storage currentTokenToBurn = circulatingTokens[tokenId];
@@ -154,7 +152,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         circulatingTokens[tokenId].tokenId = 0;
         circulatingTokens[lastMintedTokensIndex].tokenIndex = currentTokenIndex;
 
-        uint newTotalSupply = --totalTokenSupply; // Decrease the total supply after burning the token
+        uint newTotalSupply = --totalTokenSupply;
         emit TokenBurned(tokenId, newTotalSupply);
        
    }
