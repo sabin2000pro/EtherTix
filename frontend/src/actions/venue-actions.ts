@@ -6,5 +6,17 @@ export const fetchAllVenues = (searchKeyword = '') => async (dispatch: Dispatch)
 }
 
 export const fetchVenueByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
+
+}
+
+export const createVenueLocation = (event: string, name: string, email: string, phone: string, ageRestriction: string, venueCapacity: number, openTime: Date, closeTime: Date, hasPublicAccess: boolean, smokingAllowed: boolean, address: string) => async (dispatch: Dispatch): Promise<void> => {
+
+}
+
+export const editVenueDetails = (id: string) => async (dispatch: Dispatch): Promise<void> => {
+
+}
+
+export const deleteVenueByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
     
 }

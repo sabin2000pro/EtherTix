@@ -25,6 +25,7 @@ const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
         phone: { // Phone number for the venue
           type: String,
+          required: [true, "Please specify the phone number for this venue"],
           max: [20, 'Phone number can not be longer than 20 characters'],
           min: [6, "Phone number must have at least 6 characters"]
         },
