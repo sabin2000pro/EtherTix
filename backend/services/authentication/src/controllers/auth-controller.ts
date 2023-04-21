@@ -164,6 +164,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     }
 
     if (user.isActive) {  // If the user account is already active before verifying their e-mail address, send back error
+
       return next( new ErrorResponse(`User account is already active`, StatusCodes.BAD_REQUEST));
     }
 
@@ -179,16 +180,11 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
 
     if (!otpTokensMatch) {
-      return next(
-        new ErrorResponse(
-          `The token you entered does not match the one in the database.`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next(new ErrorResponse(`The token you entered does not match the one in the database.`, StatusCodes.BAD_REQUEST));
     }
 
     if (otpTokensMatch) {
-     ~ // If the OTP Tokens Match
+  
 
       user.isVerified = true; // Set theu ser is Verified field to true
       user.accountActive = true;
@@ -204,7 +200,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
         subject: "E-mail Confirmation Success",
         html: `
                     
-                    <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
+           <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
                     `,
       });
 
