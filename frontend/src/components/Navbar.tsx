@@ -15,14 +15,6 @@ interface NavBarProps {
 
 const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-<<<<<<< HEAD
-  const [searchResults, setSearchResults] = useState<{ name: string; path: string }[]>([]);
-  const {user} = useSelector((state: any) => state.auth as User);
-  let isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
-  const cart: CartItem[] = useSelector((state: any) => state.cart);
-
-  console.log(`Your Cart : `, cart);
-=======
   const [searchResults, setSearchResults] = useState<
     { name: string; path: string }[]
   >([]);
@@ -31,7 +23,6 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);
->>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -55,16 +46,11 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
 
       <Container>
         <Nav className="justify-content-center">
-<<<<<<< HEAD
-
-          <Search searchTerm = {searchTerm as any} handleSearch = {handleSearch as any} searchResults = {searchResults as any} />
-=======
           <Search
             searchTerm={searchTerm as any}
             handleSearch={handleSearch as any}
             searchResults={searchResults as any}
           />
->>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
         </Nav>
 
         <Nav className="justify-content-right">
@@ -90,17 +76,12 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
                 Events
               </Button>
 
-<<<<<<< HEAD
-              <Button href="/my-cart" style={{ backgroundColor: "transparent", border: "none" }}>
-                 {/* Cart <Badge bg = "danger">{cart && cart.length as any}</Badge> */}
-=======
               <Button
                 href="/my-cart"
                 style={{ backgroundColor: "transparent", border: "none" }}
               >
                 Cart{" "}
                 <Badge bg="danger">{cart.length as unknown as string}</Badge>
->>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
               </Button>
             </li>
           </ul>

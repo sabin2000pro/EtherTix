@@ -40,16 +40,14 @@
     "web3": "^1.8.2",
     "yup": "^0.32.11"
   },
-
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "dev": "nodemon build/index.js",
     "eject": "react-scripts eject",
     "pm2:frontend": "NODE_ENV=production pm2 serve build",
     "test": "jest"
   },
-
-  
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -68,8 +66,6 @@
       "last 1 safari version"
     ]
   },
-
-
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
@@ -84,6 +80,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
+    "nodemon": "^2.0.22",
     "style-loader": "^3.3.1",
     "ts-jest": "^29.0.5"
   }
