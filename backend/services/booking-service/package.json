@@ -2,18 +2,18 @@
   "name": "booking-service",
   "version": "1.0.0",
   "description": "Bookings Microservice Dependencies",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start:booking-service": "echo \"Error: no test specified\" && exit 1"
+    "start:booking-service": "BOOKINGS_SERVICE_DEV_MODE=development nodemon"
   },
-
   "keywords": [],
   "author": "Sabin Constantin Lungu",
   "license": "ISC",
-
   "dependencies": {
+    "@types/nodemon": "^1.19.2",
     "express-async-handler": "^1.2.0",
-    "http-status-codes": "^2.2.0"
+    "http-status-codes": "^2.2.0",
+    "nodemon": "^2.0.22"
   }
 }
