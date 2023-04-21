@@ -215,6 +215,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 // @public: True (No Authorization Token Required)
 
 export const resendEmailVerificationCode = asyncHandler(
+
   async (request: any, response: any, next: NextFunction): Promise<any> => {
     const { userId } = request.body;
     const currentUser = await User.findById(userId);
@@ -1136,53 +1137,29 @@ export const deleteAllUsers = async (
   }
 };
 
-export const lockUserAccount = async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-
-  try {
+export const lockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
     const userId = request.user.id;
     const user = await User.findById(userId);
 
     if (!user) {
-
-      return next(
-        new ErrorResponse(
-          "That user is not found not found. Please check your query params",
-          StatusCodes.NOT_FOUND
-        )
-      );
+      return next(new ErrorResponse("That user is not found not found. Please check your query params", StatusCodes.NOT_FOUND));
     }
 
-    return response
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "User Account Locked" });
-  } 
-  
-  catch (error: any) {
-    if (error) {
-      return response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ success: false, message: error.message, stack: error.stack });
-    }
-  }
-};
+    return response.status(StatusCodes.OK).json({ success: true, message: "User Account Locked" });
+});
 
-export const unlockUserAccount = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
+export const unlockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
     try {
+
       // Find the user by their ID
       const user = await User.findById(request.params.id);
 
       if (!user) {
-        return response
-          .status(StatusCodes.NOT_FOUND)
-          .json({ msg: "User not found with that ID" });
+        return response.status(StatusCodes.NOT_FOUND).json({ msg: "User not found with that ID" });
       }
 
       if (user.isLocked) {
+
         user.isLocked = false; // If the user is currently locked, set the isLocked flag to false
         await user.save();
 
@@ -1192,7 +1169,9 @@ export const unlockUserAccount = asyncHandler(
           isLocked: user.isLocked,
         });
       }
-    } catch (error: any) {
+    } 
+    
+    catch (error: any) {
       if (error) {
         return response
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -1202,16 +1181,15 @@ export const unlockUserAccount = asyncHandler(
   }
 );
 
-export const fetchTotalUsers = asyncHandler(async (request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
+export const fetchTotalUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
     try {
+
       const totalUsers = await User.countDocuments({});
-      return response
-        .status(StatusCodes.OK)
-        .json({ success: true, count: totalUsers });
-    } catch (error) {
+      
+      return response.status(StatusCodes.OK).json({ success: true, count: totalUsers });
+    } 
+    
+    catch (error) {
       if (error) {
         return response
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
