@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { ITicketDocument } from "../interface/tickets-interface";
 
 export const TicketSchema = new mongoose.Schema<ITicketDocument>({ 
 
@@ -52,7 +52,7 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({
             default: false
         },
         
-        issuer: {
+        issuer: { // Issuer of the ticket
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
             required: [true, "Please specify the Isser ID"]
