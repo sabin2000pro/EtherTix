@@ -108,12 +108,9 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     }
 
     if (password !== passwordConfirm) {
-      return next(
-        new ErrorResponse(
-          `Password confirmation error. Please check passwords`,
-          StatusCodes.BAD_REQUEST
-        )
+        return next(new ErrorResponse( `Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST)
       );
+      
     }
 
     const existingUser = await User.findOne({ email }); // Find an existing user
