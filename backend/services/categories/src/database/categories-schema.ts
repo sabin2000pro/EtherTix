@@ -7,7 +7,7 @@ export const connectCategoriesDatabase = async (...args: unknown[]) => {
 
     try {
 
-        return await mongoose.connect(CATEGORIES_SERVICE_DB_URI).then(conn => {
+        const connection = mongoose.connect(CATEGORIES_SERVICE_DB_URI)
 
             if(conn.connection) {
                 return console.log(`Connected to the Categories Service database schema successfully`)
@@ -18,7 +18,7 @@ export const connectCategoriesDatabase = async (...args: unknown[]) => {
             }
 
 
-        })
+       
     } 
     
     catch(error: any) {
