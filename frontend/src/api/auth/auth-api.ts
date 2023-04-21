@@ -170,18 +170,17 @@ export interface IResetPassword {
   userId: string;
 }
 
-export const resetPassword = async (
-  resetPasswordPayload: IResetPassword
-): Promise<any> => {
-  try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/reset-password",
-      resetPasswordPayload
-    );
+export const resetPassword = async (resetPasswordPayload: IResetPassword): Promise<any> => {
 
+  try {
+
+    const response = await axios.post("http://localhost:5299/api/auth/reset-password",resetPasswordPayload);
+  
     const data = await response.data;
     return data;
-  } catch (err) {
+  } 
+  
+  catch (err) {
     if (err) {
       return console.error(err);
     }
@@ -191,9 +190,12 @@ export const resetPassword = async (
 // All these need an authorization header
 
 export const getUser = async (): Promise<any> => {
+
   try {
+
     const response = await axios.get("http://localhost:5299/api/auth/me", {
       headers: {
+
         Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
           cookies.get(COOKIE_NAME_USER)._id
         }`,
@@ -202,7 +204,9 @@ export const getUser = async (): Promise<any> => {
 
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
     if (err) {
       throw err;
     }
@@ -233,6 +237,8 @@ export const updateProfile = async (updateProfilePayload: UpdateProfileCredentia
   } 
   
   catch (error: any) {
+
+
     if (error) {
       throw error;
     }
