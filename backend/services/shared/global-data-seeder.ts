@@ -15,6 +15,7 @@ const users = require( '../authentication/src/data/users.json')
 const events = require('../events-service/src/data/events.json');
 const tickets = require('../tickets/src/data/tickets.json');
 const venues = require('../venues/src/data/venues.json');
+const bookings = require('../booking-service/src/data/bookings.json');
 
 connectAuthSchema();
 connectEventsDatabase();
@@ -33,6 +34,7 @@ export const loadAllData = async (): Promise<any> => { // Load the data into the
 
             await User.create(users);
             await Event.create(events);
+            await Booking.create(bookings);
 
             await Ticket.create(tickets);
             await Venue.create(venues);
