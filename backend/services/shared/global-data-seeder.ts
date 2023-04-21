@@ -20,6 +20,7 @@ connectAuthSchema();
 connectEventsDatabase();
 connectTicketsSchema();
 connectVenuesSchema();
+connectBookingSchema();
 
 export const loadAllData = async (): Promise<any> => { // Load the data into the database
     
