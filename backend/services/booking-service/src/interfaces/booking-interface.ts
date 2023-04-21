@@ -4,5 +4,6 @@ export interface IBookingDocument {
     user: mongoose.Schema.Types.ObjectId,
     event: mongoose.Schema.Types.ObjectId,
     tickets: mongoose.Schema.Types.ObjectId,
-    totalPrice: Number
+    totalPrice: Number,
+    guests: Number
 }

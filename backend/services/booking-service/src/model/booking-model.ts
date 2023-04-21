@@ -25,6 +25,17 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
         type: Number,
         default: 0.0,
         required: [true, "Please specify the total price for this booking"]
+    },
+
+    guests: {
+        type: Number,
+        default: 0,
+        required: [true, "Please specify how many guests are part of this booking"]
+     },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 
 }, {timestamps: true })

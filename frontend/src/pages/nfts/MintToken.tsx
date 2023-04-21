@@ -11,6 +11,7 @@ const MintToken = ({mintNFT}: IMintNFTProps) => {
   const {nfts, loading, error} = useSelector((state: any) => state.nfts);
 
   const handleNftMint = async (event: any) => {
+    
     try {
         event.preventDefault();
     } 
@@ -38,7 +39,7 @@ const MintToken = ({mintNFT}: IMintNFTProps) => {
 
       </form> 
   
-  
+
     </>
 
 
