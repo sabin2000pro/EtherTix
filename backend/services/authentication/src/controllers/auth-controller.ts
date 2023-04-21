@@ -598,11 +598,13 @@ export const logoutUser = asyncHandler(
 );
 
 export const forgotPassword = asyncHandler(
+
   async (request: any, response: any, next: NextFunction): Promise<any> => {
     const { email } = request.body;
     const user = await User.findOne({ email });
 
     // Check if we have an e-mail in the body of the request
+
     if (!email) {
       return next(
         new ErrorResponse(
@@ -613,6 +615,7 @@ export const forgotPassword = asyncHandler(
     }
 
     if (!user) {
+
       return next(
         new ErrorResponse(
           "No user found with that e-mail address",
@@ -625,18 +628,13 @@ export const forgotPassword = asyncHandler(
 
     if (userHasResetToken) {
       await PasswordReset.deleteOne({ owner: user._id });
-      return next(
-        new ErrorResponse(
-          "User already has the password reset token",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
     }
 
     const token = generateRandomResetPasswordToken();
 
-    if (token === undefined) {
-      // If no token exists
+    if (token === undefined) { // If no token exists
+     
       return next(
         new ErrorResponse(
           "Reset Password Token is invalid",
@@ -889,31 +887,19 @@ export const deactivateUserAccount = asyncHandler(
   }
 );
 
-export const uploadUserProfilePicture = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
+export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+
     try {
+
       if (request.method === "PUT") {
-        // If the request is a PUT request
-
         const userId = request.headers.authorization.split(" ")[2];
-
-        // const userId = request.params.userId;
         const file = request.files!.file;
         const fileName = file.name;
 
         const currentUser = await User.findById(userId); // Find the current user
 
         if (!currentUser) {
-          return next(
-            new ErrorResponse(
-              "User Not found with that ID",
-              StatusCodes.NOT_FOUND
-            )
-          );
+          return next(new ErrorResponse("User Not found with that ID", StatusCodes.NOT_FOUND));
         }
 
         if (!request.files) {
