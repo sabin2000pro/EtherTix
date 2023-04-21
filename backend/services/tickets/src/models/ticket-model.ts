@@ -26,13 +26,13 @@ interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    saleStartsAt: Date,
    saleEndsAt: Date,
    confirmationMessage: string,
-   event: mongoose.Schema.Types.ObjectId, // The Event ID that this ticket is associated to
+   event: mongoose.Schema.Types.ObjectId,
    issuer: mongoose.Schema.Types.ObjectId,
 }
 
-export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Data Schema Model
+export const TicketSchema = new mongoose.Schema<ITicketDocument>({ 
 
-        name: { // Name of the ticket
+        name: { 
             type: String,
             required: [true, "Please specify the name of this ticket"]
         },
@@ -71,17 +71,17 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({ // Ticket Dat
             default: Date.now
         },
 
-        saleEndsAt: { // The timestamp at which the ticket sale ends
+        saleEndsAt: { 
             type: Date,
             default: Date.now
         },
 
-        ticketSold: { // Determines if the ticket ahs been sold or not
+        ticketSold: { 
             type: Boolean,
             default: false
         },
         
-        issuer: { // Relationship between the Event Ticket and the Event ID
+        issuer: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
             required: [true, "Please specify the Isser ID"]
