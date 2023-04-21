@@ -90,18 +90,11 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
-<<<<<<< HEAD
-
-  try {
-
-    const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
-=======
   try {
     const response = await axios.post(
       "http://localhost:5299/api/auth/login",
       loginPayload
     );
->>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
     const data = await response.data;
     return data;
   } catch (err: any) {
@@ -116,14 +109,7 @@ export const logout = async (): Promise<any> => {
     const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
-<<<<<<< HEAD
-  } 
-  
-  catch (err: any) {
-
-=======
   } catch (err: any) {
->>>>>>> 89b6e565c16270a4b2486212e9d915be274db605
     if (err) {
       return console.error(err);
     }
