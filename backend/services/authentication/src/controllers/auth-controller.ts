@@ -1015,27 +1015,13 @@ export const fetchUserByID = asyncHandler(
   }
 );
 
-export const createNewUser = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
-    try {
+export const createNewUser = asyncHandler (async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
       const body = request.body;
       const user = await User.create(body);
 
-      return response
-        .status(StatusCodes.CREATED)
-        .json({ success: true, data: user });
-    } catch (error: any) {
-      if (error) {
-        return response
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ success: false, message: error.message, stack: error.stack });
-      }
-    }
-  }
+      return response.status(StatusCodes.CREATED).json({ success: true, user });
+    } 
+  
 );
 
 export const editUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
