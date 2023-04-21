@@ -8,6 +8,7 @@ import TextInputField from "components/form/TextInputField";
 const UpdatePassword: React.FC = () => {
   const navigate = useNavigate();
 
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const {
@@ -20,6 +21,8 @@ const UpdatePassword: React.FC = () => {
   const newPassword = watch("newPassword", "");
 
   const onSubmit = async (data: UpdatePasswordCredentials) => {
+    setError(null);
+    setSuccess(null);
     if (data.newPassword !== data.passwordConfirm) {
       setError("Passwords don't match.");
       return;
@@ -28,13 +31,23 @@ const UpdatePassword: React.FC = () => {
       const response = await updatePassword(data);
 
       if (response.success) {
-        navigate("/");
+        setError(null);
+        setSuccess("Password updated succesfully, redirecting now...");
+        setTimeout(() => {
+          navigate("/");
+        }, 2500);
       }
     } catch (error) {
       console.error(error);
+      setSuccess(null);
       setError("Something went wrong. Please try again later.");
     }
   };
+
+  const togglePassVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <Container>
       {error && (
@@ -52,7 +65,7 @@ const UpdatePassword: React.FC = () => {
           column="lg"
           style={{
             marginTop: "15px",
-            marginBottom: "15px",
+            marginBottom: "5px",
             textAlign: "center",
           }}
         >
@@ -62,7 +75,7 @@ const UpdatePassword: React.FC = () => {
           <TextInputField
             name="currentPassword"
             label="Please enter your current password:"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Current password"
             register={register}
             registerOptions={{ required: "Required" }}
@@ -72,17 +85,16 @@ const UpdatePassword: React.FC = () => {
           <TextInputField
             name="newPassword"
             label="Please enter your new password:"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="New password"
             register={register}
             registerOptions={{ required: "Required" }}
             error={errors.newPassword}
-            autoFocus
           />
           <TextInputField
             name="passwordConfirm"
             label="Please confirm your new password:"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Confirm new password"
             register={register}
             registerOptions={{
@@ -91,7 +103,13 @@ const UpdatePassword: React.FC = () => {
                 value === newPassword || "Passwords don't match.",
             }}
             error={errors.passwordConfirm}
-            autoFocus
+          />
+          <Form.Check
+            style={{ marginBottom: "15px" }}
+            type="checkbox"
+            label={showPassword ? "Hide Password" : "Show password"}
+            checked={showPassword}
+            onChange={togglePassVisibility}
           />
           <Button type="submit" disabled={isSubmitting} className="w-100">
             Update Password

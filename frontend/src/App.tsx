@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "components/Navbar";
 import Home from "pages/Home";
 import EmailVerification from "pages/auth/EmailVerification";
@@ -17,11 +17,32 @@ import SingleEvent from "pages/events/SingleEvent";
 import UserProfile from "pages/auth/UserProfile";
 import Footer from "components/Footer";
 import MfaInput from "components/MfaInput";
+import { getUser } from "api/auth/auth-api";
+import * as stor from "auth/store";
+import cookies from "auth/cookies";
+import { useDispatch } from "react-redux";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getUser();
+        if (response.success) {
+          dispatch(stor.login(response.user));
+
+          cookies.set(stor.COOKIE_NAME_USER, response.user);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  });
 
   return (
     <>

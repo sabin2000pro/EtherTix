@@ -15,11 +15,11 @@ interface AuthState {
 
 //Initial state
 const initialState: AuthState = {
-  //cookies.get(COOKIE_NAME_USER) as User |
+  //cookies.get(COOKIE_NAME_USER) as User | null,
   user: cookies.get(COOKIE_NAME_USER) as User | null,
   //cookies.get(COOKIE_NAME_LOGGED_IN) ? true :
   isLoggedIn: cookies.get(COOKIE_NAME_LOGGED_IN) ? true : false,
-  cartItems: cookies.getCartContent() as [] //| [],
+  cartItems: cookies.getCartContent() as [], //| [],
 };
 
 export const authSlice = createSlice({
@@ -45,7 +45,7 @@ export const authSlice = createSlice({
         item.quantity += action.payload.quantity;
         state.cartItems[itemIndex] = item;
       }
-      cookies.setCartContent(state.cartItems)
+      cookies.setCartContent(state.cartItems);
     },
     removeItem: (state, action: PayloadAction<string>) => {
       const itemIndex = state.cartItems.findIndex(
@@ -56,7 +56,7 @@ export const authSlice = createSlice({
           (itemId) => itemId.id !== action.payload
         );
       } else {
-        state.cartItems[itemIndex].quantity -= 1; 
+        state.cartItems[itemIndex].quantity -= 1;
       }
       cookies.setCartContent(state.cartItems);
     },

@@ -27,7 +27,7 @@ const NavBar = ({ onSignUpClicked, onLoginClicked }: NavBarProps) => {
     { name: string; path: string }[]
   >([]);
 
-  const { user } = useSelector((state: any) => state.auth as User);
+  const user = useSelector((state: any) => state.auth.user as User);
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   const cart: CartItem[] = useSelector((state: any) => state.auth.cartItems);

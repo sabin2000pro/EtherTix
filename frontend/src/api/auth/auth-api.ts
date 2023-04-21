@@ -224,13 +224,13 @@ export const getUser = async (): Promise<any> => {
 };
 
 export interface UpdateProfileCredentials {
-  email: string;
-  username: string;
-  role: string;
+  email?: string;
+  username?: string;
+  role?: string;
 }
 
 export const updateProfile = async (
-  updateProfilePayload: any
+  updateProfilePayload: UpdateProfileCredentials
 ): Promise<any> => {
   try {
     const response = await axios.put(
@@ -244,7 +244,7 @@ export const updateProfile = async (
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error) {
       throw error;
@@ -294,7 +294,7 @@ export const uploadProfilePic = async (pic: any) => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error) {
       throw error;
