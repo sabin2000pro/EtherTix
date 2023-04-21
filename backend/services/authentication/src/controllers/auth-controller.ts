@@ -1041,18 +1041,12 @@ export const createNewUser = asyncHandler(
 export const editUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
     // Verify incoming HTTP method
-    
+
     if (request.method === "PUT") {
       const userId = request.params.userId; // Extract User ID
 
       if (!userId) {
-
-        return next(
-          new ErrorResponse(
-            "User ID not found. Please check your query params",
-            StatusCodes.NOT_FOUND
-          )
-        );
+         return next(new ErrorResponse("User ID not found. Please check your query params", StatusCodes.NOT_FOUND));
       }
 
       let user = await User.findById(userId);
@@ -1061,13 +1055,8 @@ export const editUserByID = asyncHandler(async (request: any, response: any, nex
         return next(new ErrorResponse("User not found", StatusCodes.NOT_FOUND));
       }
 
-      user = await User.findByIdAndUpdate(userId, request.body, {
-        new: true,
-        runValidators: true,
-      });
-
+      user = await User.findByIdAndUpdate(userId, request.body, {new: true, runValidators: true});
       await user.save();
-
       return response.status(StatusCodes.OK).json({ success: true, data: user });
     }
 
