@@ -8,7 +8,7 @@
             "ticketClass": "basic", 
             "currentStock": 5,
             "description": "Basic ticket for the highland tour event",
-            "cost": 0.0025,
+            "price": 0.0025,
             "onSaleStatus": "Pending"
         },
     
