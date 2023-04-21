@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IVenueDocument } from "../types/venue-types";
+import { IVenueDocument } from "../interfaces/venue-interface";
 
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
