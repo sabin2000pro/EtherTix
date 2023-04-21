@@ -23,6 +23,8 @@ const UserProfile: React.FC = () => {
       setBalance(parseFloat(ethAccount.convertedBalance));
       setAddress(ethAccount.currentAccount[0]);
     }
+
+
   };
 
   handleConnect();
@@ -30,24 +32,35 @@ const UserProfile: React.FC = () => {
   const handleChange = () => {
     if (user !== null) {
       setShowEditModal(!showEditModal);
-    } else {
+    }
+    
+    else {
       setSuccess(null);
       setError("You need to be logged in to make any changes");
     }
   };
 
   return (
+
+
     <Container>
+
       {error && (
         <Alert variant="danger" style={{ textAlign: "center" }}>
           {error}
         </Alert>
+
+
       )}
 
       {success && (
+
+
         <Alert variant="success" style={{ textAlign: "center" }}>
           {success}
         </Alert>
+
+        
       )}
 
       <Container className="profile-container text-center">
@@ -71,10 +84,7 @@ const UserProfile: React.FC = () => {
             <p>ETH balance: {balance}</p>
             <p>Wallet address: {address}</p>
 
-            <Button
-              variant="primary"
-              onClick={handleChange}
-              style={{
+            <Button variant = "primary" onClick={handleChange} style={{
                 display: "flex",
                 borderRadius: "7px",
                 marginTop: "40px",

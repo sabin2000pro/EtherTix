@@ -75,7 +75,6 @@ const MfaInput: React.FC = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const result = event.target.value.replace(/\D/g, "");
     setOTP({ ...OTP, [event.target.name]: result });
-
   };
 
   const inputfocus = (elmnt: any) => {
@@ -95,25 +94,34 @@ const MfaInput: React.FC = () => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
-        
+
       }
       //if right arrow key, move focus right
     } 
     
     else if (elmnt.keyCode === 39) {
+
       const next = elmnt.target.tabIndex;
+
       if (next < nOfFields) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
       }
-    } else {
+    } 
+    
+    else {
+
+
       if (elmnt.keyCode < 48 || elmnt.keyCode > 57) {
         setError("Only digits allowed");
         return;
       }
       const next = elmnt.target.tabIndex;
+
+
       if (next < nOfFields) {
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
@@ -136,26 +144,26 @@ const MfaInput: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+
     setError(null);
     setSuccess(null);
-    if (
-      OTP.otp1 === "" ||
-      OTP.otp2 === "" ||
-      OTP.otp3 === "" ||
-      OTP.otp4 === "" ||
-      OTP.otp5 === "" ||
-      OTP.otp6 === ""
-    ) {
+
+    if (OTP.otp1 === "" || OTP.otp2 === "" || OTP.otp3 === "" || OTP.otp4 === "" || OTP.otp5 === "" || OTP.otp6 === "") {
       setError("Please enter a valid token...");
       return;
     }
+
     setButtonState({ ...buttonState, verify: true, resend: true });
 
     try {
+
       bundleTogether();
+
       const response = await login(loginData);
 
       if (response.success) {
+
         cookies.set(stor.COOKIE_NAME_USER, response.user);
         cookies.set(stor.COOKIE_NAME_LOGGED_IN, true);
         cookies.set(stor.COOKIE_NAME_TOKEN, response.token);
@@ -167,10 +175,16 @@ const MfaInput: React.FC = () => {
       if (timer === 0) {
         setButtonState({ ...buttonState, resend: false });
       }
+
       setTimeout(() => {
         setButtonState({ ...buttonState, verify: false });
       }, 5000);
-    } catch (err: any) {
+
+
+    } 
+    
+    catch (err: any) {
+
       setSuccess(null);
       setError("Wrong token, try again");
       console.error(err);
@@ -178,6 +192,7 @@ const MfaInput: React.FC = () => {
       if (timer === 0) {
         setButtonState({ ...buttonState, resend: false });
       }
+
       setTimeout(() => {
         setButtonState({ ...buttonState, verify: false });
       }, 5000);
@@ -185,10 +200,13 @@ const MfaInput: React.FC = () => {
   };
 
   const handleResend = async (event: React.MouseEvent<HTMLButtonElement>) => {
+
     setButtonState({ ...buttonState, resend: true });
     event.preventDefault();
+
     setError(null);
     setSuccess(null);
+
     try {
       const response = await sendMfaEmail(loginData);
 
@@ -198,34 +216,47 @@ const MfaInput: React.FC = () => {
         setTimer(timeLeft);
         setButtonState({ ...buttonState, resend: true });
       }
-    } catch (err: any) {
+
+    } 
+    
+    catch (err: any) {
       setSuccess(null);
       setError("Something went wrong, please try again later...");
       setTimer(timeLeft);
       setButtonState({ ...buttonState, resend: true });
       console.error(err);
     }
+
+    
   };
 
   return (
+
     <Container>
+
       {error && (
+
         <Alert variant="danger" style={{ textAlign: "center" }}>
           {error}
         </Alert>
       )}
+
       {success && (
+
         <Alert variant="success" style={{ textAlign: "center" }}>
           {success}
         </Alert>
       )}
-      <Container className="verify-container">
+      <Container className = "verify-container">
+
         <Form.Label
           column="lg"
           style={{ marginTop: "15px", textAlign: "center" }}
         >
           Multi-factor authenication is active on your account
         </Form.Label>
+
+
         <Form.Label column="sm" style={{ marginTop: "5px" }}>
           A token has been sent to your email. It may take a moment to arrive.
         </Form.Label>
@@ -235,7 +266,9 @@ const MfaInput: React.FC = () => {
         >
           Enter token:
         </Form.Label>
-        <Form onSubmit={handleSubmit}>
+
+        <Form onSubmit = {handleSubmit}>
+
           <Form.Group>
             <Row
               style={{
@@ -337,9 +370,7 @@ const MfaInput: React.FC = () => {
           >
             Log In
           </Button>
-          <Button
-            className="w-100 resend-btn"
-            variant="outline-primary"
+          <Button className="w-100 resend-btn" variant="outline-primary"
             onClick={handleResend}
             disabled={buttonState.resend || timer > 0}
           >
@@ -352,6 +383,8 @@ const MfaInput: React.FC = () => {
         </Form>
       </Container>
     </Container>
+
+
   );
 };
 
