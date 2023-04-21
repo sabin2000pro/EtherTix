@@ -16,7 +16,7 @@ const MintToken = ({mintNFT}: IMintNFTProps) => {
     } 
     
     catch(error) {
-      
+
       if(error) {
         return console.error(error);
       }
@@ -29,12 +29,16 @@ const MintToken = ({mintNFT}: IMintNFTProps) => {
   return (
 
     <>
-      <form className = "mint-form" method = "POST" onSubmit = {handleNftMint}
-        <div className = "mint-token-container">
-           <button onClick = {mintNFT}>Mint Token</button>
-        </div>
 
+      <form className = "mint-form" method = "POST" onSubmit = {handleNftMint}>
 
+          <div className = "mint-token-container">
+              <button onClick = {mintNFT}>Mint Token</button>
+          </div>
+
+      </form> 
+  
+  
     </>
 
 
