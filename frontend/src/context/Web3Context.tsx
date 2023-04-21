@@ -58,13 +58,12 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
             if(error) {
                 return console.error(error);
             }
-
-
+            
         }
     }
 
     const initialiseNftContract = async (): Promise<any> => {
-        
+
         const networks = EventNftContract.networks as any;
         const nftContractAbi = EventNftContract.abi;
         const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks["5777"].address as unknown as any);
