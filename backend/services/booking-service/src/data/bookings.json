@@ -1,4 +1,5 @@
 [
+    
     {
       "_id": "5d7a514b5d2c12c8990be010",
       "userId": "5d7a514b5d2c12c7449be048",
@@ -21,16 +22,7 @@
       "title": "Mrs",
       "guests": 3,
       "phoneNumber": "07881455901",
-      "bookingDate": ""
-    },
-
-    {
-      "_id": "5d7a514b5d2c12c8990be012",
-      "eventId": "678",
-      "userId": "901",
-      "ticketIds": ["444", "555"],
-      "totalPrice": 20
+      "bookingDate": "2023-05-03T18:30:33.102Z"
     }
-
 
   ]
