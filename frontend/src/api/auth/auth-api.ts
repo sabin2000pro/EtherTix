@@ -215,23 +215,24 @@ export interface UpdateProfileCredentials {
   role?: string;
 }
 
-export const updateProfile = async (
-  updateProfilePayload: UpdateProfileCredentials
-): Promise<any> => {
+export const updateProfile = async (updateProfilePayload: UpdateProfileCredentials): Promise<any> => {
+
   try {
-    const response = await axios.put(
-      "http://localhost:5299/api/auth/update-profile",
-      updateProfilePayload,
-      {
+
+    const response = await axios.put("http://localhost:5299/api/auth/update-profile", updateProfilePayload, {
+
         headers: {
-          Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
-            cookies.get(COOKIE_NAME_USER)._id
-          }`,
+          Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`,
         },
+
       }
     );
+
+
     return response.data;
-  } catch (error: any) {
+  } 
+  
+  catch (error: any) {
     if (error) {
       throw error;
     }
@@ -244,23 +245,20 @@ export interface UpdatePasswordCredentials {
   passwordConfirm: string;
 }
 
-export const updatePassword = async (
-  updatePasswordPayload: UpdatePasswordCredentials
-): Promise<any> => {
+export const updatePassword = async (updatePasswordPayload: UpdatePasswordCredentials): Promise<any> => {
+
   try {
-    const response = await axios.put(
-      "http://localhost:5299/api/auth/update-password",
-      updatePasswordPayload,
-      {
-        headers: {
-          Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
-            cookies.get(COOKIE_NAME_USER)._id
-          }`,
-        },
-      }
+
+    const response = await axios.put("http://localhost:5299/api/auth/update-password", updatePasswordPayload, {
+
+        headers: {Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}}
     );
+
     return response.data;
-  } catch (error: any) {
+  } 
+  
+  catch (error: any) {
+
     if (error) {
       throw error;
     }
@@ -269,6 +267,8 @@ export const updatePassword = async (
 
 export const uploadProfilePic = async (pic: any) => {
   try {
+
+
     const response = await axios.put(
       "http://localhost:5299/api/auth/propic",
       pic,
