@@ -172,9 +172,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 
     if (!token) {
 
-      return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST
-        )
-      );
+      return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
     const otpTokensMatch = await token.compareVerificationTokens(OTP); // Check if they match
@@ -184,7 +182,6 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     }
 
     if (otpTokensMatch) {
-  
 
       user.isVerified = true; // Set theu ser is Verified field to true
       user.accountActive = true;
@@ -198,10 +195,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
         from: "welcome@ethertix.com",
         to: user.email,
         subject: "E-mail Confirmation Success",
-        html: `
-                    
-           <h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>
-                    `,
+        html: `<h1> Welcome to Ether Tix. Thank you for confirming your e-mail address.</h1>`,
       });
 
       const jwtToken = user.getAuthenticationToken();
@@ -210,9 +204,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
       const date = new Date();
       const currentDate = date.toISOString();
 
-      return response
-        .status(StatusCodes.CREATED)
-        .json({ message: "E-mail Address verified", sentAt: currentDate });
+      return response.status(StatusCodes.CREATED).json({ message: "E-mail Address verified", sentAt: currentDate });
     }
   }
 );
