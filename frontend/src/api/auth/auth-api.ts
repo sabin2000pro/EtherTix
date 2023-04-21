@@ -11,21 +11,27 @@ export interface IRegisterCredentials {
   passwordConfirm: string;
 }
 
+export interface ForgotPCredentials {
+  email: string;
+}
 export interface LoginCredentials {
   email: string;
   password: string;
   mfaToken: string;
 }
 
-const defaultOptions = {
+const defaultHeaderOptions = {
+
   headers: {
     "Content-Type": "application/json",
   },
+
 };
 
-let axiosInstance = axios.create(defaultOptions);
+let axiosInstance = axios.create(defaultHeaderOptions);
 
 axiosInstance.interceptors.request.use((configData: any | undefined) => {
+
   const authToken = localStorage.getItem("token");
   configData.headers.Authorization = authToken ? `Bearer ${authToken}` : ""; // Store the token in the header
   return configData;
@@ -136,17 +142,14 @@ export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
     if (error) {
       return console.error(error);
     }
-    
+
   }
 
 
 };
 
-export interface ForgotPCredentials {
-  email: string;
-}
-
 export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials): Promise<any> => {
+
   try {
 
     const response = await axios.post("http://localhost:5299/api/auth/forgot-password", forgotPasswordPayload);
