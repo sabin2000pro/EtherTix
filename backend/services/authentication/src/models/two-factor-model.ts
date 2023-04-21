@@ -1,25 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs'
-interface ITwoFactorVerification {
-    owner: mongoose.Schema.Types.ObjectId,
-    mfaToken: string;
-    createdAt: Date;
-    expiresAt: Date;
-    sentAt: Date;
-
-    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
-}
-
-interface TwoFactorVerificationDocument extends mongoose.Model<ITwoFactorVerification> {
-    owner: mongoose.Schema.Types.ObjectId,
-    mfaToken: string; // Verification Token
-    createdAt: Date;
-    expiresAt: Date;
-    sentAt: Date;
-
-    compareVerificationTokens: (enteredToken: string) => Promise<boolean>
-}
-
+import { TwoFactorVerificationDocument } from "../interfaces/two-factor-verification-interface";
 // @schema: E-mail Verification Model
 const TwoFactorVerificationSchema = new mongoose.Schema<TwoFactorVerificationDocument>({
 
@@ -54,12 +35,14 @@ const TwoFactorVerificationSchema = new mongoose.Schema<TwoFactorVerificationDoc
 
 TwoFactorVerificationSchema.pre('save', async function(next) {
 
+    let ROUNDS = 10;
+
     if(!this.isModified('mfaToken')) {
         return next();
     }
 
     // Hash the token
-    this.mfaToken = await bcrypt.hash(this.mfaToken, 10);
+    this.mfaToken = await bcrypt.hash(this.mfaToken, ROUNDS);
     return next();
 })
 

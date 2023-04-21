@@ -3,7 +3,6 @@ import { Container, Row, Button, Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
-import { CartItem } from "models/cart";
 import axios from 'axios';
 
 const EventList: React.FC = () => {
@@ -115,6 +114,7 @@ const EventList: React.FC = () => {
         </Container>
 
       </div>
+      
       
     );
   };

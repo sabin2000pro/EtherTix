@@ -6,24 +6,29 @@ interface HomeProps {
 }
 
 const services = [
+
   {
     id: 1,
     title: "Service 1",
     image: "https://source.unsplash.com/random/400x400",
     description: "Service 1 description",
   },
+
   {
     id: 2,
     title: "Service 2",
     image: "https://source.unsplash.com/random/400x400",
     description: "Service 2 description",
   },
+
   {
     id: 3,
     title: "Service 3",
     image: "https://source.unsplash.com/random/400x400",
     description: "Service 3 description",
   },
+
+
   {
     id: 4,
     title: "Service 4",
@@ -57,6 +62,7 @@ const services = [
 ];
 
 const Home = ({ onSignUpClicked }: HomeProps) => {
+
   const containerRef = useRef(null);
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
@@ -75,7 +81,8 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
 
   return (
     <>
-      <section className="hero-section">
+
+      <section className = "hero-section">
 
         <div className="hero-container">
           <div className="hero-text">
@@ -103,6 +110,8 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
 
       <section className="services-container">
         <div
+
+        
           className="container text-center"
           onWheel={handleWheel}
           ref={containerRef}

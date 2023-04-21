@@ -1,12 +1,11 @@
 import React from 'react'
 
-const AdminSingleBooking = () => {
+const AdminSingleBooking: React.FC = () => {
   return (
-
     <>
 
     </>
-    
+
   )
 }
 

@@ -59,12 +59,13 @@ const UserProfile: React.FC = () => {
         <Alert variant="success" style={{ textAlign: "center" }}>
           {success}
         </Alert>
-
         
       )}
 
       <Container className="profile-container text-center">
+
         <Row style={{ paddingTop: "5px" }}>
+
           <Col style={{ textAlign: "right", paddingLeft: "60px" }}>
             <h1
               style={{
@@ -95,7 +96,8 @@ const UserProfile: React.FC = () => {
           </Col>
 
           <Col
-            style={{
+
+            style = {{
               textAlign: "right",
               paddingRight: "100px",
               paddingTop: "30px",
@@ -123,7 +125,10 @@ const UserProfile: React.FC = () => {
             </Modal.Header>
 
             <Modal.Body>
+
               <Container>
+
+
                 <Row>
                   <Col>
                     <Button href="/update-profile" className="w-100">
@@ -131,7 +136,11 @@ const UserProfile: React.FC = () => {
                     </Button>
                   </Col>
                 </Row>
+
+
                 <Row>
+
+
                   <Col>
                     <Button
                       href="/update-password"
@@ -143,6 +152,8 @@ const UserProfile: React.FC = () => {
                   </Col>
                 </Row>
                 <Row>
+
+
                   <Col>
                     <Button
                       onClick={handleChange}
@@ -152,6 +163,8 @@ const UserProfile: React.FC = () => {
                     >
                       Cancel
                     </Button>
+
+
                   </Col>
                 </Row>
               </Container>

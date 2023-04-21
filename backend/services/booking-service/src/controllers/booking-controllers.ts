@@ -3,7 +3,7 @@ import { NextFunction } from 'express';
 import { Booking } from "../model/booking-model"
 
 export const fetchAllBookings = async (request: any, response: any, next: NextFunction): Promise<any> => {
-
+    
 }
 
 export const fetchUserBookings = async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -14,7 +14,6 @@ export const fetchUserBookings = async (request: any, response: any, next: NextF
 
     }
 
-    
 }
 
 export const fetchSingleBookingByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -28,4 +27,8 @@ export const createBooking = async (request: any, response: any, next: NextFunct
     await booking.save();
 
     return response.status(StatusCodes.CREATED).json({success: true,  booking})
+}
+
+export const editBookingDetails = async (request: any, response: any, next: NextFunction): Promise<any> => {
+    
 }
