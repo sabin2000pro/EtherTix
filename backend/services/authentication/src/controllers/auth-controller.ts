@@ -90,27 +90,17 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     }
 
     if (!surname) {
-      return next(
-        new ErrorResponse(
-          "Surname is missing. Please try enter again",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next( new ErrorResponse("Surname is missing. Please try enter again", StatusCodes.BAD_REQUEST));
     }
 
     if (!email) {
-      return next(
-        new ErrorResponse(
-          "No E-mail provided. Please check your entries",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+       return next( new ErrorResponse( "No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
     }
 
     if (password !== passwordConfirm) {
         return next(new ErrorResponse( `Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST)
       );
-      
+
     }
 
     const existingUser = await User.findOne({ email }); // Find an existing user
@@ -147,26 +137,20 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
 
-export const verifyEmailAddress = asyncHandler(
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const verifyEmailAddress = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
     const { userId, OTP } = request.body;
     const user = await User.findById(userId);
 
     // Check for invalid User ID
     if (!isValidObjectId(userId)) {
-      return next(
-        new ErrorResponse(
-          "User ID not found. Please check your entry again.",
-          StatusCodes.NOT_FOUND
-        )
-      );
+       return next(new ErrorResponse( "User ID not found. Please check your entry again.", StatusCodes.NOT_FOUND ));
     }
 
     // Check for missing OTP
+
     if (!OTP) {
-      return next(
-        new ErrorResponse(
-          "OTP Entered not found. Please check your entry",
+      return next(new ErrorResponse("OTP not found. Please check your entry",
           StatusCodes.NOT_FOUND
         )
       );
