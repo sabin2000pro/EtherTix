@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { IVenueDocument } from "../types/venue-types";
 
-
 const VenueSchema = new mongoose.Schema<IVenueDocument>({
 
         name: { // Name of the venue that will be created

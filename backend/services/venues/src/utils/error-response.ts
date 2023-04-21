@@ -1,4 +1,4 @@
-export class ErrorResponse extends Error {
+class ErrorResponse extends Error {
     statusCode: any;
     
     constructor(message: any, statusCode: any) {
@@ -8,3 +8,5 @@ export class ErrorResponse extends Error {
 
 
 }
+
+export {ErrorResponse}
