@@ -6,9 +6,12 @@ export interface IBookingDocument {
     ticketIds: mongoose.Schema.Types.ObjectId,
     totalPrice: Number,
     title: String,
-    guests: Number,
-    phoneNumber: String,
+    guests: number,
+    phoneNumber: string,
     bookingDate: Date,
     createdAt: Date,
-    emailAddress: String
+    emailAddress: string,
+
+    cardRequired: boolean,
+    isCancelled: boolean
 }

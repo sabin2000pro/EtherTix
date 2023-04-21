@@ -59,6 +59,16 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+
+    cardRequired: {
+        type: Boolean,
+        default: false
+    },
+
+    isCancelled: {
+        type: Boolean,
+        default: false
     }
 
 }, {timestamps: true })
