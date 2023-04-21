@@ -30,4 +30,4 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
 }, {timestamps: true })
 
 const Booking = mongoose.model("Booking", BookingSchema);
-export {Booking}
+export {Booking} // Create the model and export it
