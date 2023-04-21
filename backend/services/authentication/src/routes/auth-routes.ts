@@ -36,5 +36,5 @@ authRouter.route('/deactivate-account').put(rateLimiter as any, protectAuth as a
 
 // Backend Protected Routes for User Management (GET Users, Update Users, Delete Users) -> Assigned to users that holds the role organiser
 authRouter.route('/users').get(rateLimiter as any, protectAuth as any, fetchAllUsers as any);
-authRouter.route('/users/:userId').put(rateLimiter as any, protectAuth as any, editUserByID as any).delete(rateLimiter as any, protectAuth as any, deleteUserByID);
+authRouter.route('/users/:userId').put(rateLimiter as any, protectAuth as any, editUserByID as any).delete(rateLimiter as any, protectAuth as any, deleteUserByID as any);
 authRouter.route('/users/:id/upload-avatar').put(rateLimiter as any, protectAuth as any, uploadUserProfilePicture as any);
