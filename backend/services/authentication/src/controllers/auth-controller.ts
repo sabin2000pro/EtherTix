@@ -1038,18 +1038,15 @@ export const createNewUser = asyncHandler(
   }
 );
 
-export const editUserByID = async (
-  request: any,
-  response: any,
-  next: NextFunction
-): Promise<any | Response> => {
-  try {
-    // Verify incoming HTTP method
+export const editUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
+    // Verify incoming HTTP method
+    
     if (request.method === "PUT") {
       const userId = request.params.userId; // Extract User ID
 
       if (!userId) {
+
         return next(
           new ErrorResponse(
             "User ID not found. Please check your query params",
@@ -1068,38 +1065,27 @@ export const editUserByID = async (
         new: true,
         runValidators: true,
       });
+
       await user.save();
 
-      return response
-        .status(StatusCodes.OK)
-        .json({ success: true, data: user });
+      return response.status(StatusCodes.OK).json({ success: true, data: user });
     }
-  } catch (error: any) {
-    if (error) {
-      return response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ success: false, message: error.message, stack: error.stack });
-    }
-  }
-};
+
+  } 
+  
+)
 
 export const deleteUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-  
 
     if (request.method === "DELETE") {
+
       const userId = request.params.userId;
 
       if (!userId) {
-        return next(
-          new ErrorResponse(
-            `User with that ID not found`,
-            StatusCodes.BAD_REQUEST
-          )
-        );
+        return next(new ErrorResponse(`User with that ID not found`, StatusCodes.BAD_REQUEST));
       }
 
       await User.findByIdAndDelete(userId);
-      
       return response.status(StatusCodes.NO_CONTENT).json({ success: true, message: "User Deleted", data: null });
     }
   } 
