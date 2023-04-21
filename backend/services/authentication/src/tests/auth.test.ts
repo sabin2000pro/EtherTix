@@ -49,7 +49,7 @@ describe("Register Account Test Suite", () => {
         for(const data of invalidForename) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
             
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
 
     })
@@ -64,7 +64,7 @@ describe("Login Test Suite", () => {
 
         for(const data of validLoginData) {
             const response = await request(app).post('/api/v1/auth/login').send(data)            
-            return expect(response.statusCode).toBe(StatusCodes.OK);
+            expect(response.statusCode).toBe(StatusCodes.OK);
          }
 
     })
@@ -74,8 +74,10 @@ describe("Login Test Suite", () => {
         const missingEmailData = [{password: "123mini123"}]
 
         for(const data of missingEmailData) {
+
             const response = await request(app).post('/api/v1/auth/login').send(data)
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+
+            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
 
          }
     })
@@ -87,7 +89,7 @@ describe("Login Test Suite", () => {
         for(const data of invalidEmailData) {
             const response = await request(app).post('/api/v1/auth/login').send(data)
             
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
 
     })
@@ -96,9 +98,9 @@ describe("Login Test Suite", () => {
         const invalidPasswordData = [{email: "jake00@gmail.com.com", password: "dojfgisfjij"}]
 
         for(const data of invalidPasswordData) {
+
             const response = await request(app).post('/api/v1/auth/login').send(data)
-            
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
 
     })
@@ -115,7 +117,7 @@ describe("Verify E-mail Address Test Suite", () => {
         for (const bodyData of emailVerificationBodyData) {
             const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
 
-            return expect(response.statusCode).not.toBe(StatusCodes.OK);
+             expect(response.statusCode).not.toBe(StatusCodes.OK);
         }
     })
 
