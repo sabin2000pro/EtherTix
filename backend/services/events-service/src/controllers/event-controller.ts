@@ -125,7 +125,7 @@ export const uploadEventPhoto = asyncHandler(async (request: any, response: any,
 
 export const editEventStartTime = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
   const fieldsToUpdate = {newStartsAt: request.body.startsAt, newEndsAt: request.body.newEndsAt};
-  const id = request.params.id; // Take the event ID to update
+  const id = request.params.id;
   let event = await Event.findById(id);
   
   if(!isValidObjectId(id)) {
