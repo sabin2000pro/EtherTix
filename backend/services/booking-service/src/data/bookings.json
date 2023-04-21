@@ -5,7 +5,11 @@
       "eventId": "5d713995b721c3bb38c1f5d0",
       "ticketIds": ["5d7a514b5d2c12c7449be120"],
       "totalPrice": 0.0075,
-      "title": "Mr"
+      "title": "Mr",
+      "guests": 2,
+      "phoneNumber": "07881365901",
+      "bookingDate": "2023-05-03T14:28:33.102Z",
+      "emailAddress": "mike99james@gmail.com"
     },
 
     {
@@ -13,7 +17,10 @@
       "eventId": "5d713995b721c3bb38c1f5d1",
       "userId": "5d7a514b5d2c12c7449be047",
       "ticketIds": ["5d7a514b5d2c12c7449be125"],
-      "totalPrice": 0.0045
+      "totalPrice": 0.0045,
+      "title": "Mrs",
+      "guests": 3,
+      "phoneNumber": "07881455901"
     },
 
     {
