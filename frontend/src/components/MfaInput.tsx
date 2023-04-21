@@ -6,20 +6,17 @@ import { useDispatch } from "react-redux";
 import cookies from "../auth/cookies";
 import * as stor from "../auth/store";
 
-const MfaInput = () => {
+const MfaInput: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const timeLeft = 15;
 
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-    mfaToken: "",
-  });
+  const [loginData, setLoginData] = useState({email: "", password: "", mfaToken: ""});
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
   const [OTP, setOTP] = useState({
     otp1: "",
     otp2: "",
@@ -37,59 +34,73 @@ const MfaInput = () => {
   const [timer, setTimer] = useState(timeLeft);
 
   const fetchLoginData = () => {
+
     if (loginData.password !== "") {
       return;
     }
+
+
     const email = location.state.email;
     const password = location.state.password;
 
     setLoginData((loginData) => ({ ...loginData, email: email }));
     setLoginData((loginData) => ({ ...loginData, password: password }));
   };
+
+
   setTimeout(() => {
     fetchLoginData();
   }, 2000);
 
   useEffect(() => {
+
     const interval = setInterval(() => {
+
       if (timer > 0) {
-        setTimer(timer - 1);
-      } else {
+       setTimer(timer - 1);
+      }
+
+      
+      else {
         setButtonState({ ...buttonState, resend: false });
       }
     }, 1000);
+
     return () => {
       clearInterval(interval);
     };
+
   }, [buttonState, timer]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const result = event.target.value.replace(/\D/g, "");
-
     setOTP({ ...OTP, [event.target.name]: result });
-    //console.log(OTP);
+
   };
 
   const inputfocus = (elmnt: any) => {
     setError(null);
     setSuccess(null);
+
     const ms = 100;
+
     const nOfFields = 6;
-    if (
-      elmnt.key === "Delete" ||
-      elmnt.key === "Backspace" ||
-      //left arrow key
-      elmnt.keyCode === 37
-    ) {
+    if (elmnt.key === "Delete" || elmnt.key === "Backspace" || elmnt.keyCode === 37) {
+
       const next = elmnt.target.tabIndex - 2;
+
       if (next > -1) {
+
         setTimeout(() => {
           elmnt.target.form.elements[next].focus();
           elmnt.target.form.elements[next].select();
         }, ms);
+        
       }
       //if right arrow key, move focus right
-    } else if (elmnt.keyCode === 39) {
+    } 
+    
+    else if (elmnt.keyCode === 39) {
       const next = elmnt.target.tabIndex;
       if (next < nOfFields) {
         setTimeout(() => {
