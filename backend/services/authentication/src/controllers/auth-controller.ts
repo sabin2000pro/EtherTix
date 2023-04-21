@@ -664,9 +664,8 @@ export const sendResetPasswordTokenStatus = async (
   return response.status(StatusCodes.OK).json({ isValid: true });
 };
 
-export const updateUserPassword = asyncHandler(
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
-    try {
+export const updateUserPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    
       const userId = request.headers.authorization.split(" ")[2];
 
       const currentPassword = request.body.currentPassword;
@@ -701,47 +700,32 @@ export const updateUserPassword = asyncHandler(
       }
 
       if (passwordConfirm !== newPassword) {
-        return next(
-          new ErrorResponse(
-            "New passwords don't match",
-            StatusCodes.BAD_REQUEST
-          )
-        );
+
+        return next(new ErrorResponse("New passwords don't match", StatusCodes.BAD_REQUEST));
       }
 
       const user = await User.findById(userId);
 
       if (!user) {
-        return next(
-          new ErrorResponse("No user found", StatusCodes.BAD_REQUEST)
-        );
+        return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST));
+
       }
 
       const currentPasswordMatch = user.comparePasswords(currentPassword);
 
       if (!currentPasswordMatch) {
-        // If passwords do not match
-        return next(
-          new ErrorResponse(
-            "Current password entered is invalid.",
-            StatusCodes.BAD_REQUEST
-          )
+      
+        return next(new ErrorResponse("Current password entered is invalid.", StatusCodes.BAD_REQUEST)
         );
       }
 
       user.password = newPassword;
       user.passwordConfirm = passwordConfirm;
-      await user.save(); // Save new user
 
-      return response
-        .status(StatusCodes.OK)
-        .json({ success: true, message: "User Password Updated" });
-    } catch (error) {
-      if (error) {
-        return next(error);
-      }
-    }
-  }
+      await user.save(); // Save new user
+      return response.status(StatusCodes.OK).json({ success: true, message: "User Password Updated" });
+    } 
+
 );
 
 export const updateUserProfile = async (
@@ -1095,7 +1079,7 @@ export const unlockUserAccount = asyncHandler(async (request: any, response: any
     } 
     
     catch (error: any) {
-      
+
       if (error) {
         return response
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
