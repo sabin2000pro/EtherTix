@@ -2,18 +2,13 @@ import React, {useState, createContext} from "react";
 import Web3 from "web3";
 import EventNftContract from '../contracts/TicketNFT.json';
 import { ExternalProvider } from "@ethersproject/providers";
+import { IWeb3Context } from "./interface/web3-interface";
 declare global {
     
   interface Window {
     ethereum?: ExternalProvider;
   }
 
-}
-
-export type IWeb3Context =  {
-    accounts: any;
-    currentBalance: any;
-    currentOwner: any;
 }
 
 export const Web3Context = createContext({} as any); // Create the Context API for Web3
@@ -69,6 +64,7 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
     }
 
     const initialiseNftContract = async (): Promise<any> => {
+        
         const networks = EventNftContract.networks as any;
         const nftContractAbi = EventNftContract.abi;
         const nftContract = new web3Client.eth.Contract(nftContractAbi as any, networks["5777"].address as unknown as any);
@@ -119,4 +115,5 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
     return <Web3Context.Provider value = {{connectMetaMaskWallet, initialiseNftContract, mintNewToken, fetchAccountBalance}} >
          {children}
     </Web3Context.Provider>
+    
 }
