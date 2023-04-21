@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.get('/', (request: any, response: any, next: NextFunction) => {
-return response.status(StatusCodes.OK).json({success: true, message: "Bookings Microservice Root Route"})
+    return response.status(StatusCodes.OK).json({success: true, message: "Bookings Microservice Root Route"})
 })
 
 export {app};

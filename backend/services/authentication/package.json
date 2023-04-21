@@ -13,6 +13,7 @@
     "auth:test": "jest tests/auth.test.ts --bail",
     "pm2:production": "NODE_ENV=production pm2 start dist/index.js --watch -i max"
   },
+  
   "keywords": [],
   "author": "Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook, Archie Millar",
   "license": "ISC",
