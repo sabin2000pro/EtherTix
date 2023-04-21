@@ -50,6 +50,12 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
         default: Date.now
     },
 
+    emailAddress: {
+        type: String,
+        default: "",
+        required: [true, "Please specify your e-mail address for this booking"]
+    },
+
     createdAt: {
         type: Date,
         default: Date.now
