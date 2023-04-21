@@ -2,7 +2,7 @@ import React, {useState, createContext} from "react";
 import Web3 from "web3";
 import EventNftContract from '../contracts/TicketNFT.json';
 import { ExternalProvider } from "@ethersproject/providers";
-import { IWeb3Context } from "./interface/web3-interface";
+
 declare global {
     
   interface Window {
@@ -58,7 +58,7 @@ export const Web3Provider = ({children}: any) => { // Context for Web3
             if(error) {
                 return console.error(error);
             }
-            
+
         }
     }
 
