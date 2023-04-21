@@ -1,19 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs'
-
-interface IPasswordReset {
-    owner: mongoose.Schema.Types.ObjectId,
-    token: string;
-    createdAt: Date;
-    expiresAt: Date;
-}
-
-interface PasswordResetDocument extends mongoose.Model<IPasswordReset> {
-    owner: mongoose.Schema.Types.ObjectId,
-    token: string;
-    createdAt: Date;
-    expiresAt: Date;
-}
+import { PasswordResetDocument } from "../interfaces/password-reset-interface";
 
 // @schema: E-mail Verification Model
 const PasswordResetSchema = new mongoose.Schema<PasswordResetDocument>({
