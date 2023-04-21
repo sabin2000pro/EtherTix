@@ -160,3 +160,6 @@ networks:
 
   events-service:
     driver: bridge
+
+  bookings-service:
+    driver: bridge
