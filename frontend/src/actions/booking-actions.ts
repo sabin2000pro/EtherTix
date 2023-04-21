@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 
 export const fetchBookings = () => async (dispatch: Dispatch): Promise<void> => {
     try {
-        
+        dispatch({type: FETCH_BOO})
     } 
     
     catch(error) {
@@ -62,5 +62,5 @@ export const cancelBooking = (id: string) => async (dispatch: Dispatch): Promise
 
     }
 
-    
+
 }
