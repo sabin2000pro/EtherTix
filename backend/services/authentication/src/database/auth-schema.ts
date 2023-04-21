@@ -2,8 +2,6 @@ require('dotenv').config();
 import mongoose from "mongoose";
 
 const AUTH_SERVICE_DB_URI = process.env.AUTH_SERVICE_DB_URI;
-console.log(`Auth DB Conn URI Inside Auth Service : `, AUTH_SERVICE_DB_URI);
-
 
 export const connectAuthSchema = async (): Promise<any> => {
 

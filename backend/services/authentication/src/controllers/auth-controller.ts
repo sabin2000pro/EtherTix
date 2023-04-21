@@ -19,6 +19,7 @@ import { ErrorResponse } from "../utils/error-response";
 // @public: True (No Authorization Required)
 
 export const sendLoginMfa = (transporter: any, email: any, userMfa: any) => {
+
   return transporter.sendMail({
     from: "mfa@ethertix.com",
     to: email,
@@ -32,6 +33,7 @@ export const sendLoginMfa = (transporter: any, email: any, userMfa: any) => {
 };
 
 export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
+
   const transporter = emailTransporter();
 
   transporter.sendMail({
@@ -43,6 +45,7 @@ export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
            <h1> ${resetPasswordURL}</h1>
            `,
   });
+
 };
 
 export const sendConfirmationEmail = (user: any, userOTP: number) => {
@@ -66,12 +69,7 @@ export const sendConfirmationEmail = (user: any, userOTP: number) => {
 // @returns: Server Response Promise Including the User Object and Token
 // @access: Public (NO Bearer Token Required)
 
-export const sendTokenResponse = (
-  request: Express.Request,
-  user: any,
-  statusCode: number,
-  response: any
-) => {
+export const sendTokenResponse = (request: Express.Request,user: any, statusCode: number,response: any) => {
   const token = user.getAuthenticationToken();
   request.session = { token }; // Store the token in the session
 
@@ -83,18 +81,12 @@ export const sendTokenResponse = (
 // @returns: Server Response Promise
 // @public: True (No Authorization Token Required)
 
-export const registerUser = asyncHandler(
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const { forename, surname, username, email, password, passwordConfirm } =
-      request.body;
+export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
+    const { forename, surname, username, email, password, passwordConfirm } = request.body;
 
     if (!forename) {
-      return next(
-        new ErrorResponse(
-          `Forename missing, please try again`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next( new ErrorResponse(`Forename missing, please try again`, StatusCodes.BAD_REQUEST));
     }
 
     if (!surname) {
@@ -127,22 +119,14 @@ export const registerUser = asyncHandler(
     const existingUser = await User.findOne({ email }); // Find an existing user
 
     if (existingUser) {
-      return response
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ success: false, message: `User already exists` });
+        return response.status(StatusCodes.BAD_REQUEST).json({ success: false, message: `User already exists` });
     }
 
-    const user = await User.create({
-      forename,
-      surname,
-      username,
-      email,
-      password,
-      passwordConfirm,
-    });
+    const user = await User.create({forename, surname, username, email, password,passwordConfirm});
     const token = user.getAuthenticationToken(); // Get the users JWT token
 
     if (!token) {
+      
       return next(
         new ErrorResponse(
           "JWT Token invalid. Please ensure it is valid",
