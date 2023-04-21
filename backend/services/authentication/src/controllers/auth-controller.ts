@@ -126,13 +126,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     const token = user.getAuthenticationToken(); // Get the users JWT token
 
     if (!token) {
-      
-      return next(
-        new ErrorResponse(
-          "JWT Token invalid. Please ensure it is valid",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+       return next( new ErrorResponse( "JWT Token invalid. Please ensure it is valid", StatusCodes.BAD_REQUEST));
     }
 
     const currentUser = user._id; // Get the current user's ID
@@ -141,13 +135,9 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     await user.save();
 
     const userOTP = generateOTPVerificationToken(); // Function that generates the OTP token
-    const verificationToken = new EmailVerification({
-      owner: user._id,
-      token: userOTP,
-    });
-    await verificationToken.save();
 
-    console.log("email verification token: ", userOTP);
+    const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
+    await verificationToken.save();
 
     //sendConfirmationEmail(user, userOTP as unknown as any);
 
