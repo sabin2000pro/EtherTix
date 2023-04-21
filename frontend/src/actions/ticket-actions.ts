@@ -57,7 +57,6 @@ export const createTicket = (event: string, issuer: string, name: string, ticket
     catch(error: any) {
 
       if(error) {
-        console.log(`Create Ticket Error : `, error);
         dispatch({type: CREATE_TICKET_FAIL, payload: error.response.data.message});
       }
 
@@ -71,14 +70,14 @@ export const editTicketDetails = (id: string, name: string, ticketClass: string,
         dispatch({type: EDIT_TICKET_REQUEST});
         const {data} = await axios.put(`http://localhost:5303/api/v1/tickets/${id}`, {name, ticketClass, stock, description, cost});
 
-        console.log(`Updated Ticket Data : `, data);
         dispatch({type: EDIT_TICKET_SUCCESS, payload: data.message});
     }
     
     catch(error: any) {
+
      if(error) {
         dispatch({type: EDIT_TICKET_FAIL, payload: error.response.data.message});
-    }
+     }
 
     }
 
@@ -86,8 +85,9 @@ export const editTicketDetails = (id: string, name: string, ticketClass: string,
 }
 
 export const deleteTicketByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
-    try {
 
+    try {
+        dispatch({type: DELETE_TICK})
     }
 
      catch(error) {
@@ -97,6 +97,7 @@ export const deleteTicketByID = (id: string) => async (dispatch: Dispatch): Prom
 }
 
 export const deleteTickets = () => async (dispatch: Dispatch): Promise<void> => {
+
     try {
 
     }
@@ -108,6 +109,5 @@ export const deleteTickets = () => async (dispatch: Dispatch): Promise<void> => 
       }
 
     }
-
 
 }
