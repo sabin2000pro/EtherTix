@@ -21,17 +21,46 @@ export const fetchSingleBooking = (id: string) => async (dispatch: Dispatch): Pr
 }
 
 export const createNewBooking = (eventId: string, userId: string, tickets: string[], totalPrice: Number) => async (dispatch: Dispatch): Promise<void> => {
-
+    try {
+    
+    } 
+     
+    catch(error) {
+    
+    }
 } 
 
 export const deleteBookings = () => async (dispatch: Dispatch): Promise<void> => {
+    try {
+
+    }
+    
+    catch(error) {
+
+    }
+
 
 }
 
 export const deleteBookingByID = (id: string) => async (dispatch: Dispatch): Promise<void> => {
+    try {
+
+    }
+    
+    catch(error) {
+
+    }
 
 }
 
 export const cancelBooking = (id: string) => async (dispatch: Dispatch): Promise<void> => {
+    try {
 
+    }
+    
+    catch(error) {
+
+    }
+
+    
 }
