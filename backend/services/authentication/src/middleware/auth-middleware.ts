@@ -32,8 +32,6 @@ export const protectAuth = asyncHandler(async (request: IAuthRequest & IRequestU
          token = request.headers.authorization.split(' ')[1]; // Get the JWT token at the first index after Bearer
     }
 
-    // Also verify to see if the token is in the cookies
-
     if(!token) {
         return next(new ErrorResponse("You are not authorized to perform this action", StatusCodes.BAD_REQUEST));
     }
@@ -84,7 +82,6 @@ export const isUserModerator = async (request: Request & IGetUserAuthInfoRequest
             return next();
         }
 
-
     } 
     
     catch(error: any) {
@@ -125,9 +122,15 @@ export const isUserAdmin = async (request: Request & IGetUserAuthInfoRequest, _r
 
 }
 
-export const isUserEventOrganiser = async (request: Request, response: Response, next: NextFunction) => {
+export const isUserEventOrganiser = async (request: Request & IGetUserAuthInfoRequest, response: Response, next: NextFunction) => {
+
     try {
-        
+        const currentUser = await User.findById(request.user._id);
+
+        if(currentUser.role !== 'organiser') {
+            return next(new ErrorResponse(`You are unauthorized to perform this action. Only event organisers are allowed`, StatusCodes.UNAUTHORIZED));
+        }
+
     }
     
     catch(error: any) {
