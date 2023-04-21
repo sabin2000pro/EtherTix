@@ -38,19 +38,18 @@ axiosInstance.interceptors.request.use((configData: any | undefined) => {
 
 });
 
-export const registerUser = async (
-  registerPayload: IRegisterCredentials
-): Promise<any> => {
+export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
+
   try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/register",
-      registerPayload
-    );
+
+    const response = await axios.post("http://localhost:5299/api/auth/register", registerPayload);
 
     const data = await response.data;
 
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
     if (err) {
       throw err;
     }
