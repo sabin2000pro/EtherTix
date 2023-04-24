@@ -14,9 +14,12 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
   const navigate = useNavigate();
 
   const checkRole = () => {
+
     if (user.role === "Admin" || user.role === "Organiser") {
       return true;
-    } else {
+    } 
+    
+    else {
       return false;
     }
   };
@@ -30,7 +33,9 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
 
     try {
       await logout();
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error(error);
       alert(error);
     }
@@ -41,7 +46,11 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
 
   return (
     <div>
+
+
       <NavDropdown title={user.username} id="dropdown-menu-right">
+
+
         <NavDropdown.Item
           style={{ color: "#04286b", fontWeight: "bold" }}
           href="/my-profile"
@@ -54,12 +63,15 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
         >
           My events
         </NavDropdown.Item>
+
         <NavDropdown.Item
           style={{ color: "#04286b", fontWeight: "bold" }}
           href="/my-tickets"
         >
-          My tickets
+          My Booked Tickets
         </NavDropdown.Item>
+
+
         {checkRole() && (
           <NavDropdown.Item
             style={{ color: "#04286b", fontWeight: "bold" }}
@@ -75,6 +87,8 @@ const NavBarLoggedInView = ({ user }: NavBarLoggedInViewProps) => {
         >
           Log out
         </NavDropdown.Item>
+
+
       </NavDropdown>
     </div>
   );
