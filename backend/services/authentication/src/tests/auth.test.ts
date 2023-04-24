@@ -80,13 +80,9 @@ describe("Login Test Suite", () => {
     it("Login with missing e-mail address", async () => {
 
         const missingEmailData = [{password: "123mini123"}]
-
-        for(const data of missingEmailData) {
-
-            const response = await request(app).post('/api/v1/auth/login').send(data)
-            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
-
-         }
+        const response = await request(app).post('/api/v1/auth/login').send(missingEmailData)
+        expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+        expect(response.body).not.toBe(null);
     })
 
     it("Login with invalid e-mail address", async () => {
@@ -184,7 +180,7 @@ describe("Verify Login MFA Test Suite", () => {
 describe("Logout Test Suite", () => {
     
     it("Logout user success", async () => { // Test for logging out user
-        const response = await request(app).get('/api/v1/auth/logout');
+        const response = await request(app).get('/api/v1/auth/logout').send();
         expect(response.statusCode).toBe(StatusCodes.OK);
     })
 
