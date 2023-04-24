@@ -672,6 +672,8 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 
 export const updateUserProfile = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
+  if(request.method === 'PUT') {
+    
     const userId = request.headers.authorization.split(" ")[2];
     const { email, username, role } = request.body;
 
@@ -699,11 +701,11 @@ export const updateUserProfile = asyncHandler(async (request: any, response: any
 
     await updatedUserProfile.save();
     return response.status(StatusCodes.OK).json({ success: true, message: "User profile updated" });
-  } 
+  }
+  }
 
 )
   
-
 
 export const deactivateUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
