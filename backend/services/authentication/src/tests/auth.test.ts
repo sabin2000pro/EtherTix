@@ -14,42 +14,36 @@ describe("Register Account Test Suite", () => {
     it("Register Account with missing fields", async () => {
 
         const missingBodyData = [{username: "bob2000", forename: "Sabin", surname: "Lungu", password: "123mini123", passwordConfirm: "123mini123"}]
-
-        for(const data of missingBodyData) {
-            const response = await request(app).post('/api/v1/auth/register').send(data);
-            expect(response.statusCode).not.toBe(StatusCodes.OK);
-            expect(response.body.success).not.toBe(true);
-            // expect(response.body.message).toContain("Credentials missing. Please try enter again");
-         }
-
+        const response = await request(app).post('/api/v1/auth/register').send(missingBodyData);
+        expect(response.statusCode).not.toBe(StatusCodes.OK);
+        expect(response.body.success).not.toBe(true);        
     })
 
     it("Register Account - Forename Length > 12", async () => {
         const forenameBodyData = [{forename: "forenamegreaterthantwelve"}];
-
         const response = await request(app).post('/api/v1/auth/register').send(forenameBodyData);
-        expect(response.statusCode).not.toBe(200);
+
+        expect(response.statusCode).not.toBe(StatusCodes.OK);
+        expect(response.body.message).not.toBe(null);
+    })
+
+    it("Register Account Unit Test - Forename Length < 8", async () => {
+        
     })
 
     it("Register account with valid details", async () => {
         const validRegisterData = [{forename: "John", surname: "Owens", username: "johnn32948", email: "john00@gmail.com", password: "test00", passwordConfirm: "test00", role: "User"}]
-
-        for(const data of validRegisterData) {
-            const response = await request(app).post('/api/v1/auth/register').send(data)
-            expect(response.statusCode).not.toBe(StatusCodes.CREATED);
+        const response = await request(app).post('/api/v1/auth/register').send(validRegisterData)
+        expect(response.statusCode).not.toBe(StatusCodes.CREATED);
         
-         }
-
     })
 
     it("Register Account with passwords not matching", async () => {
 
         const invalidBodyData = [{forename: "James", surname: "Brown", email: "jamesbronw09@gmail.com", password: "123mini123", passwordConfirm: "lol12345", role: "User"}]
-
-        for(const data of invalidBodyData) {
-            const response = await request(app).post('/api/v1/auth/register').send(data)
-             expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
-         }
+        const response = await request(app).post('/api/v1/auth/register').send(invalidBodyData)
+        expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+         
 
     })
 
