@@ -161,28 +161,13 @@ describe("Verify E-mail Address Test Suite", () => {
 
     it("Verify e-mail address with invalid User ID", async () => {
 
-        try {
-            const emailVerificationBody = [{userId: "aiachac3q74", OTP: "900890"}]
+        const emailVerificationBody = [{userId: "aiachac3q74", OTP: "900890"}]
+        const response = await request(app).post('/api/v1/auth/verify-email').send(emailVerificationBody);
 
-            for (const bodyData of emailVerificationBody) {
-                const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
-                expect(response.statusCode).not.toBe(StatusCodes.OK);
-                expect(response.body.success).toBe(false);
-                expect(response.body.message).toContain("Invalid user ID");
-            }
-
-        } 
-        
-        catch(error) {
-
-            if(error) {
-                return console.error(error.message);
-            }
-
-        }
-
+        expect(response.statusCode).not.toBe(StatusCodes.OK);
+        expect(response.body.success).toBe(false);
+        expect(response.body.message).toContain("Invalid user ID");
     })
-
 
 })
 
@@ -191,44 +176,16 @@ describe("Verify Login MFA Test Suite", () => {
 
     it("Verify Login MFA - Invalid MFA Code", async () => {
 
-        try {
-            const invalidMfaCodeData = [{userId: "63ce8f17dbde8e822781c701"}]
-        } 
-        
-        catch(error) {
 
-            if(error) {
-                return console.error(error.message);
-            }
-
-        }
     })
 
     it("Verify Login MFA - Valid Correct MFA Code", async () => {
-
-        try {
-            const validMFABody = [{userId: "", mfaCode: "909899"}]
-        } 
-        
-        catch(error) {
-
-        }
 
     })
 
     it("Verify Login MFA - Invalid User ID", async () => {
 
-        try {
-
-        } 
-        
-        catch(error) {
-
-            if(error) {
-                return console.error(error.message);
-            }
-
-        }
+       
 
     })
 
@@ -237,10 +194,8 @@ describe("Verify Login MFA Test Suite", () => {
 describe("Logout Test Suite", () => {
     
     it("Logout user success", async () => { // Test for logging out user
-
         const response = await request(app).get('/api/v1/auth/logout');
-        return expect(response.statusCode).toBe(StatusCodes.OK);
-
+        expect(response.statusCode).toBe(StatusCodes.OK);
     })
 })
 
@@ -248,25 +203,11 @@ describe("Forgot Password Test Suite ", () => {
 
     it("Forgot Password Test - Invalid E-mail Address", async () => {
         
-        try {
-
-        } 
-        
-        catch(error) {
-
-        }
 
     })
 
     it("Forgot Password Test - Valid E-mail Address", async () => {
 
-        try {
-
-        } 
-        
-        catch(error) {
-
-        }
 
     })
 })
@@ -289,6 +230,17 @@ describe("Reset Password Test Suite", () => {
 })
 
 describe("Update User Passwords Test Suite", () => {
+    it("Update User Password Unit Test II - Valid Password", async () => {
+        const updatePasswordData = [{}]
+    })
+
+    it("Update User Password Unit Test II - Missing Current Password", async () => {
+
+    })
+
+    it("Update User Password Unit Test III - Missing New Password", async () => {
+
+    })
 
 })
 
@@ -317,18 +269,7 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => { // Test 
     })
 
     it("Fetch Invalid Missing User ID Test", async () => {
-        try {
-
-        } 
-        
-        catch(error) {
-
-            if(error){ 
-                return console.error(error);
-            }
-
-        }
-
+            
     })
 
 

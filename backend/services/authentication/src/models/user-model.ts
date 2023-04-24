@@ -62,6 +62,7 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Please provide a valid password"],
 
         validate: {
+            
             validator: (password) => {
                 return passwordRegex.test(password)
             },
