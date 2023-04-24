@@ -4,9 +4,11 @@ import request from "supertest"
 import mongoose from "mongoose"
 import {app} from '../app';
 
+const AUTH_SERVICE_DB_URI = process.env.AUTH_SERVICE_DB_URI;
+
 // Before any tests begin, connect to the database
 beforeAll(async() => {
-    return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix-auth-schema.doefuhx.mongodb.net/test");
+    return await mongoose.connect(AUTH_SERVICE_DB_URI);
 })
 
 describe("Register Account Test Suite", () => {

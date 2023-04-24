@@ -612,22 +612,13 @@ export const resetPassword = asyncHandler(
 );
 
 export const getCurrentUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-    try {
-
+  
       const userId = request.headers.authorization.split(" ")[2];
       const user = await User.findById(userId);
       return response.status(StatusCodes.OK).json({ success: true, user });
 
     } 
-    
-    catch (error: any) {
 
-      if (error) {
-        return next(error);
-      }
-
-    }
-  }
 );
 
 export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -643,50 +634,31 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
       const passwordConfirm = request.body.passwordConfirm;
 
       if (!currentPassword) {
-        return next(
-          new ErrorResponse(
-            "Please enter your current password",
-            StatusCodes.BAD_REQUEST
-          )
-        );
+          return next( new ErrorResponse("Please enter your current password", StatusCodes.BAD_REQUEST));
       }
 
       if (!newPassword) {
-        return next(
-          new ErrorResponse(
-            "Please provide your new password",
-            StatusCodes.BAD_REQUEST
-          )
-        );
+        return next(new ErrorResponse("Please provide your new password", StatusCodes.BAD_REQUEST));
       }
 
       if (!passwordConfirm) {
-        return next(
-          new ErrorResponse(
-            "Please confirm your new password",
-            StatusCodes.BAD_REQUEST
-          )
-        );
+          return next(new ErrorResponse( "Please confirm your new password", StatusCodes.BAD_REQUEST));
       }
 
       if (passwordConfirm !== newPassword) {
-
-        return next(new ErrorResponse("New passwords don't match", StatusCodes.BAD_REQUEST));
+          return next(new ErrorResponse("New passwords don't match", StatusCodes.BAD_REQUEST));
       }
 
       const user = await User.findById(userId);
 
       if (!user) {
-        return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST));
-
+          return next(new ErrorResponse("No user found", StatusCodes.BAD_REQUEST));
       }
 
       const currentPasswordMatch = user.comparePasswords(currentPassword);
 
       if (!currentPasswordMatch) {
-      
-        return next(new ErrorResponse("Current password entered is invalid.", StatusCodes.BAD_REQUEST)
-        );
+          return next(new ErrorResponse("Current password entered is invalid.", StatusCodes.BAD_REQUEST));
       }
 
       user.password = newPassword;
@@ -698,11 +670,7 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 
 );
 
-export const updateUserProfile = async (
-  request: any,
-  response: any,
-  next: NextFunction
-): Promise<any> => {
+export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
   try {
     const userId = request.headers.authorization.split(" ")[2];
 
