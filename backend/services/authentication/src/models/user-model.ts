@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
 
     surname: { // Users surname
         type: String,
-        minlength: [8, "Surname must be a minimum of 8 characters"],
+        minlength: [5, "Surname must be a minimum of 5 characters"],
         maxlength: [12, "Surname cannot exceed 12 characters"],
         required: [true, "Please provide your surname"]
     },
