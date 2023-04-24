@@ -705,31 +705,23 @@ export const updateUserProfile = asyncHandler(async (request: any, response: any
   
 
 
-export const deactivateUserAccount = asyncHandler(
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const deactivateUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
     const { userId } = request.body;
     const user = await User.findById(userId);
 
     if (!user) {
-      return next(
-        new ErrorResponse("No user found with that ID", StatusCodes.NOT_FOUND)
-      );
+      return next(new ErrorResponse("No user found with that ID", StatusCodes.NOT_FOUND));
     }
 
     if (!user.isValid || !user.isActive) {
-      return next(
-        new ErrorResponse(
-          "User account is already inactive",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+
+      return next( new ErrorResponse("User account is already inactive", StatusCodes.BAD_REQUEST));
     }
 
     if (user.isActive && user.isValid) {
-      // If the current user account is active and the user account is valid
       user.isActive = !user.isActive;
       user.isValid = !user.isValid;
-
       await user.save();
     }
 
