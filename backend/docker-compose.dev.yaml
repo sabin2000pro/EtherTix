@@ -153,10 +153,6 @@ services:
       context: ../backend/services/booking-service
       dockerfile: Dockerfile
 
-    depends_on:
-      - tickets-service
-      - events-service
-
     ports:
       - "5050:5050"
 
@@ -180,6 +176,7 @@ services:
 
   kafka:
     image: wurstmeister/kafka
+    
     ports:
       - "9092:9092"
 
