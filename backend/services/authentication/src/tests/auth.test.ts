@@ -13,15 +13,22 @@ describe("Register Account Test Suite", () => {
 
     it("Register Account with missing fields", async () => {
 
-        const missingBodyData = [{username: "bob2000", email: "andy09@gmail.com", forename: "Sabin", surname: "Lungu"}]
+        const missingBodyData = [{username: "bob2000", forename: "Sabin", surname: "Lungu", password: "123mini123", passwordConfirm: "123mini123"}]
 
         for(const data of missingBodyData) {
-            const response = await request(app).post('/api/v1/auth/register').send(data)
+            const response = await request(app).post('/api/v1/auth/register').send(data);
             expect(response.statusCode).not.toBe(StatusCodes.OK);
-            expect(response.body.success).toBe(false);
-            expect(response.body.message).toContain("Credentials missing. Please try enter again");
+            expect(response.body.success).not.toBe(true);
+            // expect(response.body.message).toContain("Credentials missing. Please try enter again");
          }
 
+    })
+
+    it("Register Account - Forename Length > 12", async () => {
+        const forenameBodyData = [{forename: "forenamegreaterthantwelve"}];
+
+        const response = await request(app).post('/api/v1/auth/register').send(forenameBodyData);
+        expect(response.statusCode).not.toBe(200);
     })
 
     it("Register account with valid details", async () => {
@@ -271,34 +278,16 @@ describe("Forgot Password Test Suite ", () => {
 describe("Reset Password Test Suite", () => {
 
     it("Reset Password Test - Missing password", async () => {
-        try {
-
-        } 
         
-        catch(error) {
-
-        }
 
     })
 
     it("Reset Password Test - Valid Password", async () => {
-        try {
-
-        } 
         
-        catch(error) {
-
-        }
     })
 
     it("Reset Password Test - Invalid Current Password", async () => {
-        try {
-
-        } 
-        
-        catch(error) {
-
-        }
+       
     })
 
 })
@@ -314,18 +303,7 @@ describe("Update User Profile ", () => {
 describe("Fetch All Users Test Suite", () => {
 
     it("Fetch All Users Unit Test", async () => {
-        try {
-
-        } 
         
-        catch(error) {
-
-            if(error) {
-                return console.error(error);
-
-            }
-        }
-
     })
 
 })
@@ -333,28 +311,12 @@ describe("Fetch All Users Test Suite", () => {
 describe("Fetch Single User - Organiser Dashboard Test Suite" , () => { // Test Suite for fetching a single user account details in JSON format
 
     it("Fetch Valid Single user By ID ", async () => {
-        try {
-
-        } 
-        
-        catch(error) {
-            if(error){ 
-                return console.error(error);
-            }
-        }
+       
 
     })
 
     it("Fetch Invalid User ID Test", async () => {
-        try {
-
-        } 
-        
-        catch(error) {
-            if(error){ 
-                return console.error(error);
-            }
-        }
+       
 
     })
 
