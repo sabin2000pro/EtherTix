@@ -28,7 +28,7 @@ describe("Register Account Test Suite", () => {
     })
 
     it("Register Account Unit Test - Forename Length < 8", async () => {
-        
+
     })
 
     it("Register account with valid details", async () => {
@@ -43,19 +43,15 @@ describe("Register Account Test Suite", () => {
         const invalidBodyData = [{forename: "James", surname: "Brown", email: "jamesbronw09@gmail.com", password: "123mini123", passwordConfirm: "lol12345", role: "User"}]
         const response = await request(app).post('/api/v1/auth/register').send(invalidBodyData)
         expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
-         
-
+    
     })
 
     it("Register account with forename characters exceeding limit", async () => {
         const invalidForename = [{forename: "weofjewoijfewiojfewoijfweoifwe", surname: "Andy", "email": "eabinlungu09@gmail.com", password: "123mini123", passwordConfirm: "123mini123", role: "User"}]
+        const response = await request(app).post('/api/v1/auth/register').send(invalidForename)
 
-        for(const data of invalidForename) {
-            const response = await request(app).post('/api/v1/auth/register').send(data)
-    
-            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
-         }
-
+        expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+         
     })
 
 })
@@ -65,12 +61,8 @@ describe("Login Test Suite", () => {
     it("Login with valid credentials", async () => {
 
         const validLoginData = [{email: "dana00@gmail.com", password: "123mini123"}]
-
-        for(const data of validLoginData) {
-            const response = await request(app).post('/api/v1/auth/login').send(data)            
-            expect(response.statusCode).toBe(StatusCodes.OK);
-         }
-
+        const response = await request(app).post('/api/v1/auth/login').send(validLoginData)            
+        expect(response.statusCode).toBe(StatusCodes.OK);
     })
 
     it("Login with missing e-mail address", async () => {
