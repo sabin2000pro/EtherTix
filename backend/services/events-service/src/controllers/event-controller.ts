@@ -46,6 +46,7 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
      }
 
      const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
+    
      await event.save();
 
     return response.status(StatusCodes.CREATED).json({success: true, event});
@@ -207,7 +208,7 @@ export const unlikeEvent = asyncHandler(async (request: any, response: any, next
 })
 
 export const bookmarkEvent = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    
+
 })
 
 export const fetchTotalNumberOfEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {

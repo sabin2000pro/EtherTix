@@ -19,18 +19,19 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         uint256 tokenIndex;
     }
 
-    uint256 public totalTokenSupply; // Stores the total token supply
+    uint256 public totalTokenSupply;
     uint256 public initialListingPrice = 0.015 ether;
     uint256 public maxTokenSupply = 50;
 
     NftToken[] public allMintedTokens;
 
     mapping (uint256 => NftToken) public circulatingTokens; // Create mapping between an Integer and the token struct (1 => Nft data, 2: Nft Data...)
-    mapping (uint256 => address) tokenOwner; // Store the owners of the NFT
+    mapping (uint256 => address) tokenOwner;
     mapping (uint256 => bool) public isTokenForSale;
     mapping (uint256 => uint) public tokensPrice;
     mapping(string => bool) tokenNames;
 
+    // Event Emitters
     event NewTokenMinted(uint256 tokenId, string tokenName, string tokenClass, uint tokenPrice, uint256 tokenCapacity, bool isListed, NftToken[] allMintedTokens);
     event NftPurchased (uint256 tokenId, address newTokenOwner, string tokenName, uint tokenPrice);
     event NftOwnershipTransferEvent(uint tokenId, address oldTokenOwnerAddress, address newTokenOwnerAddress);
