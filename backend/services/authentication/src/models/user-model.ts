@@ -86,7 +86,7 @@ const UserSchema = new mongoose.Schema({
         default: 0
     },  
 
-    pastEventsHeld: {
+    pastEventsHeld: { // The number of past events this user has held
         type: Number,
         default: 0,
     },

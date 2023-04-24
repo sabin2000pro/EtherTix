@@ -262,7 +262,7 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
 export const loginUser = asyncHandler(async ( request: any, response: any, next: NextFunction): Promise<any | Response> => {
     const { email, password, mfaToken } = request.body;
 
-    if (!email || !password || !mfaToken) {
+    if (!email || !password) {
       return next( new ErrorResponse( `Missing parameter(s). Check entries`, StatusCodes.BAD_REQUEST));
     }
 
