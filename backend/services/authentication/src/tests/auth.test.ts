@@ -189,15 +189,23 @@ describe("Logout Test Suite", () => {
 
 describe("Forgot Password Test Suite ", () => {
 
-    it("Forgot Password Test - Invalid E-mail Address", async () => {
-        
-
+    it("Forgot Password Test - Missing E-mail Address", async () => {
+    
     })
 
     it("Forgot Password Test - Valid E-mail Address", async () => {
 
-
     })
+
+    it("Forgot Password Test - E-mail Address Length < email.length - 1", async () => {
+        
+    })
+
+    it("Forgot Password Test - E-mail Address Length > email.length (15 Characters) ", async () => {
+        
+    })
+
+
 })
 
 describe("Reset Password Test Suite", () => {

@@ -22,7 +22,6 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
   const [errorText, setErrorText] = useState<string | null>(null);
 
   const {register, handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<IRegisterCredentials>();
-
   const Password = watch("password", "");
 
   async function onSubmit(credentials: IRegisterCredentials) {
@@ -51,7 +50,6 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
         alert(error);
       }
 
-
       console.error(error);
     }
   }
@@ -63,6 +61,7 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
   return (
 
     <Modal show onHide={onDismiss} backdrop = "static" centered>
+
 
       <Modal.Header closeButton>
 
@@ -89,8 +88,8 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
 
             <TextInputField name="forename" label = "Forename" type="text" placeholder="Forename" register={register} registerOptions={{ required: "Required" }} error = {errors.username} autoFocus
             />
-            <TextInputField
-              name="surname"
+
+            <TextInputField name = "surname"
               label="Surname"
               type="text"
               placeholder="Surname"
@@ -108,6 +107,7 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
               registerOptions={{ required: "Required" }}
               error={errors.username}
             />
+
             <TextInputField
               name="email"
               label="Email"
@@ -117,6 +117,7 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
               registerOptions={{ required: "Required" }}
               error={errors.email}
             />
+
             <TextInputField
               name="password"
               label="Password"
@@ -133,13 +134,17 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
               type={showPassword ? "text" : "password"}
               placeholder="Confirm Password"
               register={register}
+
               registerOptions={{
+
                 required: "Required",
                 validate: (value) =>
                   value === Password || "Passwords don't match.",
               }}
+
               error={errors.passwordConfirm}
             />
+
             <Form.Check
               style={{ marginBottom: "15px" }}
               type="checkbox"
@@ -147,10 +152,15 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
               checked={showPassword}
               onChange={togglePassVisibility}
             />
+            
             <Button type="submit" disabled={isSubmitting} className="w-100">
               Sign Up
             </Button>
+
+
           </Container>
+
+
         </Form>
       </Modal.Body>
     </Modal>

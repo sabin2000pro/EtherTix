@@ -462,14 +462,8 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
     const { email } = request.body;
     const user = await User.findOne({ email });
 
-    // Check if we have an e-mail in the body of the request
-
     if (!email) {
-
-      return next(new ErrorResponse(`Please enter an email address`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+       return next(new ErrorResponse(`Please enter an email address`, StatusCodes.BAD_REQUEST));
     }
 
     if (!user) {
@@ -497,21 +491,17 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
     }
 
     const resetPasswordToken = await PasswordReset.create({owner: user._id, token: token}); 
-
     await resetPasswordToken.save();
 
     const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}`; // Create the reset password URL
     //sendPasswordResetEmail(user, resetPasswordURL);
 
-    console.log("reset password url: ", resetPasswordURL);
-
-    return response
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "Reset Password E-mail Sent", email });
+    return response.status(StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent", email });
   }
 );
 
 export const resetPassword = asyncHandler(
+
   async (request: any, response: any, next: NextFunction): Promise<any> => {
     const newPassword = request.body.newPassword;
     const resetToken = request.body.resetToken;
