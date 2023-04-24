@@ -40,6 +40,8 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
         for(const ticketId of missingTicketId) {
             const response = await request(app).get(`/api/v1/tickets/${ticketId._id}`);
             expect(response.statusCode).not.toBe(StatusCodes.OK);
+            expect(response.headers["content-type"]).toContain("application/json");
+            expect(response.statusCode).toBeLessThan(StatusCodes.INTERNAL_SERVER_ERROR);
         }
 
     })
