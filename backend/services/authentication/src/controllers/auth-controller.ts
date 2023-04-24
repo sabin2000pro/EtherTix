@@ -12,11 +12,16 @@ import asyncHandler from "express-async-handler";
 import { generateRandomResetPasswordToken } from "../utils/generateResetPasswordToken";
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
+import axios from 'axios';
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
 // @parameters: Transporter Object, User Object, Randomly Generated User OTP
 // @returns: void
 // @public: True (No Authorization Required)
+
+export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
+  return response.status(StatusCodes.OK).json({ isValid: true });
+};
 
 export const sendLoginMfa = (transporter: any, email: any, userMfa: any) => {
 
@@ -163,14 +168,12 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
     }
 
     if (user.isActive) {  // If the user account is already active before verifying their e-mail address, send back error
-
       return next( new ErrorResponse(`User account is already active`, StatusCodes.BAD_REQUEST));
     }
 
     const token = await EmailVerification.findOne({ owner: userId }); // Find a verification token
 
     if (!token) {
-
       return next(new ErrorResponse(`OTP Verification token is not found. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
@@ -205,6 +208,7 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 
       return response.status(StatusCodes.CREATED).json({ message: "E-mail Address verified", sentAt: currentDate });
     }
+
   }
 );
 
@@ -213,37 +217,22 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
 // @returns: Server Response Promise
 // @public: True (No Authorization Token Required)
 
-export const resendEmailVerificationCode = asyncHandler(
-
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const resendEmailVerificationCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const { userId } = request.body;
     const currentUser = await User.findById(userId);
 
     if (!currentUser) {
-      // If we have no current user
-      return next(
-        new ErrorResponse(
-          "Current user does not exist. Check user again",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+       return next(new ErrorResponse("Current user does not exist. Check user again",StatusCodes.BAD_REQUEST));
     }
 
     if (!isValidObjectId(userId)) {
-      return next(
-        new ErrorResponse(
-          "Owner ID invalid. Check again",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next(new ErrorResponse("Owner ID invalid. Check again", StatusCodes.BAD_REQUEST));
     }
 
     const token = await EmailVerification.findOne({ owner: userId }); // Find associating user token
 
     if (!token) {
-      return next(
-        new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST)
-      );
+      return next(new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST));
     }
     
     else {
@@ -284,29 +273,19 @@ export const loginUser = asyncHandler(async ( request: any, response: any, next:
     }
 
     if (user.isLocked) {
-
-      return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
+       return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
     }
 
     if (!user.isVerified) {
-      return next(
-        new ErrorResponse(
-          `You cannot login. Please verify your e-mail address first`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next(new ErrorResponse(`You cannot login. Please verify your e-mail address first`, StatusCodes.BAD_REQUEST));
     }
 
     // Compare user passwords before logging in
     const matchPasswords = await user.comparePasswords(password);
 
     if (!matchPasswords) {
-      return next(
-        new ErrorResponse(
-          `Passwords do not match. Please try again`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+
+      return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST));
     }
 
     await verifyLoginToken(user._id.toString(), mfaToken, user.email, next);
@@ -329,13 +308,11 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   }
 
   if (!user) {
-
-    return next( new ErrorResponse("No user-userId match...", StatusCodes.BAD_REQUEST));
+     return next( new ErrorResponse("No user-userId match...", StatusCodes.BAD_REQUEST));
   }
 
   if (!mfaToken) {
-    return next(new ErrorResponse("Please provide an MFA token", StatusCodes.BAD_REQUEST));
-
+     return next(new ErrorResponse("Please provide an MFA token", StatusCodes.BAD_REQUEST));
   }
 
   const loginVerificationToken = await TwoFactorVerification.findOne({ owner: userId });
@@ -345,12 +322,11 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
     return next(new ErrorResponse("No mfa token found on the server-side", StatusCodes.BAD_REQUEST));
   }
 
-  const expired = await tokenExpired(userId);
+  const expired = await verifyTokenExpiration(userId);
 
   if (expired === true) {
 
     await generateNewVerificationToken(userId, user.email);
-
     return next(new ErrorResponse("The token you entered has expired, a new one has been sent to your email", StatusCodes.UNAUTHORIZED));
   }
 
@@ -374,7 +350,7 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
 
 //returns true of token associated with userId is expired (also deletes that token)
 
-const tokenExpired = async (userId: string) => {
+const verifyTokenExpiration = async (userId: string): boolean => {
   const currentDate = new Date();
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
@@ -439,6 +415,7 @@ export const sendTwoFactorLoginCode = asyncHandler(async (request: any, response
 
     return response.status(StatusCodes.OK).json({ success: true, message: "Two Factor Verification Code Sent", sentAt: currentDate});
   }
+
 );
 
 export const logoutUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -509,24 +486,17 @@ export const resetPassword = asyncHandler( async (request: any, response: any, n
     }
 
     if (resetToken !== resetUser.token) {
-      return next(
-        new ErrorResponse(
-          "Your reset token doesn't match ours",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+
+      return next(new ErrorResponse("Your reset token doesn't match the one in the database", StatusCodes.BAD_REQUEST));
     }
 
     user.password = newPassword;
     user.passwordConfirm = newPassword;
 
     await user.save(); // Save new user after reset the password
-
     await PasswordReset.deleteOne({ owner: userId });
 
-    return response
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "Password Reset Successfully" });
+    return response.status(StatusCodes.OK).json({ success: true, message: "Password Reset Successfully" });
   }
 );
 
@@ -539,10 +509,6 @@ export const getCurrentUser = asyncHandler(async (request: any, response: any, n
     } 
 
 );
-
-export const sendResetPasswordTokenStatus = async (request: any, response: any, next: NextFunction): Promise<any> => {
-  return response.status(StatusCodes.OK).json({ isValid: true });
-};
 
 export const updateUserPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     

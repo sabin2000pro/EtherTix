@@ -17,9 +17,11 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
         }
 
         return response.status(StatusCodes.OK).json({success: true, tickets});
-   } 
+     } 
    
 )
+
+
 
 
 // @desc      Get Event Ticket By ID
