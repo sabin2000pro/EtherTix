@@ -460,7 +460,7 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
     const user = await User.findOne({ email });
 
     if (!email) {
-       return next(new ErrorResponse(`Please enter an email address`, StatusCodes.BAD_REQUEST));
+       return next(new ErrorResponse(`Please provide a valid email address`, StatusCodes.BAD_REQUEST));
     }
 
     if (!user) {

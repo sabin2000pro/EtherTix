@@ -185,13 +185,18 @@ describe("Logout Test Suite", () => {
         const response = await request(app).get('/api/v1/auth/logout');
         expect(response.statusCode).toBe(StatusCodes.OK);
     })
-    
+
 })
 
 describe("Forgot Password Test Suite ", () => {
 
     it("Forgot Password Test - Missing E-mail Address", async () => {
-    
+        const forgotPasswordBody = [{email: null}]
+
+        const response = await request(app).post('/api/v1/auth/forgot-password').send(forgotPasswordBody);
+        expect(response.statusCode).not.toBe(StatusCodes.OK);
+        expect(response.body.error).toBe("Please provide a valid email address");
+        expect(response.body.success).not.toBe(true);
     })
 
     it("Forgot Password Test - Valid E-mail Address", async () => {
