@@ -103,7 +103,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     }
 
     if (password !== passwordConfirm) {
-        return next(new ErrorResponse(`Credentials missing. Please try enter again`, StatusCodes.BAD_REQUEST)
+        return next(new ErrorResponse(`Passwords do not match. Please try again`, StatusCodes.BAD_REQUEST)
       );
 
     }
