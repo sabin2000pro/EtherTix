@@ -1,5 +1,6 @@
 require('dotenv').config();
-import supertest from "supertest";
+import { StatusCodes } from 'http-status-codes';
+import request from 'supertest';
 import mongoose from 'mongoose';
 import {app} from "../app";
 
@@ -13,15 +14,18 @@ beforeAll(async () => {
 describe("Fetch All Tickets - Unit Test Suite", () => {
 
     it("Fetch All Tickets - Unit Test I", async () => {
-
+        const response = await request(app).get(`/api/v1/tickets`).send();
+        expect(response.statusCode).toBe(StatusCodes.OK);
+        expect(response.body).not.toBe(null);
     })
 
 
 })
 
 describe("Fetch Single Ticket - Unit Test Suite", () => {
-    it("Fetch Single Ticket By ID - Valid ID", async () => {
 
+    it("Fetch Single Ticket By ID - Valid ID", async () => {
+        
     })
 
     it("Fetch Single Ticket By ID - Missing ID", async () => {
@@ -34,7 +38,7 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
 
 })
 
-describe("Create Event Ticket - Unit Test Suite", async () => {
+describe("Create Event Ticket - Unit Test Suite",  () => {
     it("Create New Ticket - Valid Details", async () => {
         const ticketBodyData = [{name: "Musselburgh Horse Racing - Basic Ticket", ticketClass: "basic", currentStock: 3}]
     })
@@ -58,6 +62,19 @@ describe("Create Event Ticket - Unit Test Suite", async () => {
     it("Create New Ticket - Missing Event ID", async () => {
 
     })
+
+})
+
+describe("Edit Event Ticket Test Suite", () => {
+    it("Edit Ticket Details - Valid ID", async () => {
+
+    })
+
+    it("Edit Ticket Details - Missing Ticket Class & Current Stock", async () => {
+        
+    })
+
+
 })
 
 afterAll((done) => {

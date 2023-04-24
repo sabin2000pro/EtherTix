@@ -8,7 +8,8 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "dev": "TICKETS_DEV_MODE=development nodemon dist/src/index.js",
-    "start-tickets:service": "npm run dev"
+    "start-tickets:service": "npm run dev",
+    "tickets-service:test": "jest tests/tickets.test.ts --bail"
   },
 
   "keywords": [],
