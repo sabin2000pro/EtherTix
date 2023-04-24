@@ -40,6 +40,8 @@ const UserSchema = new mongoose.Schema({
     // User's e-mail address
     email: {
         type: String,
+        minlength: [8, "E-mail Address must be at least 8 characters long"],
+        maxlemngth: [15, "E-mail address cannot exceed 15 characters"],
         required: [true, "Please specify a valid e-mail address"],
         unique: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
@@ -54,7 +56,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         trim: true,
-        
+
         minlength: [6, "Password must have at least 6 characters"],
         maxlength: [15, "Password must not exceed 15 characters"],
         required: [true, "Please provide a valid password"],
