@@ -16,6 +16,7 @@ if(process.env.API_GATEWAY_NODE_ENV === 'development') {
 
 app.use(express.json());
 app.use(mongoSanitize());
+app.use(helmet());
 
 app.set('trust proxy', true);
 app.use(hpp());
@@ -29,6 +30,5 @@ app.use(cors({
 app.use('/api/v1/api-gateway', apiGatewayRouter);
 app.use(errorHandler);
 
-app.use(helmet());
 
 export {app}

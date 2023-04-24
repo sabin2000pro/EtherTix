@@ -338,15 +338,11 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
 
   }
 
-  const MfactorToken = await TwoFactorVerification.findOne({ owner: userId });
+  const loginVerificationToken = await TwoFactorVerification.findOne({ owner: userId });
 
-  if (!MfactorToken) {
-    return next(
-      new ErrorResponse(
-        "No mfa token found in our system...",
-        StatusCodes.BAD_REQUEST
-      )
-    );
+  if (!mfaToken) {
+
+    return next(new ErrorResponse("No mfa token found on the server-side", StatusCodes.BAD_REQUEST));
   }
 
   const expired = await tokenExpired(userId);
@@ -354,6 +350,7 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   if (expired === true) {
 
     await newToken(userId, user.email);
+
     return next(
       new ErrorResponse(
         "The token you entered has expired, a new one has been sent to your email",
@@ -363,21 +360,14 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   }
 
   // Check to see if the tokens match
-  const mfaTokensMatch = await MfactorToken.compareVerificationTokens(mfaToken);
+  const mfaTokensMatch = await loginVerificationToken.compareVerificationTokens(mfaToken);
 
   if (!mfaTokensMatch) {
-    // If tokens don't match
     user.isActive = false;
-    return next(
-      new ErrorResponse(
-        "The entered MFA token is invalid. Try again",
-        StatusCodes.BAD_REQUEST
-      )
-    );
+    return next(new ErrorResponse( "The entered MFA token is invalid. Try again", StatusCodes.BAD_REQUEST));
   }
 
   await TwoFactorVerification.deleteOne({ owner: userId });
-
   user.isActive = true; // And user account is active
 
   // return response
@@ -385,17 +375,19 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   //   .json({ message: "Your account is now active", sentAt: currentDate });
 };
 
-// API 6
+
 
 //returns true of token associated with userId is expired (also deletes that token)
+
 const tokenExpired = async (userId: string) => {
-  const currentDate = new Date(); // Get the current date at which the token is created at
+  const currentDate = new Date();
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
   if (currentDate.getTime() >= tokenINdb.expiresAt.getTime()) {
     tokenINdb.deleteOne({ owner: userId });
     return true;
   }
+  
   return false;
 };
 
