@@ -14,6 +14,7 @@ import { generateRandomResetPasswordToken } from "../utils/generateResetPassword
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
 import axios from 'axios';
+import { kafkaClient } from '../broker/auth-broker';
 
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
@@ -89,10 +90,10 @@ export const sendTokenResponse = (request: Express.Request,user: any, statusCode
 // @public: True (No Authorization Token Required)
 
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-   const producer = kafka.producer();
+   const producer = kafkaClient.producer();
    const connectedAgent = await producer.connect();
 
-   console.log(`Connected Agent : `, connectedAgent);
+   console.log(`Connected Kafka Agent : `, connectedAgent);
 
 
     const { forename, surname, username, email, password, passwordConfirm } = request.body;  
