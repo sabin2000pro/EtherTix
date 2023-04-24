@@ -35,21 +35,27 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
 })
 
 describe("Create Event Ticket - Unit Test Suite", async () => {
-    it("Create New Event - Valid Details", async () => {
+    it("Create New Ticket - Valid Details", async () => {
 
     })
 
-    it("Create New Event - Missing Details", async () => {
+    it("Create New Ticket - Missing Details", async () => {
 
     })
 
-    it("Create New Event - Event Name < 10 characters length", async () => {
+    it("Create New Ticket - Event Name < 10 characters length", async () => {
 
     })
 
-    it("Create New Event - Event Name > 100 characters length", async () => {
-        
+    it("Create New Ticket - Event Name > 100 characters length", async () => {
+
     })
+
+    it("Create New Ticket - Missing Issuer ID", async () => {
+
+    })
+
+    it("Create New Event - ")
 })
 
 afterAll((done) => {
