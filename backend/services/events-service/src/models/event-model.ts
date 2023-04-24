@@ -69,8 +69,8 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     capacity: { // Capacity that the event holds
         type: Number,
         required: [true, "Please specify the maximum number of people that can attend the event"],
-        min: [3, "There must be at least 3 minimum people at the event"],
-        max: [250, "There cannot be more than 250 people at the current event"]
+        minlength: [3, "There must be at least 3 minimum people at the event"],
+        maxlength: [250, "There cannot be more than 250 people at the current event"]
     },
 
     hasSeating: {
@@ -109,13 +109,13 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     organiser: { // Relationship between the event and the venue at which the event is held at (Event -> Venue)
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
-        required: [true, "Please specify the Organiser ID of this event"]
+        required: [true, "Please specify the organiser ID for this event"]
     },
 
     venue: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "venue",
-        required: [true, "Please specify a valid venue ID for this event"]
+        required: [true, "Please specify the venue ID this event belongs to"]
     },
 
     tickets: [{ // Event -> Ticket Relationship
