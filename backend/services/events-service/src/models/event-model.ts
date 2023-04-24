@@ -5,11 +5,16 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     name: { // Event Name
         type: String,
-        required: [true, "Please specify the name of the event"]
+        minlength: [50, "Event name must have at least 50 characters"],
+        maxlength: [100, "Event name cannot exceed 100 characters"],
+        required: [true, "Please specify the name of the event"],
+        unique: true
     },
 
     summary: { // Event Summary
         type: String,
+        minlength: [50, "Event summary must have at least 12 characters"],
+        maxlength: [150, "Event summary cannot exceed 150 characters"],
         required: [true, "Please provide a summary for the event"]
     },
 
