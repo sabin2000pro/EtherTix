@@ -36,11 +36,11 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
 
 describe("Create Event Ticket - Unit Test Suite", async () => {
     it("Create New Ticket - Valid Details", async () => {
-
+        const ticketBodyData = [{name: "Musselburgh Horse Racing - Basic Ticket", ticketClass: "basic", currentStock: 3}]
     })
 
     it("Create New Ticket - Missing Details", async () => {
-
+    
     })
 
     it("Create New Ticket - Event Name < 10 characters length", async () => {
@@ -55,7 +55,9 @@ describe("Create Event Ticket - Unit Test Suite", async () => {
 
     })
 
-    it("Create New Event - ")
+    it("Create New Ticket - Missing Event ID", async () => {
+
+    })
 })
 
 afterAll((done) => {

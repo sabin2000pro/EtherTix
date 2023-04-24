@@ -10,7 +10,6 @@ export interface ITicketAttributes { // Interface that stores the ticket data
     ticketSold: boolean
     saleStartsAt: Date,
     saleEndsAt: Date,
-    confirmationMessage: string,
     event: mongoose.Schema.Types.ObjectId,
     issuer: mongoose.Schema.Types.ObjectId,
 }
@@ -26,7 +25,6 @@ export interface ITicketDocument extends mongoose.Model<ITicketAttributes> {
    onSaleStatus: string,
    saleStartsAt: Date,
    saleEndsAt: Date,
-   confirmationMessage: string,
    event: mongoose.Schema.Types.ObjectId,
    issuer: mongoose.Schema.Types.ObjectId,
 }
