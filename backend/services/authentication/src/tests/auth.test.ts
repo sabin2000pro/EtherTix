@@ -163,8 +163,11 @@ describe("Verify E-mail Address Test Suite", () => {
 describe("Verify Login MFA Test Suite", () => {
 
     it("Verify Login MFA - Invalid MFA Code", async () => {
+         const loginMfaData = [{userId: "5d7a514b5d2c12c7449be042", mfaToken: "123456"}]
+         const response = await request(app).post('/api/v1/auth/send-login-mfa').send(loginMfaData);
 
-
+         expect(response.statusCode).toBe(StatusCodes.OK);
+         expect(response.body).not.toBe(null);
     })
 
     it("Verify Login MFA - Valid Correct MFA Code", async () => {
@@ -173,8 +176,7 @@ describe("Verify Login MFA Test Suite", () => {
 
     it("Verify Login MFA - Invalid User ID", async () => {
 
-       
-
+    
     })
 
 })

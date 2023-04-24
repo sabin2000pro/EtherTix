@@ -325,7 +325,6 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   const expired = await verifyTokenExpiration(userId);
 
   if (expired === true) {
-
     await generateNewVerificationToken(userId, user.email);
     return next(new ErrorResponse("The token you entered has expired, a new one has been sent to your email", StatusCodes.UNAUTHORIZED));
   }

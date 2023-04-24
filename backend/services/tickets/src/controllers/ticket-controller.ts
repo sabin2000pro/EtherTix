@@ -45,9 +45,10 @@ export const fetchTicketByID = asyncHandler(async (request: any, response: any, 
   
 )
 
-// @desc      Create New Event Ticket
-// @route     POST /api/tickets?eventId=....&issuerId=...&venueId=...
-// @access    Private (JWT Authorization Token Required)
+export const fetchEventTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+   const {event} = request.params.eventId;
+   const eventTicket = await Ticke
+})
 
 export const createNewTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const {issuer, event, name, ticketClass, currentStock, description, price} = request.body;
