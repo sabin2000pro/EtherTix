@@ -437,11 +437,7 @@ export const sendTwoFactorLoginCode = asyncHandler(async (request: any, response
     const date = new Date();
     const currentDate = date.toISOString();
 
-    return response.status(StatusCodes.OK).json({
-      success: true,
-      message: "Two Factor Verification Code Sent",
-      sentAt: currentDate,
-    });
+    return response.status(StatusCodes.OK).json({ success: true, message: "Two Factor Verification Code Sent", sentAt: currentDate});
   }
 );
 
@@ -453,6 +449,7 @@ export const logoutUser = asyncHandler(async (request: any, response: any, next:
 
     return response.status(StatusCodes.OK).json({ success: true, data: {}, message: "You have logged out" });
   }
+
 );
 
 export const forgotPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
@@ -470,9 +467,8 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
     const userHasResetToken = await PasswordReset.findOne({ owner: user._id });
 
     if (userHasResetToken) {
-
-      await PasswordReset.deleteOne({ owner: user._id });
-      return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
+       await PasswordReset.deleteOne({ owner: user._id });
+       return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
     }
 
     const token = generateRandomResetPasswordToken();
@@ -491,20 +487,13 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
   }
 );
 
-export const resetPassword = asyncHandler(
-
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const resetPassword = asyncHandler( async (request: any, response: any, next: NextFunction): Promise<any> => {
     const newPassword = request.body.newPassword;
     const resetToken = request.body.resetToken;
     const userId = request.body.userId;
 
     if (!newPassword) {
-      return next(
-        new ErrorResponse(
-          "Please specify the new password",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next(new ErrorResponse( "Please specify the new password", StatusCodes.BAD_REQUEST));
     }
 
     const user = await User.findById(userId);
@@ -516,9 +505,7 @@ export const resetPassword = asyncHandler(
     const resetUser = await PasswordReset.findOne({ owner: userId });
 
     if (!resetUser) {
-      return next(
-        new ErrorResponse("No reset token found", StatusCodes.BAD_REQUEST)
-      );
+      return next( new ErrorResponse("No reset token found", StatusCodes.BAD_REQUEST));
     }
 
     if (resetToken !== resetUser.token) {
