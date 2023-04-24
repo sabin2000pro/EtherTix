@@ -39,7 +39,7 @@ app.get('/', async (request: any, response: any, next: any): Promise<any> => {
 })
 
 // Error Handler middleware
-app.use('/api/auth', authRouter);
+app.use('/api/v1/auth', authRouter);
 app.use(errorHandler);
 
 export {app}
