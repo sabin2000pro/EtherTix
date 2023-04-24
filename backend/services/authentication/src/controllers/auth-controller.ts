@@ -445,16 +445,13 @@ export const sendTwoFactorLoginCode = asyncHandler(async (request: any, response
   }
 );
 
-export const logoutUser = asyncHandler(
+export const logoutUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
     if (request.session !== undefined) {
       request.session = null; // Clear the session object
     }
 
-    return response
-      .status(StatusCodes.OK)
-      .json({ success: true, data: {}, message: "You have logged out" });
+    return response.status(StatusCodes.OK).json({ success: true, data: {}, message: "You have logged out" });
   }
 );
 
@@ -467,19 +464,13 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
     }
 
     if (!user) {
-
-      return next(
-
-        new ErrorResponse(
-          "No user found with that e-mail address",
-          StatusCodes.NOT_FOUND
-        )
-      );
+       return next(new ErrorResponse( "No user found with that e-mail address", StatusCodes.NOT_FOUND));
     }
 
     const userHasResetToken = await PasswordReset.findOne({ owner: user._id });
 
     if (userHasResetToken) {
+
       await PasswordReset.deleteOne({ owner: user._id });
       return next(new ErrorResponse("User already has the password reset token", StatusCodes.BAD_REQUEST));
     }

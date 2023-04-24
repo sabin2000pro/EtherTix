@@ -185,6 +185,7 @@ describe("Logout Test Suite", () => {
         const response = await request(app).get('/api/v1/auth/logout');
         expect(response.statusCode).toBe(StatusCodes.OK);
     })
+    
 })
 
 describe("Forgot Password Test Suite ", () => {
@@ -202,7 +203,7 @@ describe("Forgot Password Test Suite ", () => {
     })
 
     it("Forgot Password Test - E-mail Address Length > email.length (15 Characters) ", async () => {
-        
+
     })
 
 
