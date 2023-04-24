@@ -160,19 +160,34 @@ export const likeEvent = asyncHandler(async (request: any, response: any, next: 
         return next(new ErrorResponse(`The event has already been liked by user : ${userId}`, StatusCodes.BAD_REQUEST));
     }
 
+    if(currentEvent.eventStatus === 'canceled') {
+        return next(new ErrorResponse(`Cannot unlike a canceled event`, StatusCodes.BAD_REQUEST));
+    }
+
     currentEvent.likes.push(userId);
     await currentEvent.save();
     return response.status(StatusCodes.OK).json({success: true, message: "Event Liked", currentEvent});
 })
 
 export const unlikeEvent = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const {eventId} = request.params.eventId;
+    const {eventId} = request.params;
     const user = request.user._id;
     const currentEvent = await Event.findById(eventId);
 
     if(!currentEvent) {
-
+        return next(new ErrorResponse(`Cannot find the event ID : ${currentEvent} to unlike`, StatusCodes.BAD_REQUEST));
     }
 
-    
+    if(currentEvent.eventStatus === 'canceled') {
+        return next(new ErrorResponse(`Cannot unlike a canceled event`, StatusCodes.BAD_REQUEST));
+    }
+
+    const alreadyLiked = currentEvent.likes.includes(user);
+
+    if(alreadyLiked) {
+        return response.status(StatusCodes.BAD_REQUEST).json({success: false, message: "You have not liked this event"})
+    }
+
+    await currentEvent.save();
+    return response.status(StatusCodes.OK).json({success: true, message: "Event Unliked"})
 })
