@@ -27,6 +27,9 @@ const EventSchema = new mongoose.Schema<EventDocument>({
     event_url: {
         type: String
     },
+
+    likes: [],
+    followers: [],
     
     slug: String,
 

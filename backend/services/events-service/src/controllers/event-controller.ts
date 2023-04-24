@@ -17,28 +17,28 @@ export const fetchAllEvents = asyncHandler(async (request: any, response: any, n
 })
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const id = request.params.id;
-        const event = await Event.findById(id);
+    const id = request.params.id;
+    const event = await Event.findById(id);
 
-        if(!event) {
-           return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
-        }
+    if(!event) {
+        return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
+     }
 
-        return response.status(StatusCodes.OK).json({success: true, event});
+    return response.status(StatusCodes.OK).json({success: true, event});
 
 }
 
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category } = request.body;
+    const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category } = request.body;
 
-        if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !slotsAvailable || !reservedSeating || !salesStatus || !venue || !organiser || !ticket || !category) {
-            return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
-        }
+    if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !slotsAvailable || !reservedSeating || !salesStatus || !venue || !organiser || !ticket || !category) {
+        return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
+     }
 
-        const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
-        await event.save();
+     const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
+    await event.save();
 
-        return response.status(StatusCodes.CREATED).json({success: true, event});
+    return response.status(StatusCodes.CREATED).json({success: true, event});
 
 }    
 
@@ -143,4 +143,36 @@ export const editEventStartTime = asyncHandler(async (request: any, response: an
   event.endsAt = request.body.endsAt;
 
   return response.status(StatusCodes.OK).json({success: true, message: "Event Start / End Dates Modified", event});
+})
+
+export const likeEvent = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const {eventId} = request.params.eventId;
+    const currentEvent = await Event.findById(eventId);
+    const userId = request.user._id;
+
+    if(!currentEvent) {
+        return next(new ErrorResponse(`Event with that ID not found`, StatusCodes.BAD_REQUEST));
+    }
+
+    const eventAlreadyLiked = currentEvent.likes.includes(userId);
+
+    if(eventAlreadyLiked) {
+        return next(new ErrorResponse(`The event has already been liked by user : ${userId}`, StatusCodes.BAD_REQUEST));
+    }
+
+    currentEvent.likes.push(userId);
+    await currentEvent.save();
+    return response.status(StatusCodes.OK).json({success: true, message: "Event Liked", currentEvent});
+})
+
+export const unlikeEvent = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const {eventId} = request.params.eventId;
+    const user = request.user._id;
+    const currentEvent = await Event.findById(eventId);
+
+    if(!currentEvent) {
+
+    }
+
+    
 })

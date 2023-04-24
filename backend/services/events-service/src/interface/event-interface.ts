@@ -19,6 +19,8 @@ export interface EventAttributes { // Interface for the event attributes
     isSoldOut: boolean;
     reservedSeating: boolean;
     eventStatus: string;
+    likes: any[];
+    followers: any[]
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
     venue: mongoose.Schema.Types.ObjectId; // Venue ID of the specific Event
@@ -45,6 +47,8 @@ export interface EventDocument extends mongoose.Model<EventAttributes> {
     hasSeating: boolean;
     salesStatus: string;
     eventStatus: string;
+    likes: any[];
+    followers: any[]
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
     venue: mongoose.Schema.Types.ObjectId; // The venue for which an event belongs to
