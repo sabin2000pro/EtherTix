@@ -86,19 +86,19 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     const { forename, surname, username, email, password, passwordConfirm } = request.body;
 
     if (!forename) {
-      return next( new ErrorResponse(`Forename missing, please try again`, StatusCodes.BAD_REQUEST));
+      return next( new ErrorResponse(`Credentials missing, please try again`, StatusCodes.BAD_REQUEST));
     }
 
     if (!surname) {
-      return next( new ErrorResponse("Surname is missing. Please try enter again", StatusCodes.BAD_REQUEST));
+      return next( new ErrorResponse("Credentials missing. Please try enter again", StatusCodes.BAD_REQUEST));
     }
 
     if (!email) {
-       return next( new ErrorResponse( "No E-mail provided. Please check your entries", StatusCodes.BAD_REQUEST));
+       return next( new ErrorResponse("Credentials missing. Please try enter again", StatusCodes.BAD_REQUEST));
     }
 
     if (password !== passwordConfirm) {
-        return next(new ErrorResponse( `Password confirmation error. Please check passwords`, StatusCodes.BAD_REQUEST)
+        return next(new ErrorResponse(`Credentials missing. Please try enter again`, StatusCodes.BAD_REQUEST)
       );
 
     }

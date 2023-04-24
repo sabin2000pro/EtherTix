@@ -6,7 +6,7 @@ import {app} from '../app';
 
 // Before any tests begin, connect to the database
 beforeAll(async() => {
-    return await mongoose.connect('mongodb+srv://sabin2000:123mini123@ethertix-auth-schema.doefuhx.mongodb.net/?retryWrites=true&w=majority');
+    return await mongoose.connect("mongodb+srv://sabin2000:123mini123@ethertix-auth-schema.doefuhx.mongodb.net/test");
 })
 
 describe("Register Account Test Suite", () => {
@@ -17,8 +17,9 @@ describe("Register Account Test Suite", () => {
 
         for(const data of missingBodyData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
-            
+            expect(response.statusCode).not.toBe(StatusCodes.OK);
+            expect(response.body.success).toBe(false);
+            expect(response.body.message).toContain("Credentials missing. Please try enter again");
          }
 
     })
@@ -40,7 +41,7 @@ describe("Register Account Test Suite", () => {
 
         for(const data of invalidBodyData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+             expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
 
     })
@@ -50,7 +51,7 @@ describe("Register Account Test Suite", () => {
 
         for(const data of invalidForename) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            
+    
             expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
          }
 
@@ -78,7 +79,6 @@ describe("Login Test Suite", () => {
         for(const data of missingEmailData) {
 
             const response = await request(app).post('/api/v1/auth/login').send(data)
-
             expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
 
          }
@@ -129,7 +129,7 @@ describe("Verify E-mail Address Test Suite", () => {
 
         for (const bodyData of missingOtpData) {
             const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
-            return expect(response.statusCode).not.toBe(StatusCodes.OK);
+            expect(response.statusCode).not.toBe(StatusCodes.OK);
 
         }
     })
@@ -142,7 +142,7 @@ describe("Verify E-mail Address Test Suite", () => {
             for (const bodyData of verifiedData) {
                 const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
     
-                return expect(response.statusCode).not.toBe(StatusCodes.OK);
+                expect(response.statusCode).not.toBe(StatusCodes.OK);
             }
         } 
         
@@ -157,7 +157,16 @@ describe("Verify E-mail Address Test Suite", () => {
     })
 
     it("Verify e-mail address with invalid User ID", async () => {
+
         try {
+            const emailVerificationBody = [{userId: "aiachac3q74", OTP: "900890"}]
+
+            for (const bodyData of emailVerificationBody) {
+                const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
+                expect(response.statusCode).not.toBe(StatusCodes.OK);
+                expect(response.body.success).toBe(false);
+                expect(response.body.message).toContain("Invalid user ID");
+            }
 
         } 
         
