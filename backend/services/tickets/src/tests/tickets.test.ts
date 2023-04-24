@@ -61,7 +61,10 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
 
 describe("Create Event Ticket - Unit Test Suite",  () => {
     it("Create New Ticket - Valid Details", async () => {
-        const ticketBodyData = [{name: "Musselburgh Horse Racing - Basic Ticket", ticketClass: "basic", currentStock: 3}]
+        const ticketBodyData = [{issuer: "5d7a514b5d2c12c7449be044", event: "5d713995b721c3bb38c1f5d2", name: "Musselburgh Horse Racing - Basic Ticket", ticketClass: "basic", currentStock: 3, description: "Enjoy an afternoon watching a horse racing competition in Musselburgh. Betting on one or more horses is also available", price: 0.040}]
+
+        const response = await request(app).post('/api/v1/tickets').send(ticketBodyData);
+        expect(response.statusCode).toBe(StatusCodes.CREATED);
     })
 
     it("Create New Ticket - Missing Details", async () => {
