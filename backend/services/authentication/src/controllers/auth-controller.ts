@@ -350,13 +350,13 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
 
 //returns true of token associated with userId is expired (also deletes that token)
 
-const verifyTokenExpiration = async (userId: string): boolean => {
+const verifyTokenExpiration = async (userId: string): Promise<boolean> => {
   const currentDate = new Date();
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
   if (currentDate.getTime() >= tokenINdb.expiresAt.getTime()) {
     tokenINdb.deleteOne({ owner: userId });
-    return true;
+     return true;
   }
 
   return false;
@@ -623,9 +623,9 @@ export const deactivateUserAccount = asyncHandler(async (request: any, response:
 
 export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
-    try {
-
       if (request.method === "PUT") {
+        
+        const id = request.params.id;
         const userId = request.headers.authorization.split(" ")[2];
         const file = request.files!.file;
         const fileName = file.name;
@@ -669,23 +669,22 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
                return next( new ErrorResponse("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
             }
 
-            await User.findByIdAndUpdate(request.params.id, {
+            await User.findByIdAndUpdate(id, {
               photo: fileName,
             });
+
+
             return response.status(StatusCodes.OK).json({
               success: true,
               message: "User Avatar Uploaded",
               sentAt: new Date(Date.now()),
             });
+
           }
         );
       }
-    } catch (error: any) {
-      if (error) {
-        return next(error);
-      }
-    }
-  }
+    } 
+    
 );
 
 export const getAllUserPremiumAccounts = asyncHandler(
