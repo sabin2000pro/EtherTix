@@ -56,7 +56,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         NftToken storage currMintedToken = circulatingTokens[newTokenID]; // Set the currently minted token to the circulating token ID
         currMintedToken.tokenPrice = _tokenPrice;
 
-        currMintedToken.isListedForSale = false;
+        currMintedToken.isListedForSale = true;
         tokenOwner[totalTokenSupply] = owner;
     
         bool isTokenListed = currMintedToken.isListedForSale;
@@ -68,17 +68,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         return newTokenID;
     }
 
-    function retrieveAllTokens() public view returns (NftToken[] memory) {
-        NftToken[] memory currentMintedTokens = new NftToken[](totalTokenSupply); // Loop through all the tokens, get the current total supply
-
-        for(uint index = 0; index < totalTokenSupply; index++) { // Set the current minted token index to the array of all minted tokens index
-            currentMintedTokens[index] = allMintedTokens[index];
-        }   
-
-        return currentMintedTokens; // Return the currently minted tokens
-    }
-
-    // @description: Returns the owner of the NFT token given an ID and returns the address of the owner
+        // @description: Returns the owner of the NFT token given an ID and returns the address of the owner
     function getOwnerOfToken(uint256 _tokenId) public view returns (address) {
         return tokenOwner[_tokenId];
     }
@@ -94,6 +84,17 @@ contract TicketNFT is ERC721URIStorage, Ownable {
    function fetchTokenByIndex(uint256 _tokenIndex) public view returns (NftToken memory) {
        return circulatingTokens[_tokenIndex];
     }
+
+    function retrieveAllTokens() public view returns (NftToken[] memory) {
+        NftToken[] memory currentMintedTokens = new NftToken[](totalTokenSupply); // Loop through all the tokens, get the current total supply
+
+        for(uint index = 0; index < totalTokenSupply; index++) { // Set the current minted token index to the array of all minted tokens index
+            currentMintedTokens[index] = allMintedTokens[index];
+        }   
+
+        return currentMintedTokens;
+    }
+
 
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public {
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
@@ -133,8 +134,8 @@ contract TicketNFT is ERC721URIStorage, Ownable {
         isTokenForSale[tokenId] = false;
 
         burnNftToken(tokenId);
-
         emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice);
+        
         return tokenBuyer;
    }
 
