@@ -12,11 +12,13 @@ beforeAll(async() => {
 describe("Register Account Test Suite", () => {
 
     it("Register Account with missing fields", async () => {
+
         const missingBodyData = [{username: "bob2000", email: "andy09@gmail.com", forename: "Sabin", surname: "Lungu"}]
 
         for(const data of missingBodyData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            return expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
+            expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+            
          }
 
     })
@@ -26,7 +28,7 @@ describe("Register Account Test Suite", () => {
 
         for(const data of validRegisterData) {
             const response = await request(app).post('/api/v1/auth/register').send(data)
-            return expect(response.statusCode).not.toBe(StatusCodes.CREATED);
+            expect(response.statusCode).not.toBe(StatusCodes.CREATED);
         
          }
 
