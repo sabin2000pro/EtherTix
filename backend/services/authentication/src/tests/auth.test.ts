@@ -28,7 +28,11 @@ describe("Register Account Test Suite", () => {
     })
 
     it("Register Account Unit Test - Forename Length < 8", async () => {
+        const forenameBodyData = [{forename: "less"}]
+        const response = await request(app).post('/api/v1/auth/register').send(forenameBodyData);
 
+        expect(response.statusCode).not.toBe(StatusCodes.OK);
+        expect(response.body.message).not.toBe(null);
     })
 
     it("Register account with valid details", async () => {
