@@ -334,9 +334,8 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   }
 
   if (!mfaToken) {
-    return next(
-      new ErrorResponse("Please provide an MFA token", StatusCodes.BAD_REQUEST)
-    );
+    return next(new ErrorResponse("Please provide an MFA token", StatusCodes.BAD_REQUEST));
+
   }
 
   const MfactorToken = await TwoFactorVerification.findOne({ owner: userId });
