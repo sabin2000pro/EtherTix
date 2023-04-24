@@ -39,9 +39,27 @@ export const createBooking = asyncHandler(async (request: any, response: any, ne
 })
 
 export const editBookingDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const bookingFieldsToUpdate = {guests: request.body.guests, title: request.body.title, phoneNumber: request.body.phoneNumber, emailAddress: request.body.emailAddress }
+    const bookingId = request.params.bookingId;
 
+    let booking = await Booking.findById(bookingId)
+
+    if(!booking) {
+        return next(new ErrorResponse(`No booking with that ID found`, StatusCodes.BAD_REQUEST));
+    }
+
+    booking = await Booking.findByIdAndUpdate(bookingId, bookingFieldsToUpdate, {new: true, runValidators: true});
+    await booking.save();
+
+    return response.status(StatusCodes.OK).json({success: true, message: "Booking details updated", booking});
 })
 
 export const cancelUserBooking = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+   const {bookingId, userId} = request.params;
+   const currentBooking = await Booking.findOneAndDelete({_id: bookingId, userId});
+
+   if(!currentBooking) {
+
+   }
 
 })

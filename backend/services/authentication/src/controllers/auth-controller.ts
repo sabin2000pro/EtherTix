@@ -157,7 +157,6 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
       return next(new ErrorResponse(`No user found with that ID`, StatusCodes.BAD_REQUEST));
     }
 
-  
     if (user.isVerified) {
 
       return next(new ErrorResponse(`User account is already verified`, StatusCodes.BAD_REQUEST));
