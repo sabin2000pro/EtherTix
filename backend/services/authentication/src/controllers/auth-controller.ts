@@ -1,3 +1,4 @@
+import { Kafka } from 'kafkajs';
 import { emailTransporter } from "./../utils/send-email";
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user-model";
@@ -13,6 +14,12 @@ import { generateRandomResetPasswordToken } from "../utils/generateResetPassword
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
 import axios from 'axios';
+
+const kafka = new Kafka({
+  clientId: 'my-auth-service',
+  brokers: ['localhost:9092']
+});
+
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
 // @parameters: Transporter Object, User Object, Randomly Generated User OTP
@@ -87,8 +94,13 @@ export const sendTokenResponse = (request: Express.Request,user: any, statusCode
 // @public: True (No Authorization Token Required)
 
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+   const producer = kafka.producer();
+   const connectedAgent = await producer.connect();
 
-    const { forename, surname, username, email, password, passwordConfirm } = request.body;
+   console.log(`Connected Agent : `, connectedAgent);
+
+   
+    const { forename, surname, username, email, password, passwordConfirm } = request.body;  
 
     if (!forename) {
       return next( new ErrorResponse(`Credentials missing, please try again`, StatusCodes.BAD_REQUEST));
