@@ -624,7 +624,7 @@ export const deactivateUserAccount = asyncHandler(async (request: any, response:
 export const uploadUserProfilePicture = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
 
       if (request.method === "PUT") {
-        
+
         const id = request.params.id;
         const userId = request.headers.authorization.split(" ")[2];
         const file = request.files!.file;
@@ -637,21 +637,11 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
         }
 
         if (!request.files) {
-          return next(
-            new ErrorResponse(
-              `Please upload a valid avatar for the user`,
-              StatusCodes.BAD_REQUEST
-            )
-          );
+           return next(new ErrorResponse(`Please upload a valid avatar for the user`, StatusCodes.BAD_REQUEST));
         }
 
         if (!file.mimetype.startsWith("image")) {
-          return next(
-            new ErrorResponse(
-              "Please make sure the uploaded file is an image",
-              StatusCodes.BAD_REQUEST
-            )
-          );
+          return next(new ErrorResponse("Please make sure the uploaded file is an image", StatusCodes.BAD_REQUEST));
         }
 
         // Validate File size. Check if file size exceeds the maximum size
@@ -674,10 +664,7 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
             });
 
 
-            return response.status(StatusCodes.OK).json({
-              success: true,
-              message: "User Avatar Uploaded",
-              sentAt: new Date(Date.now()),
+            return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now()),
             });
 
           }
@@ -687,34 +674,21 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
     
 );
 
-export const getAllUserPremiumAccounts = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
-    try {
+export const getAllUserPremiumAccounts = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+ 
       if (request.method === "GET") {
+
         const premiumUsers = await User.find({ premium: true });
 
         if (!premiumUsers) {
-          return next(
-            new ErrorResponse("No premium users found", StatusCodes.BAD_REQUEST)
-          );
+          return next(new ErrorResponse("No premium users found", StatusCodes.BAD_REQUEST));
         }
 
         return response.status(StatusCodes.OK).json({ success: true, data: premiumUsers });
       }
     } 
     
-    catch (error: any) {
-      if (error) {
-        return response
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ success: false, message: error.message, stack: error.stack });
-      }
-    }
-  }
+  
 );
 
 export const fetchLockedUserAccounts = asyncHandler(
@@ -901,5 +875,5 @@ export const fetchTotalUsers = asyncHandler(async (request: any, response: any, 
       const totalUsers = await User.countDocuments({});
       return response.status(StatusCodes.OK).json({ success: true, count: totalUsers });
     } 
-    
+  
 );
