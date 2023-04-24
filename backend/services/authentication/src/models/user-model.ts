@@ -16,8 +16,8 @@ const UserSchema = new mongoose.Schema({
     forename: { // User's forename
         type: String,
         trim: true,
-        minlength: [8, "Forename must be a minimum of 8 characters"],
-        maxlength: [12, "Forename cannot exceed 12 characters"],
+        minlength: [3, "Forename must be a minimum of 3 characters"],
+        maxlength: [15, "Forename cannot exceed 12 characters"],
         required: [true, "Please provide your forename"]
     },
 
@@ -62,7 +62,7 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Please provide a valid password"],
 
         validate: {
-            
+
             validator: (password) => {
                 return passwordRegex.test(password)
             },
