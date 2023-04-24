@@ -45,11 +45,6 @@ export const fetchTicketByID = asyncHandler(async (request: any, response: any, 
   
 )
 
-export const fetchEventTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-   const {event} = request.params.eventId;
-   const eventTicket = await Ticke
-})
-
 export const createNewTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
         const {issuer, event, name, ticketClass, currentStock, description, price} = request.body;
 
