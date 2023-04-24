@@ -115,5 +115,5 @@ First and foremost, one important design methodology that is used to design this
 
 30.	 Regular users must be able to click on an event and view information about it by showing a popup modal.
 
-- Use Case Dia
+- Use Ca
 
