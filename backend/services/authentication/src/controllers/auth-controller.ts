@@ -726,33 +726,18 @@ export const fetchLockedUserAccounts = asyncHandler(
 
 // ADMIN CONTROLLERS
 
-export const fetchAllUsers = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
-    try {
+export const fetchAllUsers = asyncHandler(async ( request: any, response: any, next: NextFunction): Promise<any | Response> => {
+ 
       const users = await User.find();
 
       if (!users) {
-        return next(
-          new ErrorResponse(
-            "No users found in the database",
-            StatusCodes.NOT_FOUND
-          )
-        );
+
+        return next(new ErrorResponse("No users found in the database", StatusCodes.NOT_FOUND));
       }
 
       return response.status(StatusCodes.OK).json({ success: true, users });
-    } catch (error: any) {
-      if (error) {
-        return response
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ success: false, message: error.message, stack: error.stack });
-      }
     }
-  }
+    
 );
 
 export const fetchUserByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {

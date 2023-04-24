@@ -20,6 +20,7 @@ export interface EventAttributes { // Interface for the event attributes
     reservedSeating: boolean;
     eventStatus: string;
     likes: any[];
+    bookmarks: any[]
     followers: any[]
 
     organiser: mongoose.Schema.Types.ObjectId; // Organiser ID (User) of the specific event
@@ -48,6 +49,7 @@ export interface EventDocument extends mongoose.Model<EventAttributes> {
     salesStatus: string;
     eventStatus: string;
     likes: any[];
+    bookmarks: []
     followers: any[]
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)

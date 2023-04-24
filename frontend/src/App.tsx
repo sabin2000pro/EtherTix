@@ -21,6 +21,7 @@ import { getUser } from "api/auth/auth-api";
 import * as stor from "auth/store";
 import cookies from "auth/cookies";
 import { useDispatch } from "react-redux";
+import AdminBookingsList from "pages/dashboard/bookings/AdminBookingsList";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -81,6 +82,9 @@ const App: React.FC = () => {
           <Route path = "/events" element={<EventsList />} />
           <Route path = "/events/:id" element={<SingleEvent />} />
 
+          <Route path = '/admin-dashboard/bookings-list' element = {<AdminBookingsList />} />
+        
+
           <Route path ="*" element = { <NotFound />} />
 
         </Routes>
@@ -90,7 +94,7 @@ const App: React.FC = () => {
       </Container>
 
       {showSignUpModal && ( <Register onDismiss={() => setShowSignUpModal(false)}
-      
+
           onSignUpSuccessful={() => {
             setShowSignUpModal(false);
           }}

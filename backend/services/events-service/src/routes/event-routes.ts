@@ -16,3 +16,6 @@ eventRouter.route('/').get(eventsRateLimiter as any, fetchAllEvents as any).post
 eventRouter.route('/:eventId').get(fetchSingleEvent as any).put(editEventByID).delete(deleteEventByID as any);
 eventRouter.route('/:eventId/like-event').put(likeEvent as any);
 eventRouter.route('/:eventId/unlike-event').delete(unlikeEvent as any);
+
+eventRouter.route('/:eventId/upload-photo').put();
+eventRouter.route('/trending').get()

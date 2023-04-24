@@ -34,7 +34,9 @@ const OrderSchema = new mongoose.Schema({
         },
     
         shippingPrice: {
-    
+            type: Number,
+            default: 0.0,
+            required: [true, "Please specify the shipping price associated with this ticket"]
         },
 
         ticket: {

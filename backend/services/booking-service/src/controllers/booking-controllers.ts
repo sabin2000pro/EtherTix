@@ -5,6 +5,10 @@ import { Booking } from "../model/booking-model"
 import { ErrorResponse } from '../utils/error-response';
 
 export const fetchAllBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    if(request.method === 'GET') {
+        const bookings = await Booking.find();
+    }
+
     
 })
 

@@ -30,6 +30,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
 
     likes: [],
     followers: [],
+    bookmarks: [],
     
     slug: String,
 

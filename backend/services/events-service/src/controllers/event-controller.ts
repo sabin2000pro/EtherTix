@@ -16,6 +16,16 @@ export const fetchAllEvents = asyncHandler(async (request: any, response: any, n
     return response.status(StatusCodes.OK).json({success: true, events});
 })
 
+export const fetchTrendingEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const trendingEvents = await Event.find({trending: true});
+
+    if(!trendingEvents) {
+        return next(new ErrorResponse(`No trending events found`, StatusCodes.BAD_REQUEST));
+    }
+
+    return response.status(StatusCodes.OK).json({success: true, trendingEvents});
+})
+
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const id = request.params.id;
     const event = await Event.findById(id);
@@ -36,7 +46,7 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
      }
 
      const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
-    await event.save();
+     await event.save();
 
     return response.status(StatusCodes.CREATED).json({success: true, event});
 
@@ -85,6 +95,10 @@ export const deleteEventByID = asyncHandler(async (request: any, response: any, 
 
      if(!event) {
         return next(new ErrorResponse(`Could not find that event ID`, StatusCodes.BAD_REQUEST));
+     }
+
+     if(event.eventStatus === 'canceled' || event.eventStatus === 'pending' || event.eventStatus === 'live' || event.eventStatus === 'completed') {
+        return next(new ErrorResponse(`Cannot delete an event that is canceled, pending or started`, StatusCodes.BAD_REQUEST))
      }
 
      event = await Event.findByIdAndUpdate(id, request.body, {new: true, runValidators: true});
@@ -190,4 +204,18 @@ export const unlikeEvent = asyncHandler(async (request: any, response: any, next
 
     await currentEvent.save();
     return response.status(StatusCodes.OK).json({success: true, message: "Event Unliked"})
+})
+
+export const bookmarkEvent = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    
+})
+
+export const fetchTotalNumberOfEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const totalNumberOfEvents = await Event.countDocuments({});
+
+    if(totalNumberOfEvents === 0) {
+        return next(new ErrorResponse(`No events found`, StatusCodes.BAD_REQUEST));
+    }
+
+    return response.status(StatusCodes.OK).json({success: true, totalNumberOfEvents});
 })

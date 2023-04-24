@@ -1,6 +1,8 @@
 version: '3.3'
 
+
 services:
+
   api-gateway-service:
     container_name: ethertix-api-gateway-service
     image: sabin2000/ethertix-api-gateway-service
@@ -29,8 +31,6 @@ services:
       context: ../backend/services/authentication
       dockerfile: Dockerfile
 
-    depends_on:
-      - kafka
     
     restart: always
 
@@ -162,7 +162,6 @@ services:
     volumes:
       - /app/node_modules
       - ../backend/services/booking-service:/app
-
 volumes:
   mongodb_data_volume:
 
