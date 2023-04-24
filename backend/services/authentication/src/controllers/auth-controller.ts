@@ -612,11 +612,7 @@ export const deactivateUserAccount = asyncHandler(async (request: any, response:
       await user.save();
     }
 
-    return response.status(StatusCodes.OK).json({
-      success: true,
-      message: "User Account Deactivated",
-      status: user.isValid,
-      sentAt: new Date(Date.now().toFixed()),
+    return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated", status: user.isValid, sentAt: new Date(Date.now().toFixed()),
     });
   }
 );
@@ -838,9 +834,7 @@ export const lockUserAccount = asyncHandler(async (request: any, response: any, 
 });
 
 export const unlockUserAccount = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-    try {
-
-      // Find the user by their ID
+   
       const user = await User.findById(request.params.id);
 
       if (!user) {
@@ -852,23 +846,12 @@ export const unlockUserAccount = asyncHandler(async (request: any, response: any
         user.isLocked = false; // If the user is currently locked, set the isLocked flag to false
         await user.save();
 
-        return response.status(StatusCodes.OK).json({
-          success: true,
-          message: "User account unlocked",
-          isLocked: user.isLocked,
-        });
+        return response.status(StatusCodes.OK).json({success: true, message: "User account unlocked", isLocked: user.isLocked});
+
       }
     } 
     
-    catch (error: any) {
 
-      if (error) {
-        return response
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ success: false, message: error.message, stack: error.stack });
-      }
-    }
-  }
 );
 
 export const fetchTotalUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {

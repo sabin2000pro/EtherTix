@@ -79,7 +79,7 @@ const EventSchema = new mongoose.Schema<EventDocument>({
         default: false
     },
 
-    isSoldOut: { // Field that determines if the event is sold out or not
+    isSoldOut: {
         type: Boolean,
         default: false,
     },
