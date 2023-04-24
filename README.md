@@ -38,7 +38,7 @@ Developing non-fungible tokens using the Solidity programming language requires 
 
 Firstly, the process of minting a token starts with declaring a function which accepts two parameters which are passed by value and stored in memory. We need to know the token name, its price, the current index in the array it is positioned at and the token class, such as premium, basic, or standard. Moreover, by storing the current owner of the token to a value known as msg.sender. This is a value provided by solidity which stores the address of the current issuer of the token. Once a token has been minted, another piece of functionality that is crucial for non-fungible tokens is to list it for sale after it has been minted. One approach taken to implement the list for sale function is to firstly extract the token we want to list on sale from the current circulating supply of tokens and thereafter by referencing the NFT struct to update the token price with the listing price which is going to represent the price of the current token.
 
-<img width="494" alt="image" src="https://user-images.githubusercontent.com/29733613/221880443-3cd6e357-0ca9-4fd4-87ba-0c10baeb4b5b.png">
+<img width = "550" alt="image" src="https://user-images.githubusercontent.com/29733613/221880443-3cd6e357-0ca9-4fd4-87ba-0c10baeb4b5b.png">
 
 
 
