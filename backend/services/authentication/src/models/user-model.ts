@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { UserDocument } from "../interfaces/user-interface";
 
+const passwordRegex = /^(?=.*[!@#$%^&*])/; // Regex to check for special characters
+
 // Roles a user can take
 enum UserRoles {
     Admin = "Admin", User = "User", Moderator = "Moderator", Organiser = "Organiser"
@@ -52,7 +54,17 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         trim: true,
-        required: [true, "Please provide a valid password"]
+        minlength: [6, "Password must have at least 6 characters"],
+        maxlength: [15, "Password must not exceed 15 characters"],
+        required: [true, "Please provide a valid password"],
+
+        validate: {
+            validator: (password) => {
+                return passwordRegex.test(password)
+            },
+
+            message: "Password must contain at least 1 special character for additional strength"
+        }
     },
 
     passwordConfirm: { // Confirm the user password
