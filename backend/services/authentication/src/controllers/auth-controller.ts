@@ -244,7 +244,9 @@ export const resendEmailVerificationCode = asyncHandler(
       return next(
         new ErrorResponse("Old token not found", StatusCodes.BAD_REQUEST)
       );
-    } else {
+    }
+    
+    else {
       await EmailVerification.deleteOne({ owner: userId });
     }
 
@@ -252,26 +254,14 @@ export const resendEmailVerificationCode = asyncHandler(
     const otpToken = generateOTPVerificationToken();
 
     if (!otpToken) {
-      return next(
-        new ErrorResponse(
-          "OTP Token generated is invalid.",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+
+      return next(new ErrorResponse("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
     }
 
-    console.log(`Your User ID: `, userId);
-    console.log(`Your OTP: `, otpToken);
-
-    const newToken = new EmailVerification({
-      owner: currentUser._id,
-      token: otpToken,
-    }); // Create a new instance of the token
+    const newToken = new EmailVerification({owner: currentUser._id, token: otpToken,});
     await newToken.save(); // Save the new token
 
-    return response
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "E-mail Verification Re-sent" });
+    return response.status(StatusCodes.OK).json({ success: true, message: "E-mail Verification Re-sent" });
   }
 );
 
