@@ -53,6 +53,68 @@ First and foremost, one important design methodology that is used to design this
 
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/29733613/193553271-85415991-39b2-442a-927a-f537e975ddff.png">
 
+# Functional Requirements
+
+1.	Authentication Service: Users must be able to Register their own account on the platform.
+
+2.	Authentication Service: Users must be able to Verify their e-mail address to add extra security to their account.
+
+3.	Authentication Service: Users must be able to Login into their account after e-mail verification on the frontend.
+
+4.	Authentication: Users must be able to submit a two-factor code before logging in. The code must be randomly generated from the server-side.
+
+5.	Authentication: Users must be able to send a Forgot Password link to their e-mail address.
+
+6.	Authentication: Users must be able to Reset their password by clicking the reset password link from the e-mail sent.
+
+7.	Authentication Service: Users must be able to view their currently logged in details on their profile page.
+
+8.	Authentication Service: Users must be able to Logout of their account.
+
+9.	Authentication Service: Users must be able to update their password on their personal profile.
+
+10.	 Authentication Service: Users must be able to update their e-mail address and/or username on their personal profile.
+
+11.	 Authentication Service: Event Organisers must be able to lock a user’s account if malicious activity is detected.
+
+12.	 Authentication Service: Every user must have a role associated to their account. For example, event-organiser, moderator, admin to prevent certain actions from being taken.
+
+13.	 Events Service: Event Organisers must be able to create a new event within the dashboard.
+
+14.	 Events Service: Event Organisers must be able to edit the details of an event on the admin dashboard.
+
+15.	 Events Service: Regular users must be able to view all the available events that are being hosted at a venue in their area.
+
+16. Categories Service: Regular users must be able to choose the type of event category they would like to view events in. For example, events for health and fitness or food and drink.
+
+17.	 Events Service: Users must be able to view the details of a single event.
+
+18.	 Tickets Service: Users must be able to select the ticket type and number of tickets.
+
+19.	 Users must be able to connect their meta mask wallet for blockchain payments.
+
+20.	 Organisers must be able to delete an event that will no longer be hosted from the protected dashboard
+
+21.	 Users must be able to sort events in either ascending or descending order.
+
+22.	 The application must have a navigation bar at the top of the page that has a search input field in the middle of the bar.
+
+23.	The application must have a navigation bar at the top of the page with register and login links on the right-hand side.
+
+24.	 Categories Service: Users must be able to choose which category of events they would like to browse.
+
+25.	 Events must have a variety of categories to choose from, Health, Food & Drink, Sports & Fitness, for example.
+
+26.	 Authentication Service: Regular Users should be able to login using their Google and Facebook accounts.
+
+27.	 Events Service: Regular users should be able to sort through events in ascending / descending order.
+
+28.	 Regular users must go on different pages to view available events through Pagination.
+
+29.	 Regular users must be able to view the currently trending events which are most popular.
+
+30.	 Regular users must be able to click on an event and view information about it by showing a popup modal.
+
 # Venues Service - Use Case Diagram
 
 
