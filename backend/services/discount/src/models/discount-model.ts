@@ -1,16 +1,24 @@
 import mongoose from "mongoose";
 
 interface IDiscountAttributes {
-    discount: Object;
+    type: string,
+    discountCode: string,
+    amountOff: string,
+    percentOff: string,
+    issuer: mongoose.Schema.Types.ObjectId,
+    ticket: mongoose.Schema.Types.ObjectId
 }
 interface DiscountDocument extends mongoose.Model<IDiscountAttributes> {
-    discount: Object; // Discount object
+    type: string
+    discountCode: string,
+    amountOff: number,
+    percentOff: string,
+    issuer: mongoose.Schema.Types.ObjectId,
+    ticket: mongoose.Schema.Types.ObjectId
 }
 
 // Create the Data Model Schema using Mongoose
 const DiscountSchema = new mongoose.Schema<DiscountDocument>({
-
-   discount: { // Discount Object
 
     type: {
         type: String,
@@ -23,9 +31,10 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
       required: [true, "Please specify the discount code."]
     },
  
-    amountOff: { // How much to take off the price in (ETHER)
+    amountOff: {
         type: Number,
-        default: null
+        default: 0.0,
+        required: [true, "Please specify the discount amount to take off"]
     },
  
     percentOff: { // Percentage off for the ticket (25%)
@@ -34,7 +43,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
         default: null
     },
 
-    applier: { // The applier of the ticket (User ID)
+    issuer: { // The applier of the ticket (User ID)
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
@@ -44,16 +53,7 @@ const DiscountSchema = new mongoose.Schema<DiscountDocument>({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Ticket",
       required: true
-   },
-
-   event: { // The event for which the discount is applied to 
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Event",
-      required: true
    }
-
-   }
-
    
 }, {timestamps: true, toJSON: {virtuals: true }})
 
