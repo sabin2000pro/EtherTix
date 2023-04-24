@@ -670,10 +670,9 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 
 );
 
-export const updateUserProfile = async (request: any, response: any, next: NextFunction): Promise<any> => {
-  try {
-    const userId = request.headers.authorization.split(" ")[2];
+export const updateUserProfile = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
+    const userId = request.headers.authorization.split(" ")[2];
     const { email, username, role } = request.body;
 
     const updateData: any = {};
@@ -690,28 +689,21 @@ export const updateUserProfile = async (request: any, response: any, next: NextF
       updateData.role = role;
     }
 
-    const updatedUserProfile = await User.findByIdAndUpdate(
-      userId,
-      updateData,
+    const updatedUserProfile = await User.findByIdAndUpdate(userId, updateData,
       {
         new: true,
         runValidators: true,
       }
+
     );
 
     await updatedUserProfile.save();
+    return response.status(StatusCodes.OK).json({ success: true, message: "User profile updated" });
+  } 
 
-    return response
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "User profile updated" });
-  } catch (error) {
-    if (error) {
-      return response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ success: false, message: error.message, stack: error.stack });
-    }
-  }
-};
+)
+  
+
 
 export const deactivateUserAccount = asyncHandler(
   async (request: any, response: any, next: NextFunction): Promise<any> => {
