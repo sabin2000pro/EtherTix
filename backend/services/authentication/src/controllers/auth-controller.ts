@@ -387,12 +387,13 @@ const tokenExpired = async (userId: string) => {
     tokenINdb.deleteOne({ owner: userId });
     return true;
   }
-  
+
   return false;
 };
 
 //Generates and saves a new token, deletes the old if found any, adds an expiration to token by *specified in .env*
-const newToken = async (userId: string, email: string) => {
+const generateNewVerificationToken = async (userId: string, email: string) => {
+
   const currentDate = new Date();
   const expiresAfter = parseInt(process.env.AUTH_MFA_EXPIRY as string);
 
@@ -404,18 +405,17 @@ const newToken = async (userId: string, email: string) => {
   if (tokenINdb) {
     tokenINdb.deleteOne({ owner: userId });
   }
+
   const token = generateMfaToken();
-  const newToken = await TwoFactorVerification.create({
-    owner: userId,
-    mfaToken: token,
-    expiresAt: expiryDate,
-  });
+
+  const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
 
   //   sendLoginMfa(emailTransporter, email, token); //uncomment when email sender works
 
   console.log("Current mfa token: ", token);
 };
+
 
 export const sendTwoFactorLoginCode = asyncHandler(
   async (request: any, response: any, next: NextFunction): Promise<any> => {
