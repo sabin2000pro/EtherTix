@@ -141,24 +141,10 @@ describe("Verify E-mail Address Test Suite", () => {
 
     it("Verify E-mail address with already verified user ID and OTP", async () => {
 
-        try {
-            const verifiedData = [{userId: "63cef9c5b006313b347a3c96", OTP: "761259"}]
-
-            for (const bodyData of verifiedData) {
-                const response = await request(app).post('/api/v1/auth/verify-email').send(bodyData);
-    
-                expect(response.statusCode).not.toBe(StatusCodes.OK);
-            }
-        } 
-        
-        catch(error) {
-            
-            if(error) {
-                return console.error(error);
-            }
-        }
-
-
+       const verifiedData = [{userId: "63cef9c5b006313b347a3c96", OTP: "761259"}]
+       const response = await request(app).post('/api/v1/auth/verify-email').send(verifiedData);
+       expect(response.statusCode).not.toBe(StatusCodes.OK);
+       expect(response.body.success).toBe(false);
     })
 
     it("Verify e-mail address with invalid User ID", async () => {
@@ -273,7 +259,6 @@ describe("Fetch Single User - Organiser Dashboard Test Suite" , () => { // Test 
     it("Fetch Invalid Missing User ID Test", async () => {
             
     })
-
 
 })
 

@@ -349,14 +349,9 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
 
   if (expired === true) {
 
-    await newToken(userId, user.email);
+    await generateNewVerificationToken(userId, user.email);
 
-    return next(
-      new ErrorResponse(
-        "The token you entered has expired, a new one has been sent to your email",
-        StatusCodes.UNAUTHORIZED
-      )
-    );
+    return next(new ErrorResponse("The token you entered has expired, a new one has been sent to your email", StatusCodes.UNAUTHORIZED));
   }
 
   // Check to see if the tokens match
@@ -398,7 +393,7 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
   const expiresAfter = parseInt(process.env.AUTH_MFA_EXPIRY as string);
 
   const expiryTime = currentDate.getTime() + expiresAfter * 1000 * 60;
-  const expiryDate = new Date(expiryTime);
+  const expiryDate = new Date(expiryTime); // Creates a new date instance for the expiration of the token
 
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 
@@ -417,43 +412,27 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
 };
 
 
-export const sendTwoFactorLoginCode = asyncHandler(
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const { email, password } = request.body;
+export const sendTwoFactorLoginCode = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
+    const { email, password } = request.body;
     const currentUser = await User.findOne({ email: email });
 
     if (!currentUser) {
-      return next(
-        new ErrorResponse(
-          "No user found, check email entry...",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+       return next(new ErrorResponse("No user found, check email entry...", StatusCodes.BAD_REQUEST));
     }
 
     // Compare user passwords before logging in
     const matchPasswords = await currentUser.comparePasswords(password);
 
     if (!matchPasswords) {
-      return next(
-        new ErrorResponse(
-          `Wrong password, check entry`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+       return next( new ErrorResponse(`Wrong password, check entry`,StatusCodes.BAD_REQUEST));
     }
 
     if (currentUser.isLocked) {
-      return next(
-        new ErrorResponse(
-          "Cannot login. Your account is locked",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+        return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
     }
 
-    await newToken(currentUser._id.toString(), email);
+    await generateNewVerificationToken(currentUser._id.toString(), email);
 
     const date = new Date();
     const currentDate = date.toISOString();
@@ -467,6 +446,7 @@ export const sendTwoFactorLoginCode = asyncHandler(
 );
 
 export const logoutUser = asyncHandler(
+
   async (request: any, response: any, next: NextFunction): Promise<any> => {
     if (request.session !== undefined) {
       request.session = null; // Clear the session object
@@ -478,18 +458,15 @@ export const logoutUser = asyncHandler(
   }
 );
 
-export const forgotPassword = asyncHandler(
-
-  async (request: any, response: any, next: NextFunction): Promise<any> => {
+export const forgotPassword = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const { email } = request.body;
     const user = await User.findOne({ email });
 
     // Check if we have an e-mail in the body of the request
 
     if (!email) {
-      return next(
-        new ErrorResponse(
-          `Please enter an email address`,
+
+      return next(new ErrorResponse(`Please enter an email address`,
           StatusCodes.BAD_REQUEST
         )
       );
@@ -498,6 +475,7 @@ export const forgotPassword = asyncHandler(
     if (!user) {
 
       return next(
+
         new ErrorResponse(
           "No user found with that e-mail address",
           StatusCodes.NOT_FOUND
@@ -515,19 +493,11 @@ export const forgotPassword = asyncHandler(
     const token = generateRandomResetPasswordToken();
 
     if (token === undefined) { // If no token exists
-     
-      return next(
-        new ErrorResponse(
-          "Reset Password Token is invalid",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+        return next(new ErrorResponse("Reset Password Token is invalid", StatusCodes.BAD_REQUEST));
     }
 
-    const resetPasswordToken = await PasswordReset.create({
-      owner: user._id,
-      token: token,
-    }); // Create an instance of the Password Reset model
+    const resetPasswordToken = await PasswordReset.create({owner: user._id, token: token}); 
+
     await resetPasswordToken.save();
 
     const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}`; // Create the reset password URL
