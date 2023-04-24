@@ -50,14 +50,13 @@ export const fetchTicketByID = asyncHandler(async (request: any, response: any, 
 // @access    Private (JWT Authorization Token Required)
 
 export const createNewTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-        const {event, issuer} = request.body;
-        const {name, ticketClass, ticketToken, stock, description, cost} = request.body;
+        const {issuer, event, name, ticketClass, ticketToken, currentStock, description, price} = request.body;
 
-        if(!name || !ticketClass || !ticketToken || !stock || !description || !cost) {
+        if(!name || !ticketClass || !ticketToken || !currentStock || !description || !price) {
             return next(new ErrorResponse(`One or more ticket entries are missing. Please check again`, StatusCodes.BAD_REQUEST));
         }
 
-        const ticket = await Ticket.create({event, issuer, name, ticketClass, ticketToken, stock, description, cost});
+        const ticket = await Ticket.create({event, issuer, name, ticketClass, ticketToken, currentStock, description, price});
         await ticket.save();
 
         return response.status(StatusCodes.CREATED).json({success: true, ticket});
