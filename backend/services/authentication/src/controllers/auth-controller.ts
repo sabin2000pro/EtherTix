@@ -270,38 +270,22 @@ export const resendEmailVerificationCode = asyncHandler(
 // @returns: Server Response Promise w/ Status Code 200
 // @public: True (No Authorization Token Required)
 
-export const loginUser = asyncHandler(
-  async (
-    request: any,
-    response: any,
-    next: NextFunction
-  ): Promise<any | Response> => {
+export const loginUser = asyncHandler(async ( request: any, response: any, next: NextFunction): Promise<any | Response> => {
     const { email, password, mfaToken } = request.body;
 
     if (!email || !password || !mfaToken) {
-      return next(
-        new ErrorResponse(
-          `Missing parameter(s). Check entries`,
-          StatusCodes.BAD_REQUEST
-        )
-      );
+      return next( new ErrorResponse( `Missing parameter(s). Check entries`, StatusCodes.BAD_REQUEST));
     }
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      return next(
-        new ErrorResponse(`Could not find that user`, StatusCodes.BAD_REQUEST)
-      );
+      return next(new ErrorResponse(`Could not find that user`, StatusCodes.BAD_REQUEST));
     }
 
     if (user.isLocked) {
-      return next(
-        new ErrorResponse(
-          "Cannot login. Your account is locked",
-          StatusCodes.BAD_REQUEST
-        )
-      );
+
+      return next(new ErrorResponse("Cannot login. Your account is locked", StatusCodes.BAD_REQUEST));
     }
 
     if (!user.isVerified) {
@@ -1076,19 +1060,8 @@ export const unlockUserAccount = asyncHandler(async (request: any, response: any
 );
 
 export const fetchTotalUsers = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
-    try {
-
       const totalUsers = await User.countDocuments({});
-      
       return response.status(StatusCodes.OK).json({ success: true, count: totalUsers });
     } 
     
-    catch (error) {
-      if (error) {
-        return response
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ success: false, message: error.message, stack: error.stack });
-      }
-    }
-  }
 );
