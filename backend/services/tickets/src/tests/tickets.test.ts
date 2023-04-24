@@ -47,6 +47,12 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
     })
 
     it("Fetch Single Ticket By ID - Malformed ID", async () => {
+        const malformedTicketID = [{_id: "abcb1"}]
+
+        for(const ticketId of malformedTicketID) {
+            const response = await request(app).get(`/api/v1/tickets/${ticketId._id}`);
+            expect(response.statusCode).not.toBe(StatusCodes.OK);
+        }
 
     })
 
