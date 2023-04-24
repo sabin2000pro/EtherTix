@@ -319,29 +319,18 @@ export const loginUser = asyncHandler(async ( request: any, response: any, next:
   }
 );
 
-// API - 5
 
-const verifyLoginToken = async (
-  userId: string,
-  mfaToken: string,
-  email: string,
-  next: NextFunction
-) => {
+const verifyLoginToken = async (userId: string, mfaToken: string, email: string,next: NextFunction) => {
+
   const user = await User.findById(userId);
 
   if (!isValidObjectId(userId)) {
-    return next(
-      new ErrorResponse(
-        `This user ID is not valid. Please try again`,
-        StatusCodes.UNAUTHORIZED
-      )
-    );
+     return next(new ErrorResponse(`This user ID is not valid. Please try again`, StatusCodes.UNAUTHORIZED));
   }
 
   if (!user) {
-    return next(
-      new ErrorResponse("No user-userId match...", StatusCodes.BAD_REQUEST)
-    );
+
+    return next( new ErrorResponse("No user-userId match...", StatusCodes.BAD_REQUEST));
   }
 
   if (!mfaToken) {
@@ -364,6 +353,7 @@ const verifyLoginToken = async (
   const expired = await tokenExpired(userId);
 
   if (expired === true) {
+
     await newToken(userId, user.email);
     return next(
       new ErrorResponse(
@@ -673,7 +663,7 @@ export const updateUserPassword = asyncHandler(async (request: any, response: an
 export const updateUserProfile = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
   if(request.method === 'PUT') {
-    
+
     const userId = request.headers.authorization.split(" ")[2];
     const { email, username, role } = request.body;
 
