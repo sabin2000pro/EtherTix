@@ -1,0 +1,1 @@
+export const EVENTS_RATE_LIMIT_MINUTES = 10 * 60 * 1000
