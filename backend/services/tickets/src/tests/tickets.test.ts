@@ -25,10 +25,22 @@ describe("Fetch All Tickets - Unit Test Suite", () => {
 describe("Fetch Single Ticket - Unit Test Suite", () => {
 
     it("Fetch Single Ticket By ID - Valid ID", async () => {
-        
+        const ticketBodyData = [{_id: "5d7a514b5d2c12c7449be120"}];
+
+        for(const ticketId of ticketBodyData) {
+            const response = await request(app).get(`/api/v1/tickets/${ticketId._id}`);
+            expect(response.statusCode).toBe(StatusCodes.OK);
+        }
+
     })
 
     it("Fetch Single Ticket By ID - Missing ID", async () => {
+        const missingTicketId = [{_id: null}]
+
+        for(const ticketId of missingTicketId) {
+            const response = await request(app).get(`/api/v1/tickets/${ticketId._id}`);
+            expect(response.statusCode).not.toBe(StatusCodes.OK);
+        }
 
     })
 
