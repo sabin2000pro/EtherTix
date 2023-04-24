@@ -52,6 +52,7 @@ describe("Fetch Single Ticket - Unit Test Suite", () => {
         for(const ticketId of malformedTicketID) {
             const response = await request(app).get(`/api/v1/tickets/${ticketId._id}`);
             expect(response.statusCode).not.toBe(StatusCodes.OK);
+            expect(response.body.message).toBe("Resource not found on the server. Invalid : _id")
         }
 
     })

@@ -14,8 +14,7 @@ export const errorHandler = (err, request: any, response: any, next: NextFunctio
     error.stack = err.stack;
 
     if(process.env.TICKETS_DEV_MODE === 'development') {
-        console.log(`Current Copy of Error :`, error.message)
-
+        
         if(err.code === 11000) {
             const message = `Duplicate resource found on the server ${Object.keys(err.keyValue)}`;
             error = new ErrorResponse(message, StatusCodes.BAD_REQUEST);
