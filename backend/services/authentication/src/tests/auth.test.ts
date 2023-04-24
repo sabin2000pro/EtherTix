@@ -39,7 +39,13 @@ describe("Register Account Test Suite", () => {
         const validRegisterData = [{forename: "John", surname: "Owens", username: "johnn32948", email: "john00@gmail.com", password: "test00", passwordConfirm: "test00", role: "User"}]
         const response = await request(app).post('/api/v1/auth/register').send(validRegisterData)
         expect(response.statusCode).not.toBe(StatusCodes.CREATED);
-        
+    })
+
+    it("Register Account - Password No Special Character Test", async () => {
+        const passwordData = [{password: "testpassword"}];
+        const response = await request(app).post('/api/v1/auth/register').send(passwordData);
+
+        expect(response.statusCode).not.toBe(StatusCodes.OK);
     })
 
     it("Register Account with passwords not matching", async () => {
