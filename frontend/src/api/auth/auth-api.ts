@@ -4,8 +4,7 @@ import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 import { AUTH_REGISTER_URI } from "./uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
-
-
+import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI } from './uris/auth-uris';
 
 export interface ForgotPCredentials {
   email: string;
@@ -42,7 +41,7 @@ export const verifyEmailAddress = async (verificationPayload: any): Promise<any>
 
   try {
 
-    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/verify-email", verificationPayload);
+    const response = await axios.post(AUTH_VERIFY_EMAIL_URI, verificationPayload);
     const data = await response.data;
     return data;
 
@@ -121,7 +120,7 @@ export const sendMfaEmail = async (mfaPayload: MfaEmailProps): Promise<any> => {
 
   try {
 
-    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/send-login-mfa", mfaPayload);
+    const response = await axios.post(AUTH_VERIFY_LOGIN_MFA_URI, mfaPayload);
     return response.data;
 
   } 

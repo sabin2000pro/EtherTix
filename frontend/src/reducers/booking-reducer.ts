@@ -1,3 +1,4 @@
+import { FETCH_BOOKINGS_SUCCESS } from './../constants/booking-constants';
 import { ISingleBooking, IBooking } from './interfaces/booking-interfaces';
 import { FETCH_BOOKINGS_REQUEST, FETCH_BOOKINGS_FAIL, FETCH_SINGLE_BOOKING_SUCCESS } from "constants/booking-constants"
 
@@ -11,7 +12,8 @@ export const bookingReducers = (state = initialBookingsState as IBooking, action
         case FETCH_BOOKINGS_REQUEST:
             return {loading: true, error: undefined, bookings: [] }
 
-        
+        case FETCH_BOOKINGS_SUCCESS:
+            return {...state, loading: false, error: undefined, bookings: action.payload}
     
         default:
             return state
