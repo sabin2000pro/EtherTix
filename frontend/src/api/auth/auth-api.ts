@@ -2,7 +2,7 @@ import { processAuthInterceptor } from './interceptor';
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
-import { AUTH_REGISTER_URI } from "./uris/auth-uris";
+import { AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
 import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI } from './uris/auth-uris';
 
@@ -60,7 +60,7 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 
   try {
 
-    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/resend-email-verification", resendVerificationPayload);
+    const response = await axios.post(AUTH_RESEND_EMAIL_VERIFICATION_URI, resendVerificationPayload);
     const data = await response.data;
 
     return data;
