@@ -13,7 +13,6 @@
     "orders-service:test": "jest tests/orders-service.test.ts --bail",
     "pm2:production": "NODE_ENV=production pm2 start dist/index.js --watch -i max"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -23,6 +22,7 @@
     "@types/morgan": "^1.9.4",
     "@types/nodemon": "^1.19.2",
     "@types/supertest": "^2.0.12",
+    "@types/typescript": "^2.0.0",
     "axios": "^1.3.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -32,6 +32,7 @@
     "mongoose": "^7.0.5",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "typescript": "^5.0.4"
   }
 }
