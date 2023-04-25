@@ -100,6 +100,7 @@ export const logout = async (): Promise<any> => {
   } 
   
   catch (err: any) {
+    
     if (err) {
       return console.error(err);
     }
