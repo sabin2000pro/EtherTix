@@ -23,6 +23,8 @@ export const connectOrderSchema = async () => {
     } 
     
     catch(error: any) {
+
+        
     if(error) {
         throw new Error(error);
     }
