@@ -22,14 +22,14 @@ export const registerUser = () => async (dispatch: Dispatch): Promise<void> => {
 }
 
 export const login = () => async (dispatch: any) => {
+
    try {
-  
+     dispatch({type: LOGIN_USER_REQUEST})
    } 
    
    catch(error: any) {
   
    }
-
 
 }
 
