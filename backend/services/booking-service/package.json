@@ -1,7 +1,7 @@
 {
-  "name": "booking-service",
+  "name": "Booking Microservice Dependencies",
   "version": "1.0.0",
-  "description": "Bookings Microservice Dependencies",
+  "description": "Bookings Microservice Dependency File with scripts",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -9,8 +9,9 @@
     "prestart": "npm run build",
     "dev": "nodemon dist/index.js",
     "start:booking-service": "BOOKINGS_SERVICE_DEV_MODE=development nodemon dist/index.js",
-    "test:booking-service": "jest tests/auth.test.ts --bail"
+    "test:booking-service": "jest tests/booking.test.ts --bail"
   },
+  
   "keywords": [],
   "author": "Sabin Constantin Lungu",
   "license": "ISC",
