@@ -68,6 +68,10 @@ export const editBookingDetails = asyncHandler(async (request: any, response: an
         return next(new ErrorResponse(`No booking with that ID found`, StatusCodes.BAD_REQUEST));
     }
 
+    if(booking.isCancelled === true) {
+        return next(new ErrorResponse(`Cannot update a booking that is already cancelled`, StatusCodes.BAD_REQUEST));
+    }
+
     booking = await Booking.findByIdAndUpdate(bookingId, bookingFieldsToUpdate, {new: true, runValidators: true});
     await booking.save();
 
@@ -86,13 +90,18 @@ export const cancelUserBooking = asyncHandler(async (request: any, response: any
 
 export const deleteBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     if(request.method === 'DELETE') {
+        await Booking.deleteMany();
 
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Bookings Deleted"})
     }
-
 })
 
 export const deleteBookingByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     if(request.method === 'DELETE') {
+        const bookingId = request.params.bookingId;
         
+        await Booking.findByIdAndDelete(bookingId);
+
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: `Booking with ID : ${bookingId} deleted`})
     }
 })

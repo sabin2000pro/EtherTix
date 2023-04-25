@@ -26,7 +26,6 @@ const UpdatePassword: React.FC = () => {
       return;
     }
 
-
     try {
 
       const response = await updatePassword(data);
@@ -48,6 +47,8 @@ const UpdatePassword: React.FC = () => {
       setSuccess(null);
       setError("Something went wrong. Please try again later.");
     }
+
+    
   };
 
   const togglePassVisibility = () => {
@@ -55,10 +56,11 @@ const UpdatePassword: React.FC = () => {
   };
 
   return (
+
     <Container>
 
-      
       {error && (
+
         <Alert variant="danger" style={{ textAlign: "center" }}>
           {error}
         </Alert>
@@ -109,7 +111,7 @@ const UpdatePassword: React.FC = () => {
             registerOptions={{ required: "Required" }}
             error={errors.newPassword}
           />
-          
+
           <TextInputField
             name="passwordConfirm"
             label="Please confirm your new password:"
