@@ -26,7 +26,7 @@ export const registerUser = (username: string, email: string, password: string, 
 
 export const verifyEmailAddress = (userId: string, OTP: string) => async (dispatch: Dispatch): Promise<void> => {
     try {
-         
+        
     } 
     
     catch(error) {
