@@ -12,14 +12,13 @@
         },
 
         "orderItems": [{
-            "name": "iPad Pro 12.9",
+            "name": "Highland Basic Event Ticket",
             "quantity": 1,
             "ticket": "5d7a514b5d2c12c7449be120",
             "_id": "63f388bf2b02ac6637b871bc",
             "itemPrice": 0.0025,
             "taxPrice": 0.009,
-            "shippingPrice": 0.002,
-            "totalPrice": 0.0135
+            "totalPrice": 0.034
         }],
 
         "orderStatus": "received"
@@ -38,13 +37,12 @@
         },
 
         "orderItems": [{
-            "name": "iPhone X",
+            "name": "Highland Premium Event Ticket",
             "quantity": 1,
-            "ticket": "63e25f48d82eb035f7da0980",
+            "ticket": "5d7a514b5d2c12c7449be122",
             "_id": "63f388bf2b02ac6637b871bf",
-            "itemPrice": 999.99,
-            "taxPrice": 2.99,
-            "shippingPrice": 0.99,
+            "itemPrice": 0.075,
+            "taxPrice": 0.010,
             "totalPrice": 1003.99
         }],
 
