@@ -124,16 +124,20 @@ export const login = async (loginPayload: LoginCredentials): Promise<any> => {
   } 
   
   catch (err: any) {
+
     if (err) {
       throw err;
     }
+
+
   }
 };
 
 export const logout = async (): Promise<any> => {
 
   try {
-    const response = await axios.post("http://localhost:5299/api/auth/logout");
+
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/logout");
     const data = await response.data;
     return data;
 
@@ -149,12 +153,13 @@ export const logout = async (): Promise<any> => {
 };
 
 
-export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
+export const sendMfaEmail = async (mfaPayload: MfaEmailProps): Promise<any> => {
 
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/send-login-mfa", mfaPayload);
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/send-login-mfa", mfaPayload);
     return response.data;
+
   } 
   
   catch (error) {
@@ -172,7 +177,7 @@ export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials):
 
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/forgot-password", forgotPasswordPayload);
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/forgot-password", forgotPasswordPayload);
     const data = await response.data;
     return data;
 
