@@ -21,9 +21,13 @@ export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> =>
 
 }
 
-export const fetchSingleEvent = (id: number) => async (dispatch: any): Promise<void> => {
+export const fetchSingleEvent = (id: number) => async (dispatch: Dispatch): Promise<void> => {
 
     try {
+
+        if(!id) {
+            throw new Error(`Event ID not found, please try again`);
+        }
 
         dispatch({type: FETCH_SINGLE_EVENT_REQUEST});
         const {data} = await axios.get(`http://localhost:5301/api/v1/events/${id}`);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { resetPassword, IResetPassword } from "api/auth/auth-api";
+import { resetPassword } from "api/auth/auth-api";
+import { IResetPassword } from "api/auth/interfaces/auth-interfaces";
 import { useForm } from "react-hook-form";
 import TextInputField from "../../components/form/TextInputField";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
