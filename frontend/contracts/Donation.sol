@@ -21,5 +21,5 @@ contract Donation is ERC721URIStorage, Ownable {
     NftDonation[] public allDonations; // Store all the donations in an array
    
     constructor() ERC721("Donation Contract", "DNCT") {}
-    
+
 }

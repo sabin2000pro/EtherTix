@@ -129,7 +129,6 @@ export const uploadEventPhoto = asyncHandler(async (request: any, response: any,
   file.mv(`${process.env.PRODUCTS_SERVICE_FILE_UPLOAD_PATH}/${fileName}`, async (error) => {
 
     if (error) {
-      console.error(error);
       return next(new ErrorResponse('Problem with file upload', StatusCodes.INTERNAL_SERVER_ERROR));
     }
 
@@ -208,7 +207,23 @@ export const unlikeEvent = asyncHandler(async (request: any, response: any, next
 })
 
 export const bookmarkEvent = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    const {eventId} = request.params;
+    const user = request.user._id;
+    const currentEvent = await Event.findById(eventId);
 
+    if(!currentEvent) {
+         return next(new ErrorResponse(`Current event not found`, StatusCodes.BAD_REQUEST));
+    }
+
+    const eventAlreadyBookmarked = currentEvent.bookmarks.includes(user);
+
+    if(eventAlreadyBookmarked) {
+        return next(new ErrorResponse(`Event already bookmarked`, StatusCodes.BAD_REQUEST));
+    }
+
+    currentEvent.bookmarks.push(user);
+    await currentEvent.save();
+    return response.status(StatusCodes.OK).json({success: true, currentEvent, message: `Event ${eventId} bookmarked`});
 })
 
 export const fetchTotalNumberOfEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {

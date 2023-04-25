@@ -49,7 +49,7 @@ export interface EventDocument extends mongoose.Model<EventAttributes> {
     salesStatus: string;
     eventStatus: string;
     likes: any[];
-    bookmarks: []
+    bookmarks: any[];
     followers: any[]
 
     organiser: mongoose.Schema.Types.ObjectId; // Event organiser (User ID)
