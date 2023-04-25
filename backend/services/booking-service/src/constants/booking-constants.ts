@@ -1,0 +1,1 @@
+export const BOOKINGS_RATE_LIMIT_MINUTES = 10 * 60 * 1000
