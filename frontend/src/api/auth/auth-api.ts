@@ -4,16 +4,9 @@ import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
 import { AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
-import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI } from './uris/auth-uris';
+import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './uris/auth-uris';
+import { ForgotPCredentials, ILoginCredentials } from './interfaces/auth-interfaces';
 
-export interface ForgotPCredentials {
-  email: string;
-}
-export interface LoginCredentials {
-  email: string;
-  password: string;
-  mfaToken: string;
-}
 
 const authConfig = processAuthInterceptor();
 
@@ -77,7 +70,7 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 };
 
 
-export const login = async (loginPayload: LoginCredentials): Promise<any> => {
+export const login = async (loginPayload: ILoginCredentials): Promise<any> => {
   try {
 
     const response = await axios.post(AUTH_LOGIN_URI, loginPayload);
@@ -100,7 +93,7 @@ export const logout = async (): Promise<any> => {
 
   try {
 
-    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/logout");
+    const response = await axios.post(AUTH_LOGOUT_URI);
     const data = await response.data;
     return data;
 

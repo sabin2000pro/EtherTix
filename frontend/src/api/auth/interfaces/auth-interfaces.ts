@@ -23,3 +23,14 @@ export interface MfaEmailProps {
     email: string;
     password: string;
 }
+
+export interface ForgotPCredentials {
+    email: string;
+  }
+
+
+export interface ILoginCredentials {
+    email: string;
+    password: string;
+    mfaToken: string;
+  }
