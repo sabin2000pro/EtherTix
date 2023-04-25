@@ -1,7 +1,7 @@
 {
-  "name": "orders-service",
+  "name": "Orders Microservice Dependencies",
   "version": "1.0.0",
-  "description": "Orders Microservice Dependencies",
+  "description": "Orders Microservice Dependencies installed below with scripts",
   "main": "index.js",
   "scripts": {
     "build:orders-service": "tsc",
