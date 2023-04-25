@@ -30,6 +30,10 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
     const id = request.params.id;
     const event = await Event.findById(id);
 
+    if(!isValidObjectId(id)) {
+        return next(new ErrorResponse(`Event ID Malformed, try again`, StatusCodes.BAD_REQUEST));
+    }
+
     if(!event) {
         return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
      }
@@ -81,31 +85,6 @@ export const editEventByID = async (request: any, response: any, next: NextFunct
     }
     
 
-export const deleteEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
-    if(request.method === 'DELETE') {
-        await Event.deleteMany();
-        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Events Deleted"})
-    }
-    
-})
-
-export const deleteEventByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-     const id = request.params.id;
-     let event = await Event.findById(id);
-
-     if(!event) {
-        return next(new ErrorResponse(`Could not find that event ID`, StatusCodes.BAD_REQUEST));
-     }
-
-     if(event.eventStatus === 'canceled' || event.eventStatus === 'pending' || event.eventStatus === 'live' || event.eventStatus === 'completed') {
-        return next(new ErrorResponse(`Cannot delete an event that is canceled, pending or started`, StatusCodes.BAD_REQUEST))
-     }
-
-     event = await Event.findByIdAndUpdate(id, request.body, {new: true, runValidators: true});
-     await event.save();
-     return response.status(StatusCodes.OK).json({success: true, message: `Event with ID : ${id} - updated successfully`});
-})
 
 export const uploadEventPhoto = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const file = request.files.file as any
@@ -234,4 +213,30 @@ export const fetchTotalNumberOfEvents = asyncHandler(async (request: any, respon
     }
 
     return response.status(StatusCodes.OK).json({success: true, totalNumberOfEvents});
+})
+
+export const deleteEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
+    if(request.method === 'DELETE') {
+        await Event.deleteMany();
+        return response.status(StatusCodes.NO_CONTENT).json({success: true, message: "Events Deleted"})
+    }
+    
+})
+
+export const deleteEventByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+     const id = request.params.id;
+     let event = await Event.findById(id);
+
+     if(!event) {
+        return next(new ErrorResponse(`Could not find that event ID`, StatusCodes.BAD_REQUEST));
+     }
+
+     if(event.eventStatus === 'canceled' || event.eventStatus === 'pending' || event.eventStatus === 'live' || event.eventStatus === 'completed') {
+        return next(new ErrorResponse(`Cannot delete an event that is canceled, pending or started`, StatusCodes.BAD_REQUEST))
+     }
+
+     event = await Event.findByIdAndUpdate(id, request.body, {new: true, runValidators: true});
+     await event.save();
+     return response.status(StatusCodes.OK).json({success: true, message: `Event with ID : ${id} - updated successfully`});
 })
