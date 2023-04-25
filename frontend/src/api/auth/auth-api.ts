@@ -5,7 +5,7 @@ import axios from "axios";
 import { AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
 import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './uris/auth-uris';
-import { ForgotPCredentials, ILoginCredentials } from './interfaces/auth-interfaces';
+import { ForgotPCredentials, ILoginCredentials, IResetPassword } from './interfaces/auth-interfaces';
 
 
 const authConfig = processAuthInterceptor();
@@ -100,7 +100,7 @@ export const logout = async (): Promise<any> => {
   } 
   
   catch (err: any) {
-    
+
     if (err) {
       return console.error(err);
     }
@@ -134,7 +134,7 @@ export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials):
 
   try {
 
-    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/forgot-password", forgotPasswordPayload);
+    const response = await axios.post("", forgotPasswordPayload);
     const data = await response.data;
     return data;
 
@@ -150,12 +150,6 @@ export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials):
   }
 };
 
-export interface IResetPassword {
-  newPassword: string;
-  confirmPassword: string;
-  resetToken: string;
-  userId: string;
-}
 
 export const resetPassword = async (resetPasswordPayload: IResetPassword): Promise<any> => {
 

@@ -34,3 +34,10 @@ export interface ILoginCredentials {
     password: string;
     mfaToken: string;
   }
+
+  export interface IResetPassword {
+    newPassword: string;
+    confirmPassword: string;
+    resetToken: string;
+    userId: string;
+  }
