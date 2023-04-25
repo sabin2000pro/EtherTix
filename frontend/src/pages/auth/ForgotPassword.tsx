@@ -2,27 +2,33 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, Button, Form, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
-import { forgotPassword, ForgotPCredentials } from "api/auth/auth-api";
+import { forgotPassword } from "api/auth/auth-api";
+import { ForgotPCredentials } from "api/auth/interfaces/auth-interfaces";
 
 const ForgotPassword: React.FC = () => {
   const [errorText, setErrorText] = useState<string | null>(null);
   const [successText, setSuccessText] = useState<string | null>(null);
 
   const timeLeft = 15;
-
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
+
     const interval = setInterval(() => {
+
       if (timer > 0) {
         setTimer(timer - 1);
       }
     }, 1000);
+
+
     return () => {
       if (timer > 0) {
         clearInterval(interval);
       }
     };
+
+
   }, [timer]);
 
   const {
@@ -32,29 +38,42 @@ const ForgotPassword: React.FC = () => {
   } = useForm<ForgotPCredentials>();
 
   const onSubmit = async (data: ForgotPCredentials) => {
+
     try {
+
       setErrorText(null);
       setSuccessText(null);
       const response = await forgotPassword(data);
+
+
       if (response.success === true) {
         setErrorText(null);
         setSuccessText(
           "User found - A password reset link has been sent to your email address."
         );
       };
-    } catch (error: any) {
+
+
+    }
+    
+     catch (error: any) {
       setSuccessText(null);
       setErrorText("No corresponding user found - Please check email entry...");
       console.log(error);
     }
+
     setTimer(timeLeft);
   };
 
   return (
+
     <Container>
+
       {errorText && <Alert variant="danger" style={{textAlign: "center"}}>{errorText}</Alert>}
       {successText && <Alert variant="success" style={{textAlign: "center"}}>{successText}</Alert>}
       <Container className="verify-container">
+
+
         <Form.Label
           column="lg"
           style={{ marginTop: "15px", textAlign: "center" }}
@@ -67,6 +86,7 @@ const ForgotPassword: React.FC = () => {
         >
           Thats Okay! Please enter your email to receive a password reset link.
         </Form.Label>
+        
         <Form onSubmit={handleSubmit(onSubmit)}>
           <TextInputField
             name="email"
