@@ -11,6 +11,10 @@ export interface IRegisterCredentials {
   passwordConfirm: string;
 }
 
+export interface MfaEmailProps {
+  email: string;
+  password: string;
+}
 export interface ForgotPCredentials {
   email: string;
 }
@@ -42,17 +46,19 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
 
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/register", registerPayload);
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/register", registerPayload);
 
     const data = await response.data;
-
     return data;
   } 
   
   catch (err: any) {
+
     if (err) {
       throw err;
     }
+
+
   }
 };
 
@@ -60,7 +66,7 @@ export const verifyEmailAddress = async (verificationPayload: any): Promise<any>
 
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/verify-email", verificationPayload);
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/verify-email", verificationPayload);
     const data = await response.data;
     return data;
 
@@ -82,6 +88,7 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
     const data = await response.data;
 
     return data;
+
   } 
   
   catch (err: any) {
@@ -96,13 +103,14 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
   try {
-    const response = await axios.post(
-      "http://localhost:5299/api/auth/login",
-      loginPayload
-    );
+
+    const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
+
     const data = await response.data;
     return data;
-  } catch (err: any) {
+  } 
+  
+  catch (err: any) {
     if (err) {
       throw err;
     }
@@ -110,11 +118,15 @@ export const login = async (loginPayload: LoginCredentials): Promise<any> => {
 };
 
 export const logout = async (): Promise<any> => {
+
   try {
     const response = await axios.post("http://localhost:5299/api/auth/logout");
     const data = await response.data;
     return data;
-  } catch (err: any) {
+
+  } 
+  
+  catch (err: any) {
     if (err) {
       return console.error(err);
     }
@@ -123,10 +135,6 @@ export const logout = async (): Promise<any> => {
   }
 };
 
-export interface MfaEmailProps {
-  email: string;
-  password: string;
-}
 
 export const sendMfaEmail = async (mfaPayload: MfaEmailProps) => {
 
