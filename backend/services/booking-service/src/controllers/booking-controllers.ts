@@ -84,4 +84,11 @@ export const cancelUserBooking = asyncHandler(async (request: any, response: any
 
 })
 
-export const dele
+export const deleteBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
+})
+
+export const deleteBookingByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
+})
+
