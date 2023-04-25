@@ -2,7 +2,7 @@ import { isValidObjectId } from 'mongoose';
 import { ErrorResponse } from '../utils/error-response';
 import { StatusCodes } from 'http-status-codes';
 import path from 'path';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction} from 'express';
 import { Event } from "../models/event-model";
 import asyncHandler from 'express-async-handler';
 
@@ -45,6 +45,10 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category } = request.body;
 
+    if(capacity === 0) {
+        return next(new ErrorResponse(`Capacity for the event cannot be 0`, StatusCodes.BAD_REQUEST));
+    }
+
     if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !slotsAvailable || !reservedSeating || !salesStatus || !venue || !organiser || !ticket || !category) {
         return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
      }
@@ -52,8 +56,7 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
      const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
     
      await event.save();
-
-    return response.status(StatusCodes.CREATED).json({success: true, event});
+     return response.status(StatusCodes.CREATED).json({success: true, event});
 
 }    
 
