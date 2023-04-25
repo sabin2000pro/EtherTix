@@ -2,9 +2,9 @@ import { processAuthInterceptor } from './interceptor';
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
-import { AUTH_FORGOT_PASSWORD_URI, AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./uris/auth-uris";
+import { AUTH_FORGOT_PASSWORD_URI, AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./auth-uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
-import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './uris/auth-uris';
+import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './auth-uris/auth-uris';
 import { ForgotPCredentials, ILoginCredentials, IResetPassword } from './interfaces/auth-interfaces';
 
 
