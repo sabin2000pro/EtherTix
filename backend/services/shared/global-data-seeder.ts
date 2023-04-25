@@ -26,6 +26,7 @@ connectEventsDatabase();
 connectTicketsSchema();
 connectVenuesSchema();
 connectBookingSchema();
+connectOrderSchema();
 
 export const loadAllData = async (): Promise<any> => { // Load the data into the database
     
@@ -45,7 +46,7 @@ export const loadAllData = async (): Promise<any> => { // Load the data into the
 
             await Order.create(orders);
 
-            console.log(`All service Data imported successfully.`);
+            console.log(`Data imported successfully...`);
             return process.exit(1);
 
     } 
@@ -69,6 +70,8 @@ export const removeAllData = async (): Promise<any> => {
         await Ticket.remove();
         await Venue.remove();
         await Booking.remove();
+
+        await Order.remove();
 
         console.log(`All the services data removed from the schemas.`);
 
