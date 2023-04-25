@@ -18,3 +18,8 @@ export interface UpdateProfileCredentials {
     username?: string;
     role?: string;
 }
+
+export interface MfaEmailProps {
+    email: string;
+    password: string;
+}

@@ -1,17 +1,11 @@
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
-import { IRegisterCredentials } from "./interfaces/auth-interfaces";
 import axios from "axios";
-import { UpdatePasswordCredentials } from "./interfaces/auth-interfaces";
 import { AUTH_REGISTER_URI } from "./uris/auth-uris";
+import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
 
 
 
-
-export interface MfaEmailProps {
-  email: string;
-  password: string;
-}
 export interface ForgotPCredentials {
   email: string;
 }
