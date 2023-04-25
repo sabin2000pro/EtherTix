@@ -83,3 +83,5 @@ export const cancelUserBooking = asyncHandler(async (request: any, response: any
    }
 
 })
+
+export const dele
