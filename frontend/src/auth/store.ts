@@ -23,50 +23,69 @@ const initialState: AuthState = {
 };
 
 export const authSlice = createSlice({
+
   name: "auth",
   initialState,
+
   reducers: {
+
+
     login: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isLoggedIn = true;
     },
+
     logout: (state) => {
       state.user = null;
       state.isLoggedIn = false;
     },
+
     addItem: (state, action: PayloadAction<CartItem>) => {
-      const itemIndex = state.cartItems.findIndex(
-        (itemId) => itemId.id === action.payload.id // find index by itemId instead of object
-      );
+
+      const itemIndex = state.cartItems.findIndex((itemId) => itemId.id === action.payload.id);
+
       if (itemIndex === -1) {
         state.cartItems.push(action.payload);
-      } else {
+      } 
+      
+      else {
         const item = state.cartItems[itemIndex] as CartItem;
         item.quantity += action.payload.quantity;
         state.cartItems[itemIndex] = item;
       }
+
       cookies.setCartContent(state.cartItems);
     },
+
+
     removeItem: (state, action: PayloadAction<string>) => {
+
       const itemIndex = state.cartItems.findIndex(
         (itemId) => itemId.id === action.payload // find index by itemId instead of object
       );
+
+
       if (state.cartItems[itemIndex].quantity === 1) {
         state.cartItems = state.cartItems.filter(
           (itemId) => itemId.id !== action.payload
         );
-      } else {
+      } 
+      
+      else {
         state.cartItems[itemIndex].quantity -= 1;
       }
+
       cookies.setCartContent(state.cartItems);
     },
-    updateItemQuantity: (
-      state,
-      action: PayloadAction<{ id: string; quantity: number }>
-    ) => {
+
+
+    updateItemQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
+      
       const itemIndex = state.cartItems.findIndex(
         (itemId) => itemId.id === action.payload.id // find index by itemId instead of object
       );
+
+
       if (itemIndex !== -1) {
         const item = state.cartItems[itemIndex] as CartItem;
         item.quantity = action.payload.quantity;
