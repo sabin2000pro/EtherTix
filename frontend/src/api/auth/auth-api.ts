@@ -11,6 +11,18 @@ export interface IRegisterCredentials {
   passwordConfirm: string;
 }
 
+export interface UpdatePasswordCredentials {
+  currentPassword: string;
+  newPassword: string;
+  passwordConfirm: string;
+}
+
+export interface UpdateProfileCredentials {
+  email?: string;
+  username?: string;
+  role?: string;
+}
+
 export interface MfaEmailProps {
   email: string;
   password: string;
@@ -82,9 +94,10 @@ export const verifyEmailAddress = async (verificationPayload: any): Promise<any>
 };
 
 export const resendEmailVerification = async (resendVerificationPayload: any): Promise<any> => {
+
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/resend-email-verification", resendVerificationPayload);
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/resend-email-verification", resendVerificationPayload);
     const data = await response.data;
 
     return data;
@@ -104,7 +117,7 @@ export const resendEmailVerification = async (resendVerificationPayload: any): P
 export const login = async (loginPayload: LoginCredentials): Promise<any> => {
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/login", loginPayload);
+    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/login", loginPayload);
 
     const data = await response.data;
     return data;
@@ -207,12 +220,11 @@ export const getUser = async (): Promise<any> => {
 
   try {
 
-    const response = await axios.get("http://localhost:5299/api/auth/me", {
+    const response = await axios.get("https://ethertix.co.uk/api/v1/auth/me", {
+
       headers: {
 
-        Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
-          cookies.get(COOKIE_NAME_USER)._id
-        }`,
+        Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`,
       },
     });
 
@@ -226,12 +238,6 @@ export const getUser = async (): Promise<any> => {
     }
   }
 };
-
-export interface UpdateProfileCredentials {
-  email?: string;
-  username?: string;
-  role?: string;
-}
 
 export const updateProfile = async (updateProfilePayload: UpdateProfileCredentials): Promise<any> => {
 
@@ -259,11 +265,6 @@ export const updateProfile = async (updateProfilePayload: UpdateProfileCredentia
   }
 };
 
-export interface UpdatePasswordCredentials {
-  currentPassword: string;
-  newPassword: string;
-  passwordConfirm: string;
-}
 
 export const updatePassword = async (updatePasswordPayload: UpdatePasswordCredentials): Promise<any> => {
 
