@@ -15,15 +15,6 @@ export const ticketsReducer = (state = initialTicketsState as ITickets, action: 
         case FETCH_ALL_TICKETS_FAIL:
             return {loading: false, error: action.payload.error, message: action.payload.error.message}
 
-        case CREATE_TICKET_REQUEST:
-            return {loading: true, error: undefined, ticket: {}}
-
-        case CREATE_TICKET_SUCCESS:
-            return {...state, loading: false, error: undefined, ticket: action.payload}
-
-        case CREATE_TICKET_FAIL:
-            return {loading: false, error: action.payload}
-
         default:
             return state
     }
@@ -42,6 +33,15 @@ export const singleTicketReducer = (state = singleTicketState as ISingleTicket, 
 
         case FETCH_SINGLE_TICKET_FAIL:
             return {loading: false, error: action.payload.error, message: action.payload.error.message}
+
+        case CREATE_TICKET_REQUEST:
+                return {loading: true, error: undefined, ticket: {}}
+    
+        case CREATE_TICKET_SUCCESS:
+                return {...state, loading: false, error: undefined, ticket: action.payload}
+    
+        case CREATE_TICKET_FAIL:
+                return {...state, loading: false, error: action.payload, ticket: {}}
 
         default:
             return state;
