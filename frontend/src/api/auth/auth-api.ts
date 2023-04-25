@@ -1,27 +1,12 @@
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
+import { IRegisterCredentials } from "./interfaces/auth-interfaces";
 import axios from "axios";
+import { UpdatePasswordCredentials } from "./interfaces/auth-interfaces";
+import { AUTH_REGISTER_URI } from "./uris/auth-uris";
 
-export interface IRegisterCredentials {
-  forename: string;
-  surname: string;
-  username: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}
 
-export interface UpdatePasswordCredentials {
-  currentPassword: string;
-  newPassword: string;
-  passwordConfirm: string;
-}
 
-export interface UpdateProfileCredentials {
-  email?: string;
-  username?: string;
-  role?: string;
-}
 
 export interface MfaEmailProps {
   email: string;
@@ -58,7 +43,7 @@ export const registerUser = async (registerPayload: IRegisterCredentials): Promi
 
   try {
 
-    const response = await axios.post("https://ethertix.co.uk/api/v1/auth/register", registerPayload);
+    const response = await axios.post(AUTH_REGISTER_URI, registerPayload);
 
     const data = await response.data;
     return data;
