@@ -7,7 +7,6 @@ import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRe
 import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './auth-uris/auth-uris';
 import { ForgotPCredentials, ILoginCredentials, IResetPassword } from './interfaces/auth-interfaces';
 
-
 const authConfig = processAuthInterceptor();
 
 export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
@@ -246,12 +245,10 @@ export const updatePassword = async (updatePasswordPayload: UpdatePasswordCreden
 };
 
 export const uploadProfilePic = async (pic: any) => {
+
   try {
 
-
-    const response = await axios.put(
-      "http://localhost:5299/api/auth/propic",
-      pic,
+    const response = await axios.put("http://localhost:5299/api/auth/propic", pic,
       {
         headers: {
           Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
@@ -260,8 +257,12 @@ export const uploadProfilePic = async (pic: any) => {
         },
       }
     );
+
+
     return response.data;
-  } catch (error: any) {
+  } 
+  
+  catch (error: any) {
     if (error) {
       throw error;
     }
