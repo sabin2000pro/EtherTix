@@ -4,6 +4,6 @@ COPY package.json .
 COPY nodemon.json .
 COPY tsconfig.json .
 RUN npm install
-EXPOSE 5771
+EXPOSE 5051
 RUN npm run build
 CMD [ "npm", "run", "start-orders:service" ]

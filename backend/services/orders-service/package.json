@@ -1,11 +1,19 @@
 {
   "name": "orders-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Orders Microservice Dependencies",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:orders-service": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "dev": "nodemon dist/index.js",
+    "start:server": "ORDERS_SERVICE_DEV_MODE=development npm run dev",
+    "start:production": "ORDERS_SERVICE_DEV_MODE=production node dist/index.js",
+    "orders-service:test": "jest tests/orders-service.test.ts --bail",
+    "pm2:production": "NODE_ENV=production pm2 start dist/index.js --watch -i max"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
