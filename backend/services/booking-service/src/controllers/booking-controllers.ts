@@ -5,20 +5,32 @@ import { Booking } from "../model/booking-model"
 import { ErrorResponse } from '../utils/error-response';
 
 export const fetchAllBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+
     if(request.method === 'GET') {
         const bookings = await Booking.find();
-    }
 
-    
+        if(!bookings) {
+
+        }
+
+        return response.status(StatusCodes.OK).json({success: true, bookings});
+    }
 })
 
 export const fetchUserBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const {userId} = request.params;
-    const userBookings = await Booking.find({userId});
 
-    if(!userBookings) {
+    if(request.method === 'GET') {
+        const {userId} = request.params;
+        const userBookings = await Booking.find({userId});
+    
+        if(!userBookings) {
+            return next(new ErrorResponse(`No user bookings found`, StatusCodes.BAD_REQUEST));
+        }
+
+        return response.status(StatusCodes.OK).json({success: true, userBookings});
 
     }
+
 
 })
 
@@ -34,12 +46,16 @@ export const fetchSingleBookingByID = asyncHandler(async (request: any, response
 })
 
 export const createBooking = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const {user, event, tickets} = request.body;
-    const booking = await Booking.create({user, event, tickets});
+    const {user, event, ticketIds} = request.body;
 
+    if(!user || !event || !ticketIds) {
+        return next(new ErrorResponse(`Cannot create booking. One or more fields are missing`, StatusCodes.BAD_REQUEST));
+    }
+
+    const booking = await Booking.create({user, event, ticketIds});
     await booking.save();
 
-    return response.status(StatusCodes.CREATED).json({success: true,  booking})
+    return response.status(StatusCodes.CREATED).json({success: true, booking})
 })
 
 export const editBookingDetails = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
