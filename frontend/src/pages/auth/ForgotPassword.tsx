@@ -73,21 +73,24 @@ const ForgotPassword: React.FC = () => {
       {successText && <Alert variant="success" style={{textAlign: "center"}}>{successText}</Alert>}
       <Container className="verify-container">
 
-
         <Form.Label
+
           column="lg"
           style={{ marginTop: "15px", textAlign: "center" }}
         >
           Forgotten Password?
         </Form.Label>
+
         <Form.Label
           column="sm"
           style={{ marginTop: "5px", marginBottom: "45px" }}
         >
           Thats Okay! Please enter your email to receive a password reset link.
         </Form.Label>
-        
+
         <Form onSubmit={handleSubmit(onSubmit)}>
+
+
           <TextInputField
             name="email"
             label="Please enter your email:"
@@ -98,6 +101,8 @@ const ForgotPassword: React.FC = () => {
             error={errors.email}
             autoFocus
           />
+
+
           <Button
             type="submit"
             disabled={isSubmitting || timer > 0}

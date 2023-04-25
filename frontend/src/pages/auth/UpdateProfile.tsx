@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Alert, Button, Form, Container, Modal } from "react-bootstrap";
-import { updateProfile, UpdateProfileCredentials } from "api/auth/auth-api";
+import { updateProfile } from "api/auth/auth-api";
+import { UpdateProfileCredentials } from "api/auth/interfaces/auth-interfaces";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import TextInputField from "components/form/TextInputField";
@@ -41,17 +42,21 @@ const UpdateProfile = () => {
     }
 
     setError(null);
+
     setSuccess(
       `Successfully updated your ${updatedDetails.join(
         ", "
       )}, redirecting now...`
     );
+
+    
     setTimeout(() => {
       navigate("/");
     }, 3500);
   };
 
   const handleModalSubmit = async () => {
+
     if (formData) {
       setError(null);
       setSuccess(null);
@@ -63,7 +68,9 @@ const UpdateProfile = () => {
         if (response.success) {
           handleRedirect();
         }
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
         setSuccess(null);
         setError("Something went wrong. Please try again later.");
