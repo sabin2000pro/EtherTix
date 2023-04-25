@@ -2,7 +2,7 @@ import { processAuthInterceptor } from './interceptor';
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
-import { AUTH_FORGOT_PASSWORD_URI, AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./auth-uris/auth-uris";
+import { AUTH_FORGOT_PASSWORD_URI, AUTH_LOGGED_IN_USER_URI, AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI, AUTH_RESET_PASSWORD_URI } from "./auth-uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
 import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './auth-uris/auth-uris';
 import { ForgotPCredentials, ILoginCredentials, IResetPassword } from './interfaces/auth-interfaces';
@@ -89,7 +89,7 @@ export const login = async (loginPayload: ILoginCredentials): Promise<any> => {
   }
 };
 
-export const logout = async (): Promise<any> => {
+export const logout = async (): Promise<any> => { // Logs out the user from the frontend-side. It sends the request to the authentication logout API
 
   try {
 
@@ -155,7 +155,7 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
   try {
 
-    const response = await axios.post("",resetPasswordPayload);
+    const response = await axios.post(AUTH_RESET_PASSWORD_URI,resetPasswordPayload);
   
     const data = await response.data;
     return data;
@@ -176,12 +176,13 @@ export const getUser = async (): Promise<any> => {
 
   try {
 
-    const response = await axios.get("https://ethertix.co.uk/api/v1/auth/me", {
+    const response = await axios.get(AUTH_LOGGED_IN_USER_URI, {
 
       headers: {
 
         Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`,
       },
+
     });
 
     const data = await response.data;
@@ -189,9 +190,11 @@ export const getUser = async (): Promise<any> => {
   } 
   
   catch (err: any) {
+
     if (err) {
       throw err;
     }
+
   }
 };
 
@@ -199,7 +202,7 @@ export const updateProfile = async (updateProfilePayload: UpdateProfileCredentia
 
   try {
 
-    const response = await axios.put("http://localhost:5299/api/auth/update-profile", updateProfilePayload, {
+    const response = await axios.put("", updateProfilePayload, {
 
         headers: {
           Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`,
@@ -226,7 +229,7 @@ export const updatePassword = async (updatePasswordPayload: UpdatePasswordCreden
 
   try {
 
-    const response = await axios.put("http://localhost:5299/api/auth/update-password", updatePasswordPayload, {
+    const response = await axios.put("", updatePasswordPayload, {
 
         headers: {Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}}
     );
