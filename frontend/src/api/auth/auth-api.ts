@@ -2,7 +2,7 @@ import { processAuthInterceptor } from './interceptor';
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
-import { AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./uris/auth-uris";
+import { AUTH_FORGOT_PASSWORD_URI, AUTH_REGISTER_URI, AUTH_RESEND_EMAIL_VERIFICATION_URI } from "./uris/auth-uris";
 import { UpdateProfileCredentials, MfaEmailProps, UpdatePasswordCredentials, IRegisterCredentials } from "./interfaces/auth-interfaces";
 import { AUTH_VERIFY_LOGIN_MFA_URI, AUTH_VERIFY_EMAIL_URI, AUTH_LOGIN_URI, AUTH_LOGOUT_URI } from './uris/auth-uris';
 import { ForgotPCredentials, ILoginCredentials, IResetPassword } from './interfaces/auth-interfaces';
@@ -134,7 +134,7 @@ export const forgotPassword = async (forgotPasswordPayload: ForgotPCredentials):
 
   try {
 
-    const response = await axios.post("", forgotPasswordPayload);
+    const response = await axios.post(AUTH_FORGOT_PASSWORD_URI, forgotPasswordPayload);
     const data = await response.data;
     return data;
 
@@ -155,7 +155,7 @@ export const resetPassword = async (resetPasswordPayload: IResetPassword): Promi
 
   try {
 
-    const response = await axios.post("http://localhost:5299/api/auth/reset-password",resetPasswordPayload);
+    const response = await axios.post("",resetPasswordPayload);
   
     const data = await response.data;
     return data;

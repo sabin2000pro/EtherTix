@@ -6,3 +6,4 @@ export const AUTH_RESEND_EMAIL_VERIFICATION_URI = "https://ethertix.co.uk/api/v1
 export const AUTH_LOGOUT_URI = "http://ethertix.co.uk/api/v1/auth/logout"
 
 export const AUTH_FORGOT_PASSWORD_URI = "https://ethertix.co.uk/api/v1/auth/forgot-password"
+export const AUTH_RESET_PASSWORD_URI = "http://localhost:5299/api/v1/auth/reset-password"
