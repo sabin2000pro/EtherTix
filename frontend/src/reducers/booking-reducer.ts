@@ -9,10 +9,16 @@ const bookingState = {
 
 export const bookingReducers = (state = initialBookingState, action: any) => {
     switch(action.type) {
-        
+
     }
+
+
 }
 
 export const singleBookingReducer = (state = bookingState, action: any) => {
+    
+    switch(action.type) {
+
+    }
 
 }
