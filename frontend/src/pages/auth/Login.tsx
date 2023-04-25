@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { sendMfaEmail, MfaEmailProps } from "api/auth/auth-api";
+import { sendMfaEmail } from "api/auth/auth-api";
+import { MfaEmailProps } from "api/auth/interfaces/auth-interfaces";
 import { useForm } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
@@ -26,6 +27,7 @@ export const Login: React.FC<LoginModalProps> = ({
 
   const onSubmit = async (credentials: MfaEmailProps) => {
     try {
+      
       const response = await sendMfaEmail(credentials);
 
       if (response.success) {
@@ -34,11 +36,17 @@ export const Login: React.FC<LoginModalProps> = ({
         navigate("/mfa", {
           state: { email: credentials.email, password: credentials.password },
         });
+
+
       }
-    } catch (err: any) {
+    } 
+    
+    catch (err: any) {
       if (err.response === undefined) {
         setErrorText("Something went wrong, check entries and try again.");
-      } else {
+      } 
+      
+      else {
         setErrorText(err.response.data.message);
       }
     }

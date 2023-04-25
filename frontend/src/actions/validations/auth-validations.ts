@@ -43,7 +43,8 @@ export const validateLoginData = (email: string, password: string): void => {
     }
 
     if(password.length < 8) {
-
+        throw new Error("Password length cannot be < 8 ")
     }
 
 }
+

@@ -7,10 +7,11 @@ import { ErrorResponse } from '../utils/error-response';
 export const fetchAllBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     if(request.method === 'GET') {
+
         const bookings = await Booking.find();
 
         if(!bookings) {
-
+            return next(new ErrorResponse(`No bookings found`, StatusCodes.BAD_REQUEST));
         }
 
         return response.status(StatusCodes.OK).json({success: true, bookings});
@@ -30,7 +31,6 @@ export const fetchUserBookings = asyncHandler(async (request: any, response: any
         return response.status(StatusCodes.OK).json({success: true, userBookings});
 
     }
-
 
 })
 
@@ -79,16 +79,20 @@ export const cancelUserBooking = asyncHandler(async (request: any, response: any
    const currentBooking = await Booking.findOneAndDelete({_id: bookingId, userId});
 
    if(!currentBooking) {
-
+        
    }
 
 })
 
 export const deleteBookings = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
+    if(request.method === 'DELETE') {
+
+    }
 
 })
 
 export const deleteBookingByID = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-
+    if(request.method === 'DELETE') {
+        
+    }
 })
-

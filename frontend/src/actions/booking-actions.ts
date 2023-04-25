@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import axios from 'axios';
 
 export const fetchBookings = () => async (dispatch: Dispatch): Promise<void> => {
-    
+
     try {
 
         dispatch({type: FETCH_BOOKINGS_REQUEST});
@@ -15,7 +15,7 @@ export const fetchBookings = () => async (dispatch: Dispatch): Promise<void> => 
     catch(error: any) {
 
         if(error) {
-             dispatch({type: FETCH_BOOKINGS_FAIL, payload: error.data.response.message});
+            dispatch({type: FETCH_BOOKINGS_FAIL, payload: error.data.response.message});
         }
 
 
@@ -31,6 +31,11 @@ export const fetchSingleBooking = (id: string) => async (dispatch: Dispatch): Pr
         }
 
         dispatch({type: FETCH_SINGLE_BOOKING_REQUEST});
+
+        const {data} = await axios.get(`http://localhost:5050/api/v1/bookings/${id}`);
+        console.log(data);
+
+        
 
 
     } 
