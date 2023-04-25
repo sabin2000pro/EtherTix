@@ -2,7 +2,7 @@ import { REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAIL, LOGIN
 import { Dispatch } from "redux";
 import axios from 'axios';
 import { AUTH_REGISTER_URI } from "api/auth/auth-uris/auth-uris";
-import { validateRegisterData } from "./validations/auth-validations";
+import { validateLoginData, validateRegisterData } from "./validations/auth-validations";
 
 export const registerUser = (username: string, email: string, password: string, passwordConfirm: string) => async (dispatch: Dispatch): Promise<void> => {
 
@@ -24,9 +24,14 @@ export const registerUser = (username: string, email: string, password: string, 
     
 }
 
+export const verifyEmailAddress = (userId: string, OTP: string) => async (dispatch: Dispatch): Promise<void> => {
+
+}
+
 export const login = (email: string, password: string) => async (dispatch: any): Promise<void> => {
 
    try {
+    validateLoginData(email, password);
      dispatch({type: LOGIN_USER_REQUEST})
    } 
    

@@ -13,7 +13,6 @@ const UserProfile: React.FC = () => {
   const [address, setAddress] = useState("");
 
   const user = useSelector((state: any) => state.auth.user as User);
-
   const { connectMetaMaskWallet } = useContext(blockchain.Web3Context);
 
   const handleConnect = async () => {
@@ -59,7 +58,7 @@ const UserProfile: React.FC = () => {
         <Alert variant="success" style={{ textAlign: "center" }}>
           {success}
         </Alert>
-        
+
       )}
 
       <Container className="profile-container text-center">

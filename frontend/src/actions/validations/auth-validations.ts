@@ -30,6 +30,7 @@ export const validateRegisterData = (username: string, email: string, password: 
 }
 
 export const validateLoginData = (email: string, password: string): void => {
+
     if(!email) {
         throw new Error("Username is required before logging in")
     }
@@ -47,4 +48,3 @@ export const validateLoginData = (email: string, password: string): void => {
     }
 
 }
-
