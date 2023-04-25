@@ -7,7 +7,7 @@ import { validateLoginData, validateRegisterData } from "./validations/auth-vali
 export const registerUser = (username: string, email: string, password: string, passwordConfirm: string) => async (dispatch: Dispatch): Promise<void> => {
 
     try {
-
+    
        validateRegisterData(username, email, password, passwordConfirm)
        dispatch({type: REGISTER_USER_REQUEST});
 
@@ -25,18 +25,33 @@ export const registerUser = (username: string, email: string, password: string, 
 }
 
 export const verifyEmailAddress = (userId: string, OTP: string) => async (dispatch: Dispatch): Promise<void> => {
+    try {
+         
+    } 
+    
+    catch(error) {
+
+    }
+
 
 }
 
 export const login = (email: string, password: string) => async (dispatch: any): Promise<void> => {
 
    try {
-    validateLoginData(email, password);
+      validateLoginData(email, password);
      dispatch({type: LOGIN_USER_REQUEST})
+
+     const {data} = await axios.post(`https://ethertix.co.uk/api/v1/auth/login`, {email, password});
+     console.log(`Login data : `, data);
+
+     dispatch({type: LOGIN_USER_SUCCESS, payload: data.user});
    } 
    
    catch(error: any) {
-  
+      if(error) {
+
+      }
    }
 
 }
