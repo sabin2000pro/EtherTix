@@ -12,7 +12,7 @@ const OrderSchema = new mongoose.Schema({
 
         name: { // Name of the product being ordered
             type: String,
-            required: [true, "Please provide the product name as part of the order items"]
+            required: [true, "Please provide the ticket name as part of the order items"]
         },
 
         quantity: {
@@ -44,6 +44,7 @@ const OrderSchema = new mongoose.Schema({
             ref: "Ticket",
             required: [true, "Please specify the Ticket ID that belongs to this order"]
           }
+          
     }],
 
     orderStatus: { // The status the order is in. It can take 6 values as outlined below
