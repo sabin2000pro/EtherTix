@@ -1,4 +1,5 @@
 FROM node:alpine AS build-stage
+ARG devmode=dev
 WORKDIR '/app'
 COPY package.json .
 COPY nodemon.json .
