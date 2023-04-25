@@ -136,7 +136,6 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
               register={register}
 
               registerOptions={{
-
                 required: "Required",
                 validate: (value) =>
                   value === Password || "Passwords don't match.",

@@ -1,25 +1,10 @@
+import { ISingleBooking, IBooking } from './interfaces/booking-interfaces';
 import { FETCH_BOOKINGS_REQUEST, FETCH_BOOKINGS_FAIL, FETCH_SINGLE_BOOKING_SUCCESS } from "constants/booking-constants"
 
-export interface IBooking {
-    bookings: any[],
-    loading?: boolean,
-    message?: string,
-    error?: string
-}
+import { initialBookingsState, initialBookingState } from 'state/booking-state';
 
-export interface ISingleBooking {
-    
-}
 
-const initialBookingState = {
-    bookings: [],   
-}
-
-const bookingState = {
-    booking: {}
-}
-
-export const bookingReducers = (state = initialBookingState, action: any) => {
+export const bookingReducers = (state = initialBookingsState as IBooking, action: any) => {
 
     switch(action.type) {
 
@@ -35,7 +20,7 @@ export const bookingReducers = (state = initialBookingState, action: any) => {
 
 }
 
-export const singleBookingReducer = (state = bookingState, action: any) => {
+export const singleBookingReducer = (state = initialBookingState as ISingleBooking, action: any) => {
 
     switch(action.type) {
         
