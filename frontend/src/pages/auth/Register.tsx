@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Alert, Button, Form, Modal, Container } from "react-bootstrap";
 import TextInputField from "../../components/form/TextInputField";
 import { registerUser } from "api/auth/auth-api";
-import { IRegisterCredentials } from "api/auth/auth-api";
+import { IRegisterCredentials } from "api/auth/interfaces/auth-interfaces";
 import { useNavigate } from "react-router-dom";
 import * as stor from "../../auth/store";
 import cookies from "auth/cookies";
@@ -152,7 +152,7 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
               checked={showPassword}
               onChange={togglePassVisibility}
             />
-            
+
             <Button type="submit" disabled={isSubmitting} className="w-100">
               Sign Up
             </Button>

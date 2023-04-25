@@ -1,3 +1,4 @@
+import { processAuthInterceptor } from './interceptor';
 import cookies from "auth/cookies";
 import { COOKIE_NAME_TOKEN, COOKIE_NAME_USER } from "auth/store";
 import axios from "axios";
@@ -15,23 +16,7 @@ export interface LoginCredentials {
   mfaToken: string;
 }
 
-const defaultHeaderOptions = {
-
-  headers: {
-    "Content-Type": "application/json",
-  },
-
-};
-
-let axiosInstance = axios.create(defaultHeaderOptions);
-
-axiosInstance.interceptors.request.use((configData: any | undefined) => {
-
-  const authToken = localStorage.getItem("token");
-  configData.headers.Authorization = authToken ? `Bearer ${authToken}` : ""; // Store the token in the header
-  return configData;
-
-});
+const authConfig = processAuthInterceptor();
 
 export const registerUser = async (registerPayload: IRegisterCredentials): Promise<any> => {
 
