@@ -1,4 +1,4 @@
-export const validateRegisterData = (username: string, email: string, password: string, passwordConfirm: string) => {
+export const validateRegisterData = (username: string, email: string, password: string, passwordConfirm: string): void => {
     if (!username) {
         throw new Error('Username is required');
     }
@@ -25,6 +25,25 @@ export const validateRegisterData = (username: string, email: string, password: 
 
     if (password.length < 8) {
         throw new Error('Password must be at least 8 characters long');
+    }
+
+}
+
+export const validateLoginData = (email: string, password: string): void => {
+    if(!email) {
+        throw new Error("Username is required before logging in")
+    }
+
+    if(!password) {
+        throw new Error("Password is required before logging in")
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+        throw new Error('Invalid email format');
+    }
+
+    if(password.length < 8) {
+
     }
 
 }
