@@ -2,7 +2,7 @@
   "name": "Orders Microservice Dependencies",
   "version": "1.0.0",
   "description": "Orders Microservice Dependencies installed below with scripts",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build:orders-service": "tsc",
     "watch": "tsc -w",
@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "supertest": "^6.3.3",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4"
   }
 }
