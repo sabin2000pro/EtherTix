@@ -1,0 +1,54 @@
+[
+    {
+        "_id": "5d713995b721c3bb38c1f9c0",
+
+        "shippingInformation": {
+            "user": "5d7a514b5d2c12c7449be047",
+            "address": "144 High Road",
+            "city": "Edinburgh",
+            "phoneNo": "07881391091",
+            "postalCode": "EH16 7AB",
+            "country": "United Kingdom"
+        },
+
+        "orderItems": [{
+            "name": "iPad Pro 12.9",
+            "quantity": 1,
+            "ticket": "5d7a514b5d2c12c7449be120",
+            "_id": "63f388bf2b02ac6637b871bc",
+            "itemPrice": 0.0025,
+            "taxPrice": 0.009,
+            "shippingPrice": 0.002,
+            "totalPrice": 0.0135
+        }],
+
+        "orderStatus": "received"
+    },
+
+    {
+        "_id": "5d713995b721c3bb38c1f9c2",
+
+        "shippingInformation": {
+            "user": "63e25f48d82eb035f7dc0654",
+            "address": "24 Grimby Road",
+            "city": "Dundee",
+            "phoneNo": "07881341559",
+            "postalCode": "DH11 4FB",
+            "country": "United Kingdom"
+        },
+
+        "orderItems": [{
+            "name": "iPhone X",
+            "quantity": 1,
+            "ticket": "63e25f48d82eb035f7da0980",
+            "_id": "63f388bf2b02ac6637b871bf",
+            "itemPrice": 999.99,
+            "taxPrice": 2.99,
+            "shippingPrice": 0.99,
+            "totalPrice": 1003.99
+        }],
+
+        "orderStatus": "received"
+    }
+
+]
