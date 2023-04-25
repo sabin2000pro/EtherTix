@@ -80,24 +80,30 @@ export const authSlice = createSlice({
 
 
     updateItemQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
-      
+
       const itemIndex = state.cartItems.findIndex(
         (itemId) => itemId.id === action.payload.id // find index by itemId instead of object
       );
 
-
       if (itemIndex !== -1) {
-        const item = state.cartItems[itemIndex] as CartItem;
+
+        const item = state.cartItems[itemIndex];
         item.quantity = action.payload.quantity;
         state.cartItems[itemIndex] = item;
       }
+      
       cookies.setCartContent(state.cartItems);
     },
+
     clearCart: (state) => {
       state.cartItems = [];
       cookies.remove(COOKIE_NAME_CART);
     },
+
+
   },
+
+  
 });
 
 export const {
