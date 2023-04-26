@@ -13,8 +13,6 @@ import asyncHandler from "express-async-handler";
 import { generateRandomResetPasswordToken } from "../utils/generateResetPasswordToken";
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
-import axios from 'axios';
-import { kafkaClient } from '../broker/auth-broker';
 
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
