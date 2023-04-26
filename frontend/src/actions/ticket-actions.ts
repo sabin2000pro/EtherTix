@@ -7,7 +7,7 @@ export const fetchAllTickets = () => async (dispatch: any) => {
     try {
 
         dispatch({type: FETCH_ALL_TICKETS_REQUEST});
-        const {data} = await axios.get(`http://localhost:5303/api/tickets`);
+        const {data} = await axios.get(`https://ethertix.co.uk/api/tickets`);
         dispatch({type: FETCH_ALL_TICKETS_SUCCESS, payload: data.tickets});
     } 
     
@@ -30,7 +30,7 @@ export const fetchTicketByID = (id: number) => async (dispatch: Dispatch): Promi
        try {
 
            dispatch({type: FETCH_SINGLE_TICKET_REQUEST});
-           const {data} = await axios.get(`http://localhost:5303/api/tickets/${id}`)
+           const {data} = await axios.get(`https://ethertix.co.uk/api/tickets/${id}`)
 
            dispatch({type: FETCH_SINGLE_TICKET_SUCCESS, payload: data.ticket});
     } 
@@ -49,7 +49,7 @@ export const createTicket = (event: string, issuer: string, name: string, ticket
     try {
 
         dispatch({type: CREATE_TICKET_REQUEST});
-        const {data} = await axios.post(`http://localhost:5303/api/v1/tickets`, {event, issuer, name, ticketClass, stock, description, cost})
+        const {data} = await axios.post(`https://ethertix.co.uk/api/v1/tickets`, {event, issuer, name, ticketClass, stock, description, cost})
 
         dispatch({type: CREATE_TICKET_SUCCESS, payload: data.ticket});
     } 
@@ -68,7 +68,7 @@ export const editTicketDetails = (id: string, name: string, ticketClass: string,
     try {
 
         dispatch({type: EDIT_TICKET_REQUEST});
-        const {data} = await axios.put(`http://localhost:5303/api/v1/tickets/${id}`, {name, ticketClass, stock, description, cost});
+        const {data} = await axios.put(`https://ethertix.co.uk/api/v1/tickets/${id}`, {name, ticketClass, stock, description, cost});
 
         dispatch({type: EDIT_TICKET_SUCCESS, payload: data.message});
     }
