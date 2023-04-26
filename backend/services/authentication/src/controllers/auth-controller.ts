@@ -131,8 +131,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
     await verificationToken.save();
 
-    //sendConfirmationEmail(user, userOTP as unknown as any);
-
+    sendConfirmationEmail(user, userOTP as unknown as any);
     return sendTokenResponse(request, user, StatusCodes.CREATED, response);
   }
 );
