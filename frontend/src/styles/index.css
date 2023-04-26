@@ -810,3 +810,17 @@ footer {
 }
 
 /*Update password---End*/
+
+/*Single event page---Start*/
+.single-event-image{
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+
+.single-event-description{
+
+  float: right;
+  text-align: left;
+}
+/*Single event page---End*/
