@@ -1,8 +1,8 @@
 import { FETCH_BOOKINGS_SUCCESS } from './../constants/booking-constants';
 import { ISingleBooking, IBooking } from './interfaces/booking-interfaces';
-import { FETCH_BOOKINGS_REQUEST, FETCH_BOOKINGS_FAIL, FETCH_SINGLE_BOOKING_SUCCESS } from "constants/booking-constants"
+import { FETCH_BOOKINGS_REQUEST, FETCH_BOOKINGS_FAIL, FETCH_SINGLE_BOOKING_SUCCESS } from "../constants/booking-constants"
 
-import { initialBookingsState, initialBookingState } from 'state/booking-state';
+import { initialBookingsState, initialBookingState } from '../state/booking-state';
 
 
 export const bookingReducers = (state = initialBookingsState as IBooking, action: any) => {

@@ -7,7 +7,7 @@ export const fetchBookings = () => async (dispatch: Dispatch): Promise<void> => 
     try {
 
         dispatch({type: FETCH_BOOKINGS_REQUEST});
-        const {data} = await axios.get(`http://localhost:5050/api/v1/bookings`);
+        const {data} = await axios.get(`https:/ethertix.co.uk/api/v1/bookings`);
         
         console.log(data);
     } 
@@ -32,7 +32,7 @@ export const fetchSingleBooking = (id: string) => async (dispatch: Dispatch): Pr
 
         dispatch({type: FETCH_SINGLE_BOOKING_REQUEST});
 
-        const {data} = await axios.get(`http://localhost:5050/api/v1/bookings/${id}`);
+        const {data} = await axios.get(`https://ethertix.co.uk/api/v1/bookings/${id}`);
         console.log(data);
 
         
