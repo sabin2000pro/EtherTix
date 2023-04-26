@@ -77,6 +77,26 @@ services:
       volumes:
         - /app/node_modules
         - ../backend/services/events-service:/app
+
+  orders-service:
+    container_name: ethertix-orders-service
+    image: sabin2000/ethertix-orders-service
+
+    build:
+      context: ../backend/services-orders-service
+      dockerfile: Dockerfile
+
+    restart: always
+
+    depends_on:
+      - booking-service
+
+    ports:
+      - "5051:5051"
+
+    volumes:
+      - /app/node_modules
+      - ../backend/services/orders-service:/app
   
   categories-service:
       container_name: ethertix-categories-service

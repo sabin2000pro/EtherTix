@@ -7,7 +7,7 @@ export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> =>
     try {
         dispatch({type: FETCH_ALL_EVENTS_REQUEST});
 
-        const {data} = await axios.get(`http://localhost:5301/api/v1/events`);
+        const {data} = await axios.get(`https://ethertix.co.uk/api/v1/events`);
         dispatch({type: FETCH_ALL_EVENTS_SUCCESS, payload: data.events});
     } 
     
@@ -30,7 +30,7 @@ export const fetchSingleEvent = (id: number) => async (dispatch: Dispatch): Prom
         }
 
         dispatch({type: FETCH_SINGLE_EVENT_REQUEST});
-        const {data} = await axios.get(`http://localhost:5301/api/v1/events/${id}`);
+        const {data} = await axios.get(`https://ethertix.co.uk/api/v1/events/${id}`);
 
         dispatch({type: FETCH_SINGLE_EVENT_SUCCESS, payload: data.event});
     } 
@@ -77,7 +77,7 @@ export const createNewEvent = (organiser: string, venue: string, tickets: string
        validateEventStatus(eventStatus);
        
        dispatch({type: CREATE_NEW_EVENT_REQUEST});
-       const {data} = await axios.post(`http://localhost:5301/api/v1/events`, {organiser, venue, tickets, name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, reservedSeating, salesStatus});
+       const {data} = await axios.post(`https://ethertix.co.uk/api/v1/events`, {organiser, venue, tickets, name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, reservedSeating, salesStatus});
 
        dispatch({type: CREATE_NEW_EVENT_SUCCESS, payload: data.event});
     } 
@@ -96,7 +96,7 @@ export const editEventByID = (id: number) => async (dispatch: Dispatch): Promise
     try {
        dispatch({type: EDIT_EVENT_REQUEST});
 
-       const {data} = await axios.put(`http://localhost:5301/api/v1/events/${id}`, {id});
+       const {data} = await axios.put(`https://ethertix.co.uk/api/v1/events/${id}`, {id});
        dispatch({type: EDIT_EVENT_SUCCESS, payload: data.event});
     } 
     
@@ -111,7 +111,7 @@ export const editEventByID = (id: number) => async (dispatch: Dispatch): Promise
 
 }
 
-export const uploadEventPhoto = () => async (dispatch: any) => {
+export const uploadEventPhoto = () => async (dispatch: any): Promise<void> => {
 
     try {
    
@@ -120,6 +120,8 @@ export const uploadEventPhoto = () => async (dispatch: any) => {
     catch(error: any) {
    
     }
+
+
 }
 
 export const deleteEventByID = (id: number) => async (dispatch: any) => {
