@@ -48,7 +48,7 @@ export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
     subject: "Reset Password",
     html: `
            
-           <h1> ${resetPasswordURL}</h1>
+        <h1> ${resetPasswordURL}</h1>
            `,
   });
 
