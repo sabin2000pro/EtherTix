@@ -90,13 +90,6 @@ export const sendTokenResponse = (request: Express.Request,user: any, statusCode
 // @public: True (No Authorization Token Required)
 
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-   const producer = kafkaClient.producer();
-   const connectedAgent = await producer.connect();
-
-   console.log(`Producer : `, producer);
-   console.log(`Connected Agent : `, connectedAgent);
-   console.log(`Kafka Client : `, kafkaClient);
-
     const { forename, surname, username, email, password, passwordConfirm } = request.body;  
 
     if (!forename) {

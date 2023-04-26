@@ -73,5 +73,5 @@ const BookingSchema = new mongoose.Schema<IBookingDocument>({
 
 }, {timestamps: true })
 
-const Booking = mongoose.model("Booking", BookingSchema);
+const Booking = mongoose.model<IBookingDocument>("Booking", BookingSchema);
 export {Booking} // Create the model and export it
