@@ -4,7 +4,7 @@ import { User } from '../authentication/src/models/user-model'
 import {Event} from  '../events-service/src/models/event-model'
 import {Ticket} from '../tickets/src/models/ticket-model';
 import {Venue} from '../venues/src/models/venue-model'
-import { Booking } from '../booking-service/src/model/booking-model';
+import {Booking} from "../booking-service/src/model/booking-model"
 import {Order} from '../orders-service/src/model/order-model';
 
 import {connectAuthSchema} from  '../authentication/src/database/auth-schema'
@@ -44,7 +44,6 @@ export const loadAllData = async (): Promise<any> => { // Load the data into the
             await Ticket.create(tickets);
             await Venue.create(venues);
 
-            await Order.create(orders);
 
             console.log(`Data imported successfully...`);
             return process.exit(1);
@@ -69,9 +68,7 @@ export const removeAllData = async (): Promise<any> => {
         await Event.remove();
         await Ticket.remove();
         await Venue.remove();
-        await Booking.remove();
-
-        await Order.remove();
+        await Booking.deleteMany();
 
         console.log(`All the services data removed from the schemas.`);
 

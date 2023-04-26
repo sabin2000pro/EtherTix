@@ -13,8 +13,6 @@ import asyncHandler from "express-async-handler";
 import { generateRandomResetPasswordToken } from "../utils/generateResetPasswordToken";
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
-import axios from 'axios';
-import { kafkaClient } from '../broker/auth-broker';
 
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
@@ -50,7 +48,7 @@ export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
     subject: "Reset Password",
     html: `
            
-           <h1> ${resetPasswordURL}</h1>
+        <h1> ${resetPasswordURL}</h1>
            `,
   });
 
@@ -90,13 +88,6 @@ export const sendTokenResponse = (request: Express.Request,user: any, statusCode
 // @public: True (No Authorization Token Required)
 
 export const registerUser = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-   const producer = kafkaClient.producer();
-   const connectedAgent = await producer.connect();
-
-   console.log(`Producer : `, producer);
-   console.log(`Connected Agent : `, connectedAgent);
-   console.log(`Kafka Client : `, kafkaClient);
-
     const { forename, surname, username, email, password, passwordConfirm } = request.body;  
 
     if (!forename) {
@@ -140,8 +131,7 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
     const verificationToken = new EmailVerification({owner: currentUser, token: userOTP});
     await verificationToken.save();
 
-    //sendConfirmationEmail(user, userOTP as unknown as any);
-
+    sendConfirmationEmail(user, userOTP as unknown as any);
     return sendTokenResponse(request, user, StatusCodes.CREATED, response);
   }
 );

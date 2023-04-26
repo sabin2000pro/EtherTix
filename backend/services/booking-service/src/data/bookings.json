@@ -1,7 +1,7 @@
 [
-    
+
     {
-      "_id": "5d7a514b5d2c12c8990be010",
+      "_id": "5d7a514b5d2c12c7449bc090",
       "userId": "5d7a514b5d2c12c7449be048",
       "eventId": "5d713995b721c3bb38c1f5d0",
       "ticketIds": ["5d7a514b5d2c12c7449be120"],
@@ -14,7 +14,7 @@
     },
 
     {
-      "_id": "235d7a514b5d2c12c8990be011",
+      "_id": "5d7a514b5d2c12c7449bc091",
       "eventId": "5d713995b721c3bb38c1f5d1",
       "userId": "5d7a514b5d2c12c7449be047",
       "ticketIds": ["5d7a514b5d2c12c7449be125"],
@@ -22,7 +22,8 @@
       "title": "Mrs",
       "guests": 3,
       "phoneNumber": "07881455901",
-      "bookingDate": "2023-05-03T18:30:33.102Z"
+      "bookingDate": "2023-05-03T18:30:33.102Z",
+      "emailAddress": "sabin22@gmail.com"
     }
 
   ]

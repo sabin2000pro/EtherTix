@@ -29,21 +29,23 @@ const App: React.FC = () => {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await getUser();
-        if (response.success) {
-          dispatch(stor.login(response.user));
+  // useEffect(() => {
 
-          cookies.set(stor.COOKIE_NAME_USER, response.user);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchUser();
-  });
+  //   const fetchUser = async () => {
+  //     try {
+
+  //       const response = await getUser();
+  //       if (response.success) {
+  //         dispatch(stor.login(response.user));
+
+  //         cookies.set(stor.COOKIE_NAME_USER, response.user);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchUser();
+  // });
 
   return (
     <>
@@ -83,8 +85,7 @@ const App: React.FC = () => {
           <Route path = "/events/:id" element={<SingleEvent />} />
 
           <Route path = '/admin-dashboard/bookings-list' element = {<AdminBookingsList />} />
-        
-
+      
           <Route path ="*" element = { <NotFound />} />
 
         </Routes>

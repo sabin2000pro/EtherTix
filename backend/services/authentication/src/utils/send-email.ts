@@ -5,7 +5,7 @@ export const emailTransporter = (): any => { // Create the e-mail transporter
 
 return nodemailer.createTransport({
 
-  host: process.env.AUTH_SERVICE_SMTP_HOST,
+  host: process.env.AUTH_SERVICE_SMTP_PROVIDER,
   port: 2525,
 
   auth: {

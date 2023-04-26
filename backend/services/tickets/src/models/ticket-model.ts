@@ -26,8 +26,6 @@ export const TicketSchema = new mongoose.Schema<ITicketDocument>({
 
     description: { // Ticket Description for an event
         type: String,
-        minlength: [50, "Ticket description must have a minimum of 50 characters"],
-        maxlength: [150, "Ticket description cannot exceed 150 characters"],
         required: [true, "Please specify the description for this ticket"]
     },
 
