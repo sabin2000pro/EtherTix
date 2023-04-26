@@ -25,7 +25,7 @@ app.set('trust proxy', true);
 app.use(hpp());
 
 app.use(cors({
-    origin: "*",
+    origin: "https://ethertix.co.uk",
     methods: ["POST", "PUT", "GET", "DELETE"]
 }));
 
