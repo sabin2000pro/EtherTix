@@ -34,13 +34,11 @@ const SingleEvent: React.FC = () => {
   
   return (
     <>
-
     <div className = "events-container">
         <h2>{event && event.name}</h2>
-        <img src = {event && event.image} alt="image"/>
+        <img className = "single-event-image" src = {event && event.image} alt="image"/>
+        <text className = "single-event-description">{event && event.description}</text>
     </div>
-
-
     </>
   )
 }
