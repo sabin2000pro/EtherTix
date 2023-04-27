@@ -30,14 +30,25 @@ const SingleEvent: React.FC = () => {
 
    }, [dispatch, id])
 
+   const handleAddToCart = () => {
+    // Add the selected number of tickets to the cart
+  };
+
    console.log(`Loading ? `, loading);
   
   return (
     <>
+
     <div className = "events-container">
+
         <h2>{event && event.name}</h2>
+
         <img className = "single-event-image" src = {event && event.image} alt="image"/>
+
         <text className = "single-event-description">{event && event.description}</text>
+
+        <button onClick ={handleAddToCart}>Add To Cart</button>
+
     </div>
     </>
   )
