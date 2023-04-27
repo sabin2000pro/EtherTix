@@ -51,15 +51,19 @@ const OrderSchema = new mongoose.Schema<IOrderDocument>({
         },
 
         address: {
-        
+            type: String,
+            required: [true, "Please specify the shipping address for this order"],
+            default: ""
         },
 
         city: {
-            
+            type: String,
+            required: [true, "Specify the city for this order"],
+            default: ""  
         },
 
-        phone: {
-
+        phoneNo: {
+    
         },
 
         postalCode: {
