@@ -1,12 +1,7 @@
+import { IOrderDocument } from './../interfaces/orders-interface';
 import mongoose from 'mongoose';
 
-const OrderSchema = new mongoose.Schema({
-
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "Please specify the User ID that belongs to this order"]
-    },
+const OrderSchema = new mongoose.Schema<IOrderDocument>({
 
     orderItems: [{
 
@@ -44,8 +39,34 @@ const OrderSchema = new mongoose.Schema({
             ref: "Ticket",
             required: [true, "Please specify the Ticket ID that belongs to this order"]
           }
-          
+
     }],
+
+    shippingInformation: {
+
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: [true, "Please specify the User ID that belongs to this order"]
+        },
+
+        address: {
+        
+        },
+
+        city: {
+            
+        },
+
+        phone: {
+
+        },
+
+        postalCode: {
+
+        }
+
+    },
 
     orderStatus: { // The status the order is in. It can take 6 values as outlined below
         type: String,
