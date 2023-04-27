@@ -13,8 +13,8 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import NotFound from "pages/NotFound";
 import CartPage from "pages/CartPage";
 import { Container } from "react-bootstrap";
-import EventsList from "pages/events/EventsList";
-import SingleEvent from "pages/events/SingleEvent";
+import {EventList} from "pages/events/EventsList";
+import {SingleEvent} from "pages/events/SingleEvent";
 import {UserProfile} from "pages/auth/UserProfile";
 import Footer from "components/Footer";
 import MfaInput from "components/MfaInput";
@@ -62,7 +62,7 @@ const App: React.FC = () => {
           <Route path = "/my-profile" element={<UserProfile />} />
 
           <Route path = "/events" element = {<EventsList />} />
-          <Route path = "/events/:id" element = {<SingleEvent />} />
+          <Route path = "/event-details/:id" element = {<SingleEvent />} />
 
           <Route path = '/admin-dashboard/bookings-list' element = {<AdminBookingsList />} />
           <Route path = '/create-booking/:eventId' element = {<CreateBooking />} />

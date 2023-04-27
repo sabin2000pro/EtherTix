@@ -32,6 +32,8 @@ export const fetchSingleEvent = (id: number) => async (dispatch: Dispatch): Prom
         dispatch({type: FETCH_SINGLE_EVENT_REQUEST});
         const {data} = await axios.get(`https://ethertix.co.uk/api/v1/events/${id}`);
 
+        console.log(`Single Event Data : `, data.event);
+
         dispatch({type: FETCH_SINGLE_EVENT_SUCCESS, payload: data.event});
     } 
     
