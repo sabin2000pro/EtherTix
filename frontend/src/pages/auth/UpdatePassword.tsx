@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import TextInputField from "components/form/TextInputField";
 
-export const UpdatePassword: React.FC = () => {
+const UpdatePassword: React.FC = () => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -142,5 +142,8 @@ export const UpdatePassword: React.FC = () => {
 
       </Container>
     </Container>
+    
   );
 };
+
+export default UpdatePassword
