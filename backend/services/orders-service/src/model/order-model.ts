@@ -63,11 +63,15 @@ const OrderSchema = new mongoose.Schema<IOrderDocument>({
         },
 
         phoneNo: {
-    
+            type: String,
+            required: [true, "Please specify your phone number for this order"],
+            default: ''
         },
 
         postalCode: {
-
+            type: String,
+            required: [true, "Please specify the postal code for this order"],
+            default: ''
         }
 
     },
@@ -90,5 +94,5 @@ const OrderSchema = new mongoose.Schema<IOrderDocument>({
 
 })
 
-const Order = mongoose.model("Order", OrderSchema);
+const Order = mongoose.model<IOrderDocument>("Order", OrderSchema);
 export {Order}
