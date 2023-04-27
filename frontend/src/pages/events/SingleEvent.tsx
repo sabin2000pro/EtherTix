@@ -3,7 +3,7 @@ import {useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSingleEvent } from 'actions/event-actions';
 
-const SingleEvent: React.FC = () => {
+export const SingleEvent: React.FC = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const {loading, error, event} = useSelector((state: any) => state.event);
@@ -33,16 +33,14 @@ const SingleEvent: React.FC = () => {
   return (
     <>
 
-    <div className = "events-container">
-        <h2>{event.name}</h2>
-        <img className = "single-event-image" src = {event.image} alt="image"/>
+      <div className = "events-container">
+          <h2>{event.name}</h2>
+          <img className = "single-event-image" src = {event.image} alt="image"/>
 
-        <p className = "single-event-description">{event.description}</p>
-    </div>
+          <p className = "single-event-description">{event.description}</p>
+      </div>
 
 
     </>
   )
 }
-
-export default SingleEvent

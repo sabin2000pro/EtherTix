@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import { Container, Row, Button, Card} from "react-bootstrap";
+import { Container, Row, Card} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
