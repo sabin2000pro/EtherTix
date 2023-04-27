@@ -10,7 +10,7 @@ interface ResetPasswordModalProps {
   onDismiss: () => void;
 }
 
-export const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
+const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
   const navigate = useNavigate();
   const { resetToken, userId } = useParams();
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,6 +35,8 @@ export const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) 
       if (response.success) {
         navigate("/");
       }
+
+
     } 
     
     catch (error) {
@@ -46,12 +48,15 @@ export const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) 
   return (
 
 
-    <Modal show onHide={onDismiss} backdrop="static" centered>
+    <Modal show onHide = {onDismiss} backdrop="static" centered>
+
       <Modal.Header>
         <Container className="text-center">
           <Modal.Title>Reset Password</Modal.Title>
         </Container>
       </Modal.Header>
+
+
       <Modal.Body>
         {errorMessage && (
           <Alert variant="danger" style={{ textAlign: "center" }}>
@@ -77,7 +82,7 @@ export const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) 
               type="password"
               placeholder="Confirm Password"
               register={register}
-              
+
               registerOptions={{
                 required: "Required",
                 validate: (value) =>
@@ -98,4 +103,7 @@ export const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) 
 
 
   );
+
 };
+
+export default ResetPassword;

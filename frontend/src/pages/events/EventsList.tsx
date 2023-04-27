@@ -5,12 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
 import axios from 'axios';
 
-export const EventList: React.FC = () => {
+const EventsList: React.FC = () => {
     const dispatch = useDispatch();
     const [ethPrice, setEthPrice] = useState<number>(0);
     const {events} = useSelector((state: any) => state.events);
-
-    console.log(`Events : `, events);
 
   useEffect(() => {
 
@@ -96,3 +94,5 @@ export const EventList: React.FC = () => {
     );
 
   };
+
+export default EventsList

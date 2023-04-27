@@ -6,7 +6,7 @@ import axios from "axios";
 
 const COINGECKO_ETH_API_URI = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
 
-export const CartPage: React.FC = () => {
+const CartPage: React.FC = () => {
 
   const dispatch = useDispatch();
   const [ethPrice, setEthPrice] = useState<number>(0);
@@ -27,14 +27,13 @@ export const CartPage: React.FC = () => {
       }
     };
 
-
     fetchEthPrice();
 
   }, []);
 
   const getTotalPrice = cart.reduce((total: number, item: CartItem) => total + item.price * item.quantity, 0);
 
-  function calculateEthPrice(price: number) {
+  const calculateEthPrice = (price: number): number => {
     return price / ethPrice;
   }
 
@@ -78,7 +77,7 @@ export const CartPage: React.FC = () => {
                           {item.price.toFixed(2)}) x {item.quantity}
                         </div>
 
-                        <button onClick={() => dispatch(stor.removeItem(item.id))}>
+                        <button onClick = {() => dispatch(stor.removeItem(item.id))}>
                           Remove
                         </button>
 
@@ -86,12 +85,11 @@ export const CartPage: React.FC = () => {
                     </div>
 
                   </>
+
                 ))}
 
                 <div className = "cart__total">
-
-                  Total Cost: ${getTotalPrice.toFixed(2)} ({(getTotalPrice / ethPrice).toFixed(6)} ETH)
-
+                    Total Cost: ${getTotalPrice.toFixed(2)} ({(getTotalPrice / ethPrice).toFixed(6)} ETH)
                 </div>
 
                 <button className="cart__remove-all" onClick={() => dispatch(stor.clearCart())}>
@@ -112,3 +110,5 @@ export const CartPage: React.FC = () => {
   );
 
 };
+
+export default CartPage

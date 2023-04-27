@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const CreateOrder = () => {
+const CreateOrder = () => {
 
 
   return (
@@ -14,3 +14,5 @@ export const CreateOrder = () => {
 
   )
 }
+
+export default CreateOrder

@@ -4,7 +4,7 @@ import * as blockchain from "context/Web3Context";
 import { useSelector } from "react-redux";
 import { User } from "models/user";
 
-export const UserProfile: React.FC = () => {
+const UserProfile: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   // const [user, setUser] = useState<UserProfileData | null>(null);
@@ -174,3 +174,5 @@ export const UserProfile: React.FC = () => {
     </Container>
   );
 };
+
+export default UserProfile

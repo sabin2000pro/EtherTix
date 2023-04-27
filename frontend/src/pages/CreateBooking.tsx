@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-export const CreateBooking: React.FC = () => {
+const CreateBooking: React.FC = () => {
     const {id} = useParams();
     const dispatch = useDispatch();
     
     useEffect(() => {
         
-    }, [])
+    }, [dispatch, id])
     
   return (
 
@@ -19,6 +19,9 @@ export const CreateBooking: React.FC = () => {
         </div>
 
     </>
-    
+
   )
 }
+
+
+export default CreateBooking

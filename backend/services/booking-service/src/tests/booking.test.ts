@@ -43,11 +43,14 @@ describe("Edit Booking Dates - API Unit Test Suite", () => {
 })
 
 describe("Delete Bookings - Unit Test Suite", () => {
-    
-    it("Delete Booking By ID - Unit Test", async () => {
+
+    it("Delete Booking By ID - Valid ID Unit Test", async () => {
 
     })
-
+    
+    it("Delete Booking By ID - Not Found ID Unit Test", async () => {
+        
+    })
 
 })
 

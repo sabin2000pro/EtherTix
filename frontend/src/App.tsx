@@ -3,24 +3,24 @@ import NavBar from "components/Navbar";
 import Home from "pages/Home";
 import EmailVerification from "pages/auth/EmailVerification";
 import ForgotPassword from "pages/auth/ForgotPassword";
-import { Login } from "pages/auth/Login";
-import { Register } from "pages/auth/Register";
-import { CreateBooking } from "pages/CreateBooking";
-import {ResetPassword} from "pages/auth/ResetPassword";
-import UpdatePassword from "pages/auth/UpdatePassword";
+import Login from "pages/auth/Login";
+import Register from "pages/auth/Register";
+import CreateBooking from "pages/CreateBooking";
+import ResetPassword from "pages/auth/ResetPassword";
+import {UpdatePassword} from "pages/auth/UpdatePassword";
 import UpdateProfile from "pages/auth/UpdateProfile";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import NotFound from "pages/NotFound";
-import CartPage from "pages/CartPage";
+import CartPage from "pages/CartPage"
 import { Container } from "react-bootstrap";
-import {EventList} from "pages/events/EventsList";
-import {SingleEvent} from "pages/events/SingleEvent";
-import {UserProfile} from "pages/auth/UserProfile";
+import EventsList from "pages/events/EventsList";
+import SingleEvent from "pages/events/SingleEvent";
+import UserProfile from "pages/auth/UserProfile";
 import Footer from "components/Footer";
 import MfaInput from "components/MfaInput";
 import AdminBookingsList from "pages/dashboard/bookings/AdminBookingsList";
-import { CreateOrder } from "pages/orders/CreateOrder";
-import {OrderConfirmation} from "pages/orders/OrderConfirmation";
+import CreateOrder from "pages/orders/CreateOrder";
+import OrderConfirmation from "pages/orders/OrderConfirmation";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ const App: React.FC = () => {
       />
 
       <Container
+      
         style={{
           // padding: "32px 0",
           maxWidth: "100%",

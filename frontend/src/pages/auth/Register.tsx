@@ -14,7 +14,7 @@ interface SignUpModalProps {
   onSignUpSuccessful: () => void;
 }
 
-export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
+const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -165,3 +165,5 @@ export const Register = ({ onDismiss, onSignUpSuccessful }: SignUpModalProps) =>
     </Modal>
   );
 };
+
+export default Register
