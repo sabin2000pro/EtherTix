@@ -33,19 +33,36 @@ const SingleEvent: React.FC = () => {
 
   return (
     <>
-      <div className="single-event-container" style={{display: 'flex'}}>
-        <img className="single-event-image" src={event && event.image} alt="Event Image"/>
-        <div className="single-event-info">
-          <h2 className="single-event-title">{event && event.name}</h2>
-          <p className="single-event-description">{event && event.description}</p>
-          <div className="ticket-counter">
-            <button onClick={() => setTicketCount(ticketCount - 1)}>-</button>
-            <p>{ticketCount}</p>
-            <button onClick={() => setTicketCount(ticketCount + 1)}>+</button>
-          </div>
-          <button className="add-to-cart-button">Add to Cart</button>
-        </div>
-      </div>
+
+     {!loading && (
+       <>
+
+        <div className = "single-event-container" style={{display: 'flex'}}>
+
+      <img className="single-event-image" src = {event.image} alt="Event Image"/>
+
+      <div className="single-event-info">
+
+  <h2 className = "single-event-title">{event && event.name}</h2>
+  <p className = "single-event-description">{event && event.description}</p>
+
+  <div className="ticket-counter">
+
+    <button onClick={() => setTicketCount(ticketCount - 1)}>-</button>
+    <p>{ticketCount}</p>
+    <button onClick ={() => setTicketCount(ticketCount + 1)}>+</button>
+
+  </div>
+
+  <button className="add-to-cart-button">Add to Cart</button>
+
+</div>
+
+</div>
+       </>
+     )}
+
+      
     </>
   )
 }
