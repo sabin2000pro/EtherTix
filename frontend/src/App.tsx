@@ -7,7 +7,7 @@ import Login from "pages/auth/Login";
 import Register from "pages/auth/Register";
 import CreateBooking from "pages/CreateBooking";
 import ResetPassword from "pages/auth/ResetPassword";
-import {UpdatePassword} from "pages/auth/UpdatePassword";
+import UpdatePassword from "pages/auth/UpdatePassword";
 import UpdateProfile from "pages/auth/UpdateProfile";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import NotFound from "pages/NotFound";
