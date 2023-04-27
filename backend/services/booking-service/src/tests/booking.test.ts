@@ -12,10 +12,22 @@ beforeAll(async() => {
 // Test Suites
 describe("Fetch All Bookings - API Unit Test Suite", () => {
 
+    it("Fetch All Bookings - Unit Test", async () => {
+
+    })
+
+
 })
 
 describe("Fetch Booking By ID - API Unit Test Suite", () => {
+
+    it("Fetch Single Booking By ID - Valid ID", async () => {
     
+    })
+
+    it("Fetch Single Booking - Invalid (Not Found ID ) ", async () => {
+
+    })
 })
 
 describe("Create New User Booking - API Unit Test Suite", () => {
@@ -23,6 +35,19 @@ describe("Create New User Booking - API Unit Test Suite", () => {
 })
 
 describe("Edit Booking Details - API Unit Test Suite", () => {
+    
+})
+
+describe("Edit Booking Dates - API Unit Test Suite", () => {
+
+})
+
+describe("Delete Bookings - Unit Test Suite", () => {
+    
+    it("Delete Booking By ID - Unit Test", async () => {
+
+    })
+
 
 })
 

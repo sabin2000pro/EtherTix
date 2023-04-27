@@ -5,11 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchEventList } from 'actions/event-actions'
 import axios from 'axios';
 
-const EventList: React.FC = () => {
+export const EventList: React.FC = () => {
     const dispatch = useDispatch();
     const [ethPrice, setEthPrice] = useState<number>(0);
-  
-    const [scrollPosition, setScrollPosition] = useState(0);
     const {events} = useSelector((state: any) => state.events);
 
     console.log(`Events : `, events);
@@ -52,15 +50,6 @@ const EventList: React.FC = () => {
 
     }, [dispatch])
 
-
-    const scrollLeft = () => {
-       setScrollPosition(scrollPosition - 200); // You can adjust the scroll amount
-    };
-    
-    const scrollRight = () => {
-       setScrollPosition(scrollPosition + 200); // You can adjust the scroll amount
-    };
-
     return (
 
       <div className = "event-list-container">
@@ -99,24 +88,11 @@ const EventList: React.FC = () => {
 
           </Row>
 
-          <div className="event-scroll">
-
-            <Button className="click-left" onClick={scrollLeft}>
-              &lt;
-            </Button>
-
-            <Button className="click-right" onClick={scrollRight}>
-              &gt;
-            </Button>
-
-          </div>
-
         </Container>
 
       </div>
-      
-      
-    );
-  };
 
-  export default EventList;
+    
+    );
+
+  };

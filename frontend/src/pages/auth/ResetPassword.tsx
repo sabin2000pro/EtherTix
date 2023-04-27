@@ -10,7 +10,7 @@ interface ResetPasswordModalProps {
   onDismiss: () => void;
 }
 
-const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
+export const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
   const navigate = useNavigate();
   const { resetToken, userId } = useParams();
   const [errorMessage, setErrorMessage] = useState("");
@@ -77,6 +77,7 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
               type="password"
               placeholder="Confirm Password"
               register={register}
+              
               registerOptions={{
                 required: "Required",
                 validate: (value) =>
@@ -84,14 +85,17 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
               }}
               error={errors.confirmPassword}
             />
+
             <Button type="submit" disabled={isSubmitting} className="w-100">
               Submit
             </Button>
+
+
           </Container>
         </Form>
       </Modal.Body>
     </Modal>
+
+
   );
 };
-
-export default ResetPassword;
