@@ -12,8 +12,7 @@ export const fetchAllEvents = asyncHandler(async (request: any, response: any, n
     const keyword = request.query.searchKeyword ? {name: {$regex: searchKeyword, $options: 'i'}} : {};
     const totalEvents = await Event.countDocuments({...keyword});
     const events = await Event.find({...keyword})
-
-    console.log(`Events : `, events);
+    
     console.log(`Keyword : `, keyword);
 
     if(!events) {
