@@ -9,7 +9,7 @@ import asyncHandler from 'express-async-handler';
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
     const currentPage = parseInt(request.query.page) || 1;
     const searchKeyword = request.query.searchKeyword; // Extract the search keyword from the query params
-    const keyword = request.query.searchKeyword ? {name: {regex: searchKeyword, $options: 'i'}} : {};
+    const keyword = request.query.searchKeyword ? {name: {$regex: searchKeyword, $options: 'i'}} : {};
     const totalEvents = await Event.countDocuments({...keyword});
     const events = await Event.find({...keyword})
 
