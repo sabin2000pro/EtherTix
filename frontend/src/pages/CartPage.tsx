@@ -4,6 +4,8 @@ import { CartItem } from "models/cart";
 import * as stor from "../auth/store";
 import axios from "axios";
 
+const COINGECKO_ETH_API_URI = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+
 const CartPage: React.FC = () => {
 
   const dispatch = useDispatch();
@@ -13,12 +15,10 @@ const CartPage: React.FC = () => {
   useEffect(() => {
 
     const fetchEthPrice = async () => {
+
       try {
 
-        const response = await axios.get(
-          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-        );
-
+        const response = await axios.get(COINGECKO_ETH_API_URI);
         setEthPrice(response.data.ethereum.usd);
       }
       
@@ -27,20 +27,19 @@ const CartPage: React.FC = () => {
       }
     };
 
-
     fetchEthPrice();
+
   }, []);
 
   const getTotalPrice = cart.reduce((total: number, item: CartItem) => total + item.price * item.quantity, 0);
 
-  function calculateEthPrice(price: number) {
+  const calculateEthPrice = (price: number): number => {
     return price / ethPrice;
   }
 
   return (
     
     <div className = "container">
-
 
       <div className = "row" style={{justifyContent: "center"}}>
 
@@ -67,32 +66,30 @@ const CartPage: React.FC = () => {
 
                     <div key = {item.id} className="cart__item">
 
-                      <img className = "cart__item-image" src={item.image} alt={item.name} />
+                      <img className = "cart__item-image" src = {item.image} alt={item.name} />
 
-                      <div className="cart__item-description">
+                      <div className = "cart__item-description">
 
                         <div className="cart__item-name">{item.name}</div>
 
-                        <div className="cart__item-price">
+                        <div className = "cart__item-price">
                           {calculateEthPrice(item.price).toFixed(6)} ETH ($
                           {item.price.toFixed(2)}) x {item.quantity}
                         </div>
 
-                        <button onClick={() => dispatch(stor.removeItem(item.id))}>
+                        <button onClick = {() => dispatch(stor.removeItem(item.id))}>
                           Remove
                         </button>
-                        
+
                       </div>
                     </div>
+
                   </>
+
                 ))}
 
-                <div className="cart__total">
-
-                  Total Cost: ${getTotalPrice.toFixed(2)} ($
-
-                  {(getTotalPrice / ethPrice).toFixed(6)} ETH)
-
+                <div className = "cart__total">
+                    Total Cost: ${getTotalPrice.toFixed(2)} ({(getTotalPrice / ethPrice).toFixed(6)} ETH)
                 </div>
 
                 <button className="cart__remove-all" onClick={() => dispatch(stor.clearCart())}>
@@ -109,7 +106,9 @@ const CartPage: React.FC = () => {
                 
       </div>
     </div>
+
   );
+
 };
 
-export default CartPage;
+export default CartPage

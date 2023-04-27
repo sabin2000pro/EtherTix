@@ -11,7 +11,7 @@ interface LoginModalProps {
   onLoginSuccessful: () => void;
 }
 
-export const Login: React.FC<LoginModalProps> = ({
+const Login: React.FC<LoginModalProps> = ({
   onDismiss,
   onLoginSuccessful,
 }: LoginModalProps) => {
@@ -27,7 +27,7 @@ export const Login: React.FC<LoginModalProps> = ({
 
   const onSubmit = async (credentials: MfaEmailProps) => {
     try {
-      
+
       const response = await sendMfaEmail(credentials);
 
       if (response.success) {
@@ -58,14 +58,18 @@ export const Login: React.FC<LoginModalProps> = ({
 
   return (
     <Modal show onHide={onDismiss} centered>
+      
       <Modal.Header closeButton>
         <Container className="text-center">
           <Modal.Title>Welcome Back</Modal.Title>
         </Container>
+
       </Modal.Header>
 
       <Modal.Body>
+
         {errorText && (
+
           <Alert variant="danger" style={{ textAlign: "center" }}>
             {errorText}
           </Alert>
@@ -114,9 +118,17 @@ export const Login: React.FC<LoginModalProps> = ({
             <Button variant="link" href="/forgot-password" className="w-100">
               Forgot your password?
             </Button>
+
+
           </Container>
         </Form>
       </Modal.Body>
+
+
     </Modal>
+
+
   );
 };
+
+export default Login

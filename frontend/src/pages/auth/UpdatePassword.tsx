@@ -14,7 +14,6 @@ const UpdatePassword: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
 
   const {register,  handleSubmit, formState: { errors, isSubmitting }, watch} = useForm<UpdatePasswordCredentials>();
-
   const newPassword = watch("newPassword", "");
 
   const onSubmit = async (data: UpdatePasswordCredentials) => {
@@ -43,12 +42,11 @@ const UpdatePassword: React.FC = () => {
     } 
     
     catch (error) {
-      console.error(error);
       setSuccess(null);
       setError("Something went wrong. Please try again later.");
     }
 
-    
+
   };
 
   const togglePassVisibility = () => {
@@ -75,7 +73,6 @@ const UpdatePassword: React.FC = () => {
 
 
       <Container className="update-password-container">
-
 
         <Form.Label
           column="lg"
@@ -113,6 +110,7 @@ const UpdatePassword: React.FC = () => {
           />
 
           <TextInputField
+
             name="passwordConfirm"
             label="Please confirm your new password:"
             type={showPassword ? "text" : "password"}
@@ -134,14 +132,18 @@ const UpdatePassword: React.FC = () => {
             onChange={togglePassVisibility}
           />
 
-
           <Button type = "submit" disabled = {isSubmitting} className="w-100">
             Update Password
           </Button>
+
+
         </Form>
+
+
       </Container>
     </Container>
+    
   );
 };
 
-export default UpdatePassword;
+export default UpdatePassword

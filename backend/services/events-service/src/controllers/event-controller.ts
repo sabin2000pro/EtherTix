@@ -7,7 +7,11 @@ import { Event } from "../models/event-model";
 import asyncHandler from 'express-async-handler';
 
 export const fetchAllEvents = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const events = await Event.find();
+    const currentPage = parseInt(request.query.page) || 1;
+    const searchKeyword = request.query.searchKeyword; // Extract the search keyword from the query params
+    const keyword = request.query.searchKeyword ? {name: {$regex: searchKeyword, $options: 'i'}} : {};
+    const totalEvents = await Event.countDocuments({...keyword});
+    const events = await Event.find({...keyword})
 
     if(!events) {
       return next(new ErrorResponse(`No events found. Please try again`, StatusCodes.BAD_REQUEST));
@@ -27,15 +31,15 @@ export const fetchTrendingEvents = asyncHandler(async (request: any, response: a
 })
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const id = request.params.id;
-    const event = await Event.findById(id);
+    const eventId = request.params.eventId;
+    const event = await Event.findById(eventId)
 
-    if(!isValidObjectId(id)) {
+    if(!isValidObjectId(eventId)) {
         return next(new ErrorResponse(`Event ID Malformed, try again`, StatusCodes.BAD_REQUEST));
     }
 
     if(!event) {
-        return next(new ErrorResponse(`No event with that ID : ${id} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
+        return next(new ErrorResponse(`No event with that ID : ${eventId} found on the server-side. Please try again later`, StatusCodes.BAD_REQUEST));
      }
 
     return response.status(StatusCodes.OK).json({success: true, event});

@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 const ORDERS_SERVICE_DB_URI = process.env.ORDERS_SERVICE_DB_URI;
 
 export const connectOrderSchema = async () => {
+    
     try {
         const currConnection = await mongoose.connect(ORDERS_SERVICE_DB_URI as any);
 
@@ -24,7 +25,7 @@ export const connectOrderSchema = async () => {
     
     catch(error: any) {
 
-        
+
     if(error) {
         throw new Error(error);
     }

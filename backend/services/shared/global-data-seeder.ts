@@ -43,9 +43,9 @@ export const loadAllData = async (): Promise<any> => { // Load the data into the
 
             await Ticket.create(tickets);
             await Venue.create(venues);
+            await Order.create(orders);
 
-
-            console.log(`Data imported successfully...`);
+            console.log(`Data imported successfully.`);
             return process.exit(1);
 
     } 
@@ -64,11 +64,13 @@ export const removeAllData = async (): Promise<any> => {
 
     try {
 
-        await User.remove();
-        await Event.remove();
-        await Ticket.remove();
-        await Venue.remove();
+        await User.deleteMany();
+        await Event.deleteMany();
+        await Ticket.deleteMany();
+        await Venue.deleteMany();
         await Booking.deleteMany();
+
+        await Order.deleteMany();
 
         console.log(`All the services data removed from the schemas.`);
 

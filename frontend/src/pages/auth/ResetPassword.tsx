@@ -35,6 +35,8 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
       if (response.success) {
         navigate("/");
       }
+
+
     } 
     
     catch (error) {
@@ -46,12 +48,15 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
   return (
 
 
-    <Modal show onHide={onDismiss} backdrop="static" centered>
+    <Modal show onHide = {onDismiss} backdrop="static" centered>
+
       <Modal.Header>
         <Container className="text-center">
           <Modal.Title>Reset Password</Modal.Title>
         </Container>
       </Modal.Header>
+
+
       <Modal.Body>
         {errorMessage && (
           <Alert variant="danger" style={{ textAlign: "center" }}>
@@ -77,6 +82,7 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
               type="password"
               placeholder="Confirm Password"
               register={register}
+
               registerOptions={{
                 required: "Required",
                 validate: (value) =>
@@ -84,14 +90,20 @@ const ResetPassword: React.FC<ResetPasswordModalProps> = ({ onDismiss }) => {
               }}
               error={errors.confirmPassword}
             />
+
             <Button type="submit" disabled={isSubmitting} className="w-100">
               Submit
             </Button>
+
+
           </Container>
         </Form>
       </Modal.Body>
     </Modal>
+
+
   );
+
 };
 
 export default ResetPassword;

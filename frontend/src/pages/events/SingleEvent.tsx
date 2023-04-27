@@ -37,6 +37,7 @@ const SingleEvent: React.FC = () => {
    console.log(`Loading ? `, loading);
   
   return (
+
     <>
 
     <div className = "events-container">

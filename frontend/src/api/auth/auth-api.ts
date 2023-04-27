@@ -250,7 +250,9 @@ export const uploadProfilePic = async (pic: any) => {
 
     const response = await axios.put("http://localhost:5299/api/auth/propic", pic,
       {
+
         headers: {
+          
           Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
             cookies.get(COOKIE_NAME_USER)._id
           }`,
