@@ -2,12 +2,12 @@ import { FETCH_ALL_EVENTS_REQUEST, FETCH_ALL_EVENTS_SUCCESS, EDIT_EVENT_REQUEST,
 import axios from 'axios';
 import { Dispatch } from 'redux';
 
-export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> => {
+export const fetchEventList = (keyword = '', page = 1) => async (dispatch: Dispatch): Promise<void> => {
 
     try {
         dispatch({type: FETCH_ALL_EVENTS_REQUEST});
 
-        const {data} = await axios.get(`https://ethertix.co.uk/api/v1/events`);
+        const {data} = await axios.get(`https://ethertix.co.uk/api/v1/events?${keyword}`);
         dispatch({type: FETCH_ALL_EVENTS_SUCCESS, payload: data.events});
     } 
     
