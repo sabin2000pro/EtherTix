@@ -812,14 +812,22 @@ footer {
 /*Update password---End*/
 
 /*Single event page---Start*/
-.single-event-image{
-  float: left;
-  width: 100px;
-  height: 100px;
+.events-container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
 }
 
-.single-event-description{
-  float: right;
-  text-align: left;
+.single-event-image {
+  float: left;    
+  margin: 0 15px 0 0;
+}
+
+.single-event-description {
+ width: 100%;
+}
+
+.single-event-info{
+  float:right;
 }
 /*Single event page---End*/

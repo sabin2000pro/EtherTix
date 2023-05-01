@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
         <div className="footer-row">
           <div className="footer-col">
             <h4>About Ether Tix</h4>
-            <p>Hello we are Ether Tix</p>
+            <p>Hello! Here at EtherTix we offer many tickets to different events that you can pay for with Ethereum, a secure form of payment.</p>
           </div>
           <div className="footer-col">
             <h4>Contact Us</h4>
