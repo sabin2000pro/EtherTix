@@ -201,7 +201,7 @@ export const updateProfile = async (updateProfilePayload: UpdateProfileCredentia
 
   try {
 
-    const response = await axios.put("", updateProfilePayload, {
+    const response = await axios.put("https://ethertix.co.uk/api/v1/auth/update-profile", updateProfilePayload, {
 
         headers: {
           Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`,
@@ -228,7 +228,7 @@ export const updatePassword = async (updatePasswordPayload: UpdatePasswordCreden
 
   try {
 
-    const response = await axios.put("", updatePasswordPayload, {
+    const response = await axios.put("https://ethertix.co.uk/api/v1/auth/update-password", updatePasswordPayload, {
 
         headers: {Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${cookies.get(COOKIE_NAME_USER)._id}`}}
     );
@@ -252,7 +252,7 @@ export const uploadProfilePic = async (pic: any) => {
       {
 
         headers: {
-          
+
           Authorization: `Bearer ${cookies.get(COOKIE_NAME_TOKEN)} ${
             cookies.get(COOKIE_NAME_USER)._id
           }`,
