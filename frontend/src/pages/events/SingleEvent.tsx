@@ -34,10 +34,11 @@ const SingleEvent: React.FC = () => {
   return (
     <>
 
+    
+
      {!loading && (
        <>
-
-        <div className = "single-event-container" style={{display: 'flex'}}>
+        <div className = "single-event-container">
 
       <img className="single-event-image" src = {event.image} alt="Event Image"/>
 
