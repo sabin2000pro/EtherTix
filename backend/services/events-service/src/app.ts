@@ -24,7 +24,7 @@ if(process.env.NODE_ENV === 'development') {
 app.use(mongoSanitize()); // Prevent agaisnst NoSQL Injection attacks in production environment
 
 app.use(cors({
-    origin: "https://ethertix.co.uk",
+    origin: "*",
     methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE"]
 }));
 

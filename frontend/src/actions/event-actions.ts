@@ -8,6 +8,7 @@ export const fetchEventList = () => async (dispatch: Dispatch): Promise<void> =>
         dispatch({type: FETCH_ALL_EVENTS_REQUEST});
 
         const {data} = await axios.get(`https://ethertix.co.uk/api/v1/events`);
+        console.log("Events Data : ", data);
         dispatch({type: FETCH_ALL_EVENTS_SUCCESS, payload: data.events});
     } 
     
