@@ -34,10 +34,10 @@ const SingleEvent: React.FC = () => {
   const handleAddtoCart = () => {
     const item = event;
     const data: CartItem = {
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      image: item.image,
+      id: item.ticket.id,
+      name: item.ticket.name,
+      price: item.ticket.price,
+      image: item.ticket.image,
       quantity: ticketCount,
     };
     dispatch(stor.addItem(data));
