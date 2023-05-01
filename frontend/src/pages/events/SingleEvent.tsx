@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSingleEvent } from 'actions/event-actions';
 
@@ -7,7 +7,7 @@ const SingleEvent: React.FC = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const {loading, error, event} = useSelector((state: any) => state.event);
-  const [ticketCount, setTicketCount] = useState(1);
+  const [ticketCount, setTicketCount] = useState(0);
 
   useEffect(() => {
     
@@ -31,10 +31,14 @@ const SingleEvent: React.FC = () => {
 
    }, [dispatch, id])
 
+   const handleDecrement = () => {
+    if (ticketCount > 0) {
+      setTicketCount(ticketCount - 1);
+    }
+  };
+
   return (
     <>
-
-    
 
      {!loading && (
        <>
@@ -46,20 +50,21 @@ const SingleEvent: React.FC = () => {
 
   <h2 className = "single-event-title">{event && event.name}</h2>
   <p className = "single-event-description">{event && event.description}</p>
+      
+      </div>
 
   <div className="ticket-counter">
 
-    <button onClick={() => setTicketCount(ticketCount - 1)}>-</button>
-    <p>{ticketCount}</p>
-    <button onClick ={() => setTicketCount(ticketCount + 1)}>+</button>
+    <button onClick={handleDecrement}>-</button>
+    <span>{ticketCount}</span>
+    <button onClick={() => setTicketCount(ticketCount + 1)}>+</button>
+    <button disabled={ticketCount === 0}>Add to Cart</button>
 
   </div>
 
   <button className="add-to-cart-button">Add to Cart</button>
 
-</div>
-
-</div>
+  </div>
        </>
      )}
 
