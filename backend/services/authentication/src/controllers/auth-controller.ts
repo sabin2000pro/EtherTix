@@ -340,6 +340,7 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   await TwoFactorVerification.deleteOne({ owner: userId });
   user.isActive = true; // And user account is active
 
+  sendLoginMfa(user, mfaToken as any); //uncomment when email sender works
 };
 
 //returns true of token associated with userId is expired (also deletes that token)
@@ -373,13 +374,8 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
 
   const token = generateMfaToken();
 
-  console.log(`Token : `, token);
-
   const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
-
-  sendLoginMfa(emailTransporter, email as any); //uncomment when email sender works
-
 };
 
 
