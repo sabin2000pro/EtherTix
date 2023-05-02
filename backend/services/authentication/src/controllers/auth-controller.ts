@@ -24,12 +24,12 @@ export const sendResetPasswordTokenStatus = async (request: any, response: any, 
   return response.status(StatusCodes.OK).json({ isValid: true });
 };
 
-export const sendLoginMfa = (email: any, userMfa: any) => {
+export const sendLoginMfa = (user: any, userMfa: any) => {
   const transporter = emailTransporter();
 
   return transporter.sendMail({
     from: "mfa@ethertix.com",
-    to: email,
+    to: user.email,
     subject: "Login MFA Verification",
     html: `
         
