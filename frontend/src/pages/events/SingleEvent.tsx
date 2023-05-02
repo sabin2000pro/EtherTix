@@ -47,7 +47,15 @@ const SingleEvent: React.FC = () => {
   return (
     <>
       {!loading && (
-        <Container style={{ margin: "60px 0 auto", marginLeft: "80px" }}>
+        <Container
+          style={{
+            marginTop: "60px",
+            // marginLeft: "180px",
+            border: "2px solid black",
+            borderRadius: "15px",
+            justifyContent: "center"
+          }}
+        >
           <div className="single-event-container">
             <Row>
               <Col>
