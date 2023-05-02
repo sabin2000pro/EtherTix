@@ -14,7 +14,6 @@ import { generateRandomResetPasswordToken } from "../utils/generateResetPassword
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
 
-const transporter = emailTransporter();
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
 // @parameters: Transporter Object, User Object, Randomly Generated User OTP
@@ -25,7 +24,8 @@ export const sendResetPasswordTokenStatus = async (request: any, response: any, 
   return response.status(StatusCodes.OK).json({ isValid: true });
 };
 
-export const sendLoginMfa = (transporter, user: any, userMfa: any) => {
+export const sendLoginMfa = (user: any, userMfa: any) => {
+  const transporter = emailTransporter();
 
   return transporter.sendMail({
     from: "mfa@ethertix.com",
@@ -376,7 +376,7 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
   const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
 
-  sendLoginMfa(emailTransporter, email, token as any);
+  sendLoginMfa(email, token as any);
 };
 
 
