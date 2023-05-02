@@ -831,4 +831,9 @@ footer {
   float:right;
   width: 50%;
 }
+
+.ticket-counter{
+  float:right;
+  display: inline;
+}
 /*Single event page---End*/

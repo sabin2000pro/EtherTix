@@ -69,8 +69,6 @@ const SingleEvent: React.FC = () => {
                 Add to Cart
               </button>
             </div>
-
-            <button className="add-to-cart-button">Add to Cart</button>
           </div>
         </>
       )}
