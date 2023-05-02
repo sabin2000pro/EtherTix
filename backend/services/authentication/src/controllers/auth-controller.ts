@@ -1,4 +1,4 @@
-import { Kafka } from 'kafkajs';
+
 import { emailTransporter } from "./../utils/send-email";
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user-model";
