@@ -829,5 +829,6 @@ footer {
 
 .single-event-info{
   float:right;
+  width: 50%;
 }
 /*Single event page---End*/
