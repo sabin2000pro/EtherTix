@@ -380,9 +380,8 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
   const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
 
-  //   sendLoginMfa(emailTransporter, email, token); //uncomment when email sender works
+  sendLoginMfa(emailTransporter, email, token); //uncomment when email sender works
 
-  console.log("Current mfa token: ", token);
 };
 
 
