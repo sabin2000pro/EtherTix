@@ -13,20 +13,6 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
   const dispatch = useDispatch();
   const containerRef = useRef(null);
 
-  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-
-    const container = event.currentTarget;
-    const scrollPosition = container.scrollLeft;
-
-    container.scrollTo({
-      top: 0,
-      left: scrollPosition + event.deltaY,
-      behavior: "smooth",
-    });
-
-
-  };
-
   useEffect(() => {
 
     const fetchEvents = async () => {
@@ -70,16 +56,12 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
           <div className="homepage-image">
             <img src="images\threesisters.jpg" alt="display_image" />
           </div>
-
-          
         </div>
       </section>
 
       <section className="services-container">
         <div
-
           className="container text-center"
-          onWheel={handleWheel}
           ref={containerRef}
         >
           <h2 className="services-title">Events</h2>
@@ -87,9 +69,9 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
             {events && events.map((event: any) => (
               <div key={event.id} className="services-item">
                 <div className="services-image">
-                  <img src={event.image} alt={event.title} />
+                  <img src={event.image} alt={event.name} />
                 </div>
-                <h3 className="services-title">{event.title}</h3>
+                <h3 className="services-title">{event.name}</h3>
                 <p className="services-description">{event.description}</p>
                 <Link to={`/event-details/${event._id}`}>
                   <button className="services-cta">Learn More</button>

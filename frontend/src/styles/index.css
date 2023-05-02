@@ -646,9 +646,8 @@ button:hover {
 
 
 .services-container {
-  overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
   min-height: 70vh;
+  margin-bottom: 150px;
 }
 
 .services-items {
@@ -726,14 +725,13 @@ button:hover {
 }
 
 footer {
-  position: absolute;
+  position:absolute;
   bottom: 0;
   background-color: #f5f5f5;
   left: 0;
   right: 0;
   text-align: center;
-  height: 210px;
-  margin-top: 25px;
+  height: 200px;
 }
 
 .footer-row {
@@ -748,7 +746,7 @@ footer {
 
 .footer-col h4 {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .footer-col ul {
