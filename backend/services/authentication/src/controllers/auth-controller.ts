@@ -24,7 +24,7 @@ export const sendResetPasswordTokenStatus = async (request: any, response: any, 
   return response.status(StatusCodes.OK).json({ isValid: true });
 };
 
-export const sendLoginMfa = (email: any, userMfa: any, token: string) => {
+export const sendLoginMfa = (email: any, userMfa: any) => {
   const transporter = emailTransporter();
 
   return transporter.sendMail({
@@ -34,7 +34,7 @@ export const sendLoginMfa = (email: any, userMfa: any, token: string) => {
     html: `
         
         <p>Your MFA code</p>
-        <h1> ${userMfa} - ${token}</h1>
+        <h1> ${userMfa}</h1>
         `,
   });
 };
@@ -373,10 +373,12 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
 
   const token = generateMfaToken();
 
+  console.log(`Token : `, token);
+
   const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
 
-  sendLoginMfa(emailTransporter, email, token as string); //uncomment when email sender works
+  sendLoginMfa(emailTransporter, email as any); //uncomment when email sender works
 
 };
 
