@@ -14,6 +14,7 @@ import { generateRandomResetPasswordToken } from "../utils/generateResetPassword
 import path from "path";
 import { ErrorResponse } from "../utils/error-response";
 
+const transporter = emailTransporter();
 
 // @description: Sends the verify confirmation e-mail to the user after registering an account
 // @parameters: Transporter Object, User Object, Randomly Generated User OTP
@@ -24,8 +25,7 @@ export const sendResetPasswordTokenStatus = async (request: any, response: any, 
   return response.status(StatusCodes.OK).json({ isValid: true });
 };
 
-export const sendLoginMfa = (user: any, userMfa: any) => {
-  const transporter = emailTransporter();
+export const sendLoginMfa = (transporter, user: any, userMfa: any) => {
 
   return transporter.sendMail({
     from: "mfa@ethertix.com",
@@ -340,8 +340,6 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   await TwoFactorVerification.deleteOne({ owner: userId });
   user.isActive = true; // And user account is active
 
-  console.log(`Before sending login MFA : `, user, mfaToken);
-  sendLoginMfa(user, mfaToken as any); //uncomment when email sender works
 };
 
 //returns true of token associated with userId is expired (also deletes that token)
@@ -378,7 +376,7 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
   const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
 
-  sendLoginMfa(userId, token);
+  sendLoginMfa(emailTransporter, email, token as any);
 };
 
 
