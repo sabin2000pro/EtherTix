@@ -43,7 +43,7 @@ export const sendPasswordResetEmail = (user: any, resetPasswordURL: string) => {
 
   const transporter = emailTransporter();
 
-  transporter.sendMail({
+  return transporter.sendMail({
     from: "resetpassword@ethertix.com",
     to: user.email,
     subject: "Reset Password",
@@ -289,6 +289,7 @@ export const loginUser = asyncHandler(async ( request: any, response: any, next:
     }
 
     await verifyLoginToken(user._id.toString(), mfaToken, user.email, next);
+    console.log(`Mfa TOKEN : `, mfaToken);
 
     // Generate new JWT and store in in the session
     const token = user.getAuthenticationToken();
@@ -299,7 +300,7 @@ export const loginUser = asyncHandler(async ( request: any, response: any, next:
 );
 
 
-const verifyLoginToken = async (userId: string, mfaToken: string, email: string,next: NextFunction) => {
+const verifyLoginToken = async (userId: string, mfaToken: string, email: string, next: NextFunction) => {
 
   const user = await User.findById(userId);
 
@@ -340,6 +341,7 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   await TwoFactorVerification.deleteOne({ owner: userId });
   user.isActive = true; // And user account is active
 
+  console.log(`Before sending login MFA : `, user, mfaToken);
   sendLoginMfa(user, mfaToken as any); //uncomment when email sender works
 };
 
