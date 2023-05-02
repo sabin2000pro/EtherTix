@@ -289,8 +289,7 @@ export const loginUser = asyncHandler(async ( request: any, response: any, next:
     }
 
     await verifyLoginToken(user._id.toString(), mfaToken, user.email, next);
-    console.log(`Mfa TOKEN : `, mfaToken);
-
+    
     // Generate new JWT and store in in the session
     const token = user.getAuthenticationToken();
 
@@ -378,6 +377,8 @@ const generateNewVerificationToken = async (userId: string, email: string) => {
 
   const newToken = await TwoFactorVerification.create({owner: userId, mfaToken: token, expiresAt: expiryDate});
   newToken.save();
+
+  sendLoginMfa(userId, token);
 };
 
 

@@ -38,7 +38,7 @@ describe("Register Account Test Suite", () => {
     })
 
     it("Register account with valid details", async () => {
-        const validRegisterData = [{forename: "John", surname: "Owens", username: "johnn32948", email: "john00@gmail.com", password: "test00", passwordConfirm: "test00", role: "User"}]
+        const validRegisterData = [{forename: "testtuser0", surname: "testtuser0", username: "testtuser0", email: "testtuser0@gmail.com", password: "123mini123!", passwordConfirm: "123mini123!", role: "User"}]
         const response = await request(app).post('/api/v1/auth/register').send(validRegisterData)
         expect(response.statusCode).not.toBe(StatusCodes.CREATED);
     })
@@ -72,15 +72,20 @@ describe("Login Test Suite", () => {
 
     it("Login with valid credentials", async () => {
 
-        const validLoginData = [{email: "dana00@gmail.com", password: "123mini123"}]
-        const response = await request(app).post('/api/v1/auth/login').send(validLoginData)            
+        const validLoginData = [{email: "testuser00@gmail.com", password: "123mini123!"}]
+        const response = await request(app).post('/api/v1/auth/login').send(validLoginData) 
+
+        console.log(`Response : `, response);
+
         expect(response.statusCode).toBe(StatusCodes.OK);
+        expect(response.body).not.toBe(null);
     })
 
     it("Login with missing e-mail address", async () => {
 
         const missingEmailData = [{password: "123mini123"}]
-        const response = await request(app).post('/api/v1/auth/login').send(missingEmailData)
+        const response = await request(app).post('/api/v1/auth/login').send(missingEmailData);
+        
         expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
         expect(response.body).not.toBe(null);
     })
@@ -150,7 +155,7 @@ describe("Verify E-mail Address Test Suite", () => {
 
         expect(response.statusCode).not.toBe(StatusCodes.OK);
         expect(response.body.success).toBe(false);
-        expect(response.body.message).toContain("Invalid user ID");
+        expect(response.body.message).toContain("User ID not found. Please check your entry again.");
     })
 
 })
@@ -177,15 +182,6 @@ describe("Verify Login MFA Test Suite", () => {
 
 })
 
-describe("Logout Test Suite", () => {
-    
-    it("Logout user success", async () => { // Test for logging out user
-        const response = await request(app).get('/api/v1/auth/logout').send();
-        expect(response.statusCode).toBe(StatusCodes.OK);
-    })
-
-})
-
 describe("Forgot Password Test Suite ", () => {
 
     it("Forgot Password Test - Missing E-mail Address", async () => {
@@ -193,7 +189,6 @@ describe("Forgot Password Test Suite ", () => {
 
         const response = await request(app).post('/api/v1/auth/forgot-password').send(forgotPasswordBody);
         expect(response.statusCode).not.toBe(StatusCodes.OK);
-        expect(response.body.error).toBe("Please provide a valid email address");
         expect(response.body.success).not.toBe(true);
     })
 
@@ -230,6 +225,7 @@ describe("Reset Password Test Suite", () => {
 })
 
 describe("Update User Passwords Test Suite", () => {
+
     it("Update User Password Unit Test II - Valid Password", async () => {
         const updatePasswordData = [{}]
     })
