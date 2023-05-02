@@ -82,7 +82,7 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
           onWheel={handleWheel}
           ref={containerRef}
         >
-          <h2 className="services-title">Services</h2>
+          <h2 className="services-title">Events</h2>
           <div className="services-items">
             {events && events.map((event: any) => (
               <div key={event.id} className="services-item">
