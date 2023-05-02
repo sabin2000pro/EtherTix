@@ -339,12 +339,7 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   await TwoFactorVerification.deleteOne({ owner: userId });
   user.isActive = true; // And user account is active
 
-  // return response
-  //   .status(StatusCodes.OK)
-  //   .json({ message: "Your account is now active", sentAt: currentDate });
 };
-
-
 
 //returns true of token associated with userId is expired (also deletes that token)
 
@@ -455,7 +450,7 @@ export const forgotPassword = asyncHandler(async (request: any, response: any, n
     await resetPasswordToken.save();
 
     const resetPasswordURL = `http://localhost:3000/reset-password/${token}/${user._id}`; // Create the reset password URL
-    //sendPasswordResetEmail(user, resetPasswordURL);
+    sendPasswordResetEmail(user, resetPasswordURL);
 
     return response.status(StatusCodes.OK).json({ success: true, message: "Reset Password E-mail Sent", email });
   }
@@ -573,16 +568,13 @@ export const updateUserProfile = asyncHandler(async (request: any, response: any
       updateData.role = role;
     }
 
-    const updatedUserProfile = await User.findByIdAndUpdate(userId, updateData,
-      {
-        new: true,
-        runValidators: true,
-      }
+    const updatedUserProfile = await User.findByIdAndUpdate(userId, updateData, {new: true, runValidators: true}
 
     );
 
     await updatedUserProfile.save();
     return response.status(StatusCodes.OK).json({ success: true, message: "User profile updated" });
+
   }
   }
 
@@ -611,6 +603,8 @@ export const deactivateUserAccount = asyncHandler(async (request: any, response:
 
     return response.status(StatusCodes.OK).json({success: true, message: "User Account Deactivated", status: user.isValid, sentAt: new Date(Date.now().toFixed()),
     });
+
+
   }
 );
 
@@ -638,10 +632,9 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
         }
 
         // Validate File size. Check if file size exceeds the maximum size
-        if (file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
-          return next( new ErrorResponse("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST)
 
-          );
+        if (file.size > process.env.MAX_FILE_UPLOAD_SIZE!) {
+            return next( new ErrorResponse("File Size Too Large - Please check file size again", StatusCodes.BAD_REQUEST));
         }
 
         file.name = `photo_${currentUser._id}${path.parse(file.name).ext}`;
@@ -652,12 +645,10 @@ export const uploadUserProfilePicture = asyncHandler(async (request: any, respon
                return next( new ErrorResponse("Problem with file upload", StatusCodes.INTERNAL_SERVER_ERROR));
             }
 
-            await User.findByIdAndUpdate(id, {
-              photo: fileName,
-            });
-
+            await User.findByIdAndUpdate(id, {photo: fileName});
 
             return response.status(StatusCodes.OK).json({success: true, message: "User Avatar Uploaded", sentAt: new Date(Date.now()),
+
             });
 
           }
