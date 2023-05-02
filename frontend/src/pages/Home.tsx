@@ -9,16 +9,16 @@ const services = [
 
   {
     id: 1,
-    title: "Service 1",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 1 description",
+    title: "Gallagher Park",
+    image: "https://unsplash.com/photos/qMFSP1xYVTQ",
+    description: "Enjoy live music in Gallagher Park, Canada",
   },
 
   {
     id: 2,
-    title: "Service 2",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 2 description",
+    title: "Roman Colosseum",
+    image: "https://unsplash.com/photos/VFRTXGw1VjU",
+    description: "Buy tickets to see the famous roman colosseum!",
   },
 
   {
@@ -111,7 +111,6 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
       <section className="services-container">
         <div
 
-        
           className="container text-center"
           onWheel={handleWheel}
           ref={containerRef}
