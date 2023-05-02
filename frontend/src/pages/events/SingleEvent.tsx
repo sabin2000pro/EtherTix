@@ -50,7 +50,6 @@ const SingleEvent: React.FC = () => {
         <Container
           style={{
             marginTop: "60px",
-            // marginLeft: "180px",
             border: "2px solid black",
             borderRadius: "15px",
             justifyContent: "center"
