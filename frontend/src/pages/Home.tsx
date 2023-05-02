@@ -1,68 +1,16 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import axios from 'axios';
+import { fetchEventList } from 'actions/event-actions'
 
 interface HomeProps {
   onSignUpClicked: () => void;
 }
 
-const services = [
-
-  {
-    id: 1,
-    title: "Gallagher Park",
-    image: "https://unsplash.com/photos/qMFSP1xYVTQ",
-    description: "Enjoy live music in Gallagher Park, Canada",
-  },
-
-  {
-    id: 2,
-    title: "Roman Colosseum",
-    image: "https://unsplash.com/photos/VFRTXGw1VjU",
-    description: "Buy tickets to see the famous roman colosseum!",
-  },
-
-  {
-    id: 3,
-    title: "Service 3",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 3 description",
-  },
-
-
-  {
-    id: 4,
-    title: "Service 4",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 4 description",
-  },
-  {
-    id: 5,
-    title: "Service 5",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 5 description",
-  },
-  {
-    id: 6,
-    title: "Service 6",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 6 description",
-  },
-  {
-    id: 7,
-    title: "Service 7",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 7 description",
-  },
-  {
-    id: 8,
-    title: "Service 8",
-    image: "https://source.unsplash.com/random/400x400",
-    description: "Service 8 description",
-  },
-];
-
 const Home = ({ onSignUpClicked }: HomeProps) => {
-
+  const {events} = useSelector((state: any) => state.events);
+  const dispatch = useDispatch();
   const containerRef = useRef(null);
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
@@ -78,6 +26,25 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
 
 
   };
+
+  useEffect(() => {
+
+    const fetchEvents = async () => {
+
+      try {
+         dispatch(fetchEventList() as any);
+      } 
+      
+      catch (error) {
+        console.error(error);
+      }
+
+    };
+
+    fetchEvents();
+
+  }, [dispatch])
+
 
   return (
     <>
@@ -117,14 +84,14 @@ const Home = ({ onSignUpClicked }: HomeProps) => {
         >
           <h2 className="services-title">Services</h2>
           <div className="services-items">
-            {services.map((service) => (
-              <div key={service.id} className="services-item">
+            {events && events.map((event: any) => (
+              <div key={event.id} className="services-item">
                 <div className="services-image">
-                  <img src={service.image} alt={service.title} />
+                  <img src={event.image} alt={event.title} />
                 </div>
-                <h3 className="services-title">{service.title}</h3>
-                <p className="services-description">{service.description}</p>
-                <Link to={`/service${service.id}`}>
+                <h3 className="services-title">{event.title}</h3>
+                <p className="services-description">{event.description}</p>
+                <Link to={`/event-details/${event._id}`}>
                   <button className="services-cta">Learn More</button>
                 </Link>
               </div>
