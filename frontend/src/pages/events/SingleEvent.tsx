@@ -35,6 +35,7 @@ const SingleEvent: React.FC = () => {
     };
 
     fetchTickets();
+    console.log("event tickets: ", eventTickets);
   });
 
   useEffect(() => {
