@@ -656,6 +656,7 @@ button:hover {
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
+  margin-bottom: 25px;
 }
 
 .services-item {
@@ -681,7 +682,7 @@ button:hover {
 }
 
 .services-title {
-  margin-top: 0;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
@@ -698,6 +699,7 @@ button:hover {
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  margin-bottom: 25px;
 }
 
 .services-cta:hover {
