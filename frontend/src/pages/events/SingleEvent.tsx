@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleEvent } from "actions/event-actions";
 import * as stor from "../../auth/store";
 import { CartItem } from "models/cart";
+import { Ticket } from "models/tickets";
 import { Col, Container, Row } from "react-bootstrap";
+import axios from "axios";
+import { fetchAllTickets } from "actions/ticket-actions";
 
 const SingleEvent: React.FC = () => {
   const { id } = useParams();
@@ -12,6 +15,29 @@ const SingleEvent: React.FC = () => {
 
   const { loading, error, event } = useSelector((state: any) => state.event);
   const [ticketCount, setTicketCount] = useState(0);
+  const [eventTickets, setEventTickets] = useState<Ticket[]>([]);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const eventID = id;
+        const { data } = await axios.get(
+          `https://ethertix.co.uk/api/v1/tickets/event-tickets`,
+          eventID as any
+        );
+        if (data.success) {
+          setEventTickets(data);
+        }
+      } catch (error) {
+        if (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    fetchTickets();
+    console.log("event tickets: ", eventTickets);
+  });
 
   useEffect(() => {
 
@@ -53,6 +79,7 @@ const SingleEvent: React.FC = () => {
       price: item.ticket.price,
       image: item.ticket.image,
       quantity: ticketCount,
+      currency: item.currency,
     };
 
     dispatch(stor.addItem(data));
@@ -69,7 +96,7 @@ const SingleEvent: React.FC = () => {
             marginTop: "60px",
             border: "2px solid black",
             borderRadius: "15px",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
 

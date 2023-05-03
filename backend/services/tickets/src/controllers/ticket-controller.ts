@@ -21,6 +21,17 @@ export const fetchAllTickets = asyncHandler(async (request: any, response: any, 
    
 )
 
+export const fetchEventTicket = asyncHandler(async (request: any, response: any, next: NextFunction): Promise<any | Response> => {
+   const eventID = request.body.eventID;
+   const tickets = await Ticket.findById({event: eventID});
+
+   if(!tickets) {
+      return next(new ErrorResponse(`No tickets found. Please try again`, StatusCodes.BAD_REQUEST));
+   }
+
+   return response.status(StatusCodes.OK).json({success: true, tickets});
+})
+
 
 
 
