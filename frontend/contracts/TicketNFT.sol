@@ -8,7 +8,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract TicketNFT is ERC721URIStorage, Ownable {
 
-    struct NftToken { 
+    struct NftToken {  // NFT Struct storing the necessary data for the NFT
         uint256 tokenId;
         address tokenOwner;
         string tokenName;
@@ -94,8 +94,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
 
         return currentMintedTokens;
     }
-
-
+    
     function listNftForSale(uint256 _tokenId, uint256 _listingPrice) public {
         require(getOwnerOfToken(_tokenId) == msg.sender, "You must be the owner of this token to list it for sale");
         require((tokenIsOnSale(_tokenId)), "The token must NOT already be on sale to list the nft for sale");
@@ -135,7 +134,7 @@ contract TicketNFT is ERC721URIStorage, Ownable {
 
         burnNftToken(tokenId);
         emit NftPurchased(tokenId, tokenBuyer, currentToken.tokenName, currentToken.tokenPrice);
-        
+
         return tokenBuyer;
    }
 
