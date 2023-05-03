@@ -12,6 +12,7 @@ import { fetchAllTickets } from "actions/ticket-actions";
 const SingleEvent: React.FC = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+
   const { loading, error, event } = useSelector((state: any) => state.event);
   const [ticketCount, setTicketCount] = useState(0);
   const [eventTickets, setEventTickets] = useState<Ticket[]>([]);
@@ -39,27 +40,39 @@ const SingleEvent: React.FC = () => {
   });
 
   useEffect(() => {
+
     const getSingleEvent = async () => {
+
+
       try {
         dispatch(fetchSingleEvent(id as any) as any);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         if (error) {
           return console.error(error);
         }
+
       }
+
     };
 
     getSingleEvent();
+
   }, [dispatch, id]);
 
   const handleDecrement = () => {
+
     if (ticketCount > 0) {
       setTicketCount(ticketCount - 1);
     }
   };
 
   const handleAddtoCart = () => {
+
+
     const item = event;
+
     const data: CartItem = {
       id: item.ticket.id,
       name: item.ticket.name,
@@ -68,12 +81,16 @@ const SingleEvent: React.FC = () => {
       quantity: ticketCount,
       currency: item.currency,
     };
+
     dispatch(stor.addItem(data));
   };
 
   return (
+
     <>
+
       {!loading && (
+
         <Container
           style={{
             marginTop: "60px",
@@ -82,8 +99,11 @@ const SingleEvent: React.FC = () => {
             justifyContent: "center",
           }}
         >
+
           <div className="single-event-container">
+
             <Row>
+
               <Col>
                 <img
                   className="single-event-image"
@@ -94,37 +114,45 @@ const SingleEvent: React.FC = () => {
                     width: "600px",
                   }}
                 />
+                
               </Col>
+
               <Col>
+
                 <div className="single-event-info">
+
                   <h2 className="single-event-title">{event && event.name}</h2>
                   <p className="single-event-description">
                     {event && event.description}
                   </p>
                 </div>
               </Col>
+
+
             </Row>
-            <Row>
-              <div></div>
-            </Row>
+
             <Row style={{ justifyContent: "center", marginTop: "100px" }}>
-              <div className="ticket-counter">
+
+              <div className = "ticket-counter">
+
                 <button onClick={handleDecrement}>-</button>
+
                 <span style={{ margin: "5px" }}>{ticketCount}</span>
+
                 <button onClick={() => setTicketCount(ticketCount + 1)}>
                   +
                 </button>
-                <button
-                  onClick={handleAddtoCart}
-                  disabled={ticketCount === 0}
-                  style={{ margin: "10px" }}
-                >
+
+                <button onClick={handleAddtoCart} disabled={ticketCount === 0} style={{ margin: "10px" }}>
                   Add to Cart
                 </button>
+
+
               </div>
             </Row>
           </div>
         </Container>
+
       )}
     </>
   );
