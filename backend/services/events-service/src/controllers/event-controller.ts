@@ -63,7 +63,7 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
             return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
          }
     
-         const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser});
+         const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser, tickets});
          await event.save();
 
          return response.status(StatusCodes.CREATED).json({success: true, event});
