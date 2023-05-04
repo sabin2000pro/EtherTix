@@ -58,10 +58,7 @@ export const createNewEvent = async (request: any, response: any, next: NextFunc
         if(capacity === 0) {
             return next(new ErrorResponse(`Capacity for the event cannot be 0`, StatusCodes.BAD_REQUEST));
         }
-    
-        if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !reservedSeating || !salesStatus || !venue || !organiser || !tickets) {
-            return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
-         }
+
     
          const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser, tickets});
          await event.save();
