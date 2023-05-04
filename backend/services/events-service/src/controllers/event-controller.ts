@@ -53,13 +53,13 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
     try {
-        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser } = request.body;
+        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser, tickets } = request.body;
 
         if(capacity === 0) {
             return next(new ErrorResponse(`Capacity for the event cannot be 0`, StatusCodes.BAD_REQUEST));
         }
     
-        if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !reservedSeating || !salesStatus || !venue || !organiser) {
+        if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !reservedSeating || !salesStatus || !venue || !organiser || !tickets) {
             return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
          }
     
