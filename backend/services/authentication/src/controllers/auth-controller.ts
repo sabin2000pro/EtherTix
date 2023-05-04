@@ -1,6 +1,7 @@
+// Code written by Sabin Constantin Lungu, Andrei Vasiliu, Andrew Crook, Jayveer Chall
 
 import { emailTransporter } from "./../utils/send-email";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { User } from "../models/user-model";
 import { EmailVerification } from "../models/email-verification-model";
 import { PasswordReset } from "../models/password-reset-model";
@@ -135,6 +136,8 @@ export const registerUser = asyncHandler(async (request: any, response: any, nex
 
     sendConfirmationEmail(user, userOTP as unknown as any);
     return sendTokenResponse(request, user, StatusCodes.CREATED, response);
+
+
   }
 );
 
@@ -208,9 +211,10 @@ export const verifyEmailAddress = asyncHandler(async (request: any, response: an
       const currentDate = date.toISOString();
 
       return response.status(StatusCodes.CREATED).json({ message: "E-mail Address verified", sentAt: currentDate });
-    }
 
+    }
   }
+
 );
 
 // @description: Resend the E-mail Verification code to the user if not received
@@ -244,11 +248,10 @@ export const resendEmailVerificationCode = asyncHandler(async (request: any, res
     const otpToken = generateOTPVerificationToken();
 
     if (!otpToken) {
-
       return next(new ErrorResponse("OTP Token generated is invalid.", StatusCodes.BAD_REQUEST));
     }
 
-    const newToken = new EmailVerification({owner: currentUser._id, token: otpToken,});
+    const newToken = new EmailVerification({owner: currentUser._id, token: otpToken});
     await newToken.save(); // Save the new token
 
     return response.status(StatusCodes.OK).json({ success: true, message: "E-mail Verification Re-sent" });
@@ -319,7 +322,6 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
   const loginVerificationToken = await TwoFactorVerification.findOne({ owner: userId });
 
   if (!mfaToken) {
-
     return next(new ErrorResponse("No mfa token found on the server-side", StatusCodes.BAD_REQUEST));
   }
 
@@ -346,6 +348,7 @@ const verifyLoginToken = async (userId: string, mfaToken: string, email: string,
 //returns true of token associated with userId is expired (also deletes that token)
 
 const verifyTokenExpiration = async (userId: string): Promise<boolean> => {
+  
   const currentDate = new Date();
   const tokenINdb = await TwoFactorVerification.findOne({ owner: userId });
 

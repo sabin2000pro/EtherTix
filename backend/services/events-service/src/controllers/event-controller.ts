@@ -32,7 +32,11 @@ export const fetchTrendingEvents = asyncHandler(async (request: any, response: a
 
 export const fetchSingleEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
     const eventId = request.params.eventId;
-    const event = await Event.findById(eventId)
+    const event = await Event.findById(eventId);
+
+    if(!eventId) {
+        return next(new ErrorResponse(`Missing Event ID`, StatusCodes.BAD_REQUEST));
+    }
 
     if(!isValidObjectId(eventId)) {
         return next(new ErrorResponse(`Event ID Malformed, try again`, StatusCodes.BAD_REQUEST));
@@ -47,26 +51,38 @@ export const fetchSingleEvent = async (request: any, response: any, next: NextFu
 }
 
 export const createNewEvent = async (request: any, response: any, next: NextFunction): Promise<any> => {
-    const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category } = request.body;
 
-    if(capacity === 0) {
-        return next(new ErrorResponse(`Capacity for the event cannot be 0`, StatusCodes.BAD_REQUEST));
-    }
+    try {
+        const {name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser } = request.body;
 
-    if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !slotsAvailable || !reservedSeating || !salesStatus || !venue || !organiser || !ticket || !category) {
-        return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
-     }
-
-     const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, slotsAvailable, reservedSeating, salesStatus, venue, organiser, ticket, category});
+        if(capacity === 0) {
+            return next(new ErrorResponse(`Capacity for the event cannot be 0`, StatusCodes.BAD_REQUEST));
+        }
     
-     await event.save();
-     return response.status(StatusCodes.CREATED).json({success: true, event});
+        if(!name || !summary || !description || !startAt || !endsAt || !eventStatus || !format || !isOnline || !capacity || !hasSeating || !reservedSeating || !salesStatus || !venue || !organiser) {
+            return next(new ErrorResponse(`One of the event fields are missing. Please try again`, StatusCodes.BAD_REQUEST));
+         }
+    
+         const event = await Event.create({name, summary, description, startAt, endsAt, eventStatus, format, isOnline, capacity, hasSeating, reservedSeating, salesStatus, venue, organiser});
+         await event.save();
+
+         return response.status(StatusCodes.CREATED).json({success: true, event});
+    } 
+    
+    catch(error) {
+
+        if(error) {
+            console.log(`Error : `, error);
+        }
+
+    }
+    
 
 }    
 
 export const editEventByID = async (request: any, response: any, next: NextFunction): Promise<any> => {
 
-        const id = request.params.id;
+        const id = request.params.eventId;
         let event = await Event.findById(id);
 
         if(!isValidObjectId(id)) {

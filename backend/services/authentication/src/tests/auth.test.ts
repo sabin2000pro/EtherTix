@@ -59,7 +59,7 @@ describe("Register Account Test Suite", () => {
     })
 
     it("Register account with forename characters exceeding limit", async () => {
-        const invalidForename = [{forename: "weofjewoijfewiojfewoijfweoifwe", surname: "Andy", "email": "eabinlungu09@gmail.com", password: "123mini123", passwordConfirm: "123mini123", role: "User"}]
+        const invalidForename = [{forename: "weofjewoijfewiojfewoijfweoifwe", surname: "Andy", email: "eabinlungu09@gmail.com", password: "123mini123", passwordConfirm: "123mini123", role: "User"}]
         const response = await request(app).post('/api/v1/auth/register').send(invalidForename)
 
         expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);

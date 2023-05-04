@@ -29,7 +29,6 @@ app.use(cors({
 }));
 
 app.use('/api/v1/events', eventRouter);
-app.use(errorHandler)
 
 app.all('*', (err: Error, request: any, response: any, next: NextFunction) => {
     return response.status(StatusCodes.NOT_FOUND).json({success: false, message: `The route you are trying to access cannot be found on the server, please try again later`});
