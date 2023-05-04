@@ -27,7 +27,7 @@ describe("Fetch Events Unit Tests", () => {
     })
 
     it("Create New Event - Valid Details Unit Test", async () => {
-        const eventData = [ {organiser: "5d7a514b5d2c12c7449be042", venue: "5d7a514b5d2c12c7449be020", name: "Test Event", summary: "Test Summary", description: "Test Description", startAt: "2023-08-12T13:00:00.000Z", endsAt: "2023-08-12T15:00:00.000Z", eventStatus: 'pending', format: "Outdoor", isOnline: false, capacity: 50, hasSeating: true, isSoldOut: false, reservedSeating: false, salesStatus: "on_sale"} ]
+        const eventData = [ {organiser: "5d7a514b5d2c12c7449be042", tickets: ["5d7a514b5d2c12c7449be220", "5d7a514b5d2c12c7449be221"], venue: "5d7a514b5d2c12c7449be020", name: "Test Event", summary: "Test Summary", description: "Test Description", startAt: "2023-08-12T13:00:00.000Z", endsAt: "2023-08-12T15:00:00.000Z", eventStatus: 'pending', format: "Outdoor", isOnline: false, capacity: 50, hasSeating: true, isSoldOut: false, reservedSeating: false, salesStatus: "on_sale"} ]
         const createEventResponse = await request(app).post(`/api/v1/events`).send(eventData);
         console.log(`Create Event Response : `, createEventResponse);
 
